@@ -12,7 +12,29 @@
         #searchBar { width: 90%; padding: 10px; margin: 10px auto; display: block; }
         input, textarea { width: 90%; padding: 10px; margin: 10px 0; display: block; }
         button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-    </style>
+ </style>
+<style>
+    /* Navigation Bar styling */
+    nav {
+        background-color: #007bff;
+        padding: 10px;
+        text-align: center;
+    }
+    nav a {
+        color: white;
+        text-decoration: none;
+        padding: 0 10px;
+        font-weight: bold;
+    }
+    /* Footer styling */
+    footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+</style>
 </head>
 <body>
 
@@ -22,6 +44,12 @@
     <p>Arsi University - Sociology & Social Work</p>
 </header>
 
+   <nav>
+    <a href="#about">About</a> | 
+    <a href="#resources">Resources</a> | 
+    <a href="#contact">Contact</a>
+</nav>
+ 
 <input type="text" id="searchBar" placeholder="Search topics...">
 
 <div class="image-wrapper">
@@ -77,6 +105,10 @@
     </section>
 </main>
 
+<footer>
+    <p>&copy; 2026 Sociology Connect - Arsi University</p>
+</footer>
+    
 </body>
 </html>
         

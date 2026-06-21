@@ -1,5 +1,5 @@
-Sociology Connect 
-​Ibsa Gabaabaa (Project Overview)
+Sociology Connect fi
+  ​Ibsa Gabaabaa (Project Overview)
 Marsariitii barattoota Sociology fi Social Work.
 
 websaayitichaa irratti fayyadamaa jira.

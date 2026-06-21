@@ -1,112 +1,69 @@
-<!DOCTYPE html>
+        
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sociology Connect</title>
+    <style>
+        /* Body styling */
+        body {
+            background-color: #f9f9f9; 
+            color: #2c3e50;          
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #007bff; 
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Image wrapper styling */
+        .image-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .image-wrapper img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Section styling */
+        section {
+            margin: 15px;
+            padding: 10px;
+            border-left: 5px solid #007bff;
+            background-color: #ffffff;
+        }
+    </style>
 </head>
-<style>
-    /* Body styling */
-    body {
-        background-color: #f9f9f9; 
-        color: #2c3e50;          
-        font-family: Arial, sans-serif;
-    }
-
-    /* Header styling */
-    header {
-        background-color: #007bff; 
-        color: white;
-        padding: 20px;
-        text-align: center;
-    }
-<!-- HTML Code -->
-<div class="image-wrapper">
-    <img src="1000022849.png" alt="Social Workers Can Help You">
-</div>
-
-<!-- CSS Code (Kanaan `index.html` kee keessatti ykn faayila `.css` kee keessatti fayyadami) -->
-<style>
-    .image-wrapper {
-        display: flex;
-        justify-content: center;
-        padding: 20px;
-    }
-    .image-wrapper img {
-        width: 100%;
-        max-width: 600px;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-</style>
-
-    
-    <!-- Search Bar -->
-<div style="margin: 15px;">
-    <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search sociology topics..." 
-           style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #007bff;">
-</div>
-
-    <!-- Iddoo oduun itti mul'atu -->
-
-
-    <div id="rss-container">
-    <h2>Odeeffannoo Haaraa</h2>
-    <iframe src="https://rss.app/embed/v1/carousel/yM758TzW9W8j1j1S" width="100%" height="300" frameborder="0"></iframe>
-</div>
-      
-<script>
-function searchFunction() {
-    let input = document.getElementById('searchBar').value.toLowerCase();
-    let sections = document.getElementsByTagName('section');
-    for (let i = 0; i < sections.length; i++) {
-        if (sections[i].innerText.toLowerCase().includes(input)) {
-            sections[i].style.display = "";
-        } else {
-            sections[i].style.display = "none";
-        }
-    }
-}
-</script>
-    
-    
-    /* Section styling */
-    section {
-        margin: 15px;
-        padding: 10px;
-        border-left: 5px solid #007bff; 
-    }
-</style>
- <!-- 1. Iddoo namoonni itti barbaadan (HTML) -->
-<div style="margin: 20px 0;">
-    <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search topics..." 
-           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-</div>
-
-<!-- 2. Hojii isaa kan raawwatu (JavaScript) -->
-<script>
-function searchFunction() {
-    let input = document.getElementById('searchBar').value.toLowerCase();
-    let sections = document.getElementsByTagName('section');
-
-    for (let i = 0; i < sections.length; i++) {
-        let content = sections[i].innerText.toLowerCase();
-        if (content.includes(input)) {
-            sections[i].style.display = "";
-        } else {
-            sections[i].style.display = "none";
-        }
-    }
-}
-</script>
-    
 <body>
-    <img src="1781866925745.png" alt="Sociology Connect Logo" style="width: 200px;">
+
     <header>
+        <img src="1781866925745.png" alt="Sociology Connect Logo" style="width: 100px; border-radius: 50%;">
         <h1>Sociology Connect</h1>
         <p>Arsi University - Sociology & Social Work</p>
     </header>
+
+    <!-- Search Bar -->
+    <div style="margin: 20px;">
+        <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search topics..." 
+               style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #007bff;">
+    </div>
+
+    <!-- Image -->
+    <div class="image-wrapper">
+        <img src="1000022849.png" alt="Social Workers Can Help You">
+    </div>
 
     <main>
         <section>
@@ -119,59 +76,39 @@ function searchFunction() {
             <p>Sociology is the study of social life, social change, and the social causes and consequences of human behavior.</p>
         </section>
 
-           <section style="background-color: #f9f9f9; padding: 20px; border-left: 5px solid #007bff; margin: 20px 0; font-family: Arial, sans-serif; border-radius: 8px;">
-        <h3 style="color: #007bff; margin-top: 0;">In Memory of Our Mentor, Mr. Ali</h3>
-        <p style="line-height: 1.6; color: #333;">
-            I am deeply saddened to reflect on the passing of my mentor, Mr. Ali, who first introduced me to the field of Social Work at Arsi University. 
-            He was the foundation of my passion for this profession. 
-            <br><br>
-            <b>As I look toward my future as a social worker, I know that my success will be a direct reflection of his guidance. 
-            Every step I take in this field is a tribute to the lessons he taught me.</b> 
-            <br><br>
-            May his soul rest in eternal peace in Jannah.
-       
-        </p>   
-           </section> 
         <section>
-            <h3>About Social Work</h3>
-            <p>Social Work is a profession that focuses on helping individuals, families, and communities to enhance their collective well-being and resolve social problems.</p>
+            <h3>In Memory of Our Mentor, Mr. Ali</h3>
+            <p>I am deeply saddened to reflect on the passing of my mentor, Mr. Ali, who first introduced me to the field of Social Work at Arsi University.</p>
         </section>
 
-        <section>
-            <h3>Iddir</h3>
-            <p>Iddir is a traditional community-based support system focused on mutual aid during times of grief and hardship.</p>
-        </section>
-
-
-                <section id="research">
+        <section id="research">
             <h3>Research Proposal</h3>
-            <p>Read our recent study on Indigenous Mutual Support Systems in Assela.</p>
-            <a href="IBRO PROP (3).pdf" target="_blank" style="text-decoration: none; color: #007bff; font-weight: bold;">[Download Full PDF Proposal]</a>
-                     
-                </section>
+            <a href="IBRO PROP (3).pdf" target="_blank">Download Full PDF Proposal</a>
+        </section>
         
         <section>
-            <h3>Mahber</h3>
-            <p>Mahber focuses on community participation and social cohesion, often rooted in shared cultural or faith-based traditions.</p>
+            <h3>Iddir & Mahber</h3>
+            <p>Traditional community support systems.</p>
         </section>
-   
+
         <section id="contact">
             <h3>Contact Us</h3>
-            <p>For more information or to share your feedback, please reach out to us.</p>
-            
             <p>Email: gunnersyom@gmail.com</p>
-            <p>Phone: 0934919856</p>
-
-            <form>
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name"><br><br>
-                
-                <label for="message">Message:</label><br>
-                <textarea id="message" name="message"></textarea><br><br>
-                
-                <button type="submit">Submit</button>
-            </form>
         </section>
     </main>
+
+    <script>
+    function searchFunction() {
+        let input = document.getElementById('searchBar').value.toLowerCase();
+        let sections = document.getElementsByTagName('section');
+        for (let i = 0; i < sections.length; i++) {
+            if (sections[i].innerText.toLowerCase().includes(input)) {
+                sections[i].style.display = "";
+            } else {
+                sections[i].style.display = "none";
+            }
+        }
+    }
+    </script>
 </body>
 </html>

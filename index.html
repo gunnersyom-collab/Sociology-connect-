@@ -26,6 +26,24 @@
            style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #007bff;">
 </div>
 
+    <!-- Iddoo oduun itti mul'atu -->
+<div id="rss-feed"></div>
+
+<script>
+// URL RSS feed isa argatte sana asitti galchi
+const rssUrl = "https://www.sciencedaily.com/rss/mind_brain/sociology.xml";
+
+fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`)
+.then(response => response.json())
+.then(data => {
+    let output = "<h2>Odeeffannoo Haaraa</h2>";
+    data.items.forEach(item => {
+        output += `<div><a href="${item.link}" target="_blank">${item.title}</a></div>`;
+    });
+    document.getElementById('rss-feed').innerHTML = output;
+});
+</script>
+    
 <script>
 function searchFunction() {
     let input = document.getElementById('searchBar').value.toLowerCase();

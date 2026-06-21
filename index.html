@@ -27,27 +27,13 @@
 </div>
 
     <!-- Iddoo oduun itti mul'atu -->
-<div id="rss-feed"></div>
 
-<script>
-    const rssUrl = "https://www.sciencedaily.com/rss/mind_brain/sociology.xml";
-    // RSS link kana 'proxy' fayyadamuu danda'a yoo 'CORS error' si mudate.
-    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(rssUrl))
-        .then(response => response.json())
-        .then(data => {
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(data.contents, "text/xml");
-            const items = xml.querySelectorAll("item");
-            let output = "<h2>Odeeffannoo Haaraa</h2>";
-            items.forEach(item => {
-                const title = item.querySelector("title").textContent;
-                const link = item.querySelector("link").textContent;
-                output += `<div><a href="${link}" target="_blank">${title}</a></div>`;
-            });
-            document.getElementById('rss-feed').innerHTML = output;
-                
-});
-</script>
+
+    <div id="rss-container">
+    <h2>Odeeffannoo Haaraa</h2>
+    <iframe src="https://rss.app/embed/v1/carousel/yM758TzW9W8j1j1S" width="100%" height="300" frameborder="0"></iframe>
+</div>
+    
     
 <script>
 function searchFunction() {

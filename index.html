@@ -20,7 +20,27 @@
         padding: 20px;
         text-align: center;
     }
+<!-- Search Bar -->
+<div style="margin: 15px;">
+    <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search sociology topics..." 
+           style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #007bff;">
+</div>
 
+<script>
+function searchFunction() {
+    let input = document.getElementById('searchBar').value.toLowerCase();
+    let sections = document.getElementsByTagName('section');
+    for (let i = 0; i < sections.length; i++) {
+        if (sections[i].innerText.toLowerCase().includes(input)) {
+            sections[i].style.display = "";
+        } else {
+            sections[i].style.display = "none";
+        }
+    }
+}
+</script>
+    
+    
     /* Section styling */
     section {
         margin: 15px;

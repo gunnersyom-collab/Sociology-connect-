@@ -1,17 +1,16 @@
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Sociology Connect</title>
     <link rel="alternate" type="application/rss+xml" href="rss.xml" title="RSS Feed">
     <style>
-        body { background-color: #f9f9f9; }
+        body { background-color: #f9f9f9; font-family: sans-serif; }
         header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
         .image-wrapper { display: flex; justify-content: center; margin: 20px 0; }
         .image-wrapper img { width: 100%; max-width: 600px; }
         section { margin: 15px; padding: 15px; background: white; border-radius: 8px; }
         #searchBar { width: 90%; padding: 10px; margin: 10px auto; display: block; }
-        form { display: flex; flex-direction: column; }
-        input, textarea { margin-bottom: 10px; padding: 8px; }
+        input, textarea { width: 90%; padding: 10px; margin: 10px 0; display: block; }
         button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
     </style>
 </head>
@@ -29,7 +28,7 @@
     <img src="social-workers-can-help (1).png" alt="Social workers can help you">
 </div>
 
-<main id="content">
+<main>
     <section>
         <h3>Sociology Connect</h3>
         <p>A platform dedicated to exploring social insights and academic resources.</p>
@@ -41,6 +40,11 @@
     </section>
 
     <section>
+        <h3>Iddir & Community Associations</h3>
+        <p>Exploring the role of Iddir and other community-based organizations in social support systems.</p>
+    </section>
+
+    <section>
         <h3>In Memory of Our Mentor, Mr.</h3>
         <p>I am deeply saddened to reflect on the loss of our mentor...</p>
     </section>
@@ -49,8 +53,19 @@
         <h3>Research Proposal</h3>
         <a href="IBRO PROP (3).pdf" target="_blank">Download Research Proposal</a>
     </section>
+
+    <section>
+        <h3>Contact & Feedback</h3>
+        <form action="mailto:keemail@gmail.com" method="post" enctype="text/plain">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="tel" name="phone" placeholder="Your Phone Number">
+            <textarea name="comment" placeholder="Write your comments here..." required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
 </main>
 
 </body>
 </html>
-     
+       

@@ -1,4 +1,4 @@
-Sociology Connect
+Sociology Connect 
 ​Ibsa Gabaabaa (Project Overview)
 Marsariitii barattoota Sociology fi Social Work.
 

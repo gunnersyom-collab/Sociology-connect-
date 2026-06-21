@@ -1,98 +1,72 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sociology Connect</title>
     <style>
-        /* Body styling */
-        body {
-            background-color: #f9f9f9; 
-            color: #2c3e50;          
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Header styling */
-        header {
-            background-color: #007bff; 
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Image wrapper styling */
-        .image-wrapper {
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-        .image-wrapper img {
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Section styling */
-        section {
-            margin: 15px;
-            padding: 10px;
-            border-left: 5px solid #007bff;
-            background-color: #ffffff;
-        }
+        body { background-color: #f9f9f9; color: #2c3e50; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
+        .image-wrapper { display: flex; justify-content: center; padding: 20px; }
+        .image-wrapper img { width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        section { margin: 15px; padding: 15px; border-left: 5px solid #007bff; background-color: #ffffff; border-radius: 5px; }
+        #searchBar { width: 90%; padding: 10px; margin: 20px auto; display: block; border-radius: 5px; border: 1px solid #007bff; }
+        form { display: flex; flex-direction: column; }
+        input, textarea { margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="1781866925745.png" alt="Sociology Connect Logo" style="width: 100px; border-radius: 50%;">
+        <img src="1781866925745.png" alt="Logo" style="width: 100px; border-radius: 50%;">
         <h1>Sociology Connect</h1>
         <p>Arsi University - Sociology & Social Work</p>
     </header>
 
-    <!-- Search Bar -->
-    <div style="margin: 20px;">
-        <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search topics..." 
-               style="width: 90%; padding: 10px; border-radius: 5px; border: 1px solid #007bff;">
-    </div>
+    <input type="text" id="searchBar" onkeyup="searchFunction()" placeholder="Search topics...">
 
-    <!-- Image -->
     <div class="image-wrapper">
         <img src="1000022849.png" alt="Social Workers Can Help You">
     </div>
 
-    <main>
+    <main id="content">
         <section>
             <h3>Sociology Connect</h3>
             <p>A platform dedicated to exploring social insights and academic resources.</p>
         </section>
-
         <section>
             <h3>About Sociology</h3>
             <p>Sociology is the study of social life, social change, and the social causes and consequences of human behavior.</p>
         </section>
-
         <section>
             <h3>In Memory of Our Mentor, Mr. Ali</h3>
             <p>I am deeply saddened to reflect on the passing of my mentor, Mr. Ali, who first introduced me to the field of Social Work at Arsi University.</p>
         </section>
-
-        <section id="research">
+        <section>
             <h3>Research Proposal</h3>
             <a href="IBRO PROP (3).pdf" target="_blank">Download Full PDF Proposal</a>
         </section>
-        
         <section>
             <h3>Iddir & Mahber</h3>
-            <p>Traditional community support systems.</p>
+            <p>Traditional community support systems focused on mutual aid.</p>
         </section>
-
+        
         <section id="contact">
             <h3>Contact Us</h3>
             <p>Email: gunnersyom@gmail.com</p>
+            <p>Phone: 0934919856</p>
+            
+            <h4>Nuqunama (Send us a message)</h4>
+            <form action="mailto:gunnersyom@gmail.com" method="post" enctype="text/plain">
+                <label>Maqaa kee:</label>
+                <input type="text" name="name" required>
+                
+                <label>Ergaa (Sanduqa yaadaa):</label>
+                <textarea name="message" rows="4" required placeholder="Yaada kee asitti barreessi..."></textarea>
+                
+                <button type="submit">Ergaa Ergii</button>
+            </form>
         </section>
     </main>
 
@@ -101,14 +75,10 @@
         let input = document.getElementById('searchBar').value.toLowerCase();
         let sections = document.getElementsByTagName('section');
         for (let i = 0; i < sections.length; i++) {
-            if (sections[i].innerText.toLowerCase().includes(input)) {
-                sections[i].style.display = "";
-            } else {
-                sections[i].style.display = "none";
-            }
+            sections[i].style.display = sections[i].innerText.toLowerCase().includes(input) ? "" : "none";
         }
     }
     </script>
 </body>
-</html>     
-                
+</html>
+            

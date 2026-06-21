@@ -30,10 +30,6 @@
 <div id="rss-feed"></div>
 
 <script>
-// URL RSS feed isa argatte sana asitti galchi
-<div id="rss-feed"></div>
-
-<script>
     const rssUrl = "https://www.sciencedaily.com/rss/mind_brain/sociology.xml";
     // RSS link kana 'proxy' fayyadamuu danda'a yoo 'CORS error' si mudate.
     fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(rssUrl))
@@ -49,9 +45,7 @@
                 output += `<div><a href="${link}" target="_blank">${title}</a></div>`;
             });
             document.getElementById('rss-feed').innerHTML = output;
-        });
-
-
+                
 });
 </script>
     

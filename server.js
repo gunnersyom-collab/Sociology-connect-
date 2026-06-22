@@ -13,6 +13,9 @@ app.use(express.json());
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+app.get('/', (req, res) => {
+  res.send('Sociology Connect Server is running!');
+});
 
 // Chat route
 app.post('/api/chat', async (req, res) => {

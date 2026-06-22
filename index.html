@@ -110,9 +110,41 @@
 </footer>
 
 <!-- Simple AI Chatbot Widget -->
-<div id="chat-widget" style="position:fixed; bottom:20px; right:20px; background:#007bff; color:white; padding:15px; border-radius:10px; cursor:pointer;" onclick="alert('Welcome! I am your Sociology Connect assistant. How can I help you?')">
-    💬 AI Chat
+
+<!-- Chat Widget -->
+<div id="chat-container" style="border: 1px solid #007bff; padding: 15px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
+    <h3>Sociology Connect AI</h3>
+    <div id="chat-history" style="height: 200px; overflow-y: scroll; border-bottom: 1px solid #ccc; margin-bottom: 10px;"></div>
+    
+    <input type="text" id="userInput" placeholder="Ask your question..." style="width: 75%;">
+    <button onclick="sendToServer()">Send</button>
 </div>
+
+<script>
+async function sendToServer() {
+    const userText = document.getElementById('userInput').value;
+    if (!userText) return; 
+
+    // Display user message in chat history
+    document.getElementById('chat-history').innerHTML += `<p><b>You:</b> ${userText}</p>`;
+    document.getElementById('userInput').value = ''; 
+
+    try {
+        // Send request to your backend server
+        const response = await fetch('http://localhost:3000/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userText })
+        });
+
+        const data = await response.json();
+        // Display AI response in chat history
+        document.getElementById('chat-history').innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+    } catch (error) {
+        document.getElementById('chat-history').innerHTML += `<p style="color:red;">Error: Could not connect to the server.</p>`;
+    }
+}
+</script>
 
     
 </body>

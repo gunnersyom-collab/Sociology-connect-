@@ -2,16 +2,23 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { OpenAI } = require('openai');
+
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "*", 
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
 
 // OpenAI API configuration
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 app.get('/', (req, res) => {
   res.send('Sociology Connect Server is running!');
 });
@@ -26,7 +33,7 @@ app.post('/api/chat', async (req, res) => {
     });
     res.json({ reply: completion.choices[0].message.content });
   } catch (error) {
-    console.error(error);
+    console.error("OpenAI Error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });

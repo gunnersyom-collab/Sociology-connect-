@@ -96,43 +96,35 @@
     <input type="text" id="userInput" placeholder="Ask your question..." style="width: 75%;">
     <button onclick="sendToServer()">Send</button>
 </div>
+<script>
+    async function sendToServer() {
+        const userInputField = document.getElementById('userInput');
+        const userText = userInputField.value;
+        if (!userText) return; 
 
-async function sendToServer() {
-    const userInputField = document.getElementById('userInput');
-    const userText = userInputField.value;
-    
-    // Check if the input is empty
-    if (!userText) return; 
+        document.getElementById('chat-history').innerHTML += `<p><b>You:</b> ${userText}</p>`;
+        userInputField.value = ''; 
 
-    // Display the user's message in the chat history
-    document.getElementById('chat-history').innerHTML += `<p><b>You:</b> ${userText}</p>`;
-    userInputField.value = ''; 
+        try {
+            const response = await fetch('https://sociology-connect.onrender.com/api/chat', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userText })
+            });
 
-    try {
-        // Send a POST request to your backend server
-        const response = await fetch('https://sociology-connect.onrender.com/api/chat', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })
-        });
+            const data = await response.json();
 
-        // Parse the response as JSON
-        const data = await response.json();
-
-        // Check if the response was successful
-        if (!response.ok) {
-            alert("Server Error: " + response.status + " - " + (data.error || "Unknown error"));
-            return;
+            if (!response.ok) {
+                alert("Server Error: " + response.status + " - " + (data.error || "Unknown error"));
+                return;
+            }
+            
+            document.getElementById('chat-history').innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+            
+        } catch (error) {
+            alert("Connection Error: " + error.message);
         }
-        
-        // Display the AI response in the chat history
-        document.getElementById('chat-history').innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
-        
-    } catch (error) {
-        // Display a connection error if the request fails
-        alert("Connection Error: " + error.message);
     }
-}
 </script>
 
 </body>

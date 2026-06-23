@@ -2,133 +2,53 @@
 <html>
 <head>
     <title>Sociology Connect</title>
-    <link rel="alternate" type="application/rss+xml" href="rss.xml" title="RSS Feed">
     <style>
-        body { background-color: #f9f9f9; font-family: sans-serif; }
-        header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
-        .image-wrapper { display: flex; justify-content: center; margin: 20px 0; }
-        .image-wrapper img { width: 100%; max-width: 600px; }
-        section { margin: 15px; padding: 15px; background: white; border-radius: 8px; }
-        #searchBar { width: 90%; padding: 10px; margin: 10px auto; display: block; }
-        input, textarea { width: 90%; padding: 10px; margin: 10px 0; display: block; }
-        button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
-        nav { background-color: #007bff; padding: 10px; text-align: center; }
-        nav a { color: white; text-decoration: none; padding: 0 10px; font-weight: bold; }
-        footer { text-align: center; padding: 20px; background-color: #f8f9fa; margin-top: 20px; font-size: 14px; }
+        body { background-color: #f9f9f9; font-family: sans-serif; padding: 20px; }
+        #chat-history { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; background: white; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="1781866925745.png" alt="Logo" style="width: 50px;">
-    <h1>Sociology Connect</h1>
-    <p>Arsi University - Sociology & Social Work</p>
-</header>
-
-<nav>
-    <a href="#about">About</a> | 
-    <a href="#resources">Resources</a> | 
-    <a href="#contact">Contact</a>
-</nav>
- 
-<input type="text" id="searchBar" placeholder="Search topics...">
-
-<div class="image-wrapper">
-    <img src="social-workers-can-help (1).png" alt="Social workers can help you">
-</div>
-
-<main>
-    <section>
-        <h3>Sociology Connect</h3>
-        <p>A platform dedicated to exploring social insights and academic resources.</p>
-    </section>
-    
-    <section>
-        <h3>About Sociology</h3>
-        <p>Sociology is the study of social life, social change, and the social causes and consequences of human behavior.</p>
-    </section>
-
-    <section>
-        <h3>Social Media & Resources</h3>
-        <p>Follow us and check out our partners:</p>
-        <ul>
-            <li><a href="https://www.arsi-university.edu.et" target="_blank">Arsi University</a></li>
-            <li><a href="https://www.facebook.com" target="_blank">Facebook</a></li>
-            <li><a href="https://www.telegram.org" target="_blank">Telegram</a></li>
-        </ul>
-    </section>
-
-    <section>
-        <h3>Iddir & Community Associations</h3>
-        <p>Exploring the role of Iddir and other community-based organizations in social support systems.</p>
-    </section>
-
-    <section>
-        <h3>In Memory of Our Mentor, Mr.</h3>
-        <p>I am deeply saddened to reflect on the loss of our mentor...</p>
-    </section>
-
-    <section>
-        <h3>Research Proposal</h3>
-        <a href="IBRO PROP (3).pdf" target="_blank">Download Research Proposal</a>
-    </section>
-
-    <section>
-        <h3>Contact & Feedback</h3>
-        <p>Email: Gunnersyom@gmail.com | Phone: 0934919856</p>
-        <form action="mailto:Gunnersyom@gmail.com" method="post" enctype="text/plain">
-            <textarea name="comment" placeholder="Write your comment" style="width: 90%; height: 100px; padding: 10px;" required></textarea>
-            <br>
-            <button type="submit">Submit</button>
-        </form>
-    </section>
-</main>
-
-<footer>
-    <p>&copy; 2026 Sociology Connect - Arsi University</p>
-</footer>
-
-<!-- Chat Widget -->
-<div id="chat-container" style="border: 1px solid #007bff; padding: 15px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
     <h3>Sociology Connect AI</h3>
-    <div id="chat-history" style="height: 200px; overflow-y: scroll; border-bottom: 1px solid #ccc; margin-bottom: 10px;"></div>
     
-    <input type="text" id="userInput" placeholder="Ask your question..." style="width: 75%;">
-    <button onclick="sendToServer()">Send</button>
-</div>
+    <div id="chat-history"></div>
+    
+    <input type="text" id="userInput" placeholder="Type your message here...">
+    <button onclick="sendMessage()">Send</button>
 
-<script>
-async function sendToServer() {
-    const userInputField = document.getElementById('userInput');
-    const userText = userInputField.value;
-    if (!userText) return; 
+    <script>
+        async function sendMessage() {
+            const userText = document.getElementById('userInput').value;
+            const chatHistory = document.getElementById('chat-history');
 
-    // Display user message in chat history
-    document.getElementById('chat-history').innerHTML += `<p><b>You:</b> ${userText}</p>`;
-    userInputField.value = ''; 
+            // Ergaa user sana screen irratti argisiisi
+            chatHistory.innerHTML += `<p><b>You:</b> ${userText}</p>`;
+            document.getElementById('userInput').value = '';
 
-    try {
-        // Send request to your backend server
-        const response = await fetch('https://sociology-connect.onrender.com/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })
-        });
+            try {
+                // Server kee wajjin quunnamtii uumuu
+                const response = await fetch('https://sociology-connect.onrender.com/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userText })
+                });
 
-       if (!response.ok) {
-            throw new Error('Network response was not ok');
+                // Yoo server-n deebii dogoggoraa (404, 500) kenne
+                if (!response.ok) {
+                    alert("Server Error: " + response.status);
+                    return;
+                }
+
+                const data = await response.json();
+                
+                // Deebii AI argattee screen irratti argisiisi
+                chatHistory.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+
+            } catch (error) {
+                // Yoo quunnamtiin hin uumamne (Failed to fetch)
+                alert("Connection Error: " + error.message);
+            }
         }
-
-        const data = await response.json();
-        
-        // Display AI response in chat history
-        document.getElementById('chat-history').innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('chat-history').innerHTML += `<p style="color:red;">Error: Could not connect to the server.</p>`;
-    }
-}
-</script>
-
+    </script>
 </body>
 </html>

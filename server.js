@@ -13,6 +13,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+// Route kana koodii server.js kee keessatti itti dabali
+app.get('/', (req, res) => {
+  res.send('Sociology Connect Server is running!');
+});
+
 app.post('/api/chat', async (req, res) => {
   try {
     const { message } = req.body;

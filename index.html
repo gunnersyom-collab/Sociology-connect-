@@ -115,7 +115,7 @@ async function sendToServer() {
             body: JSON.stringify({ message: userText })
         });
 
-        if (!response.ok) {
+       if (!response.ok) {
             throw new Error('Network response was not ok');
         }
 

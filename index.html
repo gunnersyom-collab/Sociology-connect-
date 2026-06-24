@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sociology Connect | Horsa Gowe (Yomif)</title>
     <link rel="alternate" type="application/rss+xml" href="rss.xml" title="RSS Feed">
     <style>
-        body { background-color: #f9f9f9; font-family: sans-serif; }
+        body { background-color: #f9f9f9; font-family: sans-serif; margin: 0; padding: 0; }
         header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
         .image-wrapper { display: flex; justify-content: center; margin: 20px 0; }
         .image-wrapper img { width: 100%; max-width: 600px; }
         section { margin: 15px; padding: 15px; background: white; border-radius: 8px; }
         #searchBar { width: 90%; padding: 10px; margin: 10px auto; display: block; }
         input, textarea { width: 90%; padding: 10px; margin: 10px 0; display: block; }
-        button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
         nav { background-color: #007bff; padding: 10px; text-align: center; }
         nav a { color: white; text-decoration: none; padding: 0 10px; font-weight: bold; }
         footer { text-align: center; padding: 20px; background-color: #f8f9fa; margin-top: 20px; font-size: 14px; }
+        #chat-container { border: 1px solid #007bff; padding: 15px; border-radius: 10px; max-width: 400px; margin: 20px auto; background: white; }
     </style>
     <meta name="google-site-verification" content="iOhHJZi0IXBdNvj3OC7HsJW6ffoYIkjjqQJtBAByCa0" />
 </head>
 <body>
     
 <header>
-    <img src="1781866925745.png" alt="Logo" style="width: 50px;">
     <h1>Sociology Connect</h1>
     <p>Arsi University - Sociology & Social Work</p>
     <p>Created by: <strong>Horsa Gowe (Yomif)</strong></p>
-    <p>Academic, Research & Educational Content Creator 📝</p>
 </header>
 
 <nav>
@@ -37,45 +37,10 @@
  
 <input type="text" id="searchBar" placeholder="Search topics...">
 
-<div class="image-wrapper">
-    <!-- Maqaan suuraa kanaa repository kee keessatti akka "social-workers-can-help.png" ta'uu qaba -->
-    <img src="social-workers-can-help.png" alt="Social workers can help you">
-</div>
-
 <main>
-    <section>
-        <h3>Sociology Connect</h3>
-        <p>A platform dedicated to exploring social insights and academic resources.</p>
-    </section>
-    
     <section>
         <h3>About Sociology</h3>
         <p>Sociology is the study of social life, social change, and the social causes and consequences of human behavior.</p>
-    </section>
-
-    <section>
-        <h3>Social Media & Resources</h3>
-        <p>Follow us and check out our partners:</p>
-        <ul>
-            <li><a href="https://www.arsi-university.edu.et" target="_blank">Arsi University</a></li>
-            <li><a href="https://www.facebook.com" target="_blank">Facebook</a></li>
-            <li><a href="https://www.telegram.org" target="_blank">Telegram</a></li>
-        </ul>
-    </section>
-
-    <section>
-        <h3>Iddir & Community Associations</h3>
-        <p>Exploring the role of Iddir and other community-based organizations in social support systems.</p>
-    </section>
-
-    <section>
-        <h3>In Memory of Our Mentor, Mr.</h3>
-        <p>I am deeply saddened to reflect on the loss of our mentor...</p>
-    </section>
-
-    <section>
-        <h3>Research Proposal</h3>
-        <a href="IBRO PROP (3).pdf" target="_blank">Download Research Proposal</a>
     </section>
 
     <section id="contact">
@@ -87,19 +52,20 @@
             <button type="submit">Submit</button>
         </form>
     </section>
+
+    <!-- AI Mari Section -->
+    <div id="chat-container">
+        <h3>AI Mari</h3>
+        <div id="chat-history" style="height: 200px; overflow-y: scroll; border-bottom: 1px solid #ccc; margin-bottom: 10px; padding: 5px;"></div>
+        
+        <input type="text" id="userInput" placeholder="Ask your question..." style="width: 85%;">
+        <button onclick="sendToServer()">Send</button>
+    </div>
 </main>
 
 <footer>
     <p>&copy; 2026 Sociology Connect - Arsi University</p>
 </footer>
-
-<div id="chat-container" style="border: 1px solid #007bff; padding: 15px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
-    <h3>Sociology Connect AI</h3>
-    <div id="chat-history" style="height: 200px; overflow-y: scroll; border-bottom: 1px solid #ccc; margin-bottom: 10px;"></div>
-    
-    <input type="text" id="userInput" placeholder="Ask your question..." style="width: 75%;">
-    <button onclick="sendToServer()">Send</button>
-</div>
 
 <script>
     async function sendToServer() {
@@ -124,7 +90,7 @@
                 return;
             }
             
-            document.getElementById('chat-history').innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+            document.getElementById('chat-history').innerHTML += `<p><b>AI Mari:</b> ${data.reply}</p>`;
             
         } catch (error) {
             alert("Connection Error: " + error.message);

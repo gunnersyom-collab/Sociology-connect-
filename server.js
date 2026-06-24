@@ -25,7 +25,7 @@ app.post('/api/chat', async (req, res) => {
     const { message } = req.body;
     try {
         // Maqaa model-ichaa jijjiiree "gemini-1.5-flash" godheera
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
         const result = await model.generateContent(message);
         const response = await result.response;
         const text = response.text();

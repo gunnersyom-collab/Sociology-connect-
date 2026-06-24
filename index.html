@@ -114,10 +114,17 @@
         userInputField.value = ''; 
 
         try {
-            const response = await fetch('[https://sociology-connect.onrender.com/api/chat))', { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userText })
+
+           fetch('https://sociology-connect.onrender.com/api/chat', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: "Gaaffii kee asitti galchi" })
+})
+.then(response => response.json())
+.then(data => console.log(data.reply))
+.catch(error => console.error('Error:', error)); 
             });
 
             const data = await response.json();

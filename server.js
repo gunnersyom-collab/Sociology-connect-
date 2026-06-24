@@ -5,11 +5,9 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 
-// CORS configuration
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.get('/', (req, res) => {
@@ -21,8 +19,12 @@ app.post('/api/chat', async (req, res) => {
     if (!message) return res.status(400).json({ error: "Message is required" });
 
     try {
-        // Use gemini-1.5-flash
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        // Asitti 'systemInstruction' dabalameera
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-pro",
+            systemInstruction: "You are an AI assistant for the 'Sociology Connect' website created by Horsa Gowe (Yomif). Your purpose is to provide information ONLY about the content of this website, Sociology, and Social Work. If the user asks about anything else, politely decline and remind them that you only discuss Sociology and Social Work related to this website."
+        });
+
         const result = await model.generateContent(message);
         const response = await result.response;
         res.json({ reply: response.text() });

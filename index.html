@@ -19,12 +19,10 @@
         footer { text-align: center; padding: 20px; background-color: #f8f9fa; margin-top: 20px; font-size: 14px; }
         #chat-container { border: 1px solid #007bff; padding: 15px; border-radius: 10px; max-width: 400px; margin: 20px auto; background: white; }
     </style>
-    <meta name="google-site-verification" content="iOhHJZi0IXBdNvj3OC7HsJW6ffoYIkjjqQJtBAByCa0" />
 </head>
 <body>
-    
+
 <header>
-  headers: { 'Content-Type': 'application/json' } 
     <img src="1781866925745.png" alt="Logo" style="width: 50px;">
     <h1>Sociology Connect</h1>
     <p>Arsi University - Sociology & Social Work</p>
@@ -45,44 +43,18 @@
 </div>
 
 <main>
-    <section>
+    <section id="about">
         <h3>Sociology Connect</h3>
         <p>A platform dedicated to exploring social insights and academic resources.</p>
     </section>
     
-    <section>
+    <section id="resources">
         <h3>About Sociology</h3>
         <p>Sociology is the study of social life, social change, and the social causes and consequences of human behavior.</p>
     </section>
 
-    <section>
-        <h3>Social Media & Resources</h3>
-        <p>Follow us and check out our partners:</p>
-        <ul>
-            <li><a href="https://www.arsi-university.edu.et" target="_blank">Arsi University</a></li>
-            <li><a href="https://www.facebook.com" target="_blank">Facebook</a></li>
-            <li><a href="https://www.telegram.org" target="_blank">Telegram</a></li>
-        </ul>
-    </section>
-
-    <section>
-        <h3>Iddir & Community Associations</h3>
-        <p>Exploring the role of Iddir and other community-based organizations in social support systems.</p>
-    </section>
-
-    <section>
-        <h3>In Memory of Our Mentor, Mr.</h3>
-        <p>I am deeply saddened to reflect on the loss of our mentor...</p>
-    </section>
-
-    <section>
-        <h3>Research Proposal</h3>
-        <a href="IBRO PROP (3).pdf" target="_blank">Download Research Proposal</a>
-    </section>
-
     <section id="contact">
         <h3>Contact & Feedback</h3>
-        <p>Email: Gunnersyom@gmail.com | Phone: 0934919856</p>
         <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <textarea name="comment" placeholder="Write your comment" style="width: 90%; height: 100px; padding: 10px;" required></textarea>
             <br>
@@ -114,26 +86,19 @@
         userInputField.value = ''; 
 
         try {
-
-           fetch('https://sociology-connect.onrender.com/api/chat', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ message: "Gaaffii kee asitti galchi" })
-})
-.then(response => response.json())
-.then(data => console.log(data.reply))
-.catch(error => console.error('Error:', error)); 
+            const response = await fetch('https://sociology-connect.onrender.com/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userText })
             });
 
-            const data = await response.json();
-
             if (!response.ok) {
-                alert("Server Error: " + response.status);
-                return;
+                throw new Error("Server Error: " + response.status);
             }
-            
+
+            const data = await response.json();
             document.getElementById('chat-history').innerHTML += `<p><b>AI Mari:</b> ${data.reply}</p>`;
             
         } catch (error) {

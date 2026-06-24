@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title>Sociology Connect | Horsa Gowe (Yomif)</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Sociology Connect | Horsa Gowe (Yomif)</title>
     <link rel="alternate" type="application/rss+xml" href="rss.xml" title="RSS Feed">
     <style>
         body { background-color: #f9f9f9; font-family: sans-serif; }
@@ -15,8 +17,7 @@
         nav a { color: white; text-decoration: none; padding: 0 10px; font-weight: bold; }
         footer { text-align: center; padding: 20px; background-color: #f8f9fa; margin-top: 20px; font-size: 14px; }
     </style>
-<meta name="google-site-verification" content="iOhHJZi0IXBdNvj3OC7HsJW6ffoYIkjjqQJtBAByCa0" />" />
-
+    <meta name="google-site-verification" content="iOhHJZi0IXBdNvj3OC7HsJW6ffoYIkjjqQJtBAByCa0" />
 </head>
 <body>
 
@@ -24,10 +25,8 @@
     <img src="1781866925745.png" alt="Logo" style="width: 50px;">
     <h1>Sociology Connect</h1>
     <p>Arsi University - Sociology & Social Work</p>
-<p>Created by: <strong>Horsa Gowe (Yomif)</strong></p>
-<p>Academic, Research & Educational Content Creator 📝</p>
-    
-
+    <p>Created by: <strong>Horsa Gowe (Yomif)</strong></p>
+    <p>Academic, Research & Educational Content Creator 📝</p>
 </header>
 
 <nav>
@@ -39,7 +38,8 @@
 <input type="text" id="searchBar" placeholder="Search topics...">
 
 <div class="image-wrapper">
-    <img src="social-workers-can-help (1).png" alt="Social workers can help you">
+    <!-- Maqaan suuraa kanaa repository kee keessatti akka "social-workers-can-help.png" ta'uu qaba -->
+    <img src="social-workers-can-help.png" alt="Social workers can help you">
 </div>
 
 <main>
@@ -78,10 +78,10 @@
         <a href="IBRO PROP (3).pdf" target="_blank">Download Research Proposal</a>
     </section>
 
-    <section>
+    <section id="contact">
         <h3>Contact & Feedback</h3>
         <p>Email: Gunnersyom@gmail.com | Phone: 0934919856</p>
-        <form action="mailto:Gunnersyom@gmail.com" method="post" enctype="text/plain">
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <textarea name="comment" placeholder="Write your comment" style="width: 90%; height: 100px; padding: 10px;" required></textarea>
             <br>
             <button type="submit">Submit</button>
@@ -93,7 +93,6 @@
     <p>&copy; 2026 Sociology Connect - Arsi University</p>
 </footer>
 
-<!-- Chat Widget -->
 <div id="chat-container" style="border: 1px solid #007bff; padding: 15px; border-radius: 10px; max-width: 400px; margin: 20px auto;">
     <h3>Sociology Connect AI</h3>
     <div id="chat-history" style="height: 200px; overflow-y: scroll; border-bottom: 1px solid #ccc; margin-bottom: 10px;"></div>
@@ -101,6 +100,7 @@
     <input type="text" id="userInput" placeholder="Ask your question..." style="width: 75%;">
     <button onclick="sendToServer()">Send</button>
 </div>
+
 <script>
     async function sendToServer() {
         const userInputField = document.getElementById('userInput');
@@ -120,7 +120,7 @@
             const data = await response.json();
 
             if (!response.ok) {
-                alert("Server Error: " + response.status + " - " + (data.error || "Unknown error"));
+                alert("Server Error: " + response.status);
                 return;
             }
             

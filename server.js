@@ -27,4 +27,8 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
+// Server-iin kee 'Cannot GET /' akka hin jenneef, root route tokko dabali
+app.get('/', (req, res) => {
+    res.send('AI Mari is active and ready to help on Sociology Connect!');
+});
 app.listen(3000, () => console.log('AI Mari is running...'));

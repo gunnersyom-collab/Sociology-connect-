@@ -22,7 +22,7 @@ app.post('/api/chat', async (req, res) => {
 
     try {
         // Use gemini-1.5-flash
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
         const result = await model.generateContent(message);
         const response = await result.response;
         res.json({ reply: response.text() });

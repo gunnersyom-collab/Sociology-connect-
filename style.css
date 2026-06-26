@@ -1,62 +1,25 @@
-/* Waliigala (Reset) */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Kutaa hundaaf background adda baasuu */
+.section-container {
+    padding: 40px 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
+/* Background adda ta'e (Fkn: Iddoo Contact) */
+.contact-section {
+    background-color: #f4f4f9; /* Bifa daalacha salphaa */
+    border-left: 5px solid #007bff; /* Karaa mirgaa irratti mallattoo adda baasuuf */
 }
 
-/* Header */
-header {
-    background: #35424a;
-    color: #ffffff;
-    padding: 20px 0;
-    text-align: center;
-    border-bottom: #e8491d 3px solid;
-}
-
-/* Navigation */
-nav ul {
-    list-style: none;
-    text-align: center;
-    background: #444;
-    padding: 10px;
-}
-
-nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-}
-
-/* Content Area */
-.container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
-    padding: 20px;
-}
-
-/* Button */
-.btn {
+/* Button-ii Telegram-tiif */
+.telegram-btn {
     display: inline-block;
-    background: #e8491d;
-    color: #fff;
-    padding: 10px 20px;
+    padding: 12px 25px;
+    background-color: #0088cc;
+    color: white;
     text-decoration: none;
     border-radius: 5px;
-}
-
-.btn:hover {
-    background: #333;
+    font-weight: bold;
+    margin-top: 10px;
 }

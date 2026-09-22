@@ -27,7 +27,7 @@ async function sendToServer() {
     const typing = addMessage("AI Mari", "Typing...", false);
 
     try {
-        const response = await fetch("YOUR_APPS_SCRIPT_URL", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw8FhbtmPapLW7egrxCNS-b82X12LSfYAgbyCEzhS00rDRV3T_ojbDkLj87r_QxvivFXQ/exec", {
             method: "POST",
             headers: {
                 "Content-Type": "text/plain;charset=utf-8"

@@ -1,23 +1,29 @@
-async function sendToServer() {
-    let userInput = document.getElementById('userInput').value;
-    let chatHistory = document.getElementById('chat-history');
-    
-    if (!userInput.trim()) return;
+const chatHistory = document.getElementById('chat-history');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
 
-    chatHistory.innerHTML += `<p><b>You:</b> ${userInput}</p>`;
-    document.getElementById('userInput').value = '';
+async function sendToServer() {
+    const text = userInput.value;
+    if (!text.trim()) return;
+
+    chatHistory.innerHTML += `<div class="message user"><b>You:</b> ${text}</div>`;
+    userInput.value = '';
+    chatHistory.scrollTop = chatHistory.scrollHeight;
 
     try {
-        let response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userInput })
-        });
-        
-        let data = await response.json();
-        chatHistory.innerHTML += `<p><b>AI Mari:</b> ${data.reply}</p>`;
+        const response = await fetch(
+            'https://text.pollinations.ai/' + encodeURIComponent(text)
+        );
+        const reply = await response.text();
+
+        chatHistory.innerHTML += `<div class="message ai"><b>AI Mari:</b> ${reply}</div>`;
         chatHistory.scrollTop = chatHistory.scrollHeight;
     } catch (error) {
-        chatHistory.innerHTML += `<p style="color: red;"><b>Error:</b> Could not connect to AI.</p>`;
+        chatHistory.innerHTML += `<p style="color:red;"><b>Error:</b> Could not connect to AI.</p>`;
     }
 }
+
+sendBtn.addEventListener('click', sendToServer);
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendToServer();
+});

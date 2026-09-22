@@ -1,321 +1,675 @@
+
+/* =========================================================
+   SOCIOLOGY CONNECT - SCRIPT.JS
+   AI MARI + DARK MODE + SEARCH + VOICE
+   Firebase Posts are handled by auth.js
+   ========================================================= */
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
 const chatHistory = document.getElementById("chat-history");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 const micBtn = document.getElementById("micBtn");
 const themeBtn = document.getElementById("themeBtn");
 const searchBar = document.getElementById("searchBar");
-const postsContainer = document.getElementById("postsContainer");
 const notifyBtn = document.getElementById("notifyBtn");
 
-let posts = JSON.parse(localStorage.getItem("sc_posts")) || [];
-let notifications = JSON.parse(localStorage.getItem("sc_notify")) || [];
 
-/* ---------------- AI CHAT ---------------- */
+/* =========================================================
+   AI MARI
+   ========================================================= */
 
 async function sendToServer() {
-  const text = userInput.value.trim();
-  if (!text) return;
 
-  chatHistory.innerHTML += `
-    <div class="message user"><b>You:</b> ${text}</div>
-  `;
-  userInput.value = "";
-  chatHistory.scrollTop = chatHistory.scrollHeight;
+    if (!userInput || !chatHistory) {
+        return;
+    }
 
-  try {
-    const response = await fetch(
-      "https://text.pollinations.ai/" + encodeURIComponent(text)
+    const text = userInput.value.trim();
+
+    if (!text) {
+        return;
+    }
+
+
+    /* SHOW USER MESSAGE */
+
+    const userMessage =
+        document.createElement("div");
+
+    userMessage.className =
+        "message user";
+
+    userMessage.innerHTML =
+        "<b>You:</b> " +
+        escapeHTML(text);
+
+    chatHistory.appendChild(
+        userMessage
     );
 
-    const reply = await response.text();
+    userInput.value = "";
 
-    chatHistory.innerHTML += `
-      <div class="message ai"><b>AI Mari:</b> ${reply}</div>
-    `;
+    chatHistory.scrollTop =
+        chatHistory.scrollHeight;
 
-    chatHistory.scrollTop = chatHistory.scrollHeight;
 
-  } catch {
-    chatHistory.innerHTML += `
-      <div class="message ai" style="color:red;">
-        Could not connect to AI.
-      </div>
-    `;
-  }
+    /* DISABLE SEND BUTTON */
+
+    if (sendBtn) {
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Thinking...";
+    }
+
+
+    /* AI LOADING MESSAGE */
+
+    const loading =
+        document.createElement("div");
+
+    loading.className =
+        "message ai";
+
+    loading.id =
+        "ai-loading";
+
+    loading.innerHTML =
+        "<b>AI Mari:</b> Thinking... 🤔";
+
+    chatHistory.appendChild(
+        loading
+    );
+
+    chatHistory.scrollTop =
+        chatHistory.scrollHeight;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "https://text.pollinations.ai/" +
+                encodeURIComponent(text)
+            );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "AI request failed"
+            );
+        }
+
+
+        const reply =
+            await response.text();
+
+
+        /* REMOVE LOADING */
+
+        loading.remove();
+
+
+        /* SHOW AI RESPONSE */
+
+        const aiMessage =
+            document.createElement("div");
+
+        aiMessage.className =
+            "message ai";
+
+        aiMessage.innerHTML =
+            "<b>AI Mari:</b><br>" +
+            escapeHTML(reply);
+
+
+        chatHistory.appendChild(
+            aiMessage
+        );
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+
+    } catch (error) {
+
+        console.error(
+            "AI Error:",
+            error
+        );
+
+
+        loading.remove();
+
+
+        const errorMessage =
+            document.createElement("div");
+
+        errorMessage.className =
+            "message ai";
+
+        errorMessage.style.color =
+            "red";
+
+        errorMessage.innerHTML =
+            "<b>AI Mari:</b><br>" +
+            "Sorry, I could not connect to the AI right now. Please try again.";
+
+
+        chatHistory.appendChild(
+            errorMessage
+        );
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+    } finally {
+
+        if (sendBtn) {
+
+            sendBtn.disabled =
+                false;
+
+            sendBtn.textContent =
+                "Send";
+        }
+
+    }
+
 }
 
-sendBtn?.addEventListener("click", sendToServer);
 
-userInput?.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendToServer();
-});
+/* SEND BUTTON */
 
-/* ---------------- DARK MODE ---------------- */
+sendBtn?.addEventListener(
+    "click",
+    sendToServer
+);
 
-themeBtn?.addEventListener("click", () => {
 
-  document.body.classList.toggle("dark");
+/* ENTER KEY */
 
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("dark") ? "dark" : "light"
-  );
+userInput?.addEventListener(
+    "keydown",
+    function(event) {
 
-});
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
 
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
+            event.preventDefault();
+
+            sendToServer();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+function updateThemeButton() {
+
+    if (!themeBtn) {
+        return;
+    }
+
+    if (
+        document.body.classList.contains(
+            "dark"
+        )
+    ) {
+
+        themeBtn.textContent =
+            "☀️";
+
+        themeBtn.title =
+            "Switch to light mode";
+
+    } else {
+
+        themeBtn.textContent =
+            "🌙";
+
+        themeBtn.title =
+            "Switch to dark mode";
+
+    }
+
 }
 
-/* ---------------- SEARCH ---------------- */
 
-searchBar?.addEventListener("input", () => {
+function applySavedTheme() {
 
-  const q = searchBar.value.toLowerCase();
+    const savedTheme =
+        localStorage.getItem(
+            "sociologyTheme"
+        );
 
-  document.querySelectorAll("section").forEach(sec => {
+    if (savedTheme === "dark") {
 
-    sec.style.display =
-      sec.innerText.toLowerCase().includes(q) ? "block" : "none";
+        document.body.classList.add(
+            "dark"
+        );
 
-  });
+    } else {
 
-});
+        document.body.classList.remove(
+            "dark"
+        );
 
-/* ---------------- POSTS ---------------- */
+    }
 
-function savePosts() {
-  localStorage.setItem("sc_posts", JSON.stringify(posts));
+    updateThemeButton();
+
 }
 
-function saveNotify() {
-  localStorage.setItem("sc_notify", JSON.stringify(notifications));
-}
 
-window.createPost = function () {
+/* GLOBAL THEME FUNCTION */
 
-  const box = document.getElementById("postText");
+window.toggleTheme = function() {
 
-  if (!box || !box.value.trim()) return;
+    document.body.classList.toggle(
+        "dark"
+    );
 
-  posts.unshift({
-    id: Date.now(),
-    text: box.value,
-    likes: 0,
-    comments: []
-  });
 
-  box.value = "";
+    const isDark =
+        document.body.classList.contains(
+            "dark"
+        );
 
-  notifications.unshift("New post created.");
 
-  savePosts();
-  saveNotify();
+    localStorage.setItem(
+        "sociologyTheme",
+        isDark
+            ? "dark"
+            : "light"
+    );
 
-  renderPosts();
+
+    updateThemeButton();
+
 };
 
-function renderPosts() {
 
-  if (!postsContainer) return;
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
-  postsContainer.innerHTML = "";
+function searchWebsite() {
 
-  posts.forEach(post => {
+    if (!searchBar) {
+        return;
+    }
 
-    const div = document.createElement("div");
 
-    div.style.cssText =
-      "background:white;padding:15px;border-radius:15px;margin:15px 0;box-shadow:0 3px 10px rgba(0,0,0,.08);";
+    const query =
+        searchBar.value
+            .toLowerCase()
+            .trim();
 
-    div.innerHTML = `
-      <p>${post.text}</p>
 
-      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+    /* SEARCH POSTS */
 
-        <button onclick="likePost(${post.id})">
-          ❤️ ${post.likes}
-        </button>
+    const postItems =
+        document.querySelectorAll(
+            "#postsContainer > div"
+        );
 
-        <button onclick="toggleComment(${post.id})">
-          💬 ${post.comments.length}
-        </button>
 
-        <button onclick="sharePost(${post.id})">
-          📤 Share
-        </button>
+    postItems.forEach(
+        function(post) {
 
-      </div>
+            const text =
+                post.textContent
+                    .toLowerCase();
 
-      <div id="commentBox${post.id}" style="display:none;margin-top:10px;">
 
-        <input
-          id="commentInput${post.id}"
-          placeholder="Write a comment..."
-        >
+            if (
+                !query ||
+                text.includes(query)
+            ) {
 
-        <button
-          onclick="addComment(${post.id})"
-          style="margin-top:8px;"
-        >
-          Send
-        </button>
+                post.style.display =
+                    "";
 
-        <div id="comments${post.id}" style="margin-top:10px;"></div>
+            } else {
 
-      </div>
-    `;
+                post.style.display =
+                    "none";
 
-    postsContainer.appendChild(div);
+            }
 
-    showComments(post.id);
+        }
+    );
 
-  });
 
-  updateTrending();
-}
+    /* SEARCH NEWS */
 
-window.likePost = function (id) {
+    const newsCards =
+        document.querySelectorAll(
+            "#news .card"
+        );
 
-  const p = posts.find(x => x.id === id);
 
-  p.likes++;
+    newsCards.forEach(
+        function(card) {
 
-  notifications.unshift("Someone liked a post.");
+            const text =
+                card.textContent
+                    .toLowerCase();
 
-  savePosts();
-  saveNotify();
 
-  renderPosts();
-};
+            if (
+                !query ||
+                text.includes(query)
+            ) {
 
-window.toggleComment = function (id) {
+                card.style.display =
+                    "";
 
-  const box = document.getElementById("commentBox" + id);
+            } else {
 
-  box.style.display =
-    box.style.display === "block" ? "none" : "block";
-};
+                card.style.display =
+                    "none";
 
-window.addComment = function (id) {
+            }
 
-  const input = document.getElementById("commentInput" + id);
+        }
+    );
 
-  if (!input.value.trim()) return;
 
-  posts.find(p => p.id === id).comments.push(input.value);
+    /* SEARCH RESOURCES */
 
-  notifications.unshift("New comment added.");
+    const resourceSection =
+        document.getElementById(
+            "resources"
+        );
 
-  savePosts();
-  saveNotify();
 
-  renderPosts();
-};
+    if (resourceSection) {
 
-function showComments(id) {
+        const resourceText =
+            resourceSection.textContent
+                .toLowerCase();
 
-  const area = document.getElementById("comments" + id);
 
-  if (!area) return;
+        resourceSection.style.display =
+            !query ||
+            resourceText.includes(query)
+                ? ""
+                : "none";
 
-  area.innerHTML = "";
+    }
 
-  posts.find(p => p.id === id).comments.forEach(c => {
 
-    area.innerHTML += `
-      <p style="margin:6px 0;">💬 ${c}</p>
-    `;
+    /* SEARCH EVENTS */
 
-  });
+    const eventCards =
+        document.querySelectorAll(
+            "#events .event-card"
+        );
 
-}
 
-window.sharePost = async function (id) {
+    eventCards.forEach(
+        function(card) {
 
-  const post = posts.find(p => p.id === id);
+            const text =
+                card.textContent
+                    .toLowerCase();
 
-  if (navigator.share) {
 
-    await navigator.share({
-      title: "Sociology Connect",
-      text: post.text,
-      url: location.href
-    });
+            if (
+                !query ||
+                text.includes(query)
+            ) {
 
-  } else {
+                card.style.display =
+                    "";
 
-    navigator.clipboard.writeText(post.text);
+            } else {
 
-    alert("Post copied.");
+                card.style.display =
+                    "none";
 
-  }
+            }
 
-};
-
-/* ---------------- TRENDING ---------------- */
-
-function updateTrending() {
-
-  const box = document.getElementById("trending");
-
-  if (!box) return;
-
-  const top = [...posts]
-    .sort((a, b) => b.likes - a.likes)
-    .slice(0, 3);
-
-  box.innerHTML = `
-    <h2>🔥 Trending Posts</h2>
-  `;
-
-  top.forEach(p => {
-
-    box.innerHTML += `
-      <div class="card">
-        ❤️ ${p.likes} — ${p.text}
-      </div>
-    `;
-
-  });
+        }
+    );
 
 }
 
-/* ---------------- NOTIFICATION ---------------- */
 
-notifyBtn?.addEventListener("click", () => {
+searchBar?.addEventListener(
+    "input",
+    searchWebsite
+);
 
-  if (notifications.length === 0) {
 
-    alert("No notifications.");
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
 
-    return;
+window.showNotifications =
+function() {
 
-  }
+    const notifications =
+        JSON.parse(
+            localStorage.getItem(
+                "sc_notify"
+            )
+        ) || [];
 
-  alert(notifications.slice(0, 10).join("\n"));
 
-});
+    if (
+        notifications.length === 0
+    ) {
 
-/* ---------------- VOICE ---------------- */
+        alert(
+            "🔔 Notifications\n\n" +
+            "No new notifications yet."
+        );
 
-if ("webkitSpeechRecognition" in window) {
+        return;
 
-  const recognition = new webkitSpeechRecognition();
+    }
 
-  recognition.lang = "en-US";
 
-  micBtn?.addEventListener("click", () => {
-    recognition.start();
-  });
+    alert(
+        "🔔 Notifications\n\n" +
+        notifications
+            .slice(0, 10)
+            .join("\n\n")
+    );
 
-  recognition.onresult = e => {
-    userInput.value = e.results[0][0].transcript;
-  };
+};
+
+
+/* =========================================================
+   VOICE INPUT
+   ========================================================= */
+
+let recognition = null;
+
+
+if (
+    "webkitSpeechRecognition"
+    in window
+) {
+
+    recognition =
+        new webkitSpeechRecognition();
+
+
+    recognition.lang =
+        "en-US";
+
+    recognition.continuous =
+        false;
+
+    recognition.interimResults =
+        false;
+
+
+    micBtn?.addEventListener(
+        "click",
+        function() {
+
+            try {
+
+                recognition.start();
+
+                if (micBtn) {
+                    micBtn.textContent =
+                        "🔴";
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Voice already active."
+                );
+
+            }
+
+        }
+    );
+
+
+    recognition.onresult =
+        function(event) {
+
+            const transcript =
+                event
+                    .results[0][0]
+                    .transcript;
+
+
+            if (userInput) {
+
+                userInput.value =
+                    transcript;
+
+                userInput.focus();
+
+            }
+
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onend =
+        function() {
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        function(error) {
+
+            console.error(
+                "Voice recognition error:",
+                error
+            );
+
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+} else {
+
+    if (micBtn) {
+
+        micBtn.title =
+            "Voice input is not supported by this browser.";
+
+    }
 
 }
 
-/* ---------------- START ---------------- */
 
-renderPosts();
+/* =========================================================
+   HTML SECURITY HELPER
+   ========================================================= */
 
+function escapeHTML(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        applySavedTheme();
+
+        console.log(
+            "✅ Sociology Connect script.js loaded."
+        );
+
+    }
+);

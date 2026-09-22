@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Profile | Sociology Connect</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+}
+
+/* HEADER */
+header{
+    background:linear-gradient(135deg,#007bff,#0056b3);
+    color:white;
+    padding:18px 20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0;
+    font-size:25px;
+}
+
+header p{
+    margin:6px 0 0;
+    opacity:.9;
+}
+
+/* NAVIGATION */
+nav{
+    background:white;
+    padding:12px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+nav a{
+    text-decoration:none;
+    color:#007bff;
+    font-weight:bold;
+    margin:0 10px;
+}
+
+nav a:hover{
+    text-decoration:underline;
+}
+
+/* PROFILE CARD */
+.container{
+    max-width:700px;
+    margin:30px auto;
+    padding:15px;
+}
+
+.profile-card{
+    background:white;
+    border-radius:18px;
+    padding:30px 20px;
+    text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
+}
+
+/* PROFILE PHOTO */
+.profile-photo{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #007bff;
+    background:#e9ecef;
+}
+
+.profile-card h2{
+    margin:15px 0 5px;
+    color:#222;
+}
+
+.email{
+    color:#777;
+    font-size:14px;
+}
+
+/* INFO */
+.info{
+    margin-top:25px;
+    text-align:left;
+}
+
+.info-box{
+    background:#f7f9fc;
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:12px;
+}
+
+.info-box strong{
+    display:block;
+    color:#007bff;
+    margin-bottom:5px;
+}
+
+/* EDIT FORM */
+.edit-section{
+    margin-top:25px;
+    border-top:1px solid #ddd;
+    padding-top:25px;
+    text-align:left;
+}
+
+.edit-section h3{
+    text-align:center;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:12px;
+    margin:8px 0 15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:white;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+#loginMessage{
+    color:#dc3545;
+    text-align:center;
+    font-weight:bold;
+}
+
+footer{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    padding:20px;
+}
+
+@media(max-width:600px){
+    .container{
+        margin:15px auto;
+    }
+
+    nav a{
+        display:inline-block;
+        margin:5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>👤 My Profile</h1>
+    <p>Sociology Connect – Arsi University</p>
+</header>
+
+<nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="profile.html">👤 Profile</a>
+    <a href="login.html">🔐 Login</a>
+</nav>
+
+<div class="container">
+
+    <div id="loginMessage">
+        Please login to view your profile.
+    </div>
+
+    <div class="profile-card" id="profileCard" style="display:none;">
+
+        <img
+            id="profilePhoto"
+            class="profile-photo"
+            src="https://via.placeholder.com/120"
+            alt="Profile Photo"
+        >
+
+        <h2 id="profileName">Student Name</h2>
+
+        <div class="email" id="profileEmail">
+            student@email.com
+        </div>
+
+        <div class="info">
+
+            <div class="info-box">
+                <strong>🎓 Year</strong>
+                <span id="profileYear">Not added</span>
+            </div>
+
+            <div class="info-box">
+                <strong>📝 Bio</strong>
+                <span id="profileBio">No bio added yet.</span>
+            </div>
+
+        </div>
+
+        <div class="edit-section">
+
+            <h3>✏️ Edit Profile</h3>
+
+            <label>Full Name</label>
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Enter your full name"
+            >
+
+            <label>Year</label>
+            <select id="year">
+                <option value="">Select your year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Graduate">Graduate</option>
+            </select>
+
+            <label>Bio</label>
+            <textarea
+                id="bio"
+                placeholder="Write something about yourself..."
+            ></textarea>
+
+            <label>Profile Photo URL</label>
+            <input
+                type="url"
+                id="photo"
+                placeholder="Paste your photo URL"
+            >
+
+            <button onclick="saveProfile()">
+                💾 Save Profile
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    Sociology Connect © 2026<br>
+    Arsi University – Sociology & Social Work
+</footer>
+
+<script type="module" src="auth.js"></script>
+
+</body>
+</html>

@@ -1,29 +1,35 @@
-// Import the functions you need from the SDKs you need
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  onSnapshot, 
-  query, 
-  orderBy, 
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
   serverTimestamp,
   doc,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  arrayRemove,
+  setDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration
+/* ---------------- FIREBASE ---------------- */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBiwF8jW-hCDLmtbpAD6t99afAhcldGQfw",
+  apiKey: "YOUR_KEY",
   authDomain: "sociologyconnect.firebaseapp.com",
   projectId: "sociologyconnect",
   storageBucket: "sociologyconnect.firebasestorage.app",
@@ -32,156 +38,379 @@ const firebaseConfig = {
   measurementId: "G-BM74QJ4XTZ"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app);
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 1. Signup, Login, Logout
-window.signup = () => {
-  createUserWithEmailAndPassword(auth, email.value, password.value)
-    .then(() => { alert("Account created successfully!"); location.href = "index.html"; })
-    .catch(e => alert(e.message));
-};
+/* ---------------- SIGNUP ---------------- */
 
-window.login = () => {
-  signInWithEmailAndPassword(auth, email.value, password.value)
-    .then(() => { location.href = "index.html"; })
-    .catch(e => alert(e.message));
-};
+window.signup = async () => {
 
-window.logout = () => {
-  signOut(auth).then(() => location.reload()).catch(e => alert(e.message));
-};
+  try{
 
-// 2. Auth State (Navbar irratti Imeelii agarsiisuu)
-onAuthStateChanged(auth, user => {
-  const info = document.getElementById("userInfo");
-  const login = document.getElementById("loginLink");
-  const logout = document.getElementById("logoutBtn");
+    const userCred =
+      await createUserWithEmailAndPassword(
+        auth,
+        email.value,
+        password.value
+      );
 
-  if (info && login && logout) {
-    if (user) {
-      info.style.display = "inline";
-      info.textContent = user.email;
-      login.style.display = "none";
-      logout.style.display = "inline-block";
-    } else {
-      info.style.display = "none";
-      login.style.display = "inline";
-      logout.style.display = "none";
-    }
+    await setDoc(doc(db,"users",userCred.user.uid),{
+
+      email:userCred.user.email,
+      bio:"",
+      year:"",
+      photo:""
+
+    });
+
+    alert("Account created!");
+
+    location.href="index.html";
+
+  }catch(e){
+
+    alert(e.message);
+
   }
+
+};
+
+/* ---------------- LOGIN ---------------- */
+
+window.login = async () => {
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email.value,
+      password.value
+    );
+
+    location.href="index.html";
+
+  }catch(e){
+
+    alert(e.message);
+
+  }
+
+};
+
+/* ---------------- LOGOUT ---------------- */
+
+window.logout = ()=>{
+
+  signOut(auth);
+
+};
+
+/* ---------------- AUTH STATE ---------------- */
+
+onAuthStateChanged(auth,async user=>{
+
+  const info=document.getElementById("userInfo");
+  const login=document.getElementById("loginLink");
+  const logout=document.getElementById("logoutBtn");
+
+  if(info){
+
+    if(user){
+
+      info.textContent=user.email;
+      info.style.display="inline";
+      login.style.display="none";
+      logout.style.display="inline-block";
+
+      const profile=await getDoc(doc(db,"users",user.uid));
+
+      if(profile.exists()){
+
+        const data=profile.data();
+
+        const bio=document.getElementById("profileBio");
+        const year=document.getElementById("profileYear");
+
+        if(bio)bio.value=data.bio||"";
+        if(year)year.value=data.year||"";
+
+      }
+
+    }else{
+
+      info.style.display="none";
+      login.style.display="inline";
+      logout.style.display="none";
+
+    }
+
+  }
+
 });
 
-// 3. Postii Uumuu (Create Post)
-window.createPost = () => {
-  const text = document.getElementById("postText").value;
-  const user = auth.currentUser;
+/* ---------------- SAVE PROFILE ---------------- */
 
-  if (!text.trim()) {
-    alert("Maaloo waan barreessitu guuti!");
+window.saveProfile=async()=>{
+
+  const user=auth.currentUser;
+
+  if(!user)return;
+
+  await setDoc(doc(db,"users",user.uid),{
+
+    email:user.email,
+    bio:document.getElementById("profileBio").value,
+    year:document.getElementById("profileYear").value
+
+  },{merge:true});
+
+  alert("Profile saved.");
+
+};
+
+/* ---------------- CREATE POST ---------------- */
+
+window.createPost=async()=>{
+
+  const user=auth.currentUser;
+
+  if(!user){
+
+    alert("Login first.");
     return;
+
   }
 
-  if (user) {
-    addDoc(collection(db, "posts"), {
-      content: text,
-      userEmail: user.email,
-      createdAt: serverTimestamp(),
-      likes: [],
-      comments: []
-    }).then(() => {
-      document.getElementById("postText").value = "";
-      alert("Postiin kee milkaa'inaan maxxanfame!");
-    }).catch(error => {
-      alert("Rakkoo: " + error.message);
+  const text=document.getElementById("postText").value.trim();
+
+  if(!text)return;
+
+  await addDoc(collection(db,"posts"),{
+
+    content:text,
+    userEmail:user.email,
+    createdAt:serverTimestamp(),
+    likes:[],
+    comments:[]
+
+  });
+
+  document.getElementById("postText").value="";
+
+};
+
+/* ---------------- LIKE ---------------- */
+
+window.likePost=async(id)=>{
+
+  const user=auth.currentUser;
+
+  if(!user){
+
+    alert("Login first.");
+    return;
+
+  }
+
+  const ref=doc(db,"posts",id);
+
+  const snap=await getDoc(ref);
+
+  const likes=snap.data().likes||[];
+
+  if(likes.includes(user.email)){
+
+    await updateDoc(ref,{
+      likes:arrayRemove(user.email)
     });
-  } else {
-    alert("Dura Login gochuu qabda!");
+
+  }else{
+
+    await updateDoc(ref,{
+      likes:arrayUnion(user.email)
+    });
+
   }
+
 };
 
-// 4. Like Kennuu
-window.likePost = (postId) => {
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Like gochuuf dura Login godhi!");
+/* ---------------- COMMENT ---------------- */
+
+window.addComment=async(id)=>{
+
+  const user=auth.currentUser;
+
+  if(!user){
+
+    alert("Login first.");
     return;
+
   }
-  const postRef = doc(db, "posts", postId);
-  updateDoc(postRef, {
-    likes: arrayUnion(user.email)
-  });
-};
 
-// 5. Comment Dabaluu
-window.addComment = (postId) => {
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Comment kennuuf dura Login godhi!");
-    return;
-  }
-  const commentInput = document.getElementById(`commentInput-${postId}`);
-  const commentText = commentInput.value;
+  const input=document.getElementById("commentInput-"+id);
 
-  if (!commentText.trim()) return;
+  if(!input.value.trim())return;
 
-  const postRef = doc(db, "posts", postId);
-  updateDoc(postRef, {
-    comments: arrayUnion({
-      userEmail: user.email,
-      text: commentText,
-      time: new Date().toISOString()
+  await updateDoc(doc(db,"posts",id),{
+
+    comments:arrayUnion({
+
+      userEmail:user.email,
+      text:input.value,
+      time:new Date().toISOString()
+
     })
-  }).then(() => {
-    commentInput.value = "";
+
   });
+
+  input.value="";
+
 };
 
-// 6. Postiiwwan Dubbisuu fi Agarsiisuu (Real-time Feed with Likes & Comments)
-document.addEventListener("DOMContentLoaded", () => {
-  const postsContainer = document.getElementById("postsContainer");
-  
-  if (postsContainer) {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    
-    onSnapshot(q, (snapshot) => {
-      postsContainer.innerHTML = "";
-      snapshot.forEach((docSnap) => {
-        const post = docSnap.data();
-        const postId = docSnap.id;
-        const likesCount = post.likes ? post.likes.length : 0;
-        
-        let commentsHTML = "";
-        if (post.comments && post.comments.length > 0) {
-          post.comments.forEach(c => {
-            commentsHTML += `<div style="background:#f1f3f5; padding:6px 10px; margin:4px 0; border-radius:6px; font-size:13px;"><b>${c.userEmail}:</b> ${c.text}</div>`;
-          });
-        }
+/* ---------------- SHARE ---------------- */
 
-        postsContainer.innerHTML += `
-          <div style="background:white; padding:15px; margin:15px 0; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.08);">
-            <small style="color:gray;"><b>${post.userEmail || 'Nam-tokko'}</b></small>
-            <p style="margin:10px 0; font-size:15px; color:#222; line-height:1.4;">${post.content}</p>
-            
-            <div style="display:flex; align-items:center; gap:15px; margin-top:10px; border-top:1px solid #eee; padding-top:8px;">
-              <button onclick="likePost('${postId}')" style="background:#e7f5ff; color:#007bff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">👍 Like (${likesCount})</button>
+window.sharePost=async(id)=>{
+
+  if(navigator.share){
+
+    await navigator.share({
+
+      title:"Sociology Connect",
+      text:"Check this post.",
+      url:location.href
+
+    });
+
+  }
+
+};
+
+/* ---------------- REAL TIME FEED ---------------- */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  const box=document.getElementById("postsContainer");
+
+  if(!box)return;
+
+  onSnapshot(
+
+    query(collection(db,"posts"),orderBy("createdAt","desc")),
+
+    snap=>{
+
+      box.innerHTML="";
+
+      const posts=[];
+
+      snap.forEach(d=>{
+
+        posts.push({
+          id:d.id,
+          ...d.data()
+        });
+
+      });
+
+      posts.forEach(post=>{
+
+        const likes=post.likes?post.likes.length:0;
+
+        let comments="";
+
+        (post.comments||[]).forEach(c=>{
+
+          comments+=`
+            <div style="background:#f1f3f5;padding:6px;margin:4px 0;border-radius:6px;">
+              <b>${c.userEmail}</b><br>${c.text}
+            </div>
+          `;
+
+        });
+
+        box.innerHTML+=`
+
+          <div style="background:white;padding:15px;margin:15px 0;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);">
+
+            <small><b>${post.userEmail}</b></small>
+
+            <p style="margin:10px 0;">${post.content}</p>
+
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+              <button onclick="likePost('${post.id}')">
+                ❤️ ${likes}
+              </button>
+
+              <button onclick="sharePost('${post.id}')">
+                📤 Share
+              </button>
+
             </div>
 
             <div style="margin-top:10px;">
-              <div style="max-height:120px; overflow-y:auto; margin-bottom:8px;">${commentsHTML}</div>
-              <div style="display:flex; gap:6px;">
-                <input id="commentInput-${postId}" placeholder="Comment barreessi..." style="padding:8px; font-size:13px; margin:0; border-radius:6px; border:1px solid #ccc;">
-                <button onclick="addComment('${postId}')" style="padding:8px 12px; font-size:13px; border-radius:6px; margin:0;">Ergi</button>
+
+              ${comments}
+
+              <div style="display:flex;gap:6px;">
+
+                <input id="commentInput-${post.id}" placeholder="Comment...">
+
+                <button onclick="addComment('${post.id}')">
+                  Send
+                </button>
+
               </div>
+
             </div>
+
           </div>
+
         `;
+
       });
-    });
-  }
+
+      updateTrending(posts);
+
+    }
+
+  );
+
 });
 
+/* ---------------- TRENDING ---------------- */
+
+function updateTrending(posts){
+
+  const t=document.getElementById("trending");
+
+  if(!t)return;
+
+  t.innerHTML="<h2>🔥 Trending Posts</h2>";
+
+  posts
+    .sort((a,b)=>(b.likes?.length||0)-(a.likes?.length||0))
+    .slice(0,3)
+    .forEach(p=>{
+
+      t.innerHTML+=`
+        <div class="card">
+          ❤️ ${p.likes?.length||0} — ${p.content}
+        </div>
+      `;
+
+    });
+
+}
+
+/* ---------------- ADMIN ---------------- */
+
+window.isAdmin=()=>{
+
+  return auth.currentUser?.email==="admin@sociologyconnect.com";
+
+};
 

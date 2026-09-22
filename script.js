@@ -4,12 +4,11 @@ async function sendToServer() {
     
     if (!userInput.trim()) return;
 
-    // Ergaa fayyadamaa chat history irratti dabaluuf
     chatHistory.innerHTML += `<p><b>You:</b> ${userInput}</p>`;
     document.getElementById('userInput').value = '';
 
     try {
-        let response = await fetch('/chat', {
+        let response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: userInput })

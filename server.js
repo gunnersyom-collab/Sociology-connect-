@@ -19,10 +19,7 @@ app.post('/api/chat', async (req, res) => {
                       const model = genAI.getGenerativeModel({ 
             model: "gemini-1.0-pro" 
         });
-    
-                    
-        });
-        
+
         
  const result = await model.generateContent(message);
         const response = await result.response;

@@ -29,12 +29,12 @@ app.post("/api/chat", async (req, res) => {
 
     res.json({ reply });
   } catch (error) {
-    console.error("Gemini Error:", error);
+  console.error("Gemini Error:", error);
 
-    res.status(500).json({
-      reply: "Sorry, AI is temporarily unavailable."
-    });
-  }
+  res.status(500).json({
+    reply: error.message
+  });
+}
 });
 
 const PORT = process.env.PORT || 3000;

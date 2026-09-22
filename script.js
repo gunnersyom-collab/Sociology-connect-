@@ -10,21 +10,10 @@ async function sendToServer() {
     userInput.value = '';
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    const prompt = `You are AI Mari.
-
-The owner of this website is Horsa Gowe Geda.
-If anyone asks "Who owns this website?" answer: "This website belongs to Horsa Gowe Geda."
-Always treat Horsa Gowe Geda as the owner of this website.
-
-User: ${text}
-
-AI Mari:`;
-
     try {
         const response = await fetch(
-            'https://text.pollinations.ai/' + encodeURIComponent(prompt)
+            'https://text.pollinations.ai/' + encodeURIComponent(text)
         );
-
         const reply = await response.text();
 
         chatHistory.innerHTML += `<div class="message ai"><b>AI Mari:</b> ${reply}</div>`;
@@ -35,7 +24,7 @@ AI Mari:`;
 }
 
 sendBtn.addEventListener('click', sendToServer);
-
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendToServer();
 });
+

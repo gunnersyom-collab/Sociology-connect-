@@ -4,27 +4,187 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login | Sociology Connect</title>
+
 <style>
-body{font-family:Arial,sans-serif;background:#f5f7fa;padding:20px;color:#222;}
-.box{max-width:400px;margin:40px auto;background:white;padding:25px;border-radius:15px;box-shadow:0 3px 10px rgba(0,0,0,.08);}
-h2{text-align:center;margin-bottom:20px;color:#007bff;}
-input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box;}
-button{width:100%;padding:12px;background:#007bff;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;margin-top:10px;}
-button:hover{background:#0056b3;}
-a{display:block;text-align:center;margin-top:15px;color:#007bff;text-decoration:none;}
-a:hover{text-decoration:underline;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#007bff,#00b4ff);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+.box{
+max-width:420px;
+width:100%;
+background:white;
+padding:28px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+.logo{
+text-align:center;
+margin-bottom:15px;
+}
+.logo img{
+width:70px;
+}
+h2{
+text-align:center;
+color:#007bff;
+margin-bottom:20px;
+}
+input{
+width:100%;
+padding:13px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:15px;
+}
+.password-box{
+position:relative;
+}
+#togglePass{
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+color:#555;
+font-size:14px;
+}
+button{
+width:100%;
+padding:13px;
+background:#007bff;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+margin-top:12px;
+transition:.2s;
+}
+button:hover{
+background:#0056b3;
+}
+.links{
+text-align:center;
+margin-top:18px;
+}
+.links a{
+display:block;
+margin-top:10px;
+color:#007bff;
+text-decoration:none;
+font-weight:bold;
+}
+.links a:hover{
+text-decoration:underline;
+}
+.remember{
+display:flex;
+align-items:center;
+gap:8px;
+margin-top:8px;
+font-size:14px;
+}
+footer{
+text-align:center;
+margin-top:18px;
+font-size:13px;
+color:#666;
+}
 </style>
 </head>
+
 <body>
 
 <div class="box">
-  <h2>Login</h2>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <a href="signup.html">Create Account</a>
+
+<div class="logo">
+<img src="1781866925745.png" alt="Sociology Connect Logo">
 </div>
 
+<h2>Welcome Back</h2>
+
+<input
+type="email"
+id="email"
+placeholder="Enter your email"
+autocomplete="email">
+
+<div class="password-box">
+<input
+type="password"
+id="password"
+placeholder="Enter your password"
+autocomplete="current-password">
+
+<span id="togglePass">👁️</span>
+</div>
+
+<div class="remember">
+<input type="checkbox" id="remember">
+<label for="remember">Remember me</label>
+</div>
+
+<button onclick="login()">
+Login
+</button>
+
+<div class="links">
+
+<a href="#">Forgot Password?</a>
+
+<a href="signup.html">
+Create New Account
+</a>
+
+<a href="index.html">
+← Back to Home
+</a>
+
+</div>
+
+<footer>
+Sociology Connect • Arsi University
+</footer>
+
+</div>
+
+<script>
+const pass=document.getElementById("password");
+const toggle=document.getElementById("togglePass");
+
+toggle.onclick=()=>{
+
+pass.type=
+pass.type==="password"
+?"text":"password";
+
+toggle.textContent=
+pass.type==="password"
+?"👁️":"🙈";
+
+};
+
+document.addEventListener("keypress",e=>{
+
+if(e.key==="Enter"){
+
+login();
+
+}
+
+});
+</script>
+
 <script type="module" src="auth.js"></script>
+
 </body>
 </html>

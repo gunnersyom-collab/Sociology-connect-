@@ -4,7 +4,7 @@
     margin: 20px 0;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 /* Contact Section */
@@ -57,3 +57,4 @@
 .dark .telegram-btn {
     background-color: #0a84d0;
 }
+

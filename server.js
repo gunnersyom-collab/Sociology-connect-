@@ -24,10 +24,11 @@ app.post('/api/chat', async (req, res) => {
         const result = await model.generateContent(message);
         const response = await result.response;
         res.json({ reply: response.text() });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ reply: "AI Mari is currently busy. Please try again." });
+        } catch (error) {
+        console.error("DETAILED ERROR:", error);
+        res.status(500).json({ reply: `Error: ${error.message}` });
     }
+    
 });
 
 app.listen(process.env.PORT || 3000, () => console.log('Server is running...'));

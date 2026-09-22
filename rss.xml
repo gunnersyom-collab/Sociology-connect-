@@ -1,13 +1,25 @@
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
+
   <title>Sociology Connect</title>
+
   <link>https://gunnersyom-co.github.io/sociology-connect/</link>
+
   <description>Odeeffannoo haaraa Sociology Connect</description>
+
+  <language>en-us</language>
+
   <item>
     <title>Mata-duree haaraa</title>
+
     <link>https://gunnersyom-co.github.io/sociology-connect/</link>
+
     <description>Ibsa gabaabaa</description>
+
+    <pubDate>Tue, 22 Sep 2026 00:00:00 GMT</pubDate>
   </item>
+
 </channel>
 </rss>

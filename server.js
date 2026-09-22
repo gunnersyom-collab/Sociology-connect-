@@ -27,10 +27,10 @@ async function sendToServer() {
     const typing = addMessage("AI Mari", "Typing...", false);
 
     try {
-        const response = await fetch("/api/chat", {
+        const response = await fetch("YOUR_APPS_SCRIPT_URL", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "text/plain;charset=utf-8"
             },
             body: JSON.stringify({ message })
         });

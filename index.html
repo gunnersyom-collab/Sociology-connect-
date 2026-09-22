@@ -1,157 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SociologyConnect - Community & Social Work Platform</title>
-    <meta name="description" content="SociologyConnect is a platform connecting sociology students and exploring social work in Ethiopia.">
-    <meta name="keywords" content="SociologyConnect, Sociology, Social Work, Ethiopia, Arsi University">
-    <link rel="alternate" type="application/rss+xml" href="rss.xml" title="RSS Feed">
-    <meta name="google-site-verification" content="iOhHJZi0IXBdNvj3OC7HsJW6ffoYIkjjqQJtBAByCa0" />
-    
-    <style>
-    header {
-        background-color: #007bff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 20px;
-        color: white;
-    }
-    header img {
-        margin-bottom: 10px;
-        max-width: 100px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    body { background-color: #f9f9f9; font-family: Arial, sans-serif; margin: 0; }
-    .image-wrapper { display: flex; justify-content: center; }
-    .image-wrapper img { width: 100%; max-width: 600px; }
-    section { margin: 15px; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    #searchBar { width: 90%; padding: 10px; }
-    input, textarea { width: 90%; padding: 10px; margin-bottom: 10px; }
-    button { padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    nav { background-color: #007bff; padding: 10px; text-align: center; position: sticky; top: 0; z-index: 1000; }
-    nav a { color: white; text-decoration: none; margin: 0 10px; font-weight: bold; }
-    footer { text-align: center; padding: 20px; background-color: #333; color: white; }
-    #chat-container { border: 1px solid #ccc; padding: 10px; background: white; }
-    .telegram-btn { display: inline-block; padding: 10px 15px; background-color: #0088cc; color: white; text-decoration: none; border-radius: 4px; margin-top: 10px; }
-</style>      
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociology Connect | Arsi University</title>
+
+<meta name="description" content="Sociology Connect is an academic platform for Sociology and Social Work students at Arsi University.">
+<meta name="keywords" content="Sociology, Social Work, Arsi University, Ethiopia">
+
+<link rel="alternate" type="application/rss+xml" href="rss.xml">
+<meta name="google-site-verification" content="iOhHJZi0IXBdNvj3OC7HsJW6ffoYIkjjqQJtBAByCa0">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+color:#222;
+line-height:1.6;
+}
+
+header{
+background:#007bff;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+header img{
+width:70px;
+margin-bottom:10px;
+}
+
+nav{
+position:sticky;
+top:0;
+background:#007bff;
+padding:12px;
+text-align:center;
+z-index:1000;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin:0 10px;
+font-weight:bold;
+}
+
+#themeBtn{
+float:right;
+background:white;
+color:#007bff;
+padding:6px 10px;
+border-radius:20px;
+}
+
+section{
+background:white;
+margin:15px;
+padding:18px;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.image-wrapper{
+text-align:center;
+}
+
+.image-wrapper img{
+width:100%;
+max-width:650px;
+border-radius:15px;
+}
+
+#searchBar{
+width:90%;
+display:block;
+margin:15px auto;
+padding:12px;
+border:1px solid #ccc;
+border-radius:10px;
+}
+
+textarea,input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:10px;
+margin-top:10px;
+}
+
+button{
+background:#007bff;
+color:white;
+padding:10px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.telegram-btn{
+display:inline-block;
+background:#0088cc;
+color:white;
+padding:10px 15px;
+text-decoration:none;
+border-radius:10px;
+margin-top:10px;
+}
+
+/* AI Chat */
+
+#chat-container{
+margin:15px;
+background:white;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+padding:15px;
+}
+
+#chat-history{
+height:260px;
+overflow-y:auto;
+padding:10px;
+background:#f8f8f8;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.message{
+margin:10px 0;
+padding:10px;
+border-radius:15px;
+max-width:85%;
+}
+
+.user{
+background:#007bff;
+color:white;
+margin-left:auto;
+}
+
+.ai{
+background:white;
+border:1px solid #ddd;
+}
+
+.chat-input{
+display:flex;
+gap:8px;
+}
+
+.chat-input input{
+flex:1;
+}
+
+footer{
+background:#222;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:20px;
+}
+
+/* Dark Mode */
+
+.dark{
+background:#121212;
+color:white;
+}
+
+.dark section,
+.dark #chat-container{
+background:#1d1d1d;
+color:white;
+}
+
+.dark #chat-history{
+background:#111;
+}
+
+.dark .ai{
+background:#2b2b2b;
+color:white;
+border:none;
+}
+</style>
 </head>
+
 <body>
 
 <header>
-    <img src="1781866925745.png" alt="Logo" style="width: 50px;">
-    <h1>Sociology Connect</h1>
-    <p>Arsi University - Sociology & Social Work</p>
-    <p>Created by: <strong>Horsa Gowe (Yomif)</strong></p>
-    <p>Academic, Research & Educational Content Creator 📝</p>
+<img src="1781866925745.png" alt="Sociology Connect Logo">
+<h1>Sociology Connect</h1>
+<p>Arsi University – Sociology & Social Work</p>
+<p>Created by <strong>Horsa Gowe</strong></p>
+<p>Academic • Research • Educational Content Creator</p>
 </header>
 
 <nav>
-    <a href="#about">About</a> | 
-    <a href="#resources">Resources</a> | 
-    <a href="#contact">Contact</a>
+<a href="#about">About</a> |
+<a href="#resources">Resources</a> |
+<a href="#contact">Contact</a>
+
+<button id="themeBtn">🌙</button>
 </nav>
 
+<input id="searchBar" placeholder="Search topics...">
+
 <section id="about">
-    <h2>About Us</h2>
-    <p>Welcome to <strong>SociologyConnect</strong>, a dynamic platform dedicated to students of Sociology, Social Work, and Information Technology at Arsi University. Our mission is to integrate social science research with modern technological tools to foster academic excellence and community development.</p>
+<h2>About Us</h2>
+<p>Sociology Connect is a platform that supports Sociology and Social Work students through academic resources, research guidance, and community engagement.</p>
 </section>
 
 <section id="features">
-    <h2>Our Core Pillars</h2>
-    <ul>
-        <li><strong>Academic Resources:</strong> Access curated study materials, lecture notes, and research guides tailored for Sociology and Social Work students.</li>
-        <li><strong>Techno-Sociology:</strong> Explore the intersection of social issues and technology, including data collection methodologies and programming for social impact.</li>
-        <li><strong>Research & Insights:</strong> Stay updated with contemporary articles, essays, and analysis on social dynamics and development.</li>
-        <li><strong>Community Engagement:</strong> A hub for Arsi University students to collaborate, share ideas, and contribute to student-led research initiatives.</li>
-    </ul>
+<h2>Our Core Pillars</h2>
+<ul>
+<li>Academic Resources</li>
+<li>Research Support</li>
+<li>Techno-Sociology</li>
+<li>Community Engagement</li>
+</ul>
 </section>
 
-<!-- Research Guide Section -->
 <section id="research-guide">
-    <h2 style="color: #007bff;">Research Guide for Sociology & Social Work</h2>
-    <p>Step-by-step procedure for writing a high-quality research paper:</p>
-    <ol style="line-height: 1.8; padding-left: 20px;">
-        <li><strong>Choose a Relevant Topic:</strong> Select a sociological or social issue that interests you and is researchable.</li>
-        <li><strong>Conduct a Literature Review:</strong> Gather existing academic sources, articles, and books to understand the background.</li>
-        <li><strong>Formulate a Research Question:</strong> Develop a clear, specific question or hypothesis that your paper aims to address.</li>
-        <li><strong>Design Your Methodology:</strong> Determine your data collection method (e.g., qualitative interviews, observations, or quantitative surveys).</li>
-        <li><strong>Data Collection & Analysis:</strong> Gather your information from the field and analyze it to find key themes or patterns.</li>
-        <li><strong>Structure the Paper:</strong> Organize your work into standard academic sections: Introduction, Literature Review, Methodology, Findings, and Conclusion.</li>
-        <li><strong>Review & Cite Sources:</strong> Proofread your paper for clarity and ensure all references follow academic standards (e.g., APA style).</li>
-    </ol>
+<h2>Research Guide</h2>
+<ol>
+<li>Choose a topic.</li>
+<li>Review literature.</li>
+<li>Create research questions.</li>
+<li>Design methodology.</li>
+<li>Collect data.</li>
+<li>Analyze findings.</li>
+<li>Write and cite properly.</li>
+</ol>
 </section>
-
-<input type="text" id="searchBar" placeholder="Search topics...">
 
 <div class="image-wrapper">
-    <img src="social-workers-can-help.png" alt="Social workers can help you">
+<img src="social-workers-can-help.png" alt="Social workers can help">
 </div>
 
-<main>
-    <section>
-        <h3>Sociology Connect</h3>
-        <p>A platform dedicated to exploring social insights and academic resources.</p>
-    </section>
-    
-    <section id="resources">
-        <h3>About Sociology</h3>
-        <p>Sociology is the study of social life, social change, and the social causes and consequences of human behavior.</p>
-    </section>
+<section id="resources">
+<h2>Academic Resources</h2>
+<p>Sociology studies society, social relationships, and human behavior.</p>
 
-    <section>
-        <h3>Iddir & Community Associations</h3>
-        <p>Exploring the role of Iddir and other community-based organizations in social support systems.</p>
-    </section>
+<h3>Research Proposal</h3>
+<a href="IBRO PROP (3).pdf" target="_blank">
+<button>Download Proposal</button>
+</a>
+</section>
 
-    <section>
-        <h3>In Memory of Our Mentor, Mr. Ali</h3>
-        <p>I am deeply saddened to reflect on the loss of our mentor, Mr. Ali. His guidance and wisdom will always be remembered.</p>
-    </section>
+<section>
+<h2>Community Associations</h2>
+<p>Learn about Iddir and other community-based support systems in Ethiopia.</p>
+</section>
 
-    <section>
-        <h3>Research Proposal</h3>
-        <a href="IBRO PROP (3).pdf" target="_blank">Download Research Proposal</a>
-    </section>
+<section>
+<h2>In Memory of Mr. Ali</h2>
+<p>His guidance and wisdom continue to inspire Sociology Connect.</p>
+</section>
 
-    <section id="contact">
-        <h3>Contact & Feedback</h3>
-        <p>Email: Gunnersyom@gmail.com | Phone: 0934919856</p>
-        
-        <form action="https://formspree.io/f/mppwdjda" method="POST">
-    <textarea name="comment" placeholder="Write your comment" style="width: 90%; height: 100px; padding: 10px;" required></textarea>
-    <br>
-    <button type="submit">Submit</button>
+<section id="contact">
+<h2>Contact</h2>
+
+<p>📧 Gunnersyom@gmail.com</p>
+<p>📱 0934919856</p>
+
+<form action="https://formspree.io/f/mppwdjda" method="POST">
+<textarea name="comment" rows="5" placeholder="Write your comment..." required></textarea>
+<button type="submit">Submit</button>
 </form>
 
-        
-        <div style="margin-top: 15px;">
-            <h2>Contact Us</h2>
-            <p>Need help? Connect with us on Telegram!</p>
-            <a href="https://t.me/HorsaGowe" class="telegram-btn" target="_blank">
-                Connect on Telegram
-            </a>
-        </div>
-    </section>
+<h3 style="margin-top:20px;">Telegram</h3>
+<a class="telegram-btn" href="https://t.me/HorsaGowe" target="_blank">
+Connect on Telegram
+</a>
 
-    <!-- AI Mari Section -->
-    <div id="chat-container">
-        <h3>AI Mari</h3>
-        <div id="chat-history" style="height: 200px; overflow-y: scroll; border-bottom: 1px solid #ccc; margin-bottom: 10px; padding: 5px;"></div>
-        <input type="text" id="userInput" placeholder="Ask your question..." style="width: 85%;">
-        <button onclick="sendToServer()">Send</button>
-    </div>
-</main>
+</section>
+
+<!-- AI Mari -->
+
+<section id="chat-container">
+
+<h2>AI Mari</h2>
+
+<div id="chat-history">
+<div class="message ai">
+<b>AI Mari</b><br>
+Hello! I can help you in Afaan Oromoo, Amharic, and English.
+</div>
+</div>
+
+<div class="chat-input">
+<input id="userInput" placeholder="Ask your question...">
+<button id="micBtn">🎤</button>
+<button id="sendBtn">Send</button>
+</div>
+
+</section>
 
 <footer>
-    <p>&copy; 2026 Sociology Connect - Arsi University</p>
+© 2026 Sociology Connect – Arsi University
 </footer>
 
 <script src="script.js"></script>
+
 </body>
 </html>

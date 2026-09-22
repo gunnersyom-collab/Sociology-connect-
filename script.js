@@ -2,25 +2,19 @@ const chatHistory = document.getElementById('chat-history');
 const userInput = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
 
-const systemPrompt = `
-You are AI Mari.
-
-Permanent facts for this website:
-- The owner of this website is Horsa Gowe Geda.
-- If anyone asks "Who owns this website?" answer: "This website belongs to Horsa Gowe Geda."
-- Always refer to Horsa Gowe Geda as the owner of this website.
-- Never claim a different owner.
-`;
-
 async function sendToServer() {
-    const text = userInput.value.trim();
-    if (!text) return;
+    const text = userInput.value;
+    if (!text.trim()) return;
 
     chatHistory.innerHTML += `<div class="message user"><b>You:</b> ${text}</div>`;
     userInput.value = '';
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    const prompt = `${systemPrompt}
+    const prompt = `You are AI Mari.
+
+The owner of this website is Horsa Gowe Geda.
+If anyone asks "Who owns this website?" answer: "This website belongs to Horsa Gowe Geda."
+Always treat Horsa Gowe Geda as the owner of this website.
 
 User: ${text}
 

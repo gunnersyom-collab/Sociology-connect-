@@ -1,5 +1,10 @@
+
+/* =========================================================
+   SOCIOLOGY CONNECT - AUTH.JS
+   Firebase Authentication + Profile + Posts
+   ========================================================= */
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
 
 import {
   getAuth,
@@ -26,13 +31,12 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-
-/* =====================================================
+/* =========================================================
    FIREBASE CONFIG
-===================================================== */
+   ========================================================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBiwF8jW-hCDLmtbpAD6t99afAhcldGQfw",
+  apiKey: "AIzaSyBiwF8j-W-hCDLmtbpAD6t99afAhcldGQfw",
   authDomain: "sociologyconnect.firebaseapp.com",
   projectId: "sociologyconnect",
   storageBucket: "sociologyconnect.firebasestorage.app",
@@ -41,47 +45,61 @@ const firebaseConfig = {
   measurementId: "G-BM74QJ4XTZ"
 };
 
-const app = initializeApp(firebaseConfig);
+/* =========================================================
+   INITIALIZE FIREBASE
+   ========================================================= */
 
-try {
-  getAnalytics(app);
-} catch (error) {
-  console.log("Analytics unavailable:", error);
-}
+const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+/* =========================================================
+   HELPER - GET ELEMENT
+   ========================================================= */
 
-/* =====================================================
+function getElement(id) {
+  return document.getElementById(id);
+}
+
+/* =========================================================
+   HELPER - ESCAPE HTML
+   ========================================================= */
+
+function escapeHTML(value) {
+  if (value === undefined || value === null) return "";
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* =========================================================
    SIGN UP
-===================================================== */
+   ========================================================= */
 
 window.signup = async function () {
 
+  const fullName = getElement("fullName")?.value.trim() || "";
+  const year = getElement("year")?.value || "";
+  const bio = getElement("bio")?.value.trim() || "";
+  const email = getElement("email")?.value.trim() || "";
+  const password = getElement("password")?.value || "";
+
+  if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
   try {
-
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const fullNameInput = document.getElementById("fullName");
-    const yearInput = document.getElementById("year");
-    const bioInput = document.getElementById("bio");
-
-    const email = emailInput?.value.trim();
-    const password = passwordInput?.value;
-    const fullName = fullNameInput?.value.trim() || "";
-    const year = yearInput?.value || "";
-    const bio = bioInput?.value.trim() || "";
-
-    if (!email || !password) {
-      alert("Please enter your email and password.");
-      return;
-    }
-
-    if (password.length < 6) {
-      alert("Password must contain at least 6 characters.");
-      return;
-    }
 
     const userCredential =
       await createUserWithEmailAndPassword(
@@ -92,14 +110,14 @@ window.signup = async function () {
 
     const user = userCredential.user;
 
-    /* Save name to Firebase Authentication */
+    /* Save Firebase display name */
     if (fullName) {
       await updateProfile(user, {
         displayName: fullName
       });
     }
 
-    /* Save complete profile to Firestore */
+    /* Save user profile in Firestore */
     await setDoc(
       doc(db, "users", user.uid),
       {
@@ -110,11 +128,10 @@ window.signup = async function () {
         bio: bio,
         photo: "",
         createdAt: serverTimestamp()
-      },
-      { merge: true }
+      }
     );
 
-    alert("Account created successfully! 🎉");
+    alert("Account created successfully!");
 
     window.location.href = "index.html";
 
@@ -122,43 +139,26 @@ window.signup = async function () {
 
     console.error(error);
 
-    let message = error.message;
+    alert(getFirebaseError(error));
 
-    if (error.code === "auth/email-already-in-use") {
-      message = "This email is already registered.";
-    }
-
-    if (error.code === "auth/invalid-email") {
-      message = "Please enter a valid email.";
-    }
-
-    if (error.code === "auth/weak-password") {
-      message = "Password is too weak.";
-    }
-
-    alert(message);
   }
 };
 
-
-/* =====================================================
+/* =========================================================
    LOGIN
-===================================================== */
+   ========================================================= */
 
 window.login = async function () {
 
+  const email = getElement("email")?.value.trim() || "";
+  const password = getElement("password")?.value || "";
+
+  if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+  }
+
   try {
-
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-
-    const email = emailInput?.value.trim();
-    const password = passwordInput?.value;
-
-    if (!email || !password) {
-      alert("Please enter email and password.");
-      return;
-    }
 
     await signInWithEmailAndPassword(
       auth,
@@ -172,24 +172,14 @@ window.login = async function () {
 
     console.error(error);
 
-    let message = error.message;
+    alert(getFirebaseError(error));
 
-    if (
-      error.code === "auth/invalid-credential" ||
-      error.code === "auth/wrong-password" ||
-      error.code === "auth/user-not-found"
-    ) {
-      message = "Email or password is incorrect.";
-    }
-
-    alert(message);
   }
 };
 
-
-/* =====================================================
+/* =========================================================
    LOGOUT
-===================================================== */
+   ========================================================= */
 
 window.logout = async function () {
 
@@ -197,63 +187,61 @@ window.logout = async function () {
 
     await signOut(auth);
 
-    window.location.href = "login.html";
+    window.location.href = "index.html";
 
   } catch (error) {
 
-    alert(error.message);
+    console.error(error);
+
+    alert("Could not logout.");
+
   }
 };
 
+/* =========================================================
+   FIREBASE ERROR MESSAGE
+   ========================================================= */
 
-/* =====================================================
-   AUTH STATE
-===================================================== */
+function getFirebaseError(error) {
 
-onAuthStateChanged(auth, async (user) => {
+  switch (error.code) {
 
-  const info = document.getElementById("userInfo");
-  const loginLink = document.getElementById("loginLink");
-  const logoutBtn = document.getElementById("logoutBtn");
+    case "auth/email-already-in-use":
+      return "This email is already registered.";
 
-  if (user) {
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
 
-    if (info) {
-      info.textContent =
-        user.displayName || user.email;
+    case "auth/weak-password":
+      return "Password is too weak. Use at least 6 characters.";
 
-      info.style.display = "inline";
-    }
+    case "auth/user-not-found":
+      return "No account found with this email.";
 
-    if (loginLink) {
-      loginLink.style.display = "none";
-    }
+    case "auth/wrong-password":
+      return "Incorrect password.";
 
-    if (logoutBtn) {
-      logoutBtn.style.display = "inline-block";
-    }
+    case "auth/invalid-credential":
+      return "Email or password is incorrect.";
 
-    await loadProfile(user);
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
 
-  } else {
+    default:
+      return error.message || "Something went wrong.";
+  }
+}
 
-    if (info) {
-      info.style.display = "none";
-    }
+/* =========================================================
+   LOAD PROFILE
+   ========================================================= */
 
-    if (loginLink) {
-      loginLink.style.display = "inline";
-    }
+async function loadProfile(user) {
 
-    if (logoutBtn) {
-      logoutBtn.style.display = "none";
-    }
+  const profileCard = getElement("profileCard");
+  const loginMessage = getElement("loginMessage");
 
-    const profileCard =
-      document.getElementById("profileCard");
-
-    const loginMessage =
-      document.getElementById("loginMessage");
+  if (!user) {
 
     if (profileCard) {
       profileCard.style.display = "none";
@@ -261,24 +249,26 @@ onAuthStateChanged(auth, async (user) => {
 
     if (loginMessage) {
       loginMessage.style.display = "block";
+      loginMessage.textContent =
+        "Please login to view your profile.";
     }
+
+    return;
   }
-});
 
+  /* Show profile */
+  if (profileCard) {
+    profileCard.style.display = "block";
+  }
 
-/* =====================================================
-   LOAD PROFILE
-===================================================== */
-
-async function loadProfile(user) {
+  if (loginMessage) {
+    loginMessage.style.display = "none";
+  }
 
   try {
 
-    const profileRef =
-      doc(db, "users", user.uid);
-
-    const profileSnap =
-      await getDoc(profileRef);
+    const profileRef = doc(db, "users", user.uid);
+    const profileSnap = await getDoc(profileRef);
 
     let data = {};
 
@@ -286,114 +276,111 @@ async function loadProfile(user) {
       data = profileSnap.data();
     }
 
-    const profileCard =
-      document.getElementById("profileCard");
+    const fullName =
+      data.fullName ||
+      user.displayName ||
+      "Student";
 
-    const loginMessage =
-      document.getElementById("loginMessage");
+    const email =
+      data.email ||
+      user.email ||
+      "";
 
-    if (profileCard) {
-      profileCard.style.display = "block";
-    }
+    const year =
+      data.year ||
+      "";
 
-    if (loginMessage) {
-      loginMessage.style.display = "none";
-    }
+    const bio =
+      data.bio ||
+      "";
 
+    const photo =
+      data.photo ||
+      user.photoURL ||
+      "";
 
-    /* Profile display */
+    /* =====================================================
+       PROFILE DISPLAY
+       ===================================================== */
 
     const profileName =
-      document.getElementById("profileName");
+      getElement("profileName");
 
     const profileEmail =
-      document.getElementById("profileEmail");
+      getElement("profileEmail");
 
     const profileYear =
-      document.getElementById("profileYear");
+      getElement("profileYear");
 
     const profileBio =
-      document.getElementById("profileBio");
+      getElement("profileBio");
 
     const profilePhoto =
-      document.getElementById("profilePhoto");
-
+      getElement("profilePhoto");
 
     if (profileName) {
-      profileName.textContent =
-        data.fullName ||
-        user.displayName ||
-        "Student";
+      profileName.textContent = fullName;
     }
 
     if (profileEmail) {
-      profileEmail.textContent =
-        user.email;
+      profileEmail.textContent = email;
     }
 
     if (profileYear) {
-
-      if (profileYear.tagName === "SELECT") {
-        profileYear.value = data.year || "";
-      } else {
-        profileYear.textContent =
-          data.year || "Not added";
-      }
+      profileYear.textContent =
+        year || "Not added";
     }
 
     if (profileBio) {
+      profileBio.textContent =
+        bio || "No bio added yet.";
+    }
 
-      if (
-        profileBio.tagName === "TEXTAREA" ||
-        profileBio.tagName === "INPUT"
-      ) {
-        profileBio.value = data.bio || "";
+    if (profilePhoto) {
+
+      if (photo) {
+        profilePhoto.src = photo;
       } else {
-        profileBio.textContent =
-          data.bio || "No bio added yet.";
+        profilePhoto.src =
+          "https://via.placeholder.com/120";
       }
+
+      profilePhoto.onerror = function () {
+        this.src =
+          "https://via.placeholder.com/120";
+      };
     }
 
-    if (profilePhoto && data.photo) {
-      profilePhoto.src = data.photo;
+    /* =====================================================
+       EDIT FORM
+       ===================================================== */
+
+    const fullNameInput =
+      getElement("fullName");
+
+    const yearInput =
+      getElement("year");
+
+    const bioInput =
+      getElement("bio");
+
+    const photoInput =
+      getElement("photo");
+
+    if (fullNameInput) {
+      fullNameInput.value = fullName;
     }
 
-
-    /* Edit form */
-
-    const fullName =
-      document.getElementById("fullName");
-
-    const year =
-      document.getElementById("year");
-
-    const bio =
-      document.getElementById("bio");
-
-    const photo =
-      document.getElementById("photo");
-
-
-    if (fullName) {
-      fullName.value =
-        data.fullName ||
-        user.displayName ||
-        "";
+    if (yearInput) {
+      yearInput.value = year;
     }
 
-    if (year) {
-      year.value =
-        data.year || "";
+    if (bioInput) {
+      bioInput.value = bio;
     }
 
-    if (bio) {
-      bio.value =
-        data.bio || "";
-    }
-
-    if (photo) {
-      photo.value =
-        data.photo || "";
+    if (photoInput) {
+      photoInput.value = photo;
     }
 
   } catch (error) {
@@ -402,13 +389,86 @@ async function loadProfile(user) {
       "Profile loading error:",
       error
     );
+
   }
 }
 
+/* =========================================================
+   AUTH STATE
+   ========================================================= */
 
-/* =====================================================
+onAuthStateChanged(auth, async (user) => {
+
+  /* Header elements */
+  const userInfo =
+    getElement("userInfo");
+
+  const loginLink =
+    getElement("loginLink");
+
+  const logoutBtn =
+    getElement("logoutBtn");
+
+  /* =======================================================
+     USER LOGGED IN
+     ======================================================= */
+
+  if (user) {
+
+    if (userInfo) {
+      userInfo.textContent =
+        user.displayName ||
+        user.email ||
+        "User";
+
+      userInfo.style.display =
+        "inline";
+    }
+
+    if (loginLink) {
+      loginLink.style.display =
+        "none";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display =
+        "inline-block";
+    }
+
+    /* Load profile */
+    await loadProfile(user);
+
+  }
+
+  /* =======================================================
+     USER LOGGED OUT
+     ======================================================= */
+
+  else {
+
+    if (userInfo) {
+      userInfo.style.display =
+        "none";
+    }
+
+    if (loginLink) {
+      loginLink.style.display =
+        "inline";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display =
+        "none";
+    }
+
+    await loadProfile(null);
+  }
+
+});
+
+/* =========================================================
    SAVE PROFILE
-===================================================== */
+   ========================================================= */
 
 window.saveProfile = async function () {
 
@@ -419,33 +479,32 @@ window.saveProfile = async function () {
     return;
   }
 
+  const fullName =
+    getElement("fullName")?.value.trim() || "";
+
+  const year =
+    getElement("year")?.value || "";
+
+  const bio =
+    getElement("bio")?.value.trim() || "";
+
+  const photo =
+    getElement("photo")?.value.trim() || "";
+
+  if (!fullName) {
+    alert("Please enter your full name.");
+    return;
+  }
+
   try {
 
-    const fullName =
-      document.getElementById("fullName")?.value.trim() || "";
-
-    const year =
-      document.getElementById("year")?.value || "";
-
-    const bio =
-      document.getElementById("bio")?.value.trim() || "";
-
-    const photo =
-      document.getElementById("photo")?.value.trim() || "";
-
-
-    /* Update Firebase Auth name */
-
-    if (fullName) {
-
-      await updateProfile(user, {
-        displayName: fullName
-      });
-    }
-
+    /* Update Firebase Auth profile */
+    await updateProfile(user, {
+      displayName: fullName,
+      photoURL: photo || null
+    });
 
     /* Update Firestore */
-
     await setDoc(
       doc(db, "users", user.uid),
       {
@@ -454,62 +513,58 @@ window.saveProfile = async function () {
         fullName: fullName,
         year: year,
         bio: bio,
-        photo: photo,
-        updatedAt: serverTimestamp()
+        photo: photo
       },
-      { merge: true }
+      {
+        merge: true
+      }
     );
 
-
-    /* Update screen */
+    /* Update profile display immediately */
 
     const profileName =
-      document.getElementById("profileName");
+      getElement("profileName");
 
-    const profilePhoto =
-      document.getElementById("profilePhoto");
+    const profileEmail =
+      getElement("profileEmail");
 
     const profileYear =
-      document.getElementById("profileYear");
+      getElement("profileYear");
 
     const profileBio =
-      document.getElementById("profileBio");
+      getElement("profileBio");
 
+    const profilePhoto =
+      getElement("profilePhoto");
 
     if (profileName) {
       profileName.textContent =
-        fullName || "Student";
+        fullName;
+    }
+
+    if (profileEmail) {
+      profileEmail.textContent =
+        user.email;
     }
 
     if (profileYear) {
-
-      if (profileYear.tagName === "SELECT") {
-        profileYear.value = year;
-      } else {
-        profileYear.textContent =
-          year || "Not added";
-      }
+      profileYear.textContent =
+        year || "Not added";
     }
 
     if (profileBio) {
-
-      if (
-        profileBio.tagName === "TEXTAREA" ||
-        profileBio.tagName === "INPUT"
-      ) {
-        profileBio.value = bio;
-      } else {
-        profileBio.textContent =
-          bio || "No bio added yet.";
-      }
+      profileBio.textContent =
+        bio || "No bio added yet.";
     }
 
-    if (profilePhoto && photo) {
-      profilePhoto.src = photo;
+    if (profilePhoto) {
+
+      profilePhoto.src =
+        photo ||
+        "https://via.placeholder.com/120";
     }
 
-
-    alert("Profile saved successfully! ✅");
+    alert("Profile saved successfully!");
 
   } catch (error) {
 
@@ -519,13 +574,13 @@ window.saveProfile = async function () {
       "Could not save profile: " +
       error.message
     );
+
   }
 };
 
-
-/* =====================================================
+/* =========================================================
    CREATE POST
-===================================================== */
+   ========================================================= */
 
 window.createPost = async function () {
 
@@ -536,50 +591,57 @@ window.createPost = async function () {
     return;
   }
 
+  const postText =
+    getElement("postText");
+
+  if (!postText) {
+    alert("Post box not found.");
+    return;
+  }
+
+  const content =
+    postText.value.trim();
+
+  if (!content) {
+    alert("Write something first.");
+    return;
+  }
+
   try {
-
-    const input =
-      document.getElementById("postText");
-
-    const text =
-      input?.value.trim();
-
-    if (!text) {
-      alert("Please write something first.");
-      return;
-    }
 
     const profileSnap =
       await getDoc(
         doc(db, "users", user.uid)
       );
 
-    const profile =
-      profileSnap.exists()
-        ? profileSnap.data()
-        : {};
+    let fullName =
+      user.displayName ||
+      user.email;
 
+    if (profileSnap.exists()) {
+
+      const data =
+        profileSnap.data();
+
+      fullName =
+        data.fullName ||
+        fullName;
+    }
 
     await addDoc(
       collection(db, "posts"),
       {
-        content: text,
         userId: user.uid,
         userEmail: user.email,
-        userName:
-          profile.fullName ||
-          user.displayName ||
-          user.email,
-
+        userName: fullName,
+        content: content,
         createdAt: serverTimestamp(),
-
         likes: [],
         comments: []
       }
     );
 
-
-    input.value = "";
+    postText.value = "";
 
   } catch (error) {
 
@@ -589,13 +651,13 @@ window.createPost = async function () {
       "Could not create post: " +
       error.message
     );
+
   }
 };
 
-
-/* =====================================================
-   LIKE / UNLIKE
-===================================================== */
+/* =========================================================
+   LIKE POST
+   ========================================================= */
 
 window.likePost = async function (postId) {
 
@@ -626,17 +688,23 @@ window.likePost = async function (postId) {
 
     if (likes.includes(user.email)) {
 
-      await updateDoc(postRef, {
-        likes:
-          arrayRemove(user.email)
-      });
+      await updateDoc(
+        postRef,
+        {
+          likes:
+            arrayRemove(user.email)
+        }
+      );
 
     } else {
 
-      await updateDoc(postRef, {
-        likes:
-          arrayUnion(user.email)
-      });
+      await updateDoc(
+        postRef,
+        {
+          likes:
+            arrayUnion(user.email)
+        }
+      );
     }
 
   } catch (error) {
@@ -644,16 +712,15 @@ window.likePost = async function (postId) {
     console.error(error);
 
     alert(
-      "Like failed: " +
-      error.message
+      "Could not update like."
     );
+
   }
 };
 
-
-/* =====================================================
+/* =========================================================
    ADD COMMENT
-===================================================== */
+   ========================================================= */
 
 window.addComment = async function (postId) {
 
@@ -664,20 +731,23 @@ window.addComment = async function (postId) {
     return;
   }
 
+  const input =
+    getElement(
+      "commentInput-" + postId
+    );
+
+  if (!input) {
+    return;
+  }
+
+  const text =
+    input.value.trim();
+
+  if (!text) {
+    return;
+  }
+
   try {
-
-    const input =
-      document.getElementById(
-        "commentInput-" + postId
-      );
-
-    const text =
-      input?.value.trim();
-
-    if (!text) {
-      return;
-    }
-
 
     await updateDoc(
       doc(db, "posts", postId),
@@ -693,7 +763,6 @@ window.addComment = async function (postId) {
       }
     );
 
-
     input.value = "";
 
   } catch (error) {
@@ -701,79 +770,73 @@ window.addComment = async function (postId) {
     console.error(error);
 
     alert(
-      "Comment failed: " +
-      error.message
+      "Could not add comment."
     );
+
   }
 };
 
-
-/* =====================================================
+/* =========================================================
    SHARE POST
-===================================================== */
+   ========================================================= */
 
 window.sharePost = async function (postId) {
 
-  const shareData = {
-
-    title:
-      "Sociology Connect",
-
-    text:
-      "Check this post on Sociology Connect.",
-
-    url:
-      window.location.href +
-      "#post-" +
-      postId
-  };
-
+  const shareUrl =
+    window.location.href;
 
   try {
 
     if (navigator.share) {
 
-      await navigator.share(
-        shareData
+      await navigator.share({
+        title: "Sociology Connect",
+        text: "Check this post on Sociology Connect.",
+        url: shareUrl
+      });
+
+    } else if (
+      navigator.clipboard
+    ) {
+
+      await navigator.clipboard.writeText(
+        shareUrl
+      );
+
+      alert(
+        "Post link copied!"
       );
 
     } else {
 
-      await navigator.clipboard.writeText(
-        shareData.url
-      );
-
       alert(
-        "Post link copied! 📋"
+        "Sharing is not supported on this browser."
       );
     }
 
   } catch (error) {
 
     console.log(
-      "Share cancelled or unavailable."
+      "Share cancelled."
     );
+
   }
 };
 
-
-/* =====================================================
+/* =========================================================
    REAL-TIME POSTS
-===================================================== */
+   ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    const box =
-      document.getElementById(
-        "postsContainer"
-      );
+    const postsContainer =
+      getElement("postsContainer");
 
-    if (!box) {
+    if (!postsContainer) {
       return;
     }
-
 
     const postsQuery =
       query(
@@ -784,27 +847,42 @@ document.addEventListener(
         )
       );
 
-
     onSnapshot(
       postsQuery,
       (snapshot) => {
 
-        box.innerHTML = "";
+        postsContainer.innerHTML = "";
 
         const posts = [];
 
-
         snapshot.forEach(
-          (docSnap) => {
+          (documentSnapshot) => {
 
             posts.push({
-              id: docSnap.id,
-              ...docSnap.data()
+              id:
+                documentSnapshot.id,
+
+              ...documentSnapshot.data()
             });
 
           }
         );
 
+        if (posts.length === 0) {
+
+          postsContainer.innerHTML = `
+            <div style="
+              background:white;
+              padding:20px;
+              border-radius:12px;
+              text-align:center;
+            ">
+              <h3>📭 No posts yet</h3>
+              <p>Be the first student to create a post.</p>
+            </div>
+          `;
+
+        }
 
         posts.forEach(
           (post) => {
@@ -812,84 +890,127 @@ document.addEventListener(
             const likes =
               post.likes?.length || 0;
 
-            let commentsHTML = "";
+            const comments =
+              post.comments || [];
 
-
-            (post.comments || [])
-              .forEach(
-                (comment) => {
-
-                  commentsHTML += `
-                    <div style="
-                      background:#f1f3f5;
-                      padding:8px;
-                      margin:5px 0;
-                      border-radius:8px;
-                    ">
-                      <b>
-                        ${comment.userEmail || "Student"}
-                      </b>
-                      <br>
-                      ${comment.text || ""}
-                    </div>
-                  `;
-                }
+            const userName =
+              escapeHTML(
+                post.userName ||
+                post.userEmail ||
+                "Student"
               );
 
+            const content =
+              escapeHTML(
+                post.content || ""
+              );
 
-            const postHTML = `
+            let commentsHTML = "";
 
-              <article
-                id="post-${post.id}"
-                style="
-                  background:white;
-                  padding:18px;
-                  margin:15px 0;
-                  border-radius:14px;
-                  box-shadow:0 2px 8px rgba(0,0,0,.08);
-                "
-              >
+            comments.forEach(
+              (comment) => {
 
-                <small style="color:#666;">
-                  👤
-                  <b>
-                    ${post.userName ||
-                      post.userEmail ||
-                      "Student"}
-                  </b>
-                </small>
+                commentsHTML += `
+                  <div style="
+                    background:#f1f3f5;
+                    padding:8px;
+                    margin:5px 0;
+                    border-radius:8px;
+                  ">
+                    <b>
+                      ${escapeHTML(
+                        comment.userEmail ||
+                        "Student"
+                      )}
+                    </b>
+                    <br>
+                    ${escapeHTML(
+                      comment.text ||
+                      ""
+                    )}
+                  </div>
+                `;
+
+              }
+            );
+
+            postsContainer.innerHTML += `
+              <div style="
+                background:white;
+                padding:16px;
+                margin:15px 0;
+                border-radius:14px;
+                box-shadow:0 3px 10px rgba(0,0,0,.08);
+              ">
+
+                <div style="
+                  display:flex;
+                  align-items:center;
+                  gap:8px;
+                ">
+
+                  <div style="
+                    width:42px;
+                    height:42px;
+                    border-radius:50%;
+                    background:#007bff;
+                    color:white;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-weight:bold;
+                  ">
+                    👤
+                  </div>
+
+                  <div>
+                    <b>${userName}</b>
+                    <br>
+                    <small style="color:#777;">
+                      ${escapeHTML(
+                        post.userEmail ||
+                        ""
+                      )}
+                    </small>
+                  </div>
+
+                </div>
 
                 <p style="
-                  margin:12px 0;
-                  line-height:1.5;
-                  font-size:16px;
+                  margin:15px 0;
+                  line-height:1.6;
+                  white-space:pre-wrap;
                 ">
-                  ${post.content || ""}
+                  ${content}
                 </p>
-
 
                 <div style="
                   display:flex;
                   gap:8px;
                   flex-wrap:wrap;
-                  border-top:1px solid #eee;
-                  padding-top:10px;
                 ">
 
                   <button
                     onclick="likePost('${post.id}')"
+                    style="
+                      width:auto;
+                      padding:9px 14px;
+                    "
                   >
                     ❤️ ${likes}
                   </button>
 
                   <button
                     onclick="sharePost('${post.id}')"
+                    style="
+                      width:auto;
+                      padding:9px 14px;
+                    "
                   >
                     📤 Share
                   </button>
 
                 </div>
-
 
                 <div style="
                   margin-top:12px;
@@ -905,18 +1026,19 @@ document.addEventListener(
 
                     <input
                       id="commentInput-${post.id}"
-                      type="text"
                       placeholder="Write a comment..."
                       style="
+                        margin:0;
                         flex:1;
-                        padding:10px;
-                        border:1px solid #ccc;
-                        border-radius:8px;
                       "
                     >
 
                     <button
                       onclick="addComment('${post.id}')"
+                      style="
+                        width:auto;
+                        padding:10px 14px;
+                      "
                     >
                       Send
                     </button>
@@ -925,19 +1047,11 @@ document.addEventListener(
 
                 </div>
 
-              </article>
-
+              </div>
             `;
-
-
-            box.insertAdjacentHTML(
-              "beforeend",
-              postHTML
-            );
 
           }
         );
-
 
         updateTrending(posts);
 
@@ -950,33 +1064,37 @@ document.addEventListener(
           error
         );
 
-        box.innerHTML = `
-          <p style="color:red;">
-            Could not load posts.
-          </p>
+        postsContainer.innerHTML = `
+          <div style="
+            background:#fff3cd;
+            padding:15px;
+            border-radius:10px;
+          ">
+            ⚠️ Could not load posts.
+          </div>
         `;
+
       }
     );
 
   }
 );
 
-
-/* =====================================================
+/* =========================================================
    TRENDING POSTS
-===================================================== */
+   ========================================================= */
 
 function updateTrending(posts) {
 
   const trending =
-    document.getElementById(
-      "trending"
-    );
+    getElement("trending");
 
   if (!trending) {
     return;
   }
 
+  trending.innerHTML =
+    "<h2>🔥 Trending Posts</h2>";
 
   const sorted =
     [...posts].sort(
@@ -991,13 +1109,9 @@ function updateTrending(posts) {
           (b.comments?.length || 0);
 
         return scoreB - scoreA;
+
       }
     );
-
-
-  trending.innerHTML =
-    "<h2>🔥 Trending Posts</h2>";
-
 
   sorted
     .slice(0, 3)
@@ -1005,47 +1119,52 @@ function updateTrending(posts) {
       (post) => {
 
         trending.innerHTML += `
+          <div class="card" style="
+            background:white;
+            padding:12px;
+            margin:8px 0;
+            border-radius:10px;
+          ">
 
-          <div class="card"
-               style="
-                 background:white;
-                 padding:12px;
-                 margin:8px 0;
-                 border-radius:10px;
-               ">
+            ❤️ ${post.likes?.length || 0}
+            &nbsp; 💬 ${post.comments?.length || 0}
 
-            <b>
-              ${post.userName ||
-                post.userEmail ||
-                "Student"}
-            </b>
+            <br><br>
 
-            <p>
-              ${post.content || ""}
-            </p>
-
-            <small>
-              ❤️ ${post.likes?.length || 0}
-              &nbsp;
-              💬 ${post.comments?.length || 0}
-            </small>
+            ${escapeHTML(
+              post.content || ""
+            )}
 
           </div>
-
         `;
+
       }
     );
 }
 
-
-/* =====================================================
+/* =========================================================
    ADMIN CHECK
-===================================================== */
+   ========================================================= */
 
 window.isAdmin = function () {
 
+  const user =
+    auth.currentUser;
+
+  if (!user) {
+    return false;
+  }
+
   return (
-    auth.currentUser?.email ===
+    user.email ===
     "admin@sociologyconnect.com"
   );
 };
+
+/* =========================================================
+   PAGE READY MESSAGE
+   ========================================================= */
+
+console.log(
+  "✅ Sociology Connect Firebase system loaded."
+);

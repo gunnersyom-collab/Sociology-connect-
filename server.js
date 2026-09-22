@@ -1,75 +1,66 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const chatHistory = document.getElementById("chat-history");
+const userInput = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+const themeBtn = document.getElementById("themeBtn");
+const micBtn = document.getElementById("micBtn");
 
-const app = express();
+function addMessage(sender, text, isUser) {
+    const div = document.createElement("div");
+    div.className = `message ${isUser ? "user" : "ai"}`;
+    div.innerHTML = `<b>${sender}</b><br>${text}`;
+    chatHistory.appendChild(div);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    return div;
+}
 
-app.use(cors({ origin: "*" }));
-app.use(express.json());
-app.use(express.static(__dirname));
+async function sendToServer() {
+    const message = userInput.value.trim();
+    if (!message) return;
 
-// Gemini API
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    addMessage("You", message, true);
+    userInput.value = "";
 
-// Chat history (server memory)
-let history = [];
+    const typing = addMessage("AI Mari", "Typing...", false);
 
-app.post("/api/chat", async (req, res) => {
-  const { message } = req.body;
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
+        });
 
-  if (!message || message.trim() === "") {
-    return res.status(400).json({
-      reply: "Please enter a message."
-    });
-  }
+        const data = await response.json();
+        typing.innerHTML = `<b>AI Mari</b><br>${data.reply}`;
 
-  try {
-    const model = genAI.getGenerativeModel({
-      model: "gemini-3.6-flash"
-    });
-
-    const prompt = `
-You are AI Mari, the official Sociology Connect Assistant for Arsi University.
-
-Rules:
-- Reply in Afaan Oromoo if the user writes Afaan Oromoo.
-- Reply in Amharic if the user writes Amharic.
-- Reply in English if the user writes English.
-- Help with Sociology, Social Work, assignments, university questions, and general knowledge.
-- Be friendly, respectful, and concise.
-
-Previous conversation:
-${history.map(h => `${h.role}: ${h.text}`).join("\n")}
-
-User: ${message}
-`;
-
-    const result = await model.generateContent(prompt);
-    const reply = result.response.text();
-
-    // Save history
-    history.push({ role: "User", text: message });
-    history.push({ role: "AI Mari", text: reply });
-
-    // Keep only last 20 messages
-    if (history.length > 20) {
-      history = history.slice(-20);
+    } catch (error) {
+        typing.innerHTML = "<b>AI Mari</b><br>Connection error.";
+        console.error(error);
     }
+}
 
-    res.json({ reply });
+sendBtn.addEventListener("click", sendToServer);
 
-  } catch (error) {
-    console.error("Gemini Error:", error);
-
-    res.status(500).json({
-      reply: "Sorry, AI Mari is temporarily unavailable."
-    });
-  }
+userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendToServer();
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Dark Mode
+themeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
 });
+
+// Voice Input
+if ("webkitSpeechRecognition" in window) {
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = "en-US";
+
+    micBtn.addEventListener("click", () => recognition.start());
+
+    recognition.onresult = (e) => {
+        userInput.value = e.results[0][0].transcript;
+    };
+} else {
+    micBtn.style.display = "none";
+}

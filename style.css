@@ -2,24 +2,58 @@
 .section-container {
     padding: 40px 20px;
     margin: 20px 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-/* Background adda ta'e (Fkn: Iddoo Contact) */
+/* Contact Section */
 .contact-section {
-    background-color: #f4f4f9; /* Bifa daalacha salphaa */
-    border-left: 5px solid #007bff; /* Karaa mirgaa irratti mallattoo adda baasuuf */
+    background-color: #f4f4f9;
+    border-left: 5px solid #007bff;
+    padding: 25px;
+    border-radius: 12px;
 }
 
-/* Button-ii Telegram-tiif */
+/* Telegram Button */
 .telegram-btn {
     display: inline-block;
     padding: 12px 25px;
     background-color: #0088cc;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-weight: bold;
     margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.telegram-btn:hover {
+    background-color: #006fa3;
+    transform: translateY(-2px);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .section-container,
+    .contact-section {
+        padding: 20px 15px;
+        margin: 15px 10px;
+    }
+
+    .telegram-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Dark Mode */
+.dark .section-container,
+.dark .contact-section {
+    background-color: #1f1f1f;
+    color: white;
+}
+
+.dark .telegram-btn {
+    background-color: #0a84d0;
 }

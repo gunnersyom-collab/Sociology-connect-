@@ -7,7 +7,11 @@ const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
+// Fayyila HTML/CSS/JS hunda akka fe'uuf gargaara
+app.use(express.static(__dirname));
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 app.post('/api/chat', async (req, res) => {
     const { message } = req.body;
     
@@ -26,8 +30,4 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-// Server-iin kee 'Cannot GET /' akka hin jenneef, root route tokko dabali
-app.get('/', (req, res) => {
-    res.send('AI Mari is active and ready to help on Sociology Connect!');
-});
-app.listen(3000, () => console.log('AI Mari is running...'));
+app.listen(process.env.PORT || 3000, () => console.log('Server is running...'));

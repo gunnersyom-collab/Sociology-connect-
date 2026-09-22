@@ -1,25 +1,142 @@
 
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <rss version="2.0">
+
 <channel>
 
-  <title>Sociology Connect</title>
-
-  <link>https://gunnersyom-co.github.io/sociology-connect/</link>
-
-  <description>Odeeffannoo haaraa Sociology Connect</description>
-
-  <language>en-us</language>
-
-  <item>
-    <title>Mata-duree haaraa</title>
+    <title>Sociology Connect</title>
 
     <link>https://gunnersyom-co.github.io/sociology-connect/</link>
 
-    <description>Ibsa gabaabaa</description>
+    <description>
+        Latest academic news, announcements and updates
+        from Sociology Connect – Arsi University.
+    </description>
 
-    <pubDate>Tue, 22 Sep 2026 00:00:00 GMT</pubDate>
-  </item>
+    <language>en-us</language>
+
+    <lastBuildDate>
+        Tue, 22 Sep 2026 00:00:00 GMT
+    </lastBuildDate>
+
+
+    <!-- NEWS 1 -->
+
+    <item>
+
+        <title>
+            Sociology Connect Platform Update
+        </title>
+
+        <link>
+            https://gunnersyom-co.github.io/sociology-connect/
+        </link>
+
+        <guid isPermaLink="true">
+            https://gunnersyom-co.github.io/sociology-connect/
+        </guid>
+
+        <description>
+            Sociology Connect has been updated with
+            student community features, academic resources
+            and communication tools.
+        </description>
+
+        <pubDate>
+            Tue, 22 Sep 2026 00:00:00 GMT
+        </pubDate>
+
+    </item>
+
+
+    <!-- NEWS 2 -->
+
+    <item>
+
+        <title>
+            New Academic Resources
+        </title>
+
+        <link>
+            https://gunnersyom-co.github.io/sociology-connect/
+        </link>
+
+        <guid isPermaLink="true">
+            https://gunnersyom-co.github.io/sociology-connect/#resources
+        </guid>
+
+        <description>
+            New Sociology and Social Work learning materials,
+            research guidance and academic resources are
+            being added to Sociology Connect.
+        </description>
+
+        <pubDate>
+            Tue, 22 Sep 2026 00:00:00 GMT
+        </pubDate>
+
+    </item>
+
+
+    <!-- NEWS 3 -->
+
+    <item>
+
+        <title>
+            Student Community Updates
+        </title>
+
+        <link>
+            https://gunnersyom-co.github.io/sociology-connect/
+        </link>
+
+        <guid isPermaLink="true">
+            https://gunnersyom-co.github.io/sociology-connect/#community
+        </guid>
+
+        <description>
+            Students can share ideas, questions,
+            academic information and useful announcements
+            through the Sociology Connect community.
+        </description>
+
+        <pubDate>
+            Tue, 22 Sep 2026 00:00:00 GMT
+        </pubDate>
+
+    </item>
+
+
+    <!-- NEWS 4 -->
+
+    <item>
+
+        <title>
+            Research Support for Students
+        </title>
+
+        <link>
+            https://gunnersyom-co.github.io/sociology-connect/
+        </link>
+
+        <guid isPermaLink="true">
+            https://gunnersyom-co.github.io/sociology-connect/#research-guide
+        </guid>
+
+        <description>
+            Students can use the Research Guide to learn
+            about topic selection, literature review,
+            methodology, data collection and analysis.
+        </description>
+
+        <pubDate>
+            Tue, 22 Sep 2026 00:00:00 GMT
+        </pubDate>
+
+    </item>
+
 
 </channel>
+
 </rss>

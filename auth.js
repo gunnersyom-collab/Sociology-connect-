@@ -1,6 +1,6 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -26,10 +26,13 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-/* ---------------- FIREBASE ---------------- */
+
+/* =====================================================
+   FIREBASE CONFIG
+===================================================== */
 
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
+  apiKey: "AIzaSyBiwF8jW-hCDLmtbpAD6t99afAhcldGQfw",
   authDomain: "sociologyconnect.firebaseapp.com",
   projectId: "sociologyconnect",
   storageBucket: "sociologyconnect.firebasestorage.app",
@@ -39,378 +42,1010 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-getAnalytics(app);
+
+try {
+  getAnalytics(app);
+} catch (error) {
+  console.log("Analytics unavailable:", error);
+}
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* ---------------- SIGNUP ---------------- */
 
-window.signup = async () => {
+/* =====================================================
+   SIGN UP
+===================================================== */
 
-  try{
+window.signup = async function () {
 
-    const userCred =
+  try {
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const fullNameInput = document.getElementById("fullName");
+    const yearInput = document.getElementById("year");
+    const bioInput = document.getElementById("bio");
+
+    const email = emailInput?.value.trim();
+    const password = passwordInput?.value;
+    const fullName = fullNameInput?.value.trim() || "";
+    const year = yearInput?.value || "";
+    const bio = bioInput?.value.trim() || "";
+
+    if (!email || !password) {
+      alert("Please enter your email and password.");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("Password must contain at least 6 characters.");
+      return;
+    }
+
+    const userCredential =
       await createUserWithEmailAndPassword(
         auth,
-        email.value,
-        password.value
+        email,
+        password
       );
 
-    await setDoc(doc(db,"users",userCred.user.uid),{
+    const user = userCredential.user;
 
-      email:userCred.user.email,
-      bio:"",
-      year:"",
-      photo:""
+    /* Save name to Firebase Authentication */
+    if (fullName) {
+      await updateProfile(user, {
+        displayName: fullName
+      });
+    }
 
-    });
+    /* Save complete profile to Firestore */
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        uid: user.uid,
+        email: user.email,
+        fullName: fullName,
+        year: year,
+        bio: bio,
+        photo: "",
+        createdAt: serverTimestamp()
+      },
+      { merge: true }
+    );
 
-    alert("Account created!");
+    alert("Account created successfully! 🎉");
 
-    location.href="index.html";
+    window.location.href = "index.html";
 
-  }catch(e){
+  } catch (error) {
 
-    alert(e.message);
+    console.error(error);
 
+    let message = error.message;
+
+    if (error.code === "auth/email-already-in-use") {
+      message = "This email is already registered.";
+    }
+
+    if (error.code === "auth/invalid-email") {
+      message = "Please enter a valid email.";
+    }
+
+    if (error.code === "auth/weak-password") {
+      message = "Password is too weak.";
+    }
+
+    alert(message);
   }
-
 };
 
-/* ---------------- LOGIN ---------------- */
 
-window.login = async () => {
+/* =====================================================
+   LOGIN
+===================================================== */
 
-  try{
+window.login = async function () {
+
+  try {
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    const email = emailInput?.value.trim();
+    const password = passwordInput?.value;
+
+    if (!email || !password) {
+      alert("Please enter email and password.");
+      return;
+    }
 
     await signInWithEmailAndPassword(
       auth,
-      email.value,
-      password.value
+      email,
+      password
     );
 
-    location.href="index.html";
+    window.location.href = "index.html";
 
-  }catch(e){
+  } catch (error) {
 
-    alert(e.message);
+    console.error(error);
 
-  }
+    let message = error.message;
 
-};
-
-/* ---------------- LOGOUT ---------------- */
-
-window.logout = ()=>{
-
-  signOut(auth);
-
-};
-
-/* ---------------- AUTH STATE ---------------- */
-
-onAuthStateChanged(auth,async user=>{
-
-  const info=document.getElementById("userInfo");
-  const login=document.getElementById("loginLink");
-  const logout=document.getElementById("logoutBtn");
-
-  if(info){
-
-    if(user){
-
-      info.textContent=user.email;
-      info.style.display="inline";
-      login.style.display="none";
-      logout.style.display="inline-block";
-
-      const profile=await getDoc(doc(db,"users",user.uid));
-
-      if(profile.exists()){
-
-        const data=profile.data();
-
-        const bio=document.getElementById("profileBio");
-        const year=document.getElementById("profileYear");
-
-        if(bio)bio.value=data.bio||"";
-        if(year)year.value=data.year||"";
-
-      }
-
-    }else{
-
-      info.style.display="none";
-      login.style.display="inline";
-      logout.style.display="none";
-
+    if (
+      error.code === "auth/invalid-credential" ||
+      error.code === "auth/wrong-password" ||
+      error.code === "auth/user-not-found"
+    ) {
+      message = "Email or password is incorrect.";
     }
 
+    alert(message);
   }
+};
 
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+window.logout = async function () {
+
+  try {
+
+    await signOut(auth);
+
+    window.location.href = "login.html";
+
+  } catch (error) {
+
+    alert(error.message);
+  }
+};
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+onAuthStateChanged(auth, async (user) => {
+
+  const info = document.getElementById("userInfo");
+  const loginLink = document.getElementById("loginLink");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (user) {
+
+    if (info) {
+      info.textContent =
+        user.displayName || user.email;
+
+      info.style.display = "inline";
+    }
+
+    if (loginLink) {
+      loginLink.style.display = "none";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display = "inline-block";
+    }
+
+    await loadProfile(user);
+
+  } else {
+
+    if (info) {
+      info.style.display = "none";
+    }
+
+    if (loginLink) {
+      loginLink.style.display = "inline";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display = "none";
+    }
+
+    const profileCard =
+      document.getElementById("profileCard");
+
+    const loginMessage =
+      document.getElementById("loginMessage");
+
+    if (profileCard) {
+      profileCard.style.display = "none";
+    }
+
+    if (loginMessage) {
+      loginMessage.style.display = "block";
+    }
+  }
 });
 
-/* ---------------- SAVE PROFILE ---------------- */
 
-window.saveProfile=async()=>{
+/* =====================================================
+   LOAD PROFILE
+===================================================== */
 
-  const user=auth.currentUser;
+async function loadProfile(user) {
 
-  if(!user)return;
+  try {
 
-  await setDoc(doc(db,"users",user.uid),{
+    const profileRef =
+      doc(db, "users", user.uid);
 
-    email:user.email,
-    bio:document.getElementById("profileBio").value,
-    year:document.getElementById("profileYear").value
+    const profileSnap =
+      await getDoc(profileRef);
 
-  },{merge:true});
+    let data = {};
 
-  alert("Profile saved.");
+    if (profileSnap.exists()) {
+      data = profileSnap.data();
+    }
 
-};
+    const profileCard =
+      document.getElementById("profileCard");
 
-/* ---------------- CREATE POST ---------------- */
+    const loginMessage =
+      document.getElementById("loginMessage");
 
-window.createPost=async()=>{
+    if (profileCard) {
+      profileCard.style.display = "block";
+    }
 
-  const user=auth.currentUser;
+    if (loginMessage) {
+      loginMessage.style.display = "none";
+    }
 
-  if(!user){
 
-    alert("Login first.");
+    /* Profile display */
+
+    const profileName =
+      document.getElementById("profileName");
+
+    const profileEmail =
+      document.getElementById("profileEmail");
+
+    const profileYear =
+      document.getElementById("profileYear");
+
+    const profileBio =
+      document.getElementById("profileBio");
+
+    const profilePhoto =
+      document.getElementById("profilePhoto");
+
+
+    if (profileName) {
+      profileName.textContent =
+        data.fullName ||
+        user.displayName ||
+        "Student";
+    }
+
+    if (profileEmail) {
+      profileEmail.textContent =
+        user.email;
+    }
+
+    if (profileYear) {
+
+      if (profileYear.tagName === "SELECT") {
+        profileYear.value = data.year || "";
+      } else {
+        profileYear.textContent =
+          data.year || "Not added";
+      }
+    }
+
+    if (profileBio) {
+
+      if (
+        profileBio.tagName === "TEXTAREA" ||
+        profileBio.tagName === "INPUT"
+      ) {
+        profileBio.value = data.bio || "";
+      } else {
+        profileBio.textContent =
+          data.bio || "No bio added yet.";
+      }
+    }
+
+    if (profilePhoto && data.photo) {
+      profilePhoto.src = data.photo;
+    }
+
+
+    /* Edit form */
+
+    const fullName =
+      document.getElementById("fullName");
+
+    const year =
+      document.getElementById("year");
+
+    const bio =
+      document.getElementById("bio");
+
+    const photo =
+      document.getElementById("photo");
+
+
+    if (fullName) {
+      fullName.value =
+        data.fullName ||
+        user.displayName ||
+        "";
+    }
+
+    if (year) {
+      year.value =
+        data.year || "";
+    }
+
+    if (bio) {
+      bio.value =
+        data.bio || "";
+    }
+
+    if (photo) {
+      photo.value =
+        data.photo || "";
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Profile loading error:",
+      error
+    );
+  }
+}
+
+
+/* =====================================================
+   SAVE PROFILE
+===================================================== */
+
+window.saveProfile = async function () {
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Please login first.");
     return;
-
   }
 
-  const text=document.getElementById("postText").value.trim();
+  try {
 
-  if(!text)return;
+    const fullName =
+      document.getElementById("fullName")?.value.trim() || "";
 
-  await addDoc(collection(db,"posts"),{
+    const year =
+      document.getElementById("year")?.value || "";
 
-    content:text,
-    userEmail:user.email,
-    createdAt:serverTimestamp(),
-    likes:[],
-    comments:[]
+    const bio =
+      document.getElementById("bio")?.value.trim() || "";
 
-  });
+    const photo =
+      document.getElementById("photo")?.value.trim() || "";
 
-  document.getElementById("postText").value="";
 
+    /* Update Firebase Auth name */
+
+    if (fullName) {
+
+      await updateProfile(user, {
+        displayName: fullName
+      });
+    }
+
+
+    /* Update Firestore */
+
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        uid: user.uid,
+        email: user.email,
+        fullName: fullName,
+        year: year,
+        bio: bio,
+        photo: photo,
+        updatedAt: serverTimestamp()
+      },
+      { merge: true }
+    );
+
+
+    /* Update screen */
+
+    const profileName =
+      document.getElementById("profileName");
+
+    const profilePhoto =
+      document.getElementById("profilePhoto");
+
+    const profileYear =
+      document.getElementById("profileYear");
+
+    const profileBio =
+      document.getElementById("profileBio");
+
+
+    if (profileName) {
+      profileName.textContent =
+        fullName || "Student";
+    }
+
+    if (profileYear) {
+
+      if (profileYear.tagName === "SELECT") {
+        profileYear.value = year;
+      } else {
+        profileYear.textContent =
+          year || "Not added";
+      }
+    }
+
+    if (profileBio) {
+
+      if (
+        profileBio.tagName === "TEXTAREA" ||
+        profileBio.tagName === "INPUT"
+      ) {
+        profileBio.value = bio;
+      } else {
+        profileBio.textContent =
+          bio || "No bio added yet.";
+      }
+    }
+
+    if (profilePhoto && photo) {
+      profilePhoto.src = photo;
+    }
+
+
+    alert("Profile saved successfully! ✅");
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "Could not save profile: " +
+      error.message
+    );
+  }
 };
 
-/* ---------------- LIKE ---------------- */
 
-window.likePost=async(id)=>{
+/* =====================================================
+   CREATE POST
+===================================================== */
 
-  const user=auth.currentUser;
+window.createPost = async function () {
 
-  if(!user){
+  const user = auth.currentUser;
 
-    alert("Login first.");
+  if (!user) {
+    alert("Please login first.");
     return;
-
   }
 
-  const ref=doc(db,"posts",id);
+  try {
 
-  const snap=await getDoc(ref);
+    const input =
+      document.getElementById("postText");
 
-  const likes=snap.data().likes||[];
+    const text =
+      input?.value.trim();
 
-  if(likes.includes(user.email)){
+    if (!text) {
+      alert("Please write something first.");
+      return;
+    }
 
-    await updateDoc(ref,{
-      likes:arrayRemove(user.email)
-    });
+    const profileSnap =
+      await getDoc(
+        doc(db, "users", user.uid)
+      );
 
-  }else{
+    const profile =
+      profileSnap.exists()
+        ? profileSnap.data()
+        : {};
 
-    await updateDoc(ref,{
-      likes:arrayUnion(user.email)
-    });
 
+    await addDoc(
+      collection(db, "posts"),
+      {
+        content: text,
+        userId: user.uid,
+        userEmail: user.email,
+        userName:
+          profile.fullName ||
+          user.displayName ||
+          user.email,
+
+        createdAt: serverTimestamp(),
+
+        likes: [],
+        comments: []
+      }
+    );
+
+
+    input.value = "";
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "Could not create post: " +
+      error.message
+    );
   }
-
 };
 
-/* ---------------- COMMENT ---------------- */
 
-window.addComment=async(id)=>{
+/* =====================================================
+   LIKE / UNLIKE
+===================================================== */
 
-  const user=auth.currentUser;
+window.likePost = async function (postId) {
 
-  if(!user){
+  const user = auth.currentUser;
 
-    alert("Login first.");
+  if (!user) {
+    alert("Please login first.");
     return;
-
   }
 
-  const input=document.getElementById("commentInput-"+id);
+  try {
 
-  if(!input.value.trim())return;
+    const postRef =
+      doc(db, "posts", postId);
 
-  await updateDoc(doc(db,"posts",id),{
+    const postSnap =
+      await getDoc(postRef);
 
-    comments:arrayUnion({
+    if (!postSnap.exists()) {
+      return;
+    }
 
-      userEmail:user.email,
-      text:input.value,
-      time:new Date().toISOString()
+    const data =
+      postSnap.data();
 
-    })
+    const likes =
+      data.likes || [];
 
-  });
+    if (likes.includes(user.email)) {
 
-  input.value="";
-
-};
-
-/* ---------------- SHARE ---------------- */
-
-window.sharePost=async(id)=>{
-
-  if(navigator.share){
-
-    await navigator.share({
-
-      title:"Sociology Connect",
-      text:"Check this post.",
-      url:location.href
-
-    });
-
-  }
-
-};
-
-/* ---------------- REAL TIME FEED ---------------- */
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-  const box=document.getElementById("postsContainer");
-
-  if(!box)return;
-
-  onSnapshot(
-
-    query(collection(db,"posts"),orderBy("createdAt","desc")),
-
-    snap=>{
-
-      box.innerHTML="";
-
-      const posts=[];
-
-      snap.forEach(d=>{
-
-        posts.push({
-          id:d.id,
-          ...d.data()
-        });
-
+      await updateDoc(postRef, {
+        likes:
+          arrayRemove(user.email)
       });
 
-      posts.forEach(post=>{
+    } else {
 
-        const likes=post.likes?post.likes.length:0;
+      await updateDoc(postRef, {
+        likes:
+          arrayUnion(user.email)
+      });
+    }
 
-        let comments="";
+  } catch (error) {
 
-        (post.comments||[]).forEach(c=>{
+    console.error(error);
 
-          comments+=`
-            <div style="background:#f1f3f5;padding:6px;margin:4px 0;border-radius:6px;">
-              <b>${c.userEmail}</b><br>${c.text}
-            </div>
-          `;
+    alert(
+      "Like failed: " +
+      error.message
+    );
+  }
+};
 
-        });
 
-        box.innerHTML+=`
+/* =====================================================
+   ADD COMMENT
+===================================================== */
 
-          <div style="background:white;padding:15px;margin:15px 0;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,.08);">
+window.addComment = async function (postId) {
 
-            <small><b>${post.userEmail}</b></small>
+  const user = auth.currentUser;
 
-            <p style="margin:10px 0;">${post.content}</p>
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
 
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+  try {
 
-              <button onclick="likePost('${post.id}')">
-                ❤️ ${likes}
-              </button>
+    const input =
+      document.getElementById(
+        "commentInput-" + postId
+      );
 
-              <button onclick="sharePost('${post.id}')">
-                📤 Share
-              </button>
+    const text =
+      input?.value.trim();
 
-            </div>
+    if (!text) {
+      return;
+    }
 
-            <div style="margin-top:10px;">
 
-              ${comments}
+    await updateDoc(
+      doc(db, "posts", postId),
+      {
+        comments:
+          arrayUnion({
+            userId: user.uid,
+            userEmail: user.email,
+            text: text,
+            time:
+              new Date().toISOString()
+          })
+      }
+    );
 
-              <div style="display:flex;gap:6px;">
 
-                <input id="commentInput-${post.id}" placeholder="Comment...">
+    input.value = "";
 
-                <button onclick="addComment('${post.id}')">
-                  Send
-                </button>
+  } catch (error) {
 
-              </div>
+    console.error(error);
 
-            </div>
+    alert(
+      "Comment failed: " +
+      error.message
+    );
+  }
+};
+
+
+/* =====================================================
+   SHARE POST
+===================================================== */
+
+window.sharePost = async function (postId) {
+
+  const shareData = {
+
+    title:
+      "Sociology Connect",
+
+    text:
+      "Check this post on Sociology Connect.",
+
+    url:
+      window.location.href +
+      "#post-" +
+      postId
+  };
+
+
+  try {
+
+    if (navigator.share) {
+
+      await navigator.share(
+        shareData
+      );
+
+    } else {
+
+      await navigator.clipboard.writeText(
+        shareData.url
+      );
+
+      alert(
+        "Post link copied! 📋"
+      );
+    }
+
+  } catch (error) {
+
+    console.log(
+      "Share cancelled or unavailable."
+    );
+  }
+};
+
+
+/* =====================================================
+   REAL-TIME POSTS
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const box =
+      document.getElementById(
+        "postsContainer"
+      );
+
+    if (!box) {
+      return;
+    }
+
+
+    const postsQuery =
+      query(
+        collection(db, "posts"),
+        orderBy(
+          "createdAt",
+          "desc"
+        )
+      );
+
+
+    onSnapshot(
+      postsQuery,
+      (snapshot) => {
+
+        box.innerHTML = "";
+
+        const posts = [];
+
+
+        snapshot.forEach(
+          (docSnap) => {
+
+            posts.push({
+              id: docSnap.id,
+              ...docSnap.data()
+            });
+
+          }
+        );
+
+
+        posts.forEach(
+          (post) => {
+
+            const likes =
+              post.likes?.length || 0;
+
+            let commentsHTML = "";
+
+
+            (post.comments || [])
+              .forEach(
+                (comment) => {
+
+                  commentsHTML += `
+                    <div style="
+                      background:#f1f3f5;
+                      padding:8px;
+                      margin:5px 0;
+                      border-radius:8px;
+                    ">
+                      <b>
+                        ${comment.userEmail || "Student"}
+                      </b>
+                      <br>
+                      ${comment.text || ""}
+                    </div>
+                  `;
+                }
+              );
+
+
+            const postHTML = `
+
+              <article
+                id="post-${post.id}"
+                style="
+                  background:white;
+                  padding:18px;
+                  margin:15px 0;
+                  border-radius:14px;
+                  box-shadow:0 2px 8px rgba(0,0,0,.08);
+                "
+              >
+
+                <small style="color:#666;">
+                  👤
+                  <b>
+                    ${post.userName ||
+                      post.userEmail ||
+                      "Student"}
+                  </b>
+                </small>
+
+                <p style="
+                  margin:12px 0;
+                  line-height:1.5;
+                  font-size:16px;
+                ">
+                  ${post.content || ""}
+                </p>
+
+
+                <div style="
+                  display:flex;
+                  gap:8px;
+                  flex-wrap:wrap;
+                  border-top:1px solid #eee;
+                  padding-top:10px;
+                ">
+
+                  <button
+                    onclick="likePost('${post.id}')"
+                  >
+                    ❤️ ${likes}
+                  </button>
+
+                  <button
+                    onclick="sharePost('${post.id}')"
+                  >
+                    📤 Share
+                  </button>
+
+                </div>
+
+
+                <div style="
+                  margin-top:12px;
+                ">
+
+                  ${commentsHTML}
+
+                  <div style="
+                    display:flex;
+                    gap:6px;
+                    margin-top:8px;
+                  ">
+
+                    <input
+                      id="commentInput-${post.id}"
+                      type="text"
+                      placeholder="Write a comment..."
+                      style="
+                        flex:1;
+                        padding:10px;
+                        border:1px solid #ccc;
+                        border-radius:8px;
+                      "
+                    >
+
+                    <button
+                      onclick="addComment('${post.id}')"
+                    >
+                      Send
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            `;
+
+
+            box.insertAdjacentHTML(
+              "beforeend",
+              postHTML
+            );
+
+          }
+        );
+
+
+        updateTrending(posts);
+
+      },
+
+      (error) => {
+
+        console.error(
+          "Posts error:",
+          error
+        );
+
+        box.innerHTML = `
+          <p style="color:red;">
+            Could not load posts.
+          </p>
+        `;
+      }
+    );
+
+  }
+);
+
+
+/* =====================================================
+   TRENDING POSTS
+===================================================== */
+
+function updateTrending(posts) {
+
+  const trending =
+    document.getElementById(
+      "trending"
+    );
+
+  if (!trending) {
+    return;
+  }
+
+
+  const sorted =
+    [...posts].sort(
+      (a, b) => {
+
+        const scoreA =
+          (a.likes?.length || 0) +
+          (a.comments?.length || 0);
+
+        const scoreB =
+          (b.likes?.length || 0) +
+          (b.comments?.length || 0);
+
+        return scoreB - scoreA;
+      }
+    );
+
+
+  trending.innerHTML =
+    "<h2>🔥 Trending Posts</h2>";
+
+
+  sorted
+    .slice(0, 3)
+    .forEach(
+      (post) => {
+
+        trending.innerHTML += `
+
+          <div class="card"
+               style="
+                 background:white;
+                 padding:12px;
+                 margin:8px 0;
+                 border-radius:10px;
+               ">
+
+            <b>
+              ${post.userName ||
+                post.userEmail ||
+                "Student"}
+            </b>
+
+            <p>
+              ${post.content || ""}
+            </p>
+
+            <small>
+              ❤️ ${post.likes?.length || 0}
+              &nbsp;
+              💬 ${post.comments?.length || 0}
+            </small>
 
           </div>
 
         `;
-
-      });
-
-      updateTrending(posts);
-
-    }
-
-  );
-
-});
-
-/* ---------------- TRENDING ---------------- */
-
-function updateTrending(posts){
-
-  const t=document.getElementById("trending");
-
-  if(!t)return;
-
-  t.innerHTML="<h2>🔥 Trending Posts</h2>";
-
-  posts
-    .sort((a,b)=>(b.likes?.length||0)-(a.likes?.length||0))
-    .slice(0,3)
-    .forEach(p=>{
-
-      t.innerHTML+=`
-        <div class="card">
-          ❤️ ${p.likes?.length||0} — ${p.content}
-        </div>
-      `;
-
-    });
-
+      }
+    );
 }
 
-/* ---------------- ADMIN ---------------- */
 
-window.isAdmin=()=>{
+/* =====================================================
+   ADMIN CHECK
+===================================================== */
 
-  return auth.currentUser?.email==="admin@sociologyconnect.com";
+window.isAdmin = function () {
 
+  return (
+    auth.currentUser?.email ===
+    "admin@sociologyconnect.com"
+  );
 };
-

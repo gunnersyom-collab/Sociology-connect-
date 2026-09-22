@@ -1,4 +1,6 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
@@ -19,14 +21,20 @@ import {
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBiwF8jW-hCDLmtbpAD6t99afAhcldGQfw",
+  authDomain: "sociologyconnect.firebaseapp.com",
+  projectId: "sociologyconnect",
+  storageBucket: "sociologyconnect.firebasestorage.app",
+  messagingSenderId: "500228908679",
+  appId: "1:500228908679:web:ebc9c7cd6bf7c38aa13a22",
+  measurementId: "G-BM74QJ4XTZ"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -175,4 +183,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 

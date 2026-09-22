@@ -5,6 +5,8 @@ const themeBtn = document.getElementById("themeBtn");
 const micBtn = document.getElementById("micBtn");
 
 function addMessage(sender, text, isUser) {
+    if (!chatHistory) return null;
+
     const div = document.createElement("div");
     div.className = `message ${isUser ? "user" : "ai"}`;
     div.innerHTML = `<b>${sender}</b><br>${text}`;
@@ -14,6 +16,8 @@ function addMessage(sender, text, isUser) {
 }
 
 async function sendToServer() {
+    if (!userInput) return;
+
     const message = userInput.value.trim();
     if (!message) return;
 
@@ -32,27 +36,41 @@ async function sendToServer() {
         });
 
         const data = await response.json();
-        typing.innerHTML = `<b>AI Mari</b><br>${data.reply}`;
+
+        if (typing) {
+            typing.innerHTML = `<b>AI Mari</b><br>${data.reply}`;
+        }
 
     } catch (error) {
-        typing.innerHTML = "<b>AI Mari</b><br>Connection error.";
-        console.error(error);
+        console.error("Chat Error:", error);
+
+        if (typing) {
+            typing.innerHTML = "<b>AI Mari</b><br>Connection error.";
+        }
     }
 }
 
-sendBtn.addEventListener("click", sendToServer);
+// Send button
+if (sendBtn) {
+    sendBtn.addEventListener("click", sendToServer);
+}
 
-userInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") sendToServer();
-});
+// Enter key
+if (userInput) {
+    userInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") sendToServer();
+    });
+}
 
 // Dark Mode
-themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-});
+if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+    });
+}
 
 // Voice Input
-if ("webkitSpeechRecognition" in window) {
+if (micBtn && "webkitSpeechRecognition" in window) {
     const recognition = new webkitSpeechRecognition();
     recognition.lang = "en-US";
 
@@ -61,6 +79,6 @@ if ("webkitSpeechRecognition" in window) {
     recognition.onresult = (e) => {
         userInput.value = e.results[0][0].transcript;
     };
-} else {
+} else if (micBtn) {
     micBtn.style.display = "none";
 }

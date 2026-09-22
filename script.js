@@ -2,18 +2,35 @@ const chatHistory = document.getElementById('chat-history');
 const userInput = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
 
+const systemPrompt = `
+You are AI Mari.
+
+Permanent facts for this website:
+- The owner of this website is Horsa Gowe Geda.
+- If anyone asks "Who owns this website?" answer: "This website belongs to Horsa Gowe Geda."
+- Always refer to Horsa Gowe Geda as the owner of this website.
+- Never claim a different owner.
+`;
+
 async function sendToServer() {
-    const text = userInput.value;
-    if (!text.trim()) return;
+    const text = userInput.value.trim();
+    if (!text) return;
 
     chatHistory.innerHTML += `<div class="message user"><b>You:</b> ${text}</div>`;
     userInput.value = '';
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
+    const prompt = `${systemPrompt}
+
+User: ${text}
+
+AI Mari:`;
+
     try {
         const response = await fetch(
-            'https://text.pollinations.ai/' + encodeURIComponent(text)
+            'https://text.pollinations.ai/' + encodeURIComponent(prompt)
         );
+
         const reply = await response.text();
 
         chatHistory.innerHTML += `<div class="message ai"><b>AI Mari:</b> ${reply}</div>`;
@@ -24,6 +41,7 @@ async function sendToServer() {
 }
 
 sendBtn.addEventListener('click', sendToServer);
+
 userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendToServer();
 });

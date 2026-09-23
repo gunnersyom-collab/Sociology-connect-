@@ -125,12 +125,17 @@
 #chat-history{
     height:280px;
     overflow-y:auto;
+    overflow-x:hidden;
     background:#f8f8f8;
     color:#111111;
     padding:12px;
     border-radius:10px;
     margin-bottom:12px;
     border:1px solid #e0e0e0;
+    transition:
+        background .3s ease,
+        color .3s ease,
+        border-color .3s ease;
 }
 
 
@@ -144,67 +149,80 @@
     line-height:1.6;
     word-wrap:break-word;
     overflow-wrap:break-word;
+    box-sizing:border-box;
 }
 
 
 /* ================= USER MESSAGE ================= */
 
 #chat-history .message.user{
-    background:#007bff;
-    color:#ffffff;
+    background:#007bff !important;
+    color:#ffffff !important;
     margin-left:auto;
-    border:none;
+    margin-right:0;
+    border:none !important;
 }
 
 
 /* User text */
 
 #chat-history .message.user,
-#chat-history .message.user *{
-    color:#ffffff;
+#chat-history .message.user *,
+#chat-history .message.user b,
+#chat-history .message.user strong{
+    color:#ffffff !important;
 }
 
 
-/* ================= AI MESSAGE ================= */
+/* ================= AI MESSAGE - LIGHT ================= */
 
 #chat-history .message.ai{
-    background:#ffffff;
-    color:#111111;
-    border:1px solid #dddddd;
+    background:#ffffff !important;
+    color:#111111 !important;
+    border:1px solid #dddddd !important;
+    margin-left:0;
     margin-right:auto;
 }
 
 
-/* AI text */
+/* AI text - LIGHT */
 
 #chat-history .message.ai,
-#chat-history .message.ai *{
-    color:#111111;
+#chat-history .message.ai *,
+#chat-history .message.ai b,
+#chat-history .message.ai strong,
+#chat-history .message.ai p,
+#chat-history .message.ai span,
+#chat-history .message.ai div,
+#chat-history .message.ai li{
+    color:#111111 !important;
 }
 
 
-/* AI text paragraph */
+/* AI paragraph */
 
 #chat-history .message.ai p{
     margin:0;
 }
 
 
-/* ================= COPY BUTTON ================= */
+/* =========================================================
+   COPY BUTTON
+   ========================================================= */
 
 #chat-history .copy-btn{
     margin-top:8px;
     padding:6px 12px;
-    border:none;
+    border:none !important;
     border-radius:8px;
-    background:#007bff;
+    background:#007bff !important;
     color:#ffffff !important;
     cursor:pointer;
     font-size:13px;
 }
 
 #chat-history .copy-btn:hover{
-    background:#0056b3;
+    background:#0056b3 !important;
 }
 
 
@@ -227,6 +245,10 @@
 
     .social-buttons{
         justify-content:center;
+    }
+
+    #chat-history{
+        height:280px;
     }
 
     #chat-history .message{
@@ -302,7 +324,6 @@ body.dark .social-buttons a:hover{
    DARK MODE - AI MARI
    ========================================================= */
 
-
 /* Chat background */
 
 body.dark #chat-history{
@@ -312,14 +333,14 @@ body.dark #chat-history{
 }
 
 
-/* All messages */
+/* Every message */
 
 body.dark #chat-history .message{
     color:#ffffff !important;
 }
 
 
-/* AI message */
+/* AI response */
 
 body.dark #chat-history .message.ai{
     background:#2b2b2b !important;
@@ -328,21 +349,22 @@ body.dark #chat-history .message.ai{
 }
 
 
-/* AI text */
+/* AI response text */
 
 body.dark #chat-history .message.ai,
 body.dark #chat-history .message.ai *,
+body.dark #chat-history .message.ai b,
+body.dark #chat-history .message.ai strong,
 body.dark #chat-history .message.ai p,
 body.dark #chat-history .message.ai span,
 body.dark #chat-history .message.ai div,
-body.dark #chat-history .message.ai strong,
-body.dark #chat-history .message.ai b,
-body.dark #chat-history .message.ai li{
+body.dark #chat-history .message.ai li,
+body.dark #chat-history .message.ai i{
     color:#ffffff !important;
 }
 
 
-/* User message */
+/* User response */
 
 body.dark #chat-history .message.user{
     background:#007bff !important;
@@ -351,20 +373,20 @@ body.dark #chat-history .message.user{
 }
 
 
-/* User text */
+/* User response text */
 
 body.dark #chat-history .message.user,
 body.dark #chat-history .message.user *,
+body.dark #chat-history .message.user b,
+body.dark #chat-history .message.user strong,
 body.dark #chat-history .message.user p,
 body.dark #chat-history .message.user span,
-body.dark #chat-history .message.user div,
-body.dark #chat-history .message.user strong,
-body.dark #chat-history .message.user b{
+body.dark #chat-history .message.user div{
     color:#ffffff !important;
 }
 
 
-/* Copy button */
+/* Copy button - Dark */
 
 body.dark #chat-history .copy-btn{
     background:#0a84d0 !important;
@@ -401,4 +423,9 @@ body.dark #chat-history::-webkit-scrollbar-track{
 body.dark #chat-history::-webkit-scrollbar-thumb{
     background:#555555;
 }
+
+
+/* =========================================================
+   END OF STYLE.CSS
+   ========================================================= */
 

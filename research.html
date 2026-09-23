@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Research Hub | Sociology Connect</title>
+
+    <meta name="description"
+          content="Research Hub for Sociology and Social Work students. Find research topics, proposal guidance, methodology, research questions and academic resources.">
+
+    <meta name="keywords"
+          content="Sociology research, Social Work research, research topics, research proposal, research methodology, Arsi University">
+
+    <meta name="author" content="Horsa Gowe">
+
+    <link rel="icon" type="image/png" href="1781866925745.png">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+            color:#222;
+            transition:0.3s;
+        }
+
+        /* HEADER */
+
+        header{
+            background:linear-gradient(135deg,#007bff,#0056b3);
+            color:white;
+            text-align:center;
+            padding:35px 15px;
+        }
+
+        header img{
+            width:80px;
+            height:80px;
+            object-fit:cover;
+            border-radius:50%;
+            background:white;
+            padding:5px;
+            margin-bottom:10px;
+        }
+
+        header h1{
+            font-size:32px;
+            margin-bottom:8px;
+        }
+
+        header p{
+            font-size:16px;
+        }
+
+        /* NAVIGATION */
+
+        nav{
+            background:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            padding:12px;
+            box-shadow:0 2px 10px rgba(0,0,0,.08);
+            position:sticky;
+            top:0;
+            z-index:1000;
+        }
+
+        nav a,
+        nav button{
+            border:none;
+            text-decoration:none;
+            background:#007bff;
+            color:white;
+            padding:9px 14px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:14px;
+        }
+
+        nav a:hover,
+        nav button:hover{
+            background:#0056b3;
+        }
+
+        /* MAIN */
+
+        .container{
+            max-width:1150px;
+            margin:auto;
+            padding:25px 15px;
+        }
+
+        .hero{
+            background:white;
+            padding:35px 20px;
+            border-radius:15px;
+            text-align:center;
+            margin-bottom:25px;
+            box-shadow:0 3px 15px rgba(0,0,0,.08);
+        }
+
+        .hero h2{
+            color:#007bff;
+            margin-bottom:12px;
+            font-size:28px;
+        }
+
+        .hero p{
+            color:#666;
+            max-width:800px;
+            margin:auto;
+            line-height:1.7;
+        }
+
+        /* SEARCH */
+
+        .search-box{
+            margin:25px 0;
+            text-align:center;
+        }
+
+        .search-box input{
+            width:100%;
+            max-width:650px;
+            padding:14px;
+            border:1px solid #ccc;
+            border-radius:10px;
+            font-size:16px;
+            outline:none;
+        }
+
+        .search-box input:focus{
+            border-color:#007bff;
+        }
+
+        /* GRID */
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+            margin-bottom:30px;
+        }
+
+        .card{
+            background:white;
+            padding:22px;
+            border-radius:14px;
+            box-shadow:0 3px 12px rgba(0,0,0,.08);
+            transition:.25s;
+        }
+
+        .card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 7px 20px rgba(0,0,0,.12);
+        }
+
+        .card h3{
+            color:#007bff;
+            margin-bottom:10px;
+        }
+
+        .card p{
+            color:#666;
+            line-height:1.6;
+            margin-bottom:15px;
+        }
+
+        .card button{
+            background:#007bff;
+            color:white;
+            border:none;
+            padding:10px 14px;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        .card button:hover{
+            background:#0056b3;
+        }
+
+        /* SECTIONS */
+
+        section{
+            margin-bottom:35px;
+        }
+
+        section h2{
+            margin-bottom:15px;
+            color:#0056b3;
+        }
+
+        .guide{
+            background:white;
+            padding:25px;
+            border-radius:14px;
+            box-shadow:0 3px 12px rgba(0,0,0,.07);
+        }
+
+        .guide ol{
+            padding-left:25px;
+        }
+
+        .guide li{
+            margin:12px 0;
+            line-height:1.6;
+        }
+
+        /* TOPIC GENERATOR */
+
+        .generator{
+            background:linear-gradient(135deg,#007bff,#0056b3);
+            color:white;
+            padding:30px 20px;
+            border-radius:15px;
+            text-align:center;
+        }
+
+        .generator h2{
+            color:white;
+        }
+
+        .generator button{
+            margin-top:15px;
+            padding:12px 18px;
+            border:none;
+            border-radius:9px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        #topicResult{
+            margin-top:20px;
+            background:white;
+            color:#222;
+            padding:18px;
+            border-radius:10px;
+            min-height:50px;
+            line-height:1.6;
+        }
+
+        /* FAQ */
+
+        .faq{
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            margin-bottom:12px;
+            box-shadow:0 2px 8px rgba(0,0,0,.06);
+        }
+
+        .faq h3{
+            color:#007bff;
+            margin-bottom:8px;
+        }
+
+        .faq p{
+            color:#666;
+            line-height:1.6;
+        }
+
+        /* FOOTER */
+
+        footer{
+            background:#111;
+            color:white;
+            text-align:center;
+            padding:25px 15px;
+            margin-top:30px;
+        }
+
+        /* DARK MODE */
+
+        body.dark{
+            background:#121212;
+            color:white;
+        }
+
+        body.dark nav{
+            background:#1e1e1e;
+        }
+
+        body.dark .hero,
+        body.dark .card,
+        body.dark .guide,
+        body.dark .faq{
+            background:#1f1f1f;
+            color:white;
+        }
+
+        body.dark .hero p,
+        body.dark .card p,
+        body.dark .faq p{
+            color:#ccc;
+        }
+
+        body.dark .search-box input{
+            background:#1f1f1f;
+            color:white;
+            border-color:#444;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:600px){
+
+            header h1{
+                font-size:25px;
+            }
+
+            nav{
+                position:static;
+            }
+
+            nav a,
+            nav button{
+                font-size:13px;
+                padding:8px 10px;
+            }
+
+            .hero{
+                padding:25px 15px;
+            }
+
+            .hero h2{
+                font-size:23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <img src="1781866925745.png"
+         alt="Sociology Connect Logo">
+
+    <h1>🔬 Research Hub</h1>
+
+    <p>
+        Sociology Connect | Arsi University
+    </p>
+
+</header>
+
+
+<nav>
+
+    <a href="index.html">🏠 Home</a>
+
+    <a href="index.html#news">📰 News</a>
+
+    <a href="index.html#resources">📚 Resources</a>
+
+    <a href="index.html#events">📅 Events</a>
+
+    <a href="profile.html">👤 Profile</a>
+
+    <button id="themeBtn"
+            onclick="toggleTheme()">
+        🌙
+    </button>
+
+</nav>
+
+
+<main class="container">
+
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <h2>
+            Welcome to the Research Hub 🔬
+        </h2>
+
+        <p>
+            A dedicated academic space for Sociology and Social Work
+            students to develop research ideas, understand research
+            methodology, prepare proposals and improve their academic work.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            type="search"
+            id="researchSearch"
+            placeholder="🔎 Search research topics, guides and resources..."
+            oninput="searchResearch()">
+
+    </div>
+
+
+    <!-- RESEARCH SERVICES -->
+
+    <section>
+
+        <h2>📚 Research Services</h2>
+
+        <div class="grid">
+
+
+            <div class="card">
+
+                <h3>💡 Research Topics</h3>
+
+                <p>
+                    Explore Sociology and Social Work research ideas
+                    suitable for student research.
+                </p>
+
+                <button onclick="showTopics()">
+                    Explore Topics
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📝 Proposal Guide</h3>
+
+                <p>
+                    Learn the major parts of a research proposal and
+                    how to organize your study.
+                </p>
+
+                <button onclick="showProposal()">
+                    View Guide
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📊 Methodology</h3>
+
+                <p>
+                    Understand qualitative, quantitative and mixed-method
+                    research approaches.
+                </p>
+
+                <button onclick="showMethodology()">
+                    Learn More
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>❓ Research Questions</h3>
+
+                <p>
+                    Understand how to develop clear and relevant research
+                    questions.
+                </p>
+
+                <button onclick="showQuestions()">
+                    Learn More
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📖 Literature Review</h3>
+
+                <p>
+                    Learn how to search, organize and critically review
+                    previous studies.
+                </p>
+
+                <button onclick="showLiterature()">
+                    Learn More
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>📚 Referencing</h3>
+
+                <p>
+                    Learn basic academic citation and referencing practices.
+                </p>
+
+                <button onclick="showReferencing()">
+                    Learn More
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- TOPIC GENERATOR -->
+
+    <section>
+
+        <div class="generator">
+
+            <h2>💡 Research Topic Generator</h2>
+
+            <p>
+                Need a research idea? Generate a Sociology or Social Work
+                research topic.
+            </p>
+
+            <button onclick="generateTopic()">
+                🎲 Generate Topic
+            </button>
+
+            <div id="topicResult">
+                Your research topic will appear here.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESEARCH PROCESS -->
+
+    <section>
+
+        <h2>🧭 Research Process</h2>
+
+        <div class="guide">
+
+            <ol>
+
+                <li>
+                    <strong>Choose a research topic</strong>
+                    – Identify a clear social issue.
+                </li>
+
+                <li>
+                    <strong>Review literature</strong>
+                    – Read previous studies related to your topic.
+                </li>
+
+                <li>
+                    <strong>Develop research questions</strong>
+                    – Create questions your study will answer.
+                </li>
+
+                <li>
+                    <strong>Choose methodology</strong>
+                    – Select qualitative, quantitative or mixed methods.
+                </li>
+
+                <li>
+                    <strong>Collect data</strong>
+                    – Gather information ethically and systematically.
+                </li>
+
+                <li>
+                    <strong>Analyze data</strong>
+                    – Organize and interpret your findings.
+                </li>
+
+                <li>
+                    <strong>Write the report</strong>
+                    – Present your findings, discussion and conclusion.
+                </li>
+
+                <li>
+                    <strong>Reference your sources</strong>
+                    – Give proper credit to academic sources.
+                </li>
+
+            </ol>
+
+        </div>
+
+    </section>
+
+
+    <!-- RESEARCH AREAS -->
+
+    <section>
+
+        <h2>🌍 Research Areas</h2>
+
+        <div class="grid">
+
+            <div class="card">
+                <h3>👨‍👩‍👧 Family</h3>
+                <p>
+                    Family structure, relationships, marriage and
+                    contemporary family issues.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>👩‍🎓 Youth</h3>
+                <p>
+                    Youth empowerment, education, employment and
+                    social participation.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🏘️ Community</h3>
+                <p>
+                    Community development, participation and
+                    social change.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>⚖️ Gender</h3>
+                <p>
+                    Gender relations, equality and social institutions.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🧠 Social Problems</h3>
+                <p>
+                    Poverty, substance use, unemployment, inequality
+                    and other social issues.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🤝 Social Work</h3>
+                <p>
+                    Social work intervention, vulnerable groups,
+                    community practice and social welfare.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FAQ -->
+
+    <section>
+
+        <h2>❓ Research FAQ</h2>
+
+
+        <div class="faq">
+
+            <h3>What is a research problem?</h3>
+
+            <p>
+                A research problem is a specific social issue or question
+                that a researcher wants to investigate.
+            </p>
+
+        </div>
+
+
+        <div class="faq">
+
+            <h3>What is a research proposal?</h3>
+
+            <p>
+                A research proposal explains what you want to study,
+                why the study is important and how you plan to conduct it.
+            </p>
+
+        </div>
+
+
+        <div class="faq">
+
+            <h3>What is qualitative research?</h3>
+
+            <p>
+                Qualitative research explores people's experiences,
+                meanings, opinions and social realities.
+            </p>
+
+        </div>
+
+
+        <div class="faq">
+
+            <h3>What is quantitative research?</h3>
+
+            <p>
+                Quantitative research uses numerical data and statistical
+                methods to study relationships, patterns or differences.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    © 2026 Sociology Connect – Arsi University
+
+    <br>
+
+    Sociology &amp; Social Work
+
+    <br>
+
+    <small>
+        Created by Horsa Gowe
+    </small>
+
+</footer>
+
+
+<script>
+
+    /* =========================
+       DARK MODE
+    ========================= */
+
+    function updateThemeButton(){
+
+        const button =
+            document.getElementById("themeBtn");
+
+        if(!button) return;
+
+        if(document.body.classList.contains("dark")){
+
+            button.textContent = "☀️";
+            button.title = "Light Mode";
+
+        }else{
+
+            button.textContent = "🌙";
+            button.title = "Dark Mode";
+
+        }
+
+    }
+
+
+    function loadTheme(){
+
+        const saved =
+            localStorage.getItem("sociologyTheme");
+
+        if(saved === "dark"){
+
+            document.body.classList.add("dark");
+
+        }
+
+        updateThemeButton();
+
+    }
+
+
+    function toggleTheme(){
+
+        document.body.classList.toggle("dark");
+
+        localStorage.setItem(
+            "sociologyTheme",
+            document.body.classList.contains("dark")
+                ? "dark"
+                : "light"
+        );
+
+        updateThemeButton();
+
+    }
+
+
+    /* =========================
+       TOPIC GENERATOR
+    ========================= */
+
+    const topics = [
+
+        "Effects of Community-Based Social Work Programs on Youth Empowerment",
+
+        "The Role of Social Media in Youth Social Participation",
+
+        "Effects of Unemployment on Young People's Social Well-Being",
+
+        "The Role of Education in Reducing Social Inequality",
+
+        "Community Participation in Local Development",
+
+        "The Effects of Substance Use on Youth Development",
+
+        "Gender Equality and Women's Participation in Community Development",
+
+        "The Role of Social Workers in Supporting Vulnerable Families",
+
+        "Social Capital and Community Development",
+
+        "The Impact of Migration on Family Relationships",
+
+        "Youth Unemployment and Social Problems",
+
+        "The Role of Indigenous Social Support Systems in Community Well-Being",
+
+        "Poverty and Access to Social Services",
+
+        "The Role of Social Work in Supporting Persons with Disabilities",
+
+        "Community-Based Approaches to Child Protection"
+
+    ];
+
+
+    function generateTopic(){
+
+        const result =
+            document.getElementById("topicResult");
+
+        const random =
+            Math.floor(Math.random() * topics.length);
+
+        result.innerHTML =
+            "<strong>💡 Suggested Topic:</strong><br><br>" +
+            topics[random];
+
+    }
+
+
+    /* =========================
+       GUIDE FUNCTIONS
+    ========================= */
+
+    function showTopics(){
+
+        alert(
+            "💡 Research Topics\\n\\n" +
+            "Explore youth, family, gender, community development, " +
+            "social problems and Social Work research areas."
+        );
+
+    }
+
+
+    function showProposal(){
+
+        alert(
+            "📝 Research Proposal\\n\\n" +
+            "Main parts:\\n" +
+            "1. Introduction\\n" +
+            "2. Statement of the Problem\\n" +
+            "3. Research Questions\\n" +
+            "4. Objectives\\n" +
+            "5. Literature Review\\n" +
+            "6. Methodology\\n" +
+            "7. Work Plan\\n" +
+            "8. References"
+        );
+
+    }
+
+
+    function showMethodology(){
+
+        alert(
+            "📊 Research Methodology\\n\\n" +
+            "• Qualitative Research\\n" +
+            "• Quantitative Research\\n" +
+            "• Mixed Methods Research"
+        );
+
+    }
+
+
+    function showQuestions(){
+
+        alert(
+            "❓ Research Questions\\n\\n" +
+            "A good research question should be clear, " +
+            "specific, researchable and connected to your research problem."
+        );
+
+    }
+
+
+    function showLiterature(){
+
+        alert(
+            "📖 Literature Review\\n\\n" +
+            "Search for previous studies, compare findings, " +
+            "identify gaps and connect the literature to your research."
+        );
+
+    }
+
+
+    function showReferencing(){
+
+        alert(
+            "📚 Referencing\\n\\n" +
+            "Always acknowledge the sources you use in your academic work. " +
+            "Follow the referencing style required by your department."
+        );
+
+    }
+
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    function searchResearch(){
+
+        const query =
+            document.getElementById("researchSearch")
+            .value
+           

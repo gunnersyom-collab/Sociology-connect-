@@ -12,6 +12,11 @@ import {
   doc,
   setDoc,
   getDoc,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
@@ -30,6 +35,19 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const $ = (id) => document.getElementById(id);
+
+/* ---------- HTML SECURITY HELPER ---------- */
+function escapeHTML(value) {
+    if (value === undefined || value === null) {
+        return "";
+    }
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 /* ---------- SIGN UP ---------- */
 
@@ -102,6 +120,82 @@ async function loadProfile(user) {
   $("profileBio") && ($("profileBio").textContent = data.bio || "");
 }
 
+/* ---------- CREATE POST ---------- */
+
+async function createPost() {
+  try {
+    const postText = $("postText")?.value.trim();
+    if (!postText) {
+      alert("Please write something to post!");
+      return;
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in to post.");
+      location.href = "login.html";
+      return;
+    }
+
+    const snap = await getDoc(doc(db, "users", user.uid));
+    const userData = snap.exists() ? snap.data() : {};
+    const authorName = userData.fullName || user.displayName || "Student";
+
+    await addDoc(collection(db, "posts"), {
+      text: postText,
+      authorId: user.uid,
+      authorName: authorName,
+      createdAt: serverTimestamp()
+    });
+
+    $("postText").value = "";
+    loadPosts();
+  } catch (e) {
+    alert("Error posting: " + e.message);
+  }
+}
+
+/* ---------- LOAD POSTS ---------- */
+
+async function loadPosts() {
+  const postsContainer = $("postsContainer");
+  if (!postsContainer) return;
+
+  try {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      postsContainer.innerHTML = `
+        <div class="post-empty"> 
+            <h3>📭 No posts yet</h3> 
+            <p>Be the first to share something with the community!</p> 
+        </div>`;
+      return;
+    }
+
+    let html = "";
+    querySnapshot.forEach((docSnap) => {
+      const post = docSnap.data();
+      html += `
+        <div class="card" style="margin-bottom: 12px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+            <strong style="color:#007bff;">${escapeHTML(post.authorName || "Student")}</strong>
+            <p style="margin-top: 5px; white-space: pre-wrap; line-height:1.5;">${escapeHTML(post.text)}</p>
+        </div>
+      `;
+    });
+
+    postsContainer.innerHTML = html;
+  } catch (e) {
+    console.error("Error loading posts:", e);
+    postsContainer.innerHTML = `
+      <div class="post-empty"> 
+          <h3>⚠️ Error loading posts</h3> 
+          <p>${escapeHTML(e.message)}</p> 
+      </div>`;
+  }
+}
+
 /* ---------- AUTH STATE ---------- */
 
 onAuthStateChanged(auth, (user) => {
@@ -115,10 +209,18 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-/* ---------- IMPORTANT ---------- */
+/* ---------- WINDOW GLOBAL EXPORTS ---------- */
 
 window.login = login;
 window.signup = signup;
 window.logout = logout;
+window.createPost = createPost;
+window.loadPosts = loadPosts;
 
-console.log("✅ AUTH READY");
+/* ---------- DOM CONTENT LOADED ---------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadPosts();
+});
+
+console.log("✅ AUTH & POSTS READY");

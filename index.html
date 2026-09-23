@@ -1,1007 +1,790 @@
-    <!DOCTYPE html>  <html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Sociology Connect | Arsi University</title>  <meta name="description" content="Sociology Connect is an academic and social platform for Sociology and Social Work students at Arsi University.">  <style>  
-*{  
-    margin:0;  
-    padding:0;  
-    box-sizing:border-box;  
-}  
-  
-html{  
-    scroll-behavior:smooth;  
-}  
-  
-body{  
-    font-family:Arial,sans-serif;  
-    background:#f5f7fa;  
-    color:#222;  
-    transition:.3s;  
-}  
-  
-/* ================= HEADER ================= */  
-  
-header{  
-    background:linear-gradient(135deg,#007bff,#0056b3);  
-    color:white;  
-    text-align:center;  
-    padding:25px 15px;  
-}  
-  
-header img{  
-    width:75px;  
-    height:75px;  
-    object-fit:contain;  
-    margin-bottom:10px;  
-}  
-  
-header h1{  
-    font-size:30px;  
-    margin-bottom:5px;  
-}  
-  
-header p{  
-    margin-top:5px;  
-    opacity:.95;  
-}  
-  
-/* ================= NAVIGATION ================= */  
-  
-nav{  
-    position:sticky;  
-    top:0;  
-    background:#007bff;  
-    padding:12px 10px;  
-    display:flex;  
-    justify-content:center;  
-    align-items:center;  
-    flex-wrap:wrap;  
-    gap:8px;  
-    z-index:1000;  
-    box-shadow:0 2px 10px rgba(0,0,0,.15);  
-}  
-  
-nav a{  
-    color:white;  
-    text-decoration:none;  
-    font-weight:bold;  
-    padding:7px 9px;  
-    border-radius:8px;  
-}  
-  
-nav a:hover{  
-    background:rgba(255,255,255,.15);  
-}  
-  
-.nav-btn{  
-    background:white;  
-    color:#007bff;  
-    border:none;  
-    padding:7px 12px;  
-    border-radius:20px;  
-    cursor:pointer;  
-    font-weight:bold;  
-}  
-  
-.nav-btn:hover{  
-    background:#e9f2ff;  
-}  
-  
-#userInfo{  
-    font-weight:bold;  
-    padding:7px;  
-}  
-  
-/* ================= SEARCH ================= */  
-  
-.search-container{  
-    max-width:700px;  
-    margin:18px auto;  
-    padding:0 15px;  
-}  
-  
-#searchBar{  
-    width:100%;  
-    display:block;  
-    padding:13px 16px;  
-    border:1px solid #ccc;  
-    border-radius:25px;  
-    font-size:15px;  
-    outline:none;  
-    background:white;  
-}  
-  
-#searchBar:focus{  
-    border-color:#007bff;  
-    box-shadow:0 0 0 3px rgba(0,123,255,.1);  
-}  
-  
-/* ================= GENERAL SECTIONS ================= */  
-  
-section{  
-    background:white;  
-    margin:15px auto;  
-    padding:20px;  
-    max-width:1000px;  
-    border-radius:15px;  
-    box-shadow:0 3px 10px rgba(0,0,0,.08);  
-}  
-  
-section h2{  
-    color:#007bff;  
-    margin-bottom:12px;  
-}  
-  
-section p{  
-    line-height:1.7;  
-}  
-  
-section ul,  
-section ol{  
-    padding-left:25px;  
-    line-height:1.9;  
-}  
-  
-/* ================= NEWS ================= */  
-  
-.news-grid{  
-    display:grid;  
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));  
-    gap:12px;  
-}  
-  
-.card{  
-    background:#f8f9fa;  
-    padding:15px;  
-    border-left:4px solid #007bff;  
-    border-radius:10px;  
-    margin-top:10px;  
-    line-height:1.6;  
-}  
-  
-.card h3{  
-    margin-bottom:5px;  
-}  
-  
-.news-card{  
-    transition:.2s;  
-}  
-  
-.news-card:hover{  
-    transform:translateY(-2px);  
-    box-shadow:0 4px 12px rgba(0,0,0,.08);  
-}  
-  
-/* ================= POST COMPOSER ================= */  
-  
-.post-composer{  
-    max-width:650px;  
-    margin:20px auto;  
-    background:white;  
-    padding:18px;  
-    border-radius:15px;  
-    box-shadow:0 3px 10px rgba(0,0,0,.08);  
-}  
-  
-.post-composer h3{  
-    color:#007bff;  
-    margin-bottom:5px;  
-}  
-  
-.post-composer p{  
-    color:#777;  
-    font-size:14px;  
-}  
-  
-textarea,  
-input{  
-    width:100%;  
-    padding:12px;  
-    border:1px solid #ccc;  
-    border-radius:10px;  
-    margin-top:10px;  
-    font-size:15px;  
-    outline:none;  
-}  
-  
-textarea:focus,  
-input:focus{  
-    border-color:#007bff;  
-}  
-  
-.post-composer textarea{  
-    height:90px;  
-    resize:vertical;  
-}  
-  
-button{  
-    background:#007bff;  
-    color:white;  
-    padding:10px 18px;  
-    border:none;  
-    border-radius:10px;  
-    cursor:pointer;  
-    font-weight:bold;  
-}  
-  
-button:hover{  
-    background:#0056b3;  
-}  
-  
-/* ================= POSTS ================= */  
-  
-#postsContainer{  
-    max-width:650px;  
-    margin:auto;  
-}  
-  
-.post-empty{  
-    background:white;  
-    padding:20px;  
-    border-radius:12px;  
-    text-align:center;  
-    color:#777;  
-}  
-  
-/* ================= TRENDING ================= */  
-  
-#trending{  
-    max-width:650px;  
-}  
-  
-.trending-intro{  
-    color:#777;  
-    font-size:14px;  
-}  
-  
-/* ================= EVENTS ================= */  
-  
-.event-grid{  
-    display:grid;  
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));  
-    gap:10px;  
-}  
-  
-.event-card{  
-    background:#f8f9fa;  
-    padding:15px;  
-    border-radius:10px;  
-    border-left:4px solid #007bff;  
-}  
-  
-.event-card strong{  
-    display:block;  
-    color:#007bff;  
-    margin-bottom:5px;  
-}  
-  
-/* ================= IMAGE ================= */  
-  
-.image-wrapper{  
-    text-align:center;  
-    max-width:1000px;  
-    margin:20px auto;  
-    padding:0 15px;  
-}  
-  
-.image-wrapper img{  
-    width:100%;  
-    max-width:650px;  
-    border-radius:15px;  
-    box-shadow:0 3px 10px rgba(0,0,0,.12);  
-}  
-  
-/* ================= RESOURCES ================= */  
-  
-.resource-box{  
-    background:#f1f7ff;  
-    padding:15px;  
-    border-radius:10px;  
-    margin-top:12px;  
-}  
-  
-.download-btn{  
-    display:inline-block;  
-    margin-top:12px;  
-    background:#007bff;  
-    color:white;  
-    padding:11px 18px;  
-    border-radius:10px;  
-    text-decoration:none;  
-    font-weight:bold;  
-}  
-  
-/* ================= CONTACT ================= */  
-  
-.contact-section{  
-    background:#f4f7fb;  
-}  
-  
-.contact-info{  
-    margin:12px 0;  
-    line-height:1.9;  
-}  
-  
-.telegram-btn{  
-    display:inline-block;  
-    background:#0088cc;  
-    color:white;  
-    padding:11px 18px;  
-    text-decoration:none;  
-    border-radius:10px;  
-    margin-top:10px;  
-    font-weight:bold;  
-}  
-  
-.telegram-btn:hover{  
-    background:#006fa3;  
-}  
-  
-/* ================= AI CHAT ================= */  
-  
-#chat-container{  
-    max-width:700px;  
-    margin:20px auto;  
-    background:white;  
-    border-radius:15px;  
-    padding:18px;  
-    box-shadow:0 3px 10px rgba(0,0,0,.08);  
-}  
-  
-#chat-container h2{  
-    color:#007bff;  
-    margin-bottom:12px;  
-}  
-  
-#chat-history{  
-    height:280px;  
-    overflow-y:auto;  
-    padding:12px;  
-    background:#f8f8f8;  
-    border-radius:10px;  
-    margin-bottom:10px;  
-}  
-  
-.message{  
-    margin:10px 0;  
-    padding:11px;  
-    border-radius:15px;  
-    max-width:85%;  
-    line-height:1.5;  
-    word-wrap:break-word;  
-}  
-  
-.user{  
-    background:#007bff;  
-    color:white;  
-    margin-left:auto;  
-}  
-  
-.ai{  
-    background:white;  
-    border:1px solid #ddd;  
-}  
-  
-.chat-input{  
-    display:flex;  
-    gap:7px;  
-    align-items:center;  
-}  
-  
-.chat-input input{  
-    flex:1;  
-    margin-top:0;  
-}  
-  
-.chat-input button{  
-    white-space:nowrap;  
-}  
-  
-#micBtn{  
-    padding:10px 13px;  
-}  
-  
-/* ================= FOOTER ================= */  
-  
-footer{  
-    background:#222;  
-    color:white;  
-    text-align:center;  
-    padding:22px 15px;  
-    margin-top:25px;  
-    line-height:1.7;  
-}  
-  
-/* ================= DARK MODE ================= */  
-  
-.dark{  
-    background:#121212;  
-    color:white;  
-}  
-  
-.dark nav{  
-    background:#0056b3;  
-}  
-  
-.dark section,  
-.dark .post-composer,  
-.dark #chat-container{  
-    background:#1d1d1d;  
-    color:white;  
-}  
-  
-.dark #searchBar,  
-.dark textarea,  
-.dark input{  
-    background:#2b2b2b;  
-    color:white;  
-    border-color:#555;  
-}  
-  
-.dark #chat-history{  
-    background:#111;  
-}  
-  
-.dark .ai{  
-    background:#2b2b2b;  
-    color:white;  
-    border:none;  
-}  
-  
-.dark .card,  
-.dark .event-card,  
-.dark .resource-box{  
-    background:#2b2b2b;  
-    color:white;  
-}  
-  
-.dark .post-empty{  
-    background:#1d1d1d;  
-    color:#aaa;  
-}  
-  
-.dark .contact-section{  
-    background:#1d1d1d;  
-}  
-  
-/* ================= MOBILE ================= */  
-  
-@media(max-width:700px){  
-  
-    header{  
-        padding:20px 12px;  
-    }  
-  
-    header h1{  
-        font-size:25px;  
-    }  
-  
-    nav{  
-        padding:10px 6px;  
-    }  
-  
-    nav a{  
-        font-size:13px;  
-    }  
-  
-    .nav-btn{  
-        font-size:13px;  
-        padding:7px 9px;  
-    }  
-  
-    section{  
-        margin:12px 10px;  
-        padding:16px;  
-    }  
-  
-    .post-composer,  
-    #chat-container{  
-        margin:15px 10px;  
-    }  
-  
-    .chat-input{  
-        flex-wrap:wrap;  
-    }  
-  
-    .chat-input input{  
-        width:100%;  
-        flex:100%;  
-    }  
-  
-    .chat-input button{  
-        flex:1;  
-    }  
-  
-}  
-  
-</style>  </head>  <body>  <!-- ================= HEADER ================= -->  <header>  <img src="1781866925745.png" alt="Sociology Connect Logo">  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<h1>Sociology Connect</h1>  
+<title>Sociology Connect | Arsi University</title>
 
-<p>Arsi University – Sociology & Social Work</p>  
+<meta name="description"
+content="Sociology Connect is an academic and social platform for Sociology and Social Work students at Arsi University.">
 
-<p>  
-    Created by <strong>Horsa Gowe</strong>  
-</p>
+<style>
 
-</header>  <!-- ================= NAVIGATION ================= -->  <nav>  <a href="#about">🏠 About</a>  
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-<a href="#resources">📚 Resources</a>  
+html{
+scroll-behavior:smooth;
+}
 
-<a href="#events">📅 Events</a>  
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+color:#222;
+transition:.3s;
+}
 
-<a href="#news">📰 News</a>  
+/* HEADER */
 
-<a href="#contact">📞 Contact</a>  
+header{
+background:linear-gradient(135deg,#007bff,#0056b3);
+color:#fff;
+text-align:center;
+padding:25px 15px;
+}
 
-<a href="profile.html">  
-    👤 Profile  
-</a>  
+header img{
+width:75px;
+height:75px;
+object-fit:contain;
+margin-bottom:10px;
+}
 
-<a href="login.html" id="loginLink">  
-    🔐 Login  
-</a>  
+header h1{
+font-size:30px;
+margin-bottom:5px;
+}
 
-<span  
-    id="userInfo"  
-    style="display:none;color:white;"  
-></span>  
+header p{
+margin-top:5px;
+opacity:.95;
+}
 
-<button  
-    id="logoutBtn"  
-    class="nav-btn"  
-    style="display:none;"  
-    onclick="logout()"  
->  
-    Logout  
-</button>  
+/* NAV */
 
-<button  
-    id="notifyBtn"  
-    class="nav-btn"  
-    type="button"  
-    onclick="showNotifications()"  
->  
-    🔔  
-</button>  
+nav{
+position:sticky;
+top:0;
+background:#007bff;
+padding:12px 10px;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+gap:8px;
+z-index:1000;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
 
-<button  
-    id="themeBtn"  
-    class="nav-btn"  
-    type="button"  
-    onclick="toggleTheme()"  
->  
-    🌙  
+nav a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+padding:7px 9px;
+border-radius:8px;
+}
+
+nav a:hover{
+background:rgba(255,255,255,.15);
+}
+
+.nav-btn{
+background:white;
+color:#007bff;
+border:none;
+padding:7px 12px;
+border-radius:20px;
+cursor:pointer;
+font-weight:bold;
+}
+
+#userInfo{
+color:white;
+font-weight:bold;
+}
+
+/* SEARCH */
+
+.search-container{
+max-width:700px;
+margin:18px auto;
+padding:0 15px;
+}
+
+#searchBar{
+width:100%;
+padding:13px 16px;
+border:1px solid #ccc;
+border-radius:25px;
+font-size:15px;
+}
+
+/* GENERAL */
+
+section{
+background:white;
+margin:15px auto;
+padding:20px;
+max-width:1000px;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+section h2{
+color:#007bff;
+margin-bottom:12px;
+}
+
+section p{
+line-height:1.7;
+}
+
+section ul,
+section ol{
+padding-left:25px;
+line-height:1.9;
+}
+
+/* CARDS */
+
+.card{
+background:#f8f9fa;
+padding:15px;
+border-left:4px solid #007bff;
+border-radius:10px;
+margin-top:10px;
+line-height:1.6;
+}
+
+/* POST */
+
+.post-composer{
+max-width:650px;
+margin:20px auto;
+background:white;
+padding:18px;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+.post-composer h3{
+color:#007bff;
+margin-bottom:6px;
+}
+
+.post-composer p{
+color:#666;
+font-size:14px;
+margin-bottom:10px;
+}
+
+textarea,
+input{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:15px;
+}
+
+textarea{
+min-height:100px;
+resize:vertical;
+}
+
+button{
+background:#007bff;
+color:white;
+padding:10px 18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+#postsContainer{
+max-width:650px;
+margin:auto;
+}
+
+.post-card{
+background:white;
+padding:16px;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+margin:15px auto;
+}
+
+.post-header{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+.post-avatar{
+width:45px;
+height:45px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.post-actions{
+display:flex;
+justify-content:space-around;
+margin-top:12px;
+padding-top:10px;
+border-top:1px solid #eee;
+}
+
+.post-actions button{
+background:none;
+color:#007bff;
+padding:6px;
+}
+
+.news-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:12px;
+}
+
+.event-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:10px;
+}
+
+.event-card{
+background:#f8f9fa;
+padding:15px;
+border-left:4px solid #007bff;
+border-radius:10px;
+}
+
+.image-wrapper{
+text-align:center;
+max-width:1000px;
+margin:20px auto;
+padding:0 15px;
+}
+
+.image-wrapper img{
+width:100%;
+max-width:650px;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.12);
+}
+
+.resource-box{
+background:#f1f7ff;
+padding:15px;
+border-radius:10px;
+margin-top:12px;
+}
+
+.download-btn{
+display:inline-block;
+margin-top:12px;
+background:#007bff;
+color:white;
+padding:11px 18px;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.contact-section{
+background:#f4f7fb;
+}
+
+.telegram-btn{
+display:inline-block;
+background:#0088cc;
+color:white;
+padding:11px 18px;
+text-decoration:none;
+border-radius:10px;
+margin-top:10px;
+font-weight:bold;
+}
+
+#chat-container{
+max-width:700px;
+margin:20px auto;
+background:white;
+border-radius:15px;
+padding:18px;
+box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+
+#chat-history{
+height:280px;
+overflow-y:auto;
+background:#f8f8f8;
+padding:12px;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.message{
+margin:10px 0;
+padding:11px;
+border-radius:15px;
+max-width:85%;
+}
+
+.user{
+background:#007bff;
+color:white;
+margin-left:auto;
+}
+
+.ai{
+background:white;
+border:1px solid #ddd;
+}
+
+.chat-input{
+display:flex;
+gap:7px;
+}
+
+.chat-input input{
+flex:1;
+}
+
+footer{
+background:#222;
+color:white;
+text-align:center;
+padding:22px;
+margin-top:25px;
+line-height:1.7;
+}
+
+/* DARK */
+
+.dark{
+background:#121212;
+color:white;
+}
+
+.dark section,
+.dark .post-composer,
+.dark #chat-container{
+background:#1d1d1d;
+color:white;
+}
+
+.dark textarea,
+.dark input,
+.dark #searchBar{
+background:#2b2b2b;
+color:white;
+border-color:#555;
+}
+
+.dark .card,
+.dark .event-card,
+.dark .resource-box,
+.dark .post-card{
+background:#2b2b2b;
+color:white;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+header h1{
+font-size:25px;
+}
+
+nav{
+padding:10px 6px;
+}
+
+nav a{
+font-size:13px;
+}
+
+section{
+margin:12px 10px;
+padding:16px;
+}
+
+.post-composer,
+#chat-container{
+margin:15px 10px;
+}
+
+.chat-input{
+flex-wrap:wrap;
+}
+
+.chat-input input{
+flex:100%;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+<img src="1781866925745.png" alt="Sociology Connect Logo">
+
+<h1>Sociology Connect</h1>
+
+<p>Arsi University – Sociology & Social Work</p>
+
+<p>Created by <strong>Horsa Gowe</strong></p>
+
+</header>
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav>
+
+<a href="#about">🏠 About</a>
+<a href="#resources">📚 Resources</a>
+<a href="#events">📅 Events</a>
+<a href="#news">📰 News</a>
+<a href="#contact">📞 Contact</a>
+
+<a href="profile.html">👤 Profile</a>
+
+<a href="login.html" id="loginLink">🔐 Login</a>
+
+<span id="userInfo"></span>
+
+<button id="logoutBtn"
+class="nav-btn"
+style="display:none;"
+onclick="logout()">
+Logout
 </button>
 
-</nav>  <!-- ================= SEARCH ================= -->  <div class="search-container">  <input  
-    id="searchBar"  
-    type="search"  
-    placeholder="🔎 Search posts, topics and resources..."  
+<button id="notifyBtn"
+class="nav-btn"
+onclick="showNotifications()">
+🔔
+</button>
+
+<button id="themeBtn"
+class="nav-btn"
+onclick="toggleTheme()">
+🌙
+</button>
+
+</nav>
+
+<!-- ================= SEARCH ================= -->
+
+<div class="search-container">
+
+<input
+id="searchBar"
+type="search"
+placeholder="🔎 Search posts, topics and resources..."
 >
 
-</div>  <!-- ================= LATEST NEWS ================= -->  <section id="news">  <h2>📰 Latest News</h2>  
+</div>
 
-<div class="news-grid">  
+<!-- ================= NEWS ================= -->
 
-    <div class="card news-card">  
+<section id="news">
 
-        <h3>📢 Department Announcements</h3>  
+<h2>📰 Latest News</h2>
 
-        <p>  
-            New seminars, research opportunities  
-            and important student updates will appear here.  
-        </p>  
+<div class="news-grid">
 
-    </div>  
+<div class="card">
+<h3>📢 Department Announcements</h3>
+<p>New seminars, research opportunities and student updates.</p>
+</div>
 
-    <div class="card news-card">  
+<div class="card">
+<h3>🎓 Academic Updates</h3>
+<p>Latest Sociology & Social Work learning information.</p>
+</div>
 
-        <h3>🎓 Academic Updates</h3>  
-
-        <p>  
-            Check Sociology and Social Work  
-            academic information and learning materials.  
-        </p>  
-
-    </div>  
-
-    <div class="card news-card">  
-
-        <h3>🔬 Research Opportunities</h3>  
-
-        <p>  
-            Research topics, proposal guidance  
-            and student research opportunities.  
-        </p>  
-
-    </div>  
+<div class="card">
+<h3>🔬 Research Opportunities</h3>
+<p>Research proposal guidance and opportunities.</p>
+</div>
 
 </div>
 
-</section>  <!-- ================= POST CREATOR ================= -->  <div class="post-composer">  <h3>💬 Share with the Community</h3>  
+</section>
 
-<p>  
-    Share academic ideas, announcements,  
-    questions or useful information with students.  
-</p>  
+<!-- ================= CREATE POST ================= -->
 
-<textarea  
-    id="postText"  
-    placeholder="What would you like to share today?"  
-></textarea>  
+<div class="post-composer">
 
-<button  
-    onclick="createPost()"  
-    style="margin-top:10px;"  
->  
-    📤 Post  
-</button>
+<h3>💬 Share with the Community</h3>
 
-</div>  <!-- ================= POSTS ================= -->  <div id="postsContainer">  <div class="post-empty">  
-
-    <h3>📭 Loading posts...</h3>  
-
-    <p>  
-        Please wait while Sociology Connect  
-        loads the community posts.  
-    </p>  
-
-</div>
-
-</div>  <!-- ================= TRENDING ================= -->  <section id="trending">  <h2>🔥 Trending Posts</h2>  
-
-<p class="trending-intro">  
-    Popular posts based on likes and comments.  
-</p>  
-
-<div class="card">  
-    Trending posts will appear here.  
-</div>
-
-</section>  <!-- ================= ABOUT ================= -->  <section id="about">  <h2>About Sociology Connect</h2>  
-
-<p>  
-    Sociology Connect supports Sociology and Social Work  
-    students through academic resources, research guidance,  
-    communication and community engagement.  
+<p>
+Share academic ideas,
+announcements,
+questions and useful information.
 </p>
 
-</section>  <!-- ================= CORE PILLARS ================= -->  <section id="features">  <h2>🌟 Our Core Pillars</h2>  
+<textarea
+id="postInput"
+placeholder="What would you like to share today?"
+></textarea>
 
-<ul>  
+<button onclick="createPost()">
+📤 Post
+</button>
 
-    <li>📚 Academic Resources</li>  
+</div>
 
-    <li>🔬 Research Support</li>  
+<!-- ================= POSTS ================= -->
 
-    <li>💻 Techno-Sociology</li>  
+<div id="postsContainer"></div>
 
-    <li>🤝 Community Engagement</li>  
+<!-- ================= TRENDING ================= -->
 
-    <li>👥 Student Communication</li>  
+<section id="trending">
 
+<h2>🔥 Trending Posts</h2>
+
+<p style="color:#777;">
+Popular posts based on likes and comments.
+</p>
+
+<div class="card">
+Trending posts will appear here.
+</div>
+
+</section>
+
+    <!-- ================= ABOUT ================= -->
+
+<section id="about">
+
+<h2>About Sociology Connect</h2>
+
+<p>
+Sociology Connect supports Sociology and Social Work students through academic resources, research guidance, communication and community engagement.
+</p>
+
+</section>
+
+<!-- ================= FEATURES ================= -->
+
+<section id="features">
+
+<h2>🌟 Our Core Pillars</h2>
+
+<ul>
+<li>📚 Academic Resources</li>
+<li>🔬 Research Support</li>
+<li>💻 Techno-Sociology</li>
+<li>🤝 Community Engagement</li>
+<li>👥 Student Communication</li>
 </ul>
 
-</section>  <!-- ================= RESEARCH GUIDE ================= -->  <section id="research-guide">  <h2>🔬 Research Guide</h2>  
+</section>
 
-<ol>  
+<!-- ================= RESEARCH GUIDE ================= -->
 
-    <li>Choose a research topic</li>  
+<section id="research-guide">
 
-    <li>Review related literature</li>  
+<h2>🔬 Research Guide</h2>
 
-    <li>Create research questions</li>  
-
-    <li>Design your methodology</li>  
-
-    <li>Collect data</li>  
-
-    <li>Analyze findings</li>  
-
-    <li>Write and cite properly</li>  
-
+<ol>
+<li>Choose a research topic</li>
+<li>Review literature</li>
+<li>Create research questions</li>
+<li>Design methodology</li>
+<li>Collect data</li>
+<li>Analyze findings</li>
+<li>Write and cite properly</li>
 </ol>
 
-</section>  <!-- ================= EVENTS ================= -->  <section id="events">  <h2>📅 Events & Deadlines</h2>  
+</section>
 
-<div class="event-grid">  
+<!-- ================= EVENTS ================= -->
 
-    <div class="event-card">  
+<section id="events">
 
-        <strong>📄 Research Proposal</strong>  
+<h2>📅 Events & Deadlines</h2>
 
-        <span>  
-            Important proposal deadline and updates.  
-        </span>  
+<div class="event-grid">
 
-    </div>  
+<div class="event-card">
+<strong>📄 Research Proposal</strong>
+Proposal updates.
+</div>
 
-    <div class="event-card">  
+<div class="event-card">
+<strong>🎤 Department Seminar</strong>
+Seminar information.
+</div>
 
-        <strong>🎤 Department Seminar</strong>  
+<div class="event-card">
+<strong>👥 Student Meeting</strong>
+Meeting announcements.
+</div>
 
-        <span>  
-            Student academic seminar information.  
-        </span>  
-
-    </div>  
-
-    <div class="event-card">  
-
-        <strong>👥 Student Meeting</strong>  
-
-        <span>  
-            Important student meeting announcements.  
-        </span>  
-
-    </div>  
-
-    <div class="event-card">  
-
-        <strong>🎓 Graduation Updates</strong>  
-
-        <span>  
-            Graduation information will be posted here.  
-        </span>  
-
-    </div>  
+<div class="event-card">
+<strong>🎓 Graduation Updates</strong>
+Graduation information.
+</div>
 
 </div>
 
-</section>  <!-- ================= SOCIAL WORK IMAGE ================= -->  <div class="image-wrapper">  <img  
-    src="social-workers-can-help.png"  
-    alt="Social workers can help"  
+</section>
+
+<!-- ================= IMAGE ================= -->
+
+<div class="image-wrapper">
+
+<img
+src="social-workers-can-help.png"
+alt="Social workers can help"
 >
 
-</div>  <!-- ================= RESOURCES ================= -->  <section id="resources">  <h2>📚 Academic Resources</h2>  
-
-<p>  
-    Sociology studies society, social relationships,  
-    institutions, communities and human behavior.  
-</p>  
-
-<div class="resource-box">  
-
-    <strong>📄 Research Proposal</strong>  
-
-    <p>  
-        Access the available research proposal  
-        document for academic support.  
-    </p>  
-
-    <a  
-        href="IBRO PROP (3).pdf"  
-        target="_blank"  
-        class="download-btn"  
-    >  
-        📥 Open Proposal  
-    </a>  
-
 </div>
 
-</section>  <!-- ================= CONTACT ================= -->  <section  
-    id="contact"  
-    class="contact-section"  
->  <h2>📞 Contact Sociology Connect</h2>  
+<!-- ================= RESOURCES ================= -->
 
-<div class="contact-info">  
+<section id="resources">
 
-    <p>  
-        📧 <strong>Email:</strong>  
-        Gunnersyom@gmail.com  
-    </p>  
+<h2>📚 Academic Resources</h2>
 
-    <p>  
-        📱 <strong>Phone:</strong>  
-        0934919856  
-    </p>  
+<p>
+Access useful Sociology and Social Work learning materials.
+</p>
 
-</div>  
+<div class="resource-box">
 
+<strong>📄 Research Proposal</strong>
 
-<form  
-    action="https://formspree.io/f/mppwdjda"  
-    method="POST"  
->  
+<p>Open the available proposal document.</p>
 
-    <textarea  
-        name="comment"  
-        rows="5"  
-        placeholder="Write your message..."  
-        required  
-    ></textarea>  
-
-    <button  
-        type="submit"  
-        style="margin-top:10px;"  
-    >  
-        📤 Submit Message  
-    </button>  
-
-</form>  
-
-
-<a  
-    class="telegram-btn"  
-    href="https://t.me/HorsaGowe"  
-    target="_blank"  
-    rel="noopener"  
->  
-    ✈️ Connect on Telegram  
+<a
+href="IBRO PROP (3).pdf"
+target="_blank"
+class="download-btn"
+>
+📥 Open Proposal
 </a>
 
-</section>  <!-- ================= AI MARI ================= -->  <section id="chat-container">  <h2>🤖 AI Mari</h2>  
+</div>
 
-<p style="color:#777;margin-bottom:10px;">  
-    Ask questions in Afaan Oromoo, Amharic or English.  
-</p>  
+</section>
 
-<div id="chat-history">  
+<!-- ================= CONTACT ================= -->
 
-    <div class="message ai">  
+<section
+id="contact"
+class="contact-section"
+>
 
-        <b>AI Mari</b><br>  
+<h2>📞 Contact Sociology Connect</h2>
 
-        Hello! 👋 I can help you in  
-        Afaan Oromoo, Amharic and English.  
+<p>📧 Gunnersyom@gmail.com</p>
 
-    </div>  
+<p>📱 0934919856</p>
 
-</div>  
+<form
+action="https://formspree.io/f/mppwdjda"
+method="POST"
+>
 
+<textarea
+name="comment"
+rows="5"
+placeholder="Write your message..."
+required
+></textarea>
 
-<div class="chat-input">  
+<button type="submit">
+📤 Submit Message
+</button>
 
-    <input  
-        id="userInput"  
-        type="text"  
-        placeholder="Ask your question..."  
-    >  
+</form>
 
-    <button  
-        id="micBtn"  
-        type="button"  
-    >  
-        🎤  
-    </button>  
+<a
+class="telegram-btn"
+href="https://t.me/HorsaGowe"
+target="_blank"
+>
+✈️ Connect on Telegram
+</a>
 
-    <button  
-        id="sendBtn"  
-        type="button"  
-    >  
-        Send  
-    </button>  
+</section>
+
+    <!-- ================= AI MARI ================= -->
+
+<section id="chat-container">
+
+<h2>🤖 AI Mari</h2>
+
+<p style="color:#777;margin-bottom:10px;">
+Ask questions in Afaan Oromoo,
+Amharic or English.
+</p>
+
+<div id="chat-history">
+
+<div class="message ai">
+
+<b>AI Mari</b><br>
+
+Hello! 👋 I can help you in Afaan Oromoo,
+Amharic and English.
 
 </div>
 
-</section>  <!-- ================= FOOTER ================= -->  <footer>  © 2026 Sociology Connect – Arsi University  
+</div>
 
-<br>  
+<div class="chat-input">
 
-Sociology & Social Work  
+<input
+id="userInput"
+type="text"
+placeholder="Ask your question..."
+>
 
-<br>  
+<button id="micBtn">🎤</button>
 
-<small>  
-    Created by Horsa Gowe  
-</small>
+<button id="sendBtn">Send</button>
 
-</footer>  <!-- ================= SCRIPTS ================= -->  <script src="script.js"></script>  <script type="module" src="auth.js"></script>  <!-- ================= UI FUNCTIONS ================= -->  <script>  
-  
-function toggleTheme(){  
-  
-    document.body.classList.toggle("dark");  
-  
-    const themeBtn =  
-        document.getElementById("themeBtn");  
-  
-    if(document.body.classList.contains("dark")){  
-  
-        themeBtn.textContent = "☀️";  
-  
-        localStorage.setItem(  
-            "sociologyTheme",  
-            "dark"  
-        );  
-  
-    }else{  
-  
-        themeBtn.textContent = "🌙";  
-  
-        localStorage.setItem(  
-            "sociologyTheme",  
-            "light"  
-        );  
-  
-    }  
-  
-}  
-  
-  
-function loadTheme(){  
-  
-    const savedTheme =  
-        localStorage.getItem("sociologyTheme");  
-  
-    const themeBtn =  
-        document.getElementById("themeBtn");  
-  
-    if(savedTheme === "dark"){  
-  
-        document.body.classList.add("dark");  
-  
-        if(themeBtn){  
-            themeBtn.textContent = "☀️";  
-        }  
-  
-    }  
-  
-}  
-  
-  
-function showNotifications(){  
-  
-    alert(  
-        "🔔 Notifications\n\n" +  
-        "New academic updates, announcements " +  
-        "and community activities will appear here."  
-    );  
-  
-}  
-  
-  
-/* ================= SEARCH ================= */  
-  
-document.addEventListener(  
-    "DOMContentLoaded",  
-    function(){  
-  
-        loadTheme();  
-  
-        const searchBar =  
-            document.getElementById("searchBar");  
-  
-        if(!searchBar){  
-            return;  
-        }  
-  
-        searchBar.addEventListener(  
-            "input",  
-            function(){  
-  
-                const search =  
-                    this.value.toLowerCase().trim();  
-  
-                const posts =  
-                    document.querySelectorAll(  
-                        "#postsContainer > div"  
-                    );  
-  
-                posts.forEach(  
-                    function(post){  
-  
-                        const text =  
-                            post.textContent.toLowerCase();  
-  
-                        if(!search || text.includes(search)){  
-  
-                            post.style.display = "";  
-  
-                        }else{  
-  
-                            post.style.display = "none";  
-  
-                        }  
-  
-                    }  
-                );  
-  
-            }  
-        );  
-  
-    }  
-);  
-  
-</script>  </body>  
-      </html>
+</div>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+© 2026 Sociology Connect – Arsi University
+
+<br>
+
+Sociology & Social Work
+
+<br>
+
+<small>Created by Horsa Gowe</small>
+
+</footer>
+
+<!-- ================= SCRIPTS ================= -->
+
+<script src="script.js"></script>
+
+<script type="module" src="auth.js"></script>
+
+</body>
+
+</html>
+    

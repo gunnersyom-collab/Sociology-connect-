@@ -224,3 +224,65 @@
 .dark .copy-btn{
     background:#0a84d0;
 }
+
+/* ================= AI MARI DARK MODE FIX ================= */
+
+/* LIGHT MODE */
+#chat-history{
+    background:#f8f8f8 !important;
+    color:#111 !important;
+}
+
+#chat-history .message.ai{
+    background:#ffffff !important;
+    color:#111111 !important;
+    border:1px solid #ddd !important;
+}
+
+#chat-history .message.user{
+    background:#007bff !important;
+    color:#ffffff !important;
+}
+
+/* DARK MODE */
+body.dark #chat-history{
+    background:#111111 !important;
+    color:#ffffff !important;
+}
+
+body.dark #chat-history .message.ai{
+    background:#2b2b2b !important;
+    color:#ffffff !important;
+    border:1px solid #555 !important;
+}
+
+body.dark #chat-history .message.ai *{
+    color:#ffffff !important;
+}
+
+body.dark #chat-history .message.user{
+    background:#007bff !important;
+    color:#ffffff !important;
+}
+
+/* AI TEXT */
+body.dark #chat-history .ai,
+body.dark #chat-history .ai p,
+body.dark #chat-history .ai span,
+body.dark #chat-history .ai div{
+    color:#ffffff !important;
+}
+
+/* USER TEXT */
+body.dark #chat-history .user,
+body.dark #chat-history .user p,
+body.dark #chat-history .user span,
+body.dark #chat-history .user div{
+    color:#ffffff !important;
+}
+
+/* COPY BUTTON */
+body.dark .copy-btn{
+    background:#0a84d0 !important;
+    color:#ffffff !important;
+}

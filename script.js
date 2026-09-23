@@ -1,9 +1,12 @@
+
 /* =========================================================
-   SOCIOLOGY CONNECT - SCRIPT.JS (Professional)
+   SOCIOLOGY CONNECT - SCRIPT.JS
    AI MARI + DARK MODE + SEARCH + VOICE + NOTIFICATIONS
    ========================================================= */
 
-/* ---------- ELEMENTS ---------- */
+
+/* ================= ELEMENTS ================= */
+
 const chatHistory = document.getElementById("chat-history");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
@@ -12,289 +15,629 @@ const themeBtn = document.getElementById("themeBtn");
 const searchBar = document.getElementById("searchBar");
 const notifyBtn = document.getElementById("notifyBtn");
 
-/* ---------- SECURITY ---------- */
+
+/* ================= SECURITY ================= */
+
 function escapeHTML(value){
-  return String(value||"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 }
 
-/* ---------- AI MARI ---------- */
+
+/* =========================================================
+   AI MARI
+   ========================================================= */
+
 async function sendToServer(){
 
-  if(!chatHistory || !userInput) return;
+    if(!chatHistory || !userInput) return;
 
-  const text = userInput.value.trim();
-  if(!text) return;
+    const text = userInput.value.trim();
 
-  const user = document.createElement("div");
-  user.className = "message user";
-  user.innerHTML = "<b>You:</b> " + escapeHTML(text);
-  chatHistory.appendChild(user);
+    if(!text) return;
 
-  userInput.value = "";
 
-  if(sendBtn){
-    sendBtn.disabled = true;
-    sendBtn.textContent = "Thinking...";
-  }
+    /* ---------- USER MESSAGE ---------- */
 
-  const loading = document.createElement("div");
-  loading.className = "message ai";
-  loading.innerHTML = "<b>AI Mari:</b><br><i>Typing...</i>";
-  chatHistory.appendChild(loading);
+    const userMessage = document.createElement("div");
 
-  chatHistory.scrollTop = chatHistory.scrollHeight;
+    userMessage.className = "message user";
 
-  try{
+    userMessage.innerHTML =
+        "<b>You:</b> " + escapeHTML(text);
 
-    const res = await fetch(
-      "https://text.pollinations.ai/" +
-      encodeURIComponent(text)
-    );
+    chatHistory.appendChild(userMessage);
 
-    if(!res.ok) throw new Error();
 
-    const reply = await res.text();
+    /* ---------- CLEAR INPUT ---------- */
 
-    loading.remove();
+    userInput.value = "";
 
-    const ai = document.createElement("div");
-    ai.className = "message ai";
-    ai.innerHTML = `
-      <b>AI Mari:</b><br>
-      ${escapeHTML(reply)}
-      <br><br>
-      <button class="copy-btn">📋 Copy</button>
-    `;
 
-    ai.querySelector(".copy-btn").onclick = () => {
-      navigator.clipboard.writeText(reply);
-    };
-
-    chatHistory.appendChild(ai);
-
-  }catch{
-
-    loading.remove();
-
-    const err = document.createElement("div");
-    err.className = "message ai";
-    err.style.color = "red";
-    err.innerHTML =
-      "<b>AI Mari:</b><br>Sorry, connection failed.";
-
-    chatHistory.appendChild(err);
-
-  }finally{
+    /* ---------- SEND BUTTON ---------- */
 
     if(sendBtn){
-      sendBtn.disabled = false;
-      sendBtn.textContent = "Send";
+
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Thinking...";
+
     }
 
-    chatHistory.scrollTop = chatHistory.scrollHeight;
-  }
+
+    /* ---------- LOADING ---------- */
+
+    const loading = document.createElement("div");
+
+    loading.className = "message ai";
+
+    loading.innerHTML =
+        "<b>AI Mari:</b><br><i>Typing...</i>";
+
+    chatHistory.appendChild(loading);
+
+
+    chatHistory.scrollTop =
+        chatHistory.scrollHeight;
+
+
+    try{
+
+        /* ---------- AI REQUEST ---------- */
+
+        const res = await fetch(
+            "https://text.pollinations.ai/" +
+            encodeURIComponent(text)
+        );
+
+
+        if(!res.ok){
+
+            throw new Error(
+                "AI server error"
+            );
+
+        }
+
+
+        const reply = await res.text();
+
+
+        /* ---------- REMOVE LOADING ---------- */
+
+        loading.remove();
+
+
+        /* ---------- AI MESSAGE ---------- */
+
+        const aiMessage =
+            document.createElement("div");
+
+        aiMessage.className = "message ai";
+
+
+        aiMessage.innerHTML = `
+            <b>AI Mari:</b><br>
+            <span class="ai-text">${escapeHTML(reply)}</span>
+            <br><br>
+            <button class="copy-btn" type="button">
+                📋 Copy
+            </button>
+        `;
+
+
+        /* ---------- COPY BUTTON ---------- */
+
+        const copyButton =
+            aiMessage.querySelector(".copy-btn");
+
+
+        if(copyButton){
+
+            copyButton.addEventListener(
+                "click",
+                async ()=>{
+
+                    try{
+
+                        await navigator.clipboard.writeText(
+                            reply
+                        );
+
+                        copyButton.textContent =
+                            "✅ Copied!";
+
+                        setTimeout(()=>{
+
+                            copyButton.textContent =
+                                "📋 Copy";
+
+                        },1500);
+
+                    }catch{
+
+                        alert(
+                            "Copy failed."
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ---------- ADD AI MESSAGE ---------- */
+
+        chatHistory.appendChild(
+            aiMessage
+        );
+
+
+        /* ---------- KEEP CHAT VISIBLE ---------- */
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+
+    }catch(error){
+
+        console.error(
+            "AI Mari Error:",
+            error
+        );
+
+
+        /* ---------- REMOVE LOADING ---------- */
+
+        loading.remove();
+
+
+        /* ---------- ERROR MESSAGE ---------- */
+
+        const errorMessage =
+            document.createElement("div");
+
+        errorMessage.className =
+            "message ai";
+
+
+        errorMessage.innerHTML = `
+            <b>AI Mari:</b><br>
+            <span class="ai-text">
+                Sorry, connection failed. Please try again.
+            </span>
+        `;
+
+
+        chatHistory.appendChild(
+            errorMessage
+        );
+
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+    }finally{
+
+        if(sendBtn){
+
+            sendBtn.disabled = false;
+            sendBtn.textContent = "Send";
+
+        }
+
+    }
+
 }
 
-sendBtn?.addEventListener("click",sendToServer);
 
-userInput?.addEventListener("keydown",e=>{
-  if(e.key==="Enter" && !e.shiftKey){
-    e.preventDefault();
-    sendToServer();
-  }
-});
-/* ---------- DARK MODE ---------- */
+/* ================= SEND EVENTS ================= */
+
+sendBtn?.addEventListener(
+    "click",
+    sendToServer
+);
+
+
+userInput?.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Enter" &&
+            !event.shiftKey
+        ){
+
+            event.preventDefault();
+
+            sendToServer();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
 
 function updateThemeButton(){
 
-  if(!themeBtn) return;
+    if(!themeBtn) return;
 
-  if(document.body.classList.contains("dark")){
-    themeBtn.textContent = "☀️";
-    themeBtn.title = "Light Mode";
-  }else{
-    themeBtn.textContent = "🌙";
-    themeBtn.title = "Dark Mode";
-  }
+
+    if(
+        document.body.classList.contains("dark")
+    ){
+
+        themeBtn.textContent = "☀️";
+
+        themeBtn.title =
+            "Light Mode";
+
+    }else{
+
+        themeBtn.textContent = "🌙";
+
+        themeBtn.title =
+            "Dark Mode";
+
+    }
+
 }
+
+
+/* ---------- APPLY SAVED THEME ---------- */
 
 function applySavedTheme(){
 
-  if(localStorage.getItem("sociologyTheme")==="dark"){
-    document.body.classList.add("dark");
-  }else{
-    document.body.classList.remove("dark");
-  }
+    const savedTheme =
+        localStorage.getItem(
+            "sociologyTheme"
+        );
 
-  updateThemeButton();
+
+    if(savedTheme === "dark"){
+
+        document.body.classList.add(
+            "dark"
+        );
+
+    }else{
+
+        document.body.classList.remove(
+            "dark"
+        );
+
+    }
+
+
+    updateThemeButton();
+
 }
+
+
+/* ---------- TOGGLE THEME ---------- */
 
 window.toggleTheme = function(){
 
-  document.body.classList.toggle("dark");
+    document.body.classList.toggle(
+        "dark"
+    );
 
-  localStorage.setItem(
-    "sociologyTheme",
-    document.body.classList.contains("dark")
-      ? "dark"
-      : "light"
-  );
 
-  updateThemeButton();
+    const darkMode =
+        document.body.classList.contains(
+            "dark"
+        );
+
+
+    localStorage.setItem(
+        "sociologyTheme",
+        darkMode
+            ? "dark"
+            : "light"
+    );
+
+
+    updateThemeButton();
+
 };
 
-/* ---------- SEARCH ---------- */
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 function searchWebsite(){
 
-  if(!searchBar) return;
+    if(!searchBar) return;
 
-  const q = searchBar.value.toLowerCase().trim();
 
-  let visible = 0;
+    const q =
+        searchBar.value
+            .toLowerCase()
+            .trim();
 
-  document.querySelectorAll(
-    "#postsContainer > div,#news .card,#events .event-card"
-  ).forEach(el=>{
 
-    const ok =
-      !q ||
-      el.textContent.toLowerCase().includes(q);
+    let visible = 0;
 
-    el.style.display = ok ? "" : "none";
 
-    if(ok) visible++;
-  });
+    document.querySelectorAll(
+        "#postsContainer > div,#news .card,#events .event-card"
+    ).forEach(element => {
 
-  const resources =
-    document.getElementById("resources");
+        const match =
+            !q ||
+            element.textContent
+                .toLowerCase()
+                .includes(q);
 
-  if(resources){
 
-    const ok =
-      !q ||
-      resources.textContent.toLowerCase().includes(q);
+        element.style.display =
+            match ? "" : "none";
 
-    resources.style.display = ok ? "" : "none";
-  }
 
-  const counter =
-    document.getElementById("searchCount");
+        if(match){
 
-  if(counter){
-    counter.textContent =
-      q ? `${visible} results found` : "";
-  }
+            visible++;
+
+        }
+
+    });
+
+
+    const resources =
+        document.getElementById(
+            "resources"
+        );
+
+
+    if(resources){
+
+        const match =
+            !q ||
+            resources.textContent
+                .toLowerCase()
+                .includes(q);
+
+
+        resources.style.display =
+            match ? "" : "none";
+
+    }
+
+
+    const counter =
+        document.getElementById(
+            "searchCount"
+        );
+
+
+    if(counter){
+
+        counter.textContent =
+            q
+                ? `${visible} results found`
+                : "";
+
+    }
+
 }
 
+
 searchBar?.addEventListener(
-  "input",
-  searchWebsite
+    "input",
+    searchWebsite
 );
 
-/* ---------- NOTIFICATIONS ---------- */
+
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
 
 function updateNotificationBadge(){
 
-  if(!notifyBtn) return;
+    if(!notifyBtn) return;
 
-  const list =
-    JSON.parse(localStorage.getItem("sc_notify")) || [];
 
-  notifyBtn.innerHTML =
-    list.length
-      ? `🔔 <span style="color:red">${list.length}</span>`
-      : "🔔";
+    const list =
+        JSON.parse(
+            localStorage.getItem(
+                "sc_notify"
+            )
+        ) || [];
+
+
+    notifyBtn.innerHTML =
+        list.length
+            ? `🔔 <span style="color:red">${list.length}</span>`
+            : "🔔";
+
 }
+
 
 window.showNotifications = function(){
 
-  const list =
-    JSON.parse(localStorage.getItem("sc_notify")) || [];
+    const list =
+        JSON.parse(
+            localStorage.getItem(
+                "sc_notify"
+            )
+        ) || [];
 
-  if(list.length===0){
-    alert("🔔 No new notifications.");
-    return;
-  }
 
-  alert(
-    "🔔 Notifications\n\n" +
-    list.slice(0,10).join("\n\n")
-  );
+    if(list.length === 0){
+
+        alert(
+            "🔔 No new notifications."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "🔔 Notifications\n\n" +
+        list.slice(0,10).join(
+            "\n\n"
+        )
+    );
+
 };
 
-/* ---------- VOICE INPUT ---------- */
+
+/* =========================================================
+   VOICE INPUT
+   ========================================================= */
 
 let recognition = null;
 
-if("webkitSpeechRecognition" in window){
 
-  recognition = new webkitSpeechRecognition();
+if(
+    "webkitSpeechRecognition" in window
+){
 
-  recognition.lang = "en-US";
-  recognition.continuous = false;
-  recognition.interimResults = false;
+    recognition =
+        new webkitSpeechRecognition();
 
-  micBtn?.addEventListener("click",()=>{
 
-    try{
-      recognition.start();
-      micBtn.textContent = "🔴";
-    }catch{}
+    recognition.lang =
+        "en-US";
 
-  });
+    recognition.continuous =
+        false;
 
-  recognition.onresult = e=>{
+    recognition.interimResults =
+        false;
 
-    userInput.value =
-      e.results[0][0].transcript;
 
-    userInput.focus();
+    micBtn?.addEventListener(
+        "click",
+        ()=>{
 
-    micBtn.textContent = "🎤";
-  };
+            try{
 
-  recognition.onend = ()=>{
-    micBtn.textContent = "🎤";
-  };
+                recognition.start();
 
-  recognition.onerror = ()=>{
-    micBtn.textContent = "🎤";
-  };
+                micBtn.textContent =
+                    "🔴";
+
+            }catch(error){
+
+                console.log(
+                    "Voice already running."
+                );
+
+            }
+
+        }
+    );
+
+
+    recognition.onresult =
+        event => {
+
+            if(!userInput) return;
+
+
+            userInput.value =
+                event.results[0][0]
+                    .transcript;
+
+
+            userInput.focus();
+
+
+            if(micBtn){
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onend =
+        ()=>{
+
+            if(micBtn){
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        ()=>{
+
+            if(micBtn){
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
 
 }else{
 
-  if(micBtn){
-    micBtn.title =
-      "Voice input is not supported.";
-  }
-}
+    if(micBtn){
 
-/* ---------- START ---------- */
+        micBtn.title =
+            "Voice input is not supported.";
 
-document.addEventListener("DOMContentLoaded",()=>{
-
-  applySavedTheme();
-  updateNotificationBadge();
-
-  document.addEventListener("keydown",e=>{
-
-    if(e.ctrlKey &&
-       e.key.toLowerCase()==="k"){
-
-      e.preventDefault();
-      searchBar?.focus();
     }
 
-  });
+}
 
-  console.log(
-    "✅ Sociology Connect Professional Script Loaded."
-  );
 
-});
+/* =========================================================
+   START
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    ()=>{
+
+        applySavedTheme();
+
+        updateNotificationBadge();
+
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if(
+                    event.ctrlKey &&
+                    event.key.toLowerCase() === "k"
+                ){
+
+                    event.preventDefault();
+
+                    searchBar?.focus();
+
+                }
+
+            }
+        );
+
+
+        console.log(
+            "✅ Sociology Connect Professional Script Loaded."
+        );
+
+    }
+);

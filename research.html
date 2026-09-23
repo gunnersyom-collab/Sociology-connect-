@@ -1421,25 +1421,229 @@ document
 
             }
 
-        }
+<script>
+/* =========================
+   DARK MODE
+========================= */
+
+function updateThemeButton(){
+    const button=document.getElementById("themeBtn");
+    if(!button) return;
+
+    if(document.body.classList.contains("dark")){
+        button.textContent="☀️";
+        button.title="Light Mode";
+    }else{
+        button.textContent="🌙";
+        button.title="Dark Mode";
+    }
+}
+
+function loadTheme(){
+    if(localStorage.getItem("sociologyTheme")==="dark"){
+        document.body.classList.add("dark");
+    }
+    updateThemeButton();
+}
+
+function toggleTheme(){
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "sociologyTheme",
+        document.body.classList.contains("dark")
+            ? "dark"
+            : "light"
     );
 
+    updateThemeButton();
+}
+
+/* =========================
+   TOPIC GENERATOR
+========================= */
+
+const topics=[
+"Effects of Community-Based Social Work Programs on Youth Empowerment",
+"The Role of Social Media in Youth Social Participation",
+"Effects of Unemployment on Young People's Social Well-Being",
+"The Role of Education in Reducing Social Inequality",
+"Community Participation in Local Development",
+"The Effects of Substance Use on Youth Development",
+"Gender Equality and Women's Participation in Community Development",
+"The Role of Social Workers in Supporting Vulnerable Families",
+"Social Capital and Community Development",
+"The Impact of Migration on Family Relationships",
+"Youth Unemployment and Social Problems",
+"The Role of Indigenous Social Support Systems in Community Well-Being",
+"Poverty and Access to Social Services",
+"The Role of Social Work in Supporting Persons with Disabilities",
+"Community-Based Approaches to Child Protection"
+];
+
+function generateTopic(){
+    const result=document.getElementById("topicResult");
+    const random=Math.floor(Math.random()*topics.length);
+
+    result.innerHTML=
+        "<strong>💡 Suggested Topic:</strong><br><br>"+topics[random];
+}
+
+/* =========================
+   GUIDE FUNCTIONS
+========================= */
+
+function showTopics(){
+    alert("💡 Research Topics\n\nExplore youth, family, gender, community development, social problems and Social Work research areas.");
+}
+
+function showProposal(){
+    alert("📝 Research Proposal\n\n1. Introduction\n2. Statement of the Problem\n3. Research Questions\n4. Objectives\n5. Literature Review\n6. Methodology\n7. Work Plan\n8. References");
+}
+
+function showMethodology(){
+    alert("📊 Research Methodology\n\n• Qualitative Research\n• Quantitative Research\n• Mixed Methods Research");
+}
+
+function showQuestions(){
+    alert("❓ Research Questions\n\nA good research question should be clear, specific and researchable.");
+}
+
+function showLiterature(){
+    alert("📖 Literature Review\n\nSearch previous studies, compare findings and identify research gaps.");
+}
+
+function showReferencing(){
+    alert("📚 Referencing\n\nAlways acknowledge your academic sources.");
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchResearch(){
+
+    const query=document
+        .getElementById("researchSearch")
+        .value
+        .toLowerCase()
+        .trim();
+
+    document.querySelectorAll(".card,.faq,.guide").forEach(item=>{
+
+        item.style.display=
+            !query || item.innerText.toLowerCase().includes(query)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+/* =========================
+   AI RESEARCH ASSISTANT
+========================= */
+
+async function askResearchAI(){
+
+    const input=document.getElementById("researchAIInput");
+    const result=document.getElementById("researchAIResult");
+    const button=document.getElementById("researchAISend");
+
+    if(!input||!result||!button) return;
+
+    const question=input.value.trim();
+
+    if(!question){
+        result.textContent="⚠️ Please enter your research question.";
+        input.focus();
+        return;
+    }
+
+    button.disabled=true;
+    button.textContent="⏳ Thinking...";
+    result.textContent="🤖 AI Mari is thinking...";
+
+    const prompt=`
+You are AI Mari, an academic Research Assistant for Sociology Connect at Arsi University.
+
+IMPORTANT INSTRUCTIONS:
+
+1. Answer ONLY the student's current question.
+2. Do NOT repeat previous answers, tables, examples or instructions unless requested.
+3. If the student asks for "5 research topics", give exactly 5 topics.
+4. Keep the answer directly related to the question.
+5. Do not automatically generate research questions, objectives, methodology, literature review or proposal sections unless asked.
+6. Use simple academic English.
+7. Make Sociology and Social Work answers suitable for Ethiopia.
+8. Do not invent sources, statistics or citations.
+9. If the student asks for a list, use a numbered list.
+10. If the student asks for a table, use a table.
+
+CURRENT STUDENT QUESTION:
+${question}
+
+Now answer ONLY the current question.
+`;
+
+    try{
+
+        const response=await fetch(
+            "https://text.pollinations.ai/"+encodeURIComponent(prompt)
+        );
+
+        if(!response.ok) throw new Error();
+
+        const answer=await response.text();
+
+        result.textContent="🤖 AI Mari:\n\n"+answer;
+
+    }catch{
+
+        result.textContent="❌ Sorry, AI Research Assistant could not connect right now.";
+
+    }finally{
+
+        button.disabled=false;
+        button.textContent="🤖 Ask AI";
+
+    }
+
+}
+
+/* =========================
+   CLEAR AI
+========================= */
+
+function clearResearchAI(){
+
+    document.getElementById("researchAIInput").value="";
+    document.getElementById("researchAIResult").textContent=
+        "💡 Your AI research assistance will appear here.";
+
+}
+
+/* =========================
+   ENTER KEY
+========================= */
+
+document.getElementById("researchAIInput")
+?.addEventListener("keydown",function(e){
+
+    if(e.key==="Enter" && !e.shiftKey){
+        e.preventDefault();
+        askResearchAI();
+    }
+
+});
 
 /* =========================
    START
 ========================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        loadTheme();
-
-    }
-);
-
+window.addEventListener("DOMContentLoaded",loadTheme);
 </script>
-
+               
 </body>
 </html>
            

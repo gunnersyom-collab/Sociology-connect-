@@ -1,60 +1,150 @@
-/* Kutaa hundaaf background adda baasuu */
-.section-container {
-    padding: 40px 20px;
-    margin: 20px 0;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+/* ================= SECTION CONTAINER ================= */
+.section-container{
+    padding:40px 20px;
+    margin:20px 0;
+    background:#ffffff;
+    border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    transition:.3s ease;
 }
 
-/* Contact Section */
-.contact-section {
-    background-color: #f4f4f9;
-    border-left: 5px solid #007bff;
-    padding: 25px;
-    border-radius: 12px;
+.section-container:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
-/* Telegram Button */
-.telegram-btn {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #0088cc;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    margin-top: 10px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+/* ================= CONTACT SECTION ================= */
+.contact-section{
+    background:#f4f4f9;
+    border-left:5px solid #007bff;
+    padding:25px;
+    border-radius:16px;
 }
 
-.telegram-btn:hover {
-    background-color: #006fa3;
-    transform: translateY(-2px);
+.contact-section h2{
+    color:#007bff;
+    margin-bottom:10px;
 }
 
-/* Mobile */
-@media (max-width: 768px) {
+.contact-section p{
+    line-height:1.7;
+    color:#555;
+}
+
+/* ================= CONTACT FORM ================= */
+.contact-section input,
+.contact-section textarea{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #d0d7de;
+    border-radius:10px;
+    font-size:15px;
+    transition:.3s;
+}
+
+.contact-section input:focus,
+.contact-section textarea:focus{
+    border-color:#007bff;
+    outline:none;
+    box-shadow:0 0 8px rgba(0,123,255,.25);
+}
+
+/* ================= TELEGRAM BUTTON ================= */
+.telegram-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 25px;
+    background:#0088cc;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-weight:bold;
+    margin-top:15px;
+    transition:.3s ease;
+}
+
+.telegram-btn:hover{
+    background:#006fa3;
+    transform:translateY(-2px) scale(1.02);
+}
+
+/* ================= SOCIAL BUTTONS ================= */
+.social-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:20px;
+}
+
+.social-buttons a{
+    width:45px;
+    height:45px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eef4ff;
+    border-radius:50%;
+    color:#007bff;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.social-buttons a:hover{
+    background:#007bff;
+    color:#fff;
+    transform:scale(1.1);
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+
     .section-container,
-    .contact-section {
-        padding: 20px 15px;
-        margin: 15px 10px;
+    .contact-section{
+        padding:20px 15px;
+        margin:15px 10px;
     }
 
-    .telegram-btn {
-        width: 100%;
-        text-align: center;
+    .telegram-btn{
+        width:100%;
+        text-align:center;
+    }
+
+    .social-buttons{
+        justify-content:center;
     }
 }
 
-/* Dark Mode */
+/* ================= DARK MODE ================= */
 .dark .section-container,
-.dark .contact-section {
-    background-color: #1f1f1f;
-    color: white;
+.dark .contact-section{
+    background:#1f1f1f;
+    color:white;
 }
 
-.dark .telegram-btn {
-    background-color: #0a84d0;
+.dark .contact-section p{
+    color:#ddd;
 }
 
+.dark .contact-section input,
+.dark .contact-section textarea{
+    background:#2b2b2b;
+    color:white;
+    border-color:#444;
+}
+
+.dark .telegram-btn{
+    background:#0a84d0;
+}
+
+.dark .social-buttons a{
+    background:#2b2b2b;
+    color:#4aa3ff;
+}
+
+.dark .social-buttons a:hover{
+    background:#0a84d0;
+    color:white;
+}

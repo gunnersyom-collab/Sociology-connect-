@@ -339,23 +339,43 @@ window.addComment = async(id)=>{
 };
 
 /* ---------------- SHARE ---------------- */
+window.sharePost = async (id) => {
 
-window.sharePost = async(id)=>{
+  const postUrl = `${location.origin}${location.pathname}?post=${id}`;
 
-  if(navigator.share){
+  try {
 
-    await navigator.share({
-      title:"Sociology Connect",
-      text:"Check this post",
-      url:location.href
-    });
+    if (navigator.share && navigator.canShare) {
 
-  }else{
+      await navigator.share({
+        title: "Sociology Connect",
+        text: "Check out this post on Sociology Connect!",
+        url: postUrl
+      });
 
-    navigator.clipboard.writeText(location.href);
-    alert("Link copied.");
+    } else if (navigator.share) {
+
+      await navigator.share({
+        title: "Sociology Connect",
+        text: "Check out this post on Sociology Connect!",
+        url: postUrl
+      });
+
+    } else {
+
+      await navigator.clipboard.writeText(postUrl);
+
+      alert("Share is not supported on this browser. Link copied.");
+
+    }
+
+  } catch (err) {
+
+    console.log("Share cancelled.");
 
   }
+
+};
 
 };
 

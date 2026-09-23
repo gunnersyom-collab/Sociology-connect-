@@ -7,12 +7,18 @@ import {
   onAuthStateChanged,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
 import {
   getFirestore,
   doc,
   setDoc,
   getDoc,
-  serverTimestamp
+  serverTimestamp,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -31,7 +37,7 @@ const db = getFirestore(app);
 
 const $ = (id) => document.getElementById(id);
 
-/* ---------- SIGN UP ---------- */
+/* ================= SIGN UP ================= */
 
 async function signup() {
   try {
@@ -64,7 +70,7 @@ async function signup() {
   }
 }
 
-/* ---------- LOGIN ---------- */
+/* ================= LOGIN ================= */
 
 async function login() {
   try {
@@ -80,14 +86,14 @@ async function login() {
   }
 }
 
-/* ---------- LOGOUT ---------- */
+/* ================= LOGOUT ================= */
 
 async function logout() {
   await signOut(auth);
   location.href = "login.html";
 }
 
-/* ---------- PROFILE ---------- */
+/* ================= PROFILE ================= */
 
 async function loadProfile(user) {
   if (!user) return;
@@ -98,27 +104,131 @@ async function loadProfile(user) {
   $("userInfo") && ($("userInfo").textContent = data.fullName || user.displayName || user.email);
   $("profileName") && ($("profileName").textContent = data.fullName || user.displayName || "Student");
   $("profileEmail") && ($("profileEmail").textContent = user.email);
-  $("profileYear") && ($("profileYear").textContent = data.year || "");
-  $("profileBio") && ($("profileBio").textContent = data.bio || "");
+  $("profileYear") && ($("profileYear").textContent = data.year || "Not added");
+  $("profileBio") && ($("profileBio").textContent = data.bio || "No bio yet");
 }
 
-/* ---------- AUTH STATE ---------- */
+/* ================= CREATE POST ================= */
+
+async function createPost() {
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
+
+  const input = $("postInput");
+  if (!input) return;
+
+  const text = input.value.trim();
+
+  if (!text) {
+    alert("Write something first.");
+    return;
+  }
+
+  try {
+
+    const profile = await getDoc(doc(db, "users", user.uid));
+    const pdata = profile.exists() ? profile.data() : {};
+
+    await addDoc(collection(db, "posts"), {
+      text,
+      name: pdata.fullName || user.displayName || "Student",
+      uid: user.uid,
+      createdAt: serverTimestamp()
+    });
+
+    input.value = "";
+
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+/* ================= LOAD POSTS ================= */
+
+function loadPosts() {
+
+  const container = $("postsContainer");
+
+  if (!container) return;
+
+  const q = query(
+    collection(db, "posts"),
+    orderBy("createdAt", "desc")
+  );
+
+  onSnapshot(q, (snapshot) => {
+
+    container.innerHTML = "";
+
+    if (snapshot.empty) {
+      container.innerHTML = `
+        <div class="card">
+          No posts yet. Be the first to post.
+        </div>`;
+      return;
+    }
+
+    snapshot.forEach((docSnap) => {
+
+      const post = docSnap.data();
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <h3>${post.name || "Student"}</h3>
+        <p>${post.text || ""}</p>
+        <small>Just now</small>
+      `;
+
+      container.appendChild(card);
+
+    });
+
+  }, (error) => {
+
+    container.innerHTML = `
+      <div class="card" style="color:red;">
+        Failed to load posts.<br>${error.message}
+      </div>`;
+
+  });
+
+}
+
+/* ================= AUTH STATE ================= */
 
 onAuthStateChanged(auth, (user) => {
+
   if (user) {
+
     $("loginLink") && ($("loginLink").style.display = "none");
     $("logoutBtn") && ($("logoutBtn").style.display = "inline-block");
+
     loadProfile(user);
+    loadPosts();
+
   } else {
+
     $("loginLink") && ($("loginLink").style.display = "inline");
     $("logoutBtn") && ($("logoutBtn").style.display = "none");
+
+    loadPosts();
+
   }
+
 });
 
-/* ---------- IMPORTANT ---------- */
+/* ================= GLOBAL ================= */
 
 window.login = login;
 window.signup = signup;
 window.logout = logout;
+window.createPost = createPost;
 
 console.log("✅ AUTH READY");

@@ -1398,28 +1398,97 @@ function clearResearchAI(){
     input?.focus();
 
 }
+async function askResearchAI(){
 
+    const input=document.getElementById("researchAIInput");
+    const result=document.getElementById("researchAIResult");
+    const button=document.getElementById("researchAISend");
+
+    if(!input||!result||!button) return;
+
+    const question=input.value.trim();
+
+    if(!question){
+        result.textContent="⚠️ Please enter your research question.";
+        input.focus();
+        return;
+    }
+
+    button.disabled=true;
+    button.textContent="⏳ Thinking...";
+    result.textContent="🤖 AI Mari is thinking...";
+
+    const prompt=`
+You are AI Mari, an academic Research Assistant for Sociology Connect at Arsi University.
+
+IMPORTANT INSTRUCTIONS:
+
+1. Answer ONLY the student's current question.
+2. Never repeat previous answers, tables or examples unless requested.
+3. If the student asks for "5 research topics", give exactly 5 topics.
+4. Keep the answer directly related to the question.
+5. Do not automatically add research questions, objectives, methodology or proposal sections unless requested.
+6. Use simple academic English.
+7. Make Sociology and Social Work answers suitable for Ethiopia.
+8. Do not invent sources, statistics or citations.
+
+CURRENT STUDENT QUESTION:
+${question}
+
+Answer ONLY the current question.
+`;
+
+    try{
+
+        const response=await fetch(
+            "https://text.pollinations.ai/"+encodeURIComponent(prompt)
+        );
+
+        if(!response.ok) throw new Error();
+
+        const answer=await response.text();
+
+        result.textContent="🤖 AI Mari:\n\n"+answer;
+
+    }catch{
+
+        result.textContent="❌ Sorry, connection failed. Please try again.";
+
+    }finally{
+
+        button.disabled=false;
+        button.textContent="🤖 Ask AI";
+
+    }
+
+}
+
+/* =========================
+   CLEAR AI
+========================= */
+
+function clearResearchAI(){
+
+    document.getElementById("researchAIInput").value="";
+    document.getElementById("researchAIResult").textContent=
+    "💡 Your AI research assistance will appear here.";
+
+    document.getElementById("researchAIInput").focus();
+
+}
 
 /* =========================
    ENTER KEY
 ========================= */
 
-document
-    .getElementById("researchAIInput")
-    ?.addEventListener(
-        "keydown",
-        function(event){
+document.getElementById("researchAIInput")?.addEventListener("keydown",function(event){
 
-            if(
-                event.key === "Enter" &&
-                !event.shiftKey
-            ){
+    if(event.key==="Enter"&&!event.shiftKey){
+        event.preventDefault();
+        askResearchAI();
+    }
 
-                event.preventDefault();
-
-                askResearchAI();
-
-            }
+});
 
 <script>
 /* =========================

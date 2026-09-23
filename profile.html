@@ -238,28 +238,39 @@ placeholder="Paste image URL">
 Sociology Connect © 2026
 </footer>
 
+
 <script>
-// Load profile
-function loadProfile(){
+function loadProfile() {
+  const data = JSON.parse(localStorage.getItem("scProfile")) || {};
 
-const data=JSON.parse(localStorage.getItem("scProfile"))||{};
+  document.getElementById("profileName").textContent = data.name || "Student Name";
+  document.getElementById("profileYear").textContent = data.year || "Not added";
+  document.getElementById("profileBio").textContent = data.bio || "No bio added yet.";
 
-document.getElementById("profileName").textContent=data.name||"Student Name";
-document.getElementById("profileYear").textContent=data.year||"Not added";
-document.getElementById("profileBio").textContent=data.bio||"No bio added yet.";
+  if (data.photo) {
+    document.getElementById("profilePhoto").src = data.photo;
+  }
 
-if(data.photo){
-document.getElementById("profilePhoto").src=data.photo;
+  document.getElementById("fullName").value = data.name || "";
+  document.getElementById("year").value = data.year || "";
+  document.getElementById("bio").value = data.bio || "";
+  document.getElementById("photo").value = data.photo || "";
 }
 
-document.getElementById("fullName").value=data.name||"";
-document.getElementById("year").value=data.year||"";
-document.getElementById("bio").value=data.bio||"";
-document.getElementById("photo").value=data.photo||"";
+function saveProfile() {
+  const data = {
+    name: document.getElementById("fullName").value,
+    year: document.getElementById("year").value,
+    bio: document.getElementById("bio").value,
+    photo: document.getElementById("photo").value
+  };
+
+  localStorage.setItem("scProfile", JSON.stringify(data));
+  loadProfile();
 }
 
-// Save profile
-function saveProfile(){
+window.onload = loadProfile;
+</script>
 
 const data={
 name:document.getElementById("fullName").value,

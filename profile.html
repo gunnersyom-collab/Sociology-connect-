@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,6 +49,12 @@ height:220px;
 background:linear-gradient(135deg,#0d6efd,#4facfe);
 }
 
+.photo-wrapper{
+position:relative;
+width:120px;
+margin:-60px auto 10px;
+}
+
 .profile-photo{
 width:120px;
 height:120px;
@@ -57,8 +62,25 @@ border-radius:50%;
 object-fit:cover;
 border:5px solid #fff;
 display:block;
-margin:-60px auto 10px;
 box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+.camera-btn{
+position:absolute;
+bottom:0;
+right:0;
+width:36px;
+height:36px;
+border-radius:50%;
+background:#007bff;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+cursor:pointer;
+border:3px solid #fff;
+box-shadow:0 2px 8px rgba(0,0,0,.3);
 }
 
 h2{text-align:center;margin-top:10px;}
@@ -77,9 +99,7 @@ font-size:32px;
 color:#0d6efd;
 }
 
-.info{
-padding:0 20px;
-}
+.info{padding:0 20px;}
 
 .info-box{
 background:#f5f7fb;
@@ -137,9 +157,7 @@ font-weight:bold;
 cursor:pointer;
 }
 
-button:hover{
-background:#0043a8;
-}
+button:hover{background:#0043a8;}
 
 footer{
 text-align:center;
@@ -168,7 +186,11 @@ color:#777;
 
 <div class="cover"></div>
 
+<div class="photo-wrapper">
 <img id="profilePhoto" class="profile-photo" src="IMG_20260910_154710.png" alt="Profile">
+<label for="photoInput" class="camera-btn">📷</label>
+<input type="file" id="photoInput" accept="image/*" hidden>
+</div>
 
 <h2 id="profileName">Student Name</h2>
 <div class="email">Sociology & Social Work</div>
@@ -213,9 +235,6 @@ color:#777;
 <label>Bio</label>
 <textarea id="bio" placeholder="Write something..."></textarea>
 
-<label>Profile Photo URL (Optional)</label>
-<input id="photo" type="url" placeholder="Paste image URL">
-
 <button onclick="saveProfile()">💾 Save Profile</button>
 
 </div>
@@ -230,34 +249,50 @@ Sociology Connect © 2026
 
 <script>
 function loadProfile(){
- const data=JSON.parse(localStorage.getItem("scProfile"))||{};
+const data=JSON.parse(localStorage.getItem("scProfile"))||{};
 
- document.getElementById("profileName").textContent=data.name||"Student Name";
- document.getElementById("profileYear").textContent=data.year||"Not added";
- document.getElementById("profileBio").textContent=data.bio||"No bio added yet.";
+document.getElementById("profileName").textContent=data.name||"Student Name";
+document.getElementById("profileYear").textContent=data.year||"Not added";
+document.getElementById("profileBio").textContent=data.bio||"No bio added yet.";
 
- if(data.photo){
-   document.getElementById("profilePhoto").src=data.photo;
- }
+if(data.photo){
+document.getElementById("profilePhoto").src=data.photo;
+}
 
- document.getElementById("fullName").value=data.name||"";
- document.getElementById("year").value=data.year||"";
- document.getElementById("bio").value=data.bio||"";
- document.getElementById("photo").value=data.photo||"";
+document.getElementById("fullName").value=data.name||"";
+document.getElementById("year").value=data.year||"";
+document.getElementById("bio").value=data.bio||"";
 }
 
 function saveProfile(){
- const data={
-   name:document.getElementById("fullName").value,
-   year:document.getElementById("year").value,
-   bio:document.getElementById("bio").value,
-   photo:document.getElementById("photo").value
- };
+const data=JSON.parse(localStorage.getItem("scProfile"))||{};
 
- localStorage.setItem("scProfile",JSON.stringify(data));
- loadProfile();
- alert("Profile updated successfully!");
+data.name=document.getElementById("fullName").value;
+data.year=document.getElementById("year").value;
+data.bio=document.getElementById("bio").value;
+
+localStorage.setItem("scProfile",JSON.stringify(data));
+loadProfile();
+alert("Profile updated successfully!");
 }
+
+const photoInput=document.getElementById("photoInput");
+
+photoInput.addEventListener("change",function(){
+const file=this.files[0];
+if(!file)return;
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+const data=JSON.parse(localStorage.getItem("scProfile"))||{};
+data.photo=e.target.result;
+localStorage.setItem("scProfile",JSON.stringify(data));
+loadProfile();
+};
+
+reader.readAsDataURL(file);
+});
 
 window.onload=loadProfile;
 </script>

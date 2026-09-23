@@ -1,226 +1,674 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+/* =========================================================
+   SOCIOLOGY CONNECT - SCRIPT.JS
+   AI MARI + DARK MODE + SEARCH + VOICE
+   Firebase Posts are handled by auth.js
+   ========================================================= */
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBiwF8jW-hCDLmtbpAD6t99afAhcldGQfw",
-  authDomain: "sociologyconnect.firebaseapp.com",
-  projectId: "sociologyconnect",
-  storageBucket: "sociologyconnect.firebasestorage.app",
-  messagingSenderId: "500228908679",
-  appId: "1:500228908679:web:ebc9c7cd6bf7c38aa13a22",
-  measurementId: "G-BM74QJ4XTZ"
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const chatHistory = document.getElementById("chat-history");
+const userInput = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+const micBtn = document.getElementById("micBtn");
+const themeBtn = document.getElementById("themeBtn");
+const searchBar = document.getElementById("searchBar");
+const notifyBtn = document.getElementById("notifyBtn");
+
+
+/* =========================================================
+   AI MARI
+   ========================================================= */
+
+async function sendToServer() {
+
+    if (!userInput || !chatHistory) {
+        return;
+    }
+
+    const text = userInput.value.trim();
+
+    if (!text) {
+        return;
+    }
+
+
+    /* SHOW USER MESSAGE */
+
+    const userMessage =
+        document.createElement("div");
+
+    userMessage.className =
+        "message user";
+
+    userMessage.innerHTML =
+        "<b>You:</b> " +
+        escapeHTML(text);
+
+    chatHistory.appendChild(
+        userMessage
+    );
+
+    userInput.value = "";
+
+    chatHistory.scrollTop =
+        chatHistory.scrollHeight;
+
+
+    /* DISABLE SEND BUTTON */
+
+    if (sendBtn) {
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Thinking...";
+    }
+
+
+    /* AI LOADING MESSAGE */
+
+    const loading =
+        document.createElement("div");
+
+    loading.className =
+        "message ai";
+
+    loading.id =
+        "ai-loading";
+
+    loading.innerHTML =
+        "<b>AI Mari:</b> Thinking... 🤔";
+
+    chatHistory.appendChild(
+        loading
+    );
+
+    chatHistory.scrollTop =
+        chatHistory.scrollHeight;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "https://text.pollinations.ai/" +
+                encodeURIComponent(text)
+            );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "AI request failed"
+            );
+        }
+
+
+        const reply =
+            await response.text();
+
+
+        /* REMOVE LOADING */
+
+        loading.remove();
+
+
+        /* SHOW AI RESPONSE */
+
+        const aiMessage =
+            document.createElement("div");
+
+        aiMessage.className =
+            "message ai";
+
+        aiMessage.innerHTML =
+            "<b>AI Mari:</b><br>" +
+            escapeHTML(reply);
+
+
+        chatHistory.appendChild(
+            aiMessage
+        );
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+
+    } catch (error) {
+
+        console.error(
+            "AI Error:",
+            error
+        );
+
+
+        loading.remove();
+
+
+        const errorMessage =
+            document.createElement("div");
+
+        errorMessage.className =
+            "message ai";
+
+        errorMessage.style.color =
+            "red";
+
+        errorMessage.innerHTML =
+            "<b>AI Mari:</b><br>" +
+            "Sorry, I could not connect to the AI right now. Please try again.";
+
+
+        chatHistory.appendChild(
+            errorMessage
+        );
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+    } finally {
+
+        if (sendBtn) {
+
+            sendBtn.disabled =
+                false;
+
+            sendBtn.textContent =
+                "Send";
+        }
+
+    }
+
+}
+
+
+/* SEND BUTTON */
+
+sendBtn?.addEventListener(
+    "click",
+    sendToServer
+);
+
+
+/* ENTER KEY */
+
+userInput?.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            sendToServer();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+function updateThemeButton() {
+
+    if (!themeBtn) {
+        return;
+    }
+
+    if (
+        document.body.classList.contains(
+            "dark"
+        )
+    ) {
+
+        themeBtn.textContent =
+            "☀️";
+
+        themeBtn.title =
+            "Switch to light mode";
+
+    } else {
+
+        themeBtn.textContent =
+            "🌙";
+
+        themeBtn.title =
+            "Switch to dark mode";
+
+    }
+
+}
+
+
+function applySavedTheme() {
+
+    const savedTheme =
+        localStorage.getItem(
+            "sociologyTheme"
+        );
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+    } else {
+
+        document.body.classList.remove(
+            "dark"
+        );
+
+    }
+
+    updateThemeButton();
+
+}
+
+
+/* GLOBAL THEME FUNCTION */
+
+window.toggleTheme = function() {
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+    const isDark =
+        document.body.classList.contains(
+            "dark"
+        );
+
+
+    localStorage.setItem(
+        "sociologyTheme",
+        isDark
+            ? "dark"
+            : "light"
+    );
+
+
+    updateThemeButton();
+
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
-const $ = (id) => document.getElementById(id);
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
-/* ---------- HTML SECURITY HELPER ---------- */
+function searchWebsite() {
+
+    if (!searchBar) {
+        return;
+    }
+
+
+    const query =
+        searchBar.value
+            .toLowerCase()
+            .trim();
+
+
+    /* SEARCH POSTS */
+
+    const postItems =
+        document.querySelectorAll(
+            "#postsContainer > div"
+        );
+
+
+    postItems.forEach(
+        function(post) {
+
+            const text =
+                post.textContent
+                    .toLowerCase();
+
+
+            if (
+                !query ||
+                text.includes(query)
+            ) {
+
+                post.style.display =
+                    "";
+
+            } else {
+
+                post.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    /* SEARCH NEWS */
+
+    const newsCards =
+        document.querySelectorAll(
+            "#news .card"
+        );
+
+
+    newsCards.forEach(
+        function(card) {
+
+            const text =
+                card.textContent
+                    .toLowerCase();
+
+
+            if (
+                !query ||
+                text.includes(query)
+            ) {
+
+                card.style.display =
+                    "";
+
+            } else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    /* SEARCH RESOURCES */
+
+    const resourceSection =
+        document.getElementById(
+            "resources"
+        );
+
+
+    if (resourceSection) {
+
+        const resourceText =
+            resourceSection.textContent
+                .toLowerCase();
+
+
+        resourceSection.style.display =
+            !query ||
+            resourceText.includes(query)
+                ? ""
+                : "none";
+
+    }
+
+
+    /* SEARCH EVENTS */
+
+    const eventCards =
+        document.querySelectorAll(
+            "#events .event-card"
+        );
+
+
+    eventCards.forEach(
+        function(card) {
+
+            const text =
+                card.textContent
+                    .toLowerCase();
+
+
+            if (
+                !query ||
+                text.includes(query)
+            ) {
+
+                card.style.display =
+                    "";
+
+            } else {
+
+                card.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+searchBar?.addEventListener(
+    "input",
+    searchWebsite
+);
+
+
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
+
+window.showNotifications =
+function() {
+
+    const notifications =
+        JSON.parse(
+            localStorage.getItem(
+                "sc_notify"
+            )
+        ) || [];
+
+
+    if (
+        notifications.length === 0
+    ) {
+
+        alert(
+            "🔔 Notifications\n\n" +
+            "No new notifications yet."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "🔔 Notifications\n\n" +
+        notifications
+            .slice(0, 10)
+            .join("\n\n")
+    );
+
+};
+
+
+/* =========================================================
+   VOICE INPUT
+   ========================================================= */
+
+let recognition = null;
+
+
+if (
+    "webkitSpeechRecognition"
+    in window
+) {
+
+    recognition =
+        new webkitSpeechRecognition();
+
+
+    recognition.lang =
+        "en-US";
+
+    recognition.continuous =
+        false;
+
+    recognition.interimResults =
+        false;
+
+
+    micBtn?.addEventListener(
+        "click",
+        function() {
+
+            try {
+
+                recognition.start();
+
+                if (micBtn) {
+                    micBtn.textContent =
+                        "🔴";
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Voice already active."
+                );
+
+            }
+
+        }
+    );
+
+
+    recognition.onresult =
+        function(event) {
+
+            const transcript =
+                event
+                    .results[0][0]
+                    .transcript;
+
+
+            if (userInput) {
+
+                userInput.value =
+                    transcript;
+
+                userInput.focus();
+
+            }
+
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onend =
+        function() {
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        function(error) {
+
+            console.error(
+                "Voice recognition error:",
+                error
+            );
+
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+} else {
+
+    if (micBtn) {
+
+        micBtn.title =
+            "Voice input is not supported by this browser.";
+
+    }
+
+}
+
+
+/* =========================================================
+   HTML SECURITY HELPER
+   ========================================================= */
+
 function escapeHTML(value) {
-    if (value === undefined || value === null) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
         return "";
+
     }
+
+
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
 }
 
-/* ---------- SIGN UP ---------- */
 
-async function signup() {
-  try {
-    const fullName = $("fullName")?.value.trim() || "";
-    const year = $("year")?.value || "";
-    const bio = $("bio")?.value.trim() || "";
-    const email = $("email").value.trim();
-    const password = $("password").value;
+/* =========================================================
+   START
+   ========================================================= */
 
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
-    if (fullName) {
-      await updateProfile(cred.user, { displayName: fullName });
+        applySavedTheme();
+
+        console.log(
+            "✅ Sociology Connect script.js loaded."
+        );
+
     }
-
-    await setDoc(doc(db, "users", cred.user.uid), {
-      uid: cred.user.uid,
-      email: cred.user.email,
-      fullName,
-      year,
-      bio,
-      createdAt: serverTimestamp()
-    });
-
-    alert("Account created successfully!");
-    location.href = "index.html";
-
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-/* ---------- LOGIN ---------- */
-
-async function login() {
-  try {
-    const email = $("email").value.trim();
-    const password = $("password").value;
-
-    await signInWithEmailAndPassword(auth, email, password);
-
-    location.href = "index.html";
-
-  } catch (e) {
-    alert(e.message);
-  }
-}
-
-/* ---------- LOGOUT ---------- */
-
-async function logout() {
-  await signOut(auth);
-  location.href = "login.html";
-}
-
-/* ---------- PROFILE ---------- */
-
-async function loadProfile(user) {
-  if (!user) return;
-
-  const snap = await getDoc(doc(db, "users", user.uid));
-  const data = snap.exists() ? snap.data() : {};
-
-  $("userInfo") && ($("userInfo").textContent = data.fullName || user.displayName || user.email);
-  $("profileName") && ($("profileName").textContent = data.fullName || user.displayName || "Student");
-  $("profileEmail") && ($("profileEmail").textContent = user.email);
-  $("profileYear") && ($("profileYear").textContent = data.year || "");
-  $("profileBio") && ($("profileBio").textContent = data.bio || "");
-}
-
-/* ---------- CREATE POST ---------- */
-
-async function createPost() {
-  try {
-    const postText = $("postText")?.value.trim();
-    if (!postText) {
-      alert("Please write something to post!");
-      return;
-    }
-
-    const user = auth.currentUser;
-    if (!user) {
-      alert("You must be logged in to post.");
-      location.href = "login.html";
-      return;
-    }
-
-    const snap = await getDoc(doc(db, "users", user.uid));
-    const userData = snap.exists() ? snap.data() : {};
-    const authorName = userData.fullName || user.displayName || "Student";
-
-    await addDoc(collection(db, "posts"), {
-      text: postText,
-      authorId: user.uid,
-      authorName: authorName,
-      createdAt: serverTimestamp()
-    });
-
-    $("postText").value = "";
-    loadPosts();
-  } catch (e) {
-    alert("Error posting: " + e.message);
-  }
-}
-
-/* ---------- LOAD POSTS ---------- */
-
-async function loadPosts() {
-  const postsContainer = $("postsContainer");
-  if (!postsContainer) return;
-
-  try {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      postsContainer.innerHTML = `
-        <div class="post-empty"> 
-            <h3>📭 No posts yet</h3> 
-            <p>Be the first to share something with the community!</p> 
-        </div>`;
-      return;
-    }
-
-    let html = "";
-    querySnapshot.forEach((docSnap) => {
-      const post = docSnap.data();
-      html += `
-        <div class="card" style="margin-bottom: 12px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-            <strong style="color:#007bff;">${escapeHTML(post.authorName || "Student")}</strong>
-            <p style="margin-top: 5px; white-space: pre-wrap; line-height:1.5;">${escapeHTML(post.text)}</p>
-        </div>
-      `;
-    });
-
-    postsContainer.innerHTML = html;
-  } catch (e) {
-    console.error("Error loading posts:", e);
-    postsContainer.innerHTML = `
-      <div class="post-empty"> 
-          <h3>⚠️ Error loading posts</h3> 
-          <p>${escapeHTML(e.message)}</p> 
-      </div>`;
-  }
-}
-
-/* ---------- AUTH STATE ---------- */
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    $("loginLink") && ($("loginLink").style.display = "none");
-    $("logoutBtn") && ($("logoutBtn").style.display = "inline-block");
-    loadProfile(user);
-  } else {
-    $("loginLink") && ($("loginLink").style.display = "inline");
-    $("logoutBtn") && ($("logoutBtn").style.display = "none");
-  }
-});
-
-/* ---------- WINDOW GLOBAL EXPORTS ---------- */
-
-window.login = login;
-window.signup = signup;
-window.logout = logout;
-window.createPost = createPost;
-window.loadPosts = loadPosts;
-
-/* ---------- DOM CONTENT LOADED ---------- */
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadPosts();
-});
-
-console.log("✅ AUTH & POSTS READY");
+);

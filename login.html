@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
 <title>Login | Sociology Connect</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
 font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#007bff,#00b4ff);
@@ -19,23 +20,14 @@ padding:20px;
 .box{
 max-width:420px;
 width:100%;
-background:white;
+background:#fff;
 padding:28px;
 border-radius:20px;
 box-shadow:0 10px 25px rgba(0,0,0,.15);
 }
-.logo{
-text-align:center;
-margin-bottom:15px;
-}
-.logo img{
-width:70px;
-}
-h2{
-text-align:center;
-color:#007bff;
-margin-bottom:20px;
-}
+.logo{text-align:center;margin-bottom:15px}
+.logo img{width:70px}
+h2{text-align:center;color:#007bff;margin-bottom:20px}
 input{
 width:100%;
 padding:13px;
@@ -44,54 +36,45 @@ border:1px solid #ccc;
 border-radius:10px;
 font-size:15px;
 }
-.password-box{
-position:relative;
-}
+.password-box{position:relative}
 #togglePass{
 position:absolute;
 right:12px;
 top:50%;
 transform:translateY(-50%);
 cursor:pointer;
-color:#555;
-font-size:14px;
 }
 button{
 width:100%;
 padding:13px;
 background:#007bff;
-color:white;
+color:#fff;
 border:none;
 border-radius:10px;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
 margin-top:12px;
-transition:.2s;
 }
-button:hover{
-background:#0056b3;
-}
-.links{
-text-align:center;
-margin-top:18px;
-}
-.links a{
-display:block;
-margin-top:10px;
-color:#007bff;
-text-decoration:none;
-font-weight:bold;
-}
-.links a:hover{
-text-decoration:underline;
-}
+button:hover{background:#0056b3}
 .remember{
 display:flex;
 align-items:center;
 gap:8px;
 margin-top:8px;
 font-size:14px;
+}
+.remember input{
+width:auto;
+margin:0;
+}
+.links{text-align:center;margin-top:18px}
+.links a{
+display:block;
+margin-top:10px;
+color:#007bff;
+text-decoration:none;
+font-weight:bold;
 }
 footer{
 text-align:center;
@@ -112,20 +95,26 @@ color:#666;
 
 <h2>Welcome Back</h2>
 
+<form id="loginForm">
+
 <input
 type="email"
 id="email"
 placeholder="Enter your email"
-autocomplete="email">
+autocomplete="email"
+required>
 
 <div class="password-box">
+
 <input
 type="password"
 id="password"
 placeholder="Enter your password"
-autocomplete="current-password">
+autocomplete="current-password"
+required>
 
 <span id="togglePass">👁️</span>
+
 </div>
 
 <div class="remember">
@@ -133,58 +122,46 @@ autocomplete="current-password">
 <label for="remember">Remember me</label>
 </div>
 
-<button onclick="login()">
-Login
-</button>
+<button type="submit">Login</button>
+
+</form>
 
 <div class="links">
-
 <a href="#">Forgot Password?</a>
+<a href="signup.html">Create New Account</a>
+<a href="index.html">← Back to Home</a>
+</div>
 
-<a href="signup.html">
-Create New Account
-</a>
-
-<a href="index.html">
-← Back to Home
-</a>
+<footer>Sociology Connect • Arsi University</footer>
 
 </div>
 
-<footer>
-Sociology Connect • Arsi University
-</footer>
-
-</div>
+<script type="module" src="auth.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded",()=>{
+
 const pass=document.getElementById("password");
 const toggle=document.getElementById("togglePass");
+const form=document.getElementById("loginForm");
 
-toggle.onclick=()=>{
+toggle.addEventListener("click",()=>{
+pass.type=pass.type==="password"?"text":"password";
+toggle.textContent=pass.type==="password"?"👁️":"🙈";
+});
 
-pass.type=
-pass.type==="password"
-?"text":"password";
+form.addEventListener("submit",(e)=>{
+e.preventDefault();
 
-toggle.textContent=
-pass.type==="password"
-?"👁️":"🙈";
-
-};
-
-document.addEventListener("keypress",e=>{
-
-if(e.key==="Enter"){
-
-login();
-
+if(typeof window.login==="function"){
+window.login();
+}else{
+alert("auth.js hin fe'amne. Browser Console ilaali.");
 }
+});
 
 });
 </script>
-
-<script type="module" src="auth.js"></script>
 
 </body>
 </html>

@@ -1,15 +1,9 @@
-
 /* =========================================================
-   SOCIOLOGY CONNECT - SCRIPT.JS
-   AI MARI + DARK MODE + SEARCH + VOICE
-   Firebase Posts are handled by auth.js
+   SOCIOLOGY CONNECT - SCRIPT.JS (Professional)
+   AI MARI + DARK MODE + SEARCH + VOICE + NOTIFICATIONS
    ========================================================= */
 
-
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
-
+/* ---------- ELEMENTS ---------- */
 const chatHistory = document.getElementById("chat-history");
 const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
@@ -18,658 +12,289 @@ const themeBtn = document.getElementById("themeBtn");
 const searchBar = document.getElementById("searchBar");
 const notifyBtn = document.getElementById("notifyBtn");
 
-
-/* =========================================================
-   AI MARI
-   ========================================================= */
-
-async function sendToServer() {
-
-    if (!userInput || !chatHistory) {
-        return;
-    }
-
-    const text = userInput.value.trim();
-
-    if (!text) {
-        return;
-    }
-
-
-    /* SHOW USER MESSAGE */
-
-    const userMessage =
-        document.createElement("div");
-
-    userMessage.className =
-        "message user";
-
-    userMessage.innerHTML =
-        "<b>You:</b> " +
-        escapeHTML(text);
-
-    chatHistory.appendChild(
-        userMessage
-    );
-
-    userInput.value = "";
-
-    chatHistory.scrollTop =
-        chatHistory.scrollHeight;
-
-
-    /* DISABLE SEND BUTTON */
-
-    if (sendBtn) {
-        sendBtn.disabled = true;
-        sendBtn.textContent = "Thinking...";
-    }
-
-
-    /* AI LOADING MESSAGE */
-
-    const loading =
-        document.createElement("div");
-
-    loading.className =
-        "message ai";
-
-    loading.id =
-        "ai-loading";
-
-    loading.innerHTML =
-        "<b>AI Mari:</b> Thinking... 🤔";
-
-    chatHistory.appendChild(
-        loading
-    );
-
-    chatHistory.scrollTop =
-        chatHistory.scrollHeight;
-
-
-    try {
-
-        const response =
-            await fetch(
-                "https://text.pollinations.ai/" +
-                encodeURIComponent(text)
-            );
-
-
-        if (!response.ok) {
-            throw new Error(
-                "AI request failed"
-            );
-        }
-
-
-        const reply =
-            await response.text();
-
-
-        /* REMOVE LOADING */
-
-        loading.remove();
-
-
-        /* SHOW AI RESPONSE */
-
-        const aiMessage =
-            document.createElement("div");
-
-        aiMessage.className =
-            "message ai";
-
-        aiMessage.innerHTML =
-            "<b>AI Mari:</b><br>" +
-            escapeHTML(reply);
-
-
-        chatHistory.appendChild(
-            aiMessage
-        );
-
-        chatHistory.scrollTop =
-            chatHistory.scrollHeight;
-
-
-    } catch (error) {
-
-        console.error(
-            "AI Error:",
-            error
-        );
-
-
-        loading.remove();
-
-
-        const errorMessage =
-            document.createElement("div");
-
-        errorMessage.className =
-            "message ai";
-
-        errorMessage.style.color =
-            "red";
-
-        errorMessage.innerHTML =
-            "<b>AI Mari:</b><br>" +
-            "Sorry, I could not connect to the AI right now. Please try again.";
-
-
-        chatHistory.appendChild(
-            errorMessage
-        );
-
-        chatHistory.scrollTop =
-            chatHistory.scrollHeight;
-
-    } finally {
-
-        if (sendBtn) {
-
-            sendBtn.disabled =
-                false;
-
-            sendBtn.textContent =
-                "Send";
-        }
-
-    }
-
+/* ---------- SECURITY ---------- */
+function escapeHTML(value){
+  return String(value||"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
+/* ---------- AI MARI ---------- */
+async function sendToServer(){
 
-/* SEND BUTTON */
+  if(!chatHistory || !userInput) return;
 
-sendBtn?.addEventListener(
-    "click",
-    sendToServer
-);
+  const text = userInput.value.trim();
+  if(!text) return;
 
+  const user = document.createElement("div");
+  user.className = "message user";
+  user.innerHTML = "<b>You:</b> " + escapeHTML(text);
+  chatHistory.appendChild(user);
 
-/* ENTER KEY */
+  userInput.value = "";
 
-userInput?.addEventListener(
-    "keydown",
-    function(event) {
+  if(sendBtn){
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Thinking...";
+  }
 
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
+  const loading = document.createElement("div");
+  loading.className = "message ai";
+  loading.innerHTML = "<b>AI Mari:</b><br><i>Typing...</i>";
+  chatHistory.appendChild(loading);
 
-            event.preventDefault();
+  chatHistory.scrollTop = chatHistory.scrollHeight;
 
-            sendToServer();
+  try{
 
-        }
-
-    }
-);
-
-
-/* =========================================================
-   DARK MODE
-   ========================================================= */
-
-function updateThemeButton() {
-
-    if (!themeBtn) {
-        return;
-    }
-
-    if (
-        document.body.classList.contains(
-            "dark"
-        )
-    ) {
-
-        themeBtn.textContent =
-            "☀️";
-
-        themeBtn.title =
-            "Switch to light mode";
-
-    } else {
-
-        themeBtn.textContent =
-            "🌙";
-
-        themeBtn.title =
-            "Switch to dark mode";
-
-    }
-
-}
-
-
-function applySavedTheme() {
-
-    const savedTheme =
-        localStorage.getItem(
-            "sociologyTheme"
-        );
-
-    if (savedTheme === "dark") {
-
-        document.body.classList.add(
-            "dark"
-        );
-
-    } else {
-
-        document.body.classList.remove(
-            "dark"
-        );
-
-    }
-
-    updateThemeButton();
-
-}
-
-
-/* GLOBAL THEME FUNCTION */
-
-window.toggleTheme = function() {
-
-    document.body.classList.toggle(
-        "dark"
+    const res = await fetch(
+      "https://text.pollinations.ai/" +
+      encodeURIComponent(text)
     );
 
+    if(!res.ok) throw new Error();
 
-    const isDark =
-        document.body.classList.contains(
-            "dark"
-        );
+    const reply = await res.text();
 
+    loading.remove();
 
-    localStorage.setItem(
-        "sociologyTheme",
-        isDark
-            ? "dark"
-            : "light"
-    );
+    const ai = document.createElement("div");
+    ai.className = "message ai";
+    ai.innerHTML = `
+      <b>AI Mari:</b><br>
+      ${escapeHTML(reply)}
+      <br><br>
+      <button class="copy-btn">📋 Copy</button>
+    `;
 
+    ai.querySelector(".copy-btn").onclick = () => {
+      navigator.clipboard.writeText(reply);
+    };
 
-    updateThemeButton();
+    chatHistory.appendChild(ai);
 
+  }catch{
+
+    loading.remove();
+
+    const err = document.createElement("div");
+    err.className = "message ai";
+    err.style.color = "red";
+    err.innerHTML =
+      "<b>AI Mari:</b><br>Sorry, connection failed.";
+
+    chatHistory.appendChild(err);
+
+  }finally{
+
+    if(sendBtn){
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send";
+    }
+
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  }
+}
+
+sendBtn?.addEventListener("click",sendToServer);
+
+userInput?.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendToServer();
+  }
+});
+/* ---------- DARK MODE ---------- */
+
+function updateThemeButton(){
+
+  if(!themeBtn) return;
+
+  if(document.body.classList.contains("dark")){
+    themeBtn.textContent = "☀️";
+    themeBtn.title = "Light Mode";
+  }else{
+    themeBtn.textContent = "🌙";
+    themeBtn.title = "Dark Mode";
+  }
+}
+
+function applySavedTheme(){
+
+  if(localStorage.getItem("sociologyTheme")==="dark"){
+    document.body.classList.add("dark");
+  }else{
+    document.body.classList.remove("dark");
+  }
+
+  updateThemeButton();
+}
+
+window.toggleTheme = function(){
+
+  document.body.classList.toggle("dark");
+
+  localStorage.setItem(
+    "sociologyTheme",
+    document.body.classList.contains("dark")
+      ? "dark"
+      : "light"
+  );
+
+  updateThemeButton();
 };
 
+/* ---------- SEARCH ---------- */
 
-/* =========================================================
-   SEARCH
-   ========================================================= */
+function searchWebsite(){
 
-function searchWebsite() {
+  if(!searchBar) return;
 
-    if (!searchBar) {
-        return;
-    }
+  const q = searchBar.value.toLowerCase().trim();
 
+  let visible = 0;
 
-    const query =
-        searchBar.value
-            .toLowerCase()
-            .trim();
+  document.querySelectorAll(
+    "#postsContainer > div,#news .card,#events .event-card"
+  ).forEach(el=>{
 
+    const ok =
+      !q ||
+      el.textContent.toLowerCase().includes(q);
 
-    /* SEARCH POSTS */
+    el.style.display = ok ? "" : "none";
 
-    const postItems =
-        document.querySelectorAll(
-            "#postsContainer > div"
-        );
+    if(ok) visible++;
+  });
 
+  const resources =
+    document.getElementById("resources");
 
-    postItems.forEach(
-        function(post) {
+  if(resources){
 
-            const text =
-                post.textContent
-                    .toLowerCase();
+    const ok =
+      !q ||
+      resources.textContent.toLowerCase().includes(q);
 
+    resources.style.display = ok ? "" : "none";
+  }
 
-            if (
-                !query ||
-                text.includes(query)
-            ) {
+  const counter =
+    document.getElementById("searchCount");
 
-                post.style.display =
-                    "";
-
-            } else {
-
-                post.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
-
-    /* SEARCH NEWS */
-
-    const newsCards =
-        document.querySelectorAll(
-            "#news .card"
-        );
-
-
-    newsCards.forEach(
-        function(card) {
-
-            const text =
-                card.textContent
-                    .toLowerCase();
-
-
-            if (
-                !query ||
-                text.includes(query)
-            ) {
-
-                card.style.display =
-                    "";
-
-            } else {
-
-                card.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
-
-    /* SEARCH RESOURCES */
-
-    const resourceSection =
-        document.getElementById(
-            "resources"
-        );
-
-
-    if (resourceSection) {
-
-        const resourceText =
-            resourceSection.textContent
-                .toLowerCase();
-
-
-        resourceSection.style.display =
-            !query ||
-            resourceText.includes(query)
-                ? ""
-                : "none";
-
-    }
-
-
-    /* SEARCH EVENTS */
-
-    const eventCards =
-        document.querySelectorAll(
-            "#events .event-card"
-        );
-
-
-    eventCards.forEach(
-        function(card) {
-
-            const text =
-                card.textContent
-                    .toLowerCase();
-
-
-            if (
-                !query ||
-                text.includes(query)
-            ) {
-
-                card.style.display =
-                    "";
-
-            } else {
-
-                card.style.display =
-                    "none";
-
-            }
-
-        }
-    );
-
+  if(counter){
+    counter.textContent =
+      q ? `${visible} results found` : "";
+  }
 }
-
 
 searchBar?.addEventListener(
-    "input",
-    searchWebsite
+  "input",
+  searchWebsite
 );
 
+/* ---------- NOTIFICATIONS ---------- */
 
-/* =========================================================
-   NOTIFICATIONS
-   ========================================================= */
+function updateNotificationBadge(){
 
-window.showNotifications =
-function() {
+  if(!notifyBtn) return;
 
-    const notifications =
-        JSON.parse(
-            localStorage.getItem(
-                "sc_notify"
-            )
-        ) || [];
+  const list =
+    JSON.parse(localStorage.getItem("sc_notify")) || [];
 
+  notifyBtn.innerHTML =
+    list.length
+      ? `🔔 <span style="color:red">${list.length}</span>`
+      : "🔔";
+}
 
-    if (
-        notifications.length === 0
-    ) {
+window.showNotifications = function(){
 
-        alert(
-            "🔔 Notifications\n\n" +
-            "No new notifications yet."
-        );
+  const list =
+    JSON.parse(localStorage.getItem("sc_notify")) || [];
 
-        return;
+  if(list.length===0){
+    alert("🔔 No new notifications.");
+    return;
+  }
 
-    }
-
-
-    alert(
-        "🔔 Notifications\n\n" +
-        notifications
-            .slice(0, 10)
-            .join("\n\n")
-    );
-
+  alert(
+    "🔔 Notifications\n\n" +
+    list.slice(0,10).join("\n\n")
+  );
 };
 
-
-/* =========================================================
-   VOICE INPUT
-   ========================================================= */
+/* ---------- VOICE INPUT ---------- */
 
 let recognition = null;
 
+if("webkitSpeechRecognition" in window){
 
-if (
-    "webkitSpeechRecognition"
-    in window
-) {
+  recognition = new webkitSpeechRecognition();
 
-    recognition =
-        new webkitSpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = false;
+  recognition.interimResults = false;
 
+  micBtn?.addEventListener("click",()=>{
 
-    recognition.lang =
-        "en-US";
+    try{
+      recognition.start();
+      micBtn.textContent = "🔴";
+    }catch{}
 
-    recognition.continuous =
-        false;
+  });
 
-    recognition.interimResults =
-        false;
+  recognition.onresult = e=>{
 
+    userInput.value =
+      e.results[0][0].transcript;
 
-    micBtn?.addEventListener(
-        "click",
-        function() {
+    userInput.focus();
 
-            try {
+    micBtn.textContent = "🎤";
+  };
 
-                recognition.start();
+  recognition.onend = ()=>{
+    micBtn.textContent = "🎤";
+  };
 
-                if (micBtn) {
-                    micBtn.textContent =
-                        "🔴";
-                }
+  recognition.onerror = ()=>{
+    micBtn.textContent = "🎤";
+  };
 
-            } catch (error) {
+}else{
 
-                console.log(
-                    "Voice already active."
-                );
-
-            }
-
-        }
-    );
-
-
-    recognition.onresult =
-        function(event) {
-
-            const transcript =
-                event
-                    .results[0][0]
-                    .transcript;
-
-
-            if (userInput) {
-
-                userInput.value =
-                    transcript;
-
-                userInput.focus();
-
-            }
-
-
-            if (micBtn) {
-
-                micBtn.textContent =
-                    "🎤";
-
-            }
-
-        };
-
-
-    recognition.onend =
-        function() {
-
-            if (micBtn) {
-
-                micBtn.textContent =
-                    "🎤";
-
-            }
-
-        };
-
-
-    recognition.onerror =
-        function(error) {
-
-            console.error(
-                "Voice recognition error:",
-                error
-            );
-
-
-            if (micBtn) {
-
-                micBtn.textContent =
-                    "🎤";
-
-            }
-
-        };
-
-} else {
-
-    if (micBtn) {
-
-        micBtn.title =
-            "Voice input is not supported by this browser.";
-
-    }
-
+  if(micBtn){
+    micBtn.title =
+      "Voice input is not supported.";
+  }
 }
 
+/* ---------- START ---------- */
 
-/* =========================================================
-   HTML SECURITY HELPER
-   ========================================================= */
+document.addEventListener("DOMContentLoaded",()=>{
 
-function escapeHTML(value) {
+  applySavedTheme();
+  updateNotificationBadge();
 
-    if (
-        value === undefined ||
-        value === null
-    ) {
+  document.addEventListener("keydown",e=>{
 
-        return "";
+    if(e.ctrlKey &&
+       e.key.toLowerCase()==="k"){
 
+      e.preventDefault();
+      searchBar?.focus();
     }
 
+  });
 
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+  console.log(
+    "✅ Sociology Connect Professional Script Loaded."
+  );
 
-}
-
-
-/* =========================================================
-   START
-   ========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        applySavedTheme();
-
-        console.log(
-            "✅ Sociology Connect script.js loaded."
-        );
-
-    }
-);
+});

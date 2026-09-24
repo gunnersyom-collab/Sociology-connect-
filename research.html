@@ -863,7 +863,48 @@ body.dark #researchAIResult{
     </div>
 
 </section>
-<!-- =========================
+
+   <!-- =========================
+     RESEARCH ABSTRACT GENERATOR
+========================= -->
+
+<section class="ai-research">
+
+    <h2>📄 Research Abstract Generator</h2>
+
+    <p>
+        Enter your research topic and AI Mari will generate
+        a clear academic research abstract.
+    </p>
+
+    <textarea
+        id="abstractTopic"
+        placeholder="Example: Youth Unemployment in Ethiopia"
+        aria-label="Research topic"></textarea>
+
+    <div class="ai-research-actions">
+
+        <button
+            type="button"
+            id="abstractGenerateBtn"
+            onclick="generateAbstract()">
+            🤖 Generate Abstract
+        </button>
+
+        <button
+            type="button"
+            onclick="clearAbstract()">
+            🗑️ Clear
+        </button>
+
+    </div>
+
+    <div id="abstractResult">
+        Your research abstract will appear here.
+    </div>
+
+</section>
+   <!-- =========================
      RESEARCH PROCESS
 ========================= -->
 

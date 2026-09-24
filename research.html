@@ -1252,7 +1252,78 @@ document.getElementById("researchAIInput")?.addEventListener("keydown",function(
 /* =========================
    START
 ========================= */
+/* =========================
+   RESEARCH QUESTION GENERATOR
+========================= */
 
+async function generateResearchQuestions(){
+
+    const input=document.getElementById("topicInput");
+    const result=document.getElementById("generatorResult");
+    const button=document.getElementById("generateBtn");
+
+    if(!input||!result||!button) return;
+
+    const topic=input.value.trim();
+
+    if(!topic){
+        result.textContent="⚠️ Please enter a research topic.";
+        input.focus();
+        return;
+    }
+
+    button.disabled=true;
+    button.textContent="Generating...";
+    result.textContent="🤖 AI Mari is generating...";
+
+    const prompt=`
+You are AI Mari, an academic Research Assistant for Sociology Connect at Arsi University.
+
+Generate ONLY:
+1. One Main Research Question
+2. Four Sub Research Questions
+3. One General Objective
+4. Four Specific Objectives
+
+Topic:
+${topic}
+
+Use simple academic English.
+`;
+
+    try{
+
+        const response=await fetch(
+            "https://text.pollinations.ai/"+encodeURIComponent(prompt)
+        );
+
+        if(!response.ok) throw new Error();
+
+        const answer=await response.text();
+
+        result.textContent=answer;
+
+    }catch{
+
+        result.textContent="❌ Connection failed. Please try again.";
+
+    }finally{
+
+        button.disabled=false;
+        button.textContent="Generate";
+
+    }
+}
+
+function clearGenerator(){
+
+    document.getElementById("topicInput").value="";
+
+    document.getElementById("generatorResult").textContent=
+        "Your research questions will appear here.";
+
+    document.getElementById("topicInput").focus();
+}
 window.addEventListener("DOMContentLoaded",loadTheme);
 </script>
 

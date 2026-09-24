@@ -1371,13 +1371,17 @@ function clearGenerator(){
 
     document.getElementById("topicInput").focus();
 }
-/* APA 7 CITATION GENERATOR */
+/* =========================
+   APA 7 CITATION GENERATOR
+========================= */
 
 function generateAPA(){
 
     const author=document.getElementById("apaAuthor").value.trim();
     const year=document.getElementById("apaYear").value.trim();
+    const type=document.getElementById("apaType").value;
     const title=document.getElementById("apaTitle").value.trim();
+    const url=document.getElementById("apaURL").value.trim();
     const result=document.getElementById("apaResult");
 
     if(!author || !year || !title){
@@ -1389,16 +1393,45 @@ function generateAPA(){
     const lastName=names.pop();
     const initials=names.map(n=>n[0].toUpperCase()+".").join(" ");
 
+    let reference="";
+
+    if(type==="book"){
+        reference=`${lastName}, ${initials} (${year}). <i>${title}</i>.`;
+    }else if(type==="journal"){
+        reference=`${lastName}, ${initials} (${year}). ${title}. <i>Journal Article</i>.`;
+    }else{
+        reference=`${lastName}, ${initials} (${year}). <i>${title}</i>. ${url}`;
+    }
+
     result.innerHTML=`
-<strong>APA 7 Reference:</strong><br><br>
-${lastName}, ${initials} (${year}). <i>${title}</i>.
-`;
+        <strong>APA 7 Reference:</strong><br><br>
+        ${reference}
+        <br><br>
+        <strong>In-text Citation:</strong> (${lastName}, ${year})
+        <br><br>
+        <button type="button" onclick="copyAPA()">📋 Copy</button>
+    `;
+
+    window.currentAPA=reference.replace(/<[^>]+>/g,"");
+}
+
+function copyAPA(){
+
+    navigator.clipboard.writeText(window.currentAPA || "");
+
 }
 
 function clearAPA(){
-    // kun akkuma duraan jirutti haa hafu
+
+    document.getElementById("apaAuthor").value="";
+    document.getElementById("apaYear").value="";
+    document.getElementById("apaType").value="book";
+    document.getElementById("apaTitle").value="";
+    document.getElementById("apaURL").value="";
+    document.getElementById("apaResult").textContent="Your APA 7 citation will appear here.";
 
 }
+
    
    window.addEventListener("DOMContentLoaded",loadTheme);
 </script>

@@ -1147,22 +1147,26 @@ async function askResearchAI(){
     button.textContent="⏳ Thinking...";
     result.textContent="🤖 AI Mari is thinking...";
 
-    const prompt=`You are AI Mari, an academic Research Assistant for Sociology Connect at Arsi University.
+    const prompt=`
+You are AI Mari, an academic Research Assistant for Sociology Connect at Arsi University.
 
 IMPORTANT INSTRUCTIONS:
 
-1. Answer ONLY the student's current question.
-2. Never repeat previous answers, tables or examples unless requested.
-3. If asked for "5 research topics", give exactly 5 topics.
-4. Keep the answer directly related to the question.
-5. Use simple academic English.
-6. Make Sociology and Social Work answers suitable for Ethiopia.
-7. Do not invent sources, statistics or citations.
+- Answer ONLY the student's current question.
+- Do NOT repeat previous answers, tables, examples, or instructions unless the student asks for them.
+- Do NOT invent specific regions, cities, kebeles, or institutions unless the student mentions them.
+- If the student says "in Ethiopia", keep the answer at the national (Ethiopia) level.
+- If the student asks for "5 research topics", give exactly 5 topics only.
+- Do not automatically generate research questions, objectives, methodology, literature review, or proposal sections unless asked.
+- Use simple academic English.
+- Do not invent sources, statistics, citations, or research findings.
+- If the student asks for a numbered list, return only a numbered list.
 
 CURRENT STUDENT QUESTION:
 ${question}
 
-Answer ONLY the current question.`;
+Answer ONLY the current question.
+`;
 
     try{
 
@@ -1186,7 +1190,6 @@ Answer ONLY the current question.`;
         button.textContent="🤖 Ask AI";
 
     }
-
 }
 
 /* =========================
@@ -1214,11 +1217,8 @@ document.getElementById("researchAIInput")?.addEventListener("keydown",function(
    START
 ========================= */
 
-window.addEventListener("DOMContentLoaded", loadTheme);
+window.addEventListener("DOMContentLoaded",loadTheme);
 </script>
 
 </body>
 </html>
-                
-    
-        

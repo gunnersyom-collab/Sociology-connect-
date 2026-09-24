@@ -275,6 +275,23 @@ togglePassword.addEventListener("click", () => {
 </script>
 
 <script type="module" src="auth.js"></script>
+<script type="module">
+import { auth } from "./firebase.js";
+import { createUserWithEmailAndPassword }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+window.signup = async () => {
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("password").value;
+
+  try{
+    await createUserWithEmailAndPassword(auth,email,pass);
+    alert("Account created successfully!");
+    location.href="login.html";
+  }catch(e){
+    alert(e.message);
+  }
+};
+</script>
 </body>
 </html>

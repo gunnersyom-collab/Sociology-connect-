@@ -2147,6 +2147,43 @@ IMPORTANT INSTRUCTIONS:
 10. If the topic says "in Ethiopia", keep the discussion
     at the national level unless a specific location is provided.
 
+<section class="ai-research">
+
+    <h2>🎯 Research Objectives Generator</h2>
+
+    <p>
+        Enter your research topic and AI Mari will generate
+        one general objective and four specific objectives.
+    </p>
+
+    <textarea
+        id="objectiveTopic"
+        placeholder="Example: Youth Unemployment in Ethiopia"
+        aria-label="Research topic"></textarea>
+
+    <div class="ai-research-actions">
+
+        <button
+            type="button"
+            id="objectiveGenerateBtn"
+            onclick="generateResearchObjectives()">
+            🤖 Generate Objectives
+        </button>
+
+        <button
+            type="button"
+            onclick="clearObjectives()">
+            🗑️ Clear
+        </button>
+
+    </div>
+
+    <div id="objectiveResult">
+        Your research objectives will appear here.
+    </div>
+
+</section>
+
 RESEARCH TOPIC:
 
 ${topic}

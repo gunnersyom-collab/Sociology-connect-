@@ -1116,65 +1116,63 @@ Sociology &amp; Social Work
 <small>Created by Horsa Gowe</small>
 
 </footer>
-
-
 <!-- =========================================================
      JAVASCRIPT
      ========================================================= -->
+
 <script src="script.js"></script>
 <script type="module" src="auth.js"></script>
 
-<body>
-  <!-- Website kee keessaa content hundi as ol jira -->
+<script type="module">
+import { auth, db } from "./firebase.js";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-  <textarea id="postText" placeholder="What's on your mind?"></textarea>
-  <button id="postBtn">Post</button>
+const feed = document.getElementById("postsContainer");
+const input = document.getElementById("postInput");
 
-  <div id="feed"></div>
+window.createPost = async () => {
+  const text = input.value.trim();
+  const user = auth.currentUser;
 
-  <script src="script.js"></script>
-  <script type="module" src="auth.js"></script>
+  if (!user) return alert("Login first");
+  if (!text) return;
 
-  <script type="module">
-    import { auth, db } from "./firebase.js";
-    import {
-      collection, addDoc, serverTimestamp,
-      query, orderBy, onSnapshot
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+  await addDoc(collection(db, "posts"), {
+    text,
+    userId: user.uid,
+    name: user.email,
+    createdAt: serverTimestamp()
+  });
 
-    const feed = document.getElementById("feed");
+  input.value = "";
+};
 
-    document.getElementById("postBtn").onclick = async () => {
-      const text = document.getElementById("postText").value.trim();
-      const user = auth.currentUser;
+const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
 
-      if (!user) return alert("Login first");
-      if (!text) return;
+onSnapshot(q, (snap) => {
+  feed.innerHTML = "";
 
-      await addDoc(collection(db, "posts"), {
-        text,
-        userId: user.uid,
-        name: user.email,
-        createdAt: serverTimestamp()
-      });
+  snap.forEach((doc) => {
+    const p = doc.data();
 
-      document.getElementById("postText").value = "";
-    };
-
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-
-    onSnapshot(q, (snap) => {
-      feed.innerHTML = "";
-      snap.forEach((doc) => {
-        const p = doc.data();
-        feed.innerHTML += `
-          <div class="post">
-            <h4>${p.name}</h4>
-            <p>${p.text}</p>
-          </div>`;
-      });
-    });
-  </script>
+    feed.innerHTML += `
+      <div class="post-card">
+        <div class="post-header">
+          <strong>${p.name}</strong>
+        </div>
+        <p>${p.text}</p>
+      </div>`;
+  });
+});
+</script>
 
 </body>
 </html>
+

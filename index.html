@@ -1121,30 +1121,60 @@ Sociology &amp; Social Work
 <!-- =========================================================
      JAVASCRIPT
      ========================================================= -->
-
 <script src="script.js"></script>
+<script type="module" src="auth.js"></script>
 
-<script
-    type="module"
-    src="auth.js">
-</script>
 <body>
-
-  <!-- Website kee keessaa wanti duraan jiru hundi as jira -->
+  <!-- Website kee keessaa content hundi as ol jira -->
 
   <textarea id="postText" placeholder="What's on your mind?"></textarea>
-
   <button id="postBtn">Post</button>
 
   <div id="feed"></div>
 
-  <!-- SCRIPT KANA ASITTI GALCHI -->
+  <script src="script.js"></script>
+  <script type="module" src="auth.js"></script>
+
   <script type="module">
-    // script kee guutuu asitti
+    import { auth, db } from "./firebase.js";
+    import {
+      collection, addDoc, serverTimestamp,
+      query, orderBy, onSnapshot
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    const feed = document.getElementById("feed");
+
+    document.getElementById("postBtn").onclick = async () => {
+      const text = document.getElementById("postText").value.trim();
+      const user = auth.currentUser;
+
+      if (!user) return alert("Login first");
+      if (!text) return;
+
+      await addDoc(collection(db, "posts"), {
+        text,
+        userId: user.uid,
+        name: user.email,
+        createdAt: serverTimestamp()
+      });
+
+      document.getElementById("postText").value = "";
+    };
+
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snap) => {
+      feed.innerHTML = "";
+      snap.forEach((doc) => {
+        const p = doc.data();
+        feed.innerHTML += `
+          <div class="post">
+            <h4>${p.name}</h4>
+            <p>${p.text}</p>
+          </div>`;
+      });
+    });
   </script>
 
 </body>
-
-</body>
 </html>
-    

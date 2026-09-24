@@ -1371,9 +1371,7 @@ function clearGenerator(){
 
     document.getElementById("topicInput").focus();
 }
-/* =========================
-   APA 7 CITATION GENERATOR
-========================= */
+/* APA 7 CITATION GENERATOR */
 
 function generateAPA(){
 
@@ -1387,9 +1385,9 @@ function generateAPA(){
         return;
     }
 
-    const parts=author.split(" ");
-    const lastName=parts.pop();
-    const initials=parts.map(name=>name.charAt(0).toUpperCase()+".").join(" ");
+    const names=author.split(/\s+/);
+    const lastName=names.pop();
+    const initials=names.map(n=>n[0].toUpperCase()+".").join(" ");
 
     result.innerHTML=`
 <strong>APA 7 Reference:</strong><br><br>
@@ -1398,11 +1396,7 @@ ${lastName}, ${initials} (${year}). <i>${title}</i>.
 }
 
 function clearAPA(){
-
-    document.getElementById("apaAuthor").value="";
-    document.getElementById("apaYear").value="";
-    document.getElementById("apaTitle").value="";
-    document.getElementById("apaResult").textContent="Your APA 7 citation will appear here.";
+    // kun akkuma duraan jirutti haa hafu
 
 }
    

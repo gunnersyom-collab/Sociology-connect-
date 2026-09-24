@@ -778,7 +778,43 @@ body.dark #researchAIResult{
     </div>
 
 </section>
+<!-- =========================
+     RESEARCH QUESTION GENERATOR
+========================= -->
 
+<section class="ai-research">
+
+    <h2>🎯 Research Question Generator</h2>
+
+    <p>Enter your research topic and AI Mari will generate research questions and objectives.</p>
+
+    <textarea
+        id="topicInput"
+        placeholder="Example: Youth unemployment in Ethiopia">
+    </textarea>
+
+    <div class="ai-research-actions">
+
+        <button
+            id="generateBtn"
+            type="button"
+            onclick="generateResearchQuestions()">
+            Generate
+        </button>
+
+        <button
+            type="button"
+            onclick="clearGenerator()">
+            Clear
+        </button>
+
+    </div>
+
+    <div id="generatorResult">
+        Your research questions will appear here.
+    </div>
+
+</section>
 
 <!-- =========================
      RESEARCH PROCESS

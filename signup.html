@@ -293,5 +293,24 @@ window.signup = async () => {
   }
 };
 </script>
+<script type="module">
+import { auth } from "./firebase.js";
+import { signInWithEmailAndPassword }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+window.login = async ()=>{
+  const email=document.getElementById("email").value;
+  const pass=document.getElementById("password").value;
+
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+    alert("Welcome to Sociology Connect!");
+    location.href="index.html";
+  }catch(e){
+    alert(e.message);
+  }
+};
+</script>
+
 </body>
 </html>

@@ -1591,6 +1591,7 @@ Write the abstract now.
    CLEAR ABSTRACT
 ========================= */
 
+   
 function clearAbstract(){
 
     const input =
@@ -1614,6 +1615,130 @@ function clearAbstract(){
 
     input?.focus();
 
+}
+/* =========================
+   PROBLEM STATEMENT GENERATOR
+========================= */
+
+async function generateProblemStatement(){
+
+    const input =
+        document.getElementById("problemTopic");
+
+    const result =
+        document.getElementById("problemResult");
+
+    const button =
+        document.getElementById("problemGenerateBtn");
+
+    if(!input || !result || !button) return;
+
+    const topic =
+        input.value.trim();
+
+    if(!topic){
+
+        result.textContent =
+            "⚠️ Please enter a research topic.";
+
+        input.focus();
+
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "⏳ Generating...";
+
+    result.textContent =
+        "🤖 AI Mari is generating your problem statement...";
+
+    const prompt = `
+You are AI Mari, an academic Research Assistant
+for Sociology Connect at Arsi University.
+
+IMPORTANT INSTRUCTIONS:
+
+1. Write ONLY a research problem statement.
+2. Answer only for the topic provided.
+3. Use simple academic English.
+4. Make it suitable for Sociology or Social Work research.
+5. Focus on the social problem, its context,
+   affected people, and why the problem needs research.
+6. Do not invent statistics, sources, citations,
+   locations, institutions or specific facts.
+7. If information is not provided, keep the explanation general.
+8. Do not add research questions, objectives,
+   methodology or recommendations.
+9. Write approximately 250-350 words.
+10. If the topic says "in Ethiopia", keep the discussion
+    at the national level unless a specific location is provided.
+
+RESEARCH TOPIC:
+${topic}
+
+Write the problem statement now.
+`;
+
+    try{
+
+        const response =
+            await fetch(
+                "https://text.pollinations.ai/" +
+                encodeURIComponent(prompt)
+            );
+
+        if(!response.ok){
+
+            throw new Error("Request failed");
+
+        }
+
+        const answer =
+            await response.text();
+
+        if(!answer.trim()){
+
+            throw new Error("Empty response");
+
+        }
+
+        result.textContent =
+            "📝 Problem Statement:\n\n" +
+            answer;
+
+    }catch(error){
+
+        result.textContent =
+            "❌ Sorry, the Problem Statement Generator could not connect right now. Please try again.";
+
+    }finally{
+
+        button.disabled = false;
+        button.textContent =
+            "🤖 Generate Problem Statement";
+
+    }
+}
+
+
+function clearProblemStatement(){
+
+    const input =
+        document.getElementById("problemTopic");
+
+    const result =
+        document.getElementById("problemResult");
+
+    if(input){
+        input.value = "";
+    }
+
+    if(result){
+        result.textContent =
+            "Your problem statement will appear here.";
+    }
+
+    input?.focus();
 }
    
 </script>

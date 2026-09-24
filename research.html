@@ -815,7 +815,54 @@ body.dark #researchAIResult{
     </div>
 
 </section>
+<!-- =========================
+     APA 7 CITATION GENERATOR
+========================= -->
 
+<section class="ai-research">
+
+    <h2>📚 APA 7 Citation Generator</h2>
+
+    <p>Enter the author's name, year and title to generate an APA 7 reference.</p>
+
+    <input
+        type="text"
+        id="apaAuthor"
+        placeholder="Author (Example: John Smith)">
+
+    <input
+        type="text"
+        id="apaYear"
+        placeholder="Year (Example: 2024)"
+        style="margin-top:10px;">
+
+    <input
+        type="text"
+        id="apaTitle"
+        placeholder="Title of the book or article"
+        style="margin-top:10px;">
+
+    <div class="ai-research-actions">
+
+        <button
+            type="button"
+            onclick="generateAPA()">
+            Generate APA 7
+        </button>
+
+        <button
+            type="button"
+            onclick="clearAPA()">
+            Clear
+        </button>
+
+    </div>
+
+    <div id="apaResult" style="margin-top:15px;">
+        Your APA 7 citation will appear here.
+    </div>
+
+</section>
 <!-- =========================
      RESEARCH PROCESS
 ========================= -->

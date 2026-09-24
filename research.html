@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,6 +17,7 @@ content="Sociology research, Social Work research, research topics, research pro
 <meta name="robots" content="index, follow">
 
 <link rel="icon" type="image/png" href="1781866925745.png">
+
 
 <style>
 
@@ -384,7 +386,8 @@ section h2{
 #generatorResult,
 #apaResult,
 #abstractResult,
-#problemResult{
+#problemResult,
+#objectiveResult{
     margin-top:18px;
     background:#f5f7fb;
     border:1px solid #ddd;
@@ -475,7 +478,8 @@ body.dark #researchAIResult,
 body.dark #generatorResult,
 body.dark #apaResult,
 body.dark #abstractResult,
-body.dark #problemResult{
+body.dark #problemResult,
+body.dark #objectiveResult{
     background:#151515;
     color:white;
     border-color:#444;
@@ -517,10 +521,12 @@ body.dark #problemResult{
     .ai-research button{
         width:100%;
     }
+
 }
 
 </style>
 </head>
+
 
 <body>
 
@@ -920,7 +926,7 @@ body.dark #problemResult{
 
 
 <!-- =========================
-     RESEARCH ABSTRACT GENERATOR
+     1. RESEARCH ABSTRACT GENERATOR
 ========================= -->
 
 <section class="ai-research">
@@ -962,7 +968,7 @@ body.dark #problemResult{
 
 
 <!-- =========================
-     PROBLEM STATEMENT GENERATOR
+     2. PROBLEM STATEMENT GENERATOR
 ========================= -->
 
 <section class="ai-research">
@@ -1004,7 +1010,49 @@ body.dark #problemResult{
 
 
 <!-- =========================
-     RESEARCH PROCESS
+     3. RESEARCH OBJECTIVES GENERATOR
+========================= -->
+
+<section class="ai-research">
+
+    <h2>🎯 Research Objectives Generator</h2>
+
+    <p>
+        Enter your research topic and AI Mari will generate
+        one general objective and four specific objectives.
+    </p>
+
+    <textarea
+        id="objectiveTopic"
+        placeholder="Example: Youth Unemployment in Ethiopia"
+        aria-label="Research topic"></textarea>
+
+    <div class="ai-research-actions">
+
+        <button
+            type="button"
+            id="objectiveGenerateBtn"
+            onclick="generateResearchObjectives()">
+            🤖 Generate Objectives
+        </button>
+
+        <button
+            type="button"
+            onclick="clearObjectives()">
+            🗑️ Clear
+        </button>
+
+    </div>
+
+    <div id="objectiveResult">
+        Your research objectives will appear here.
+    </div>
+
+</section>
+
+
+<!-- =========================
+     4. RESEARCH PROCESS
 ========================= -->
 
 <section>
@@ -1065,7 +1113,7 @@ body.dark #problemResult{
 
 
 <!-- =========================
-     RESEARCH AREAS
+     5. RESEARCH AREAS
 ========================= -->
 
 <section>
@@ -1152,7 +1200,7 @@ body.dark #problemResult{
 
 
 <!-- =========================
-     FAQ
+     6. RESEARCH FAQ
 ========================= -->
 
 <section>
@@ -1778,17 +1826,15 @@ function generateAPA(){
     }
 
 
-    /*
-       Simple organization detection
-    */
-
     const organizationNames = [
+
         "World Health Organization",
         "United Nations",
         "UNICEF",
         "World Bank",
         "Ministry of Education",
         "Ministry of Health"
+
     ];
 
 
@@ -2147,43 +2193,6 @@ IMPORTANT INSTRUCTIONS:
 10. If the topic says "in Ethiopia", keep the discussion
     at the national level unless a specific location is provided.
 
-<section class="ai-research">
-
-    <h2>🎯 Research Objectives Generator</h2>
-
-    <p>
-        Enter your research topic and AI Mari will generate
-        one general objective and four specific objectives.
-    </p>
-
-    <textarea
-        id="objectiveTopic"
-        placeholder="Example: Youth Unemployment in Ethiopia"
-        aria-label="Research topic"></textarea>
-
-    <div class="ai-research-actions">
-
-        <button
-            type="button"
-            id="objectiveGenerateBtn"
-            onclick="generateResearchObjectives()">
-            🤖 Generate Objectives
-        </button>
-
-        <button
-            type="button"
-            onclick="clearObjectives()">
-            🗑️ Clear
-        </button>
-
-    </div>
-
-    <div id="objectiveResult">
-        Your research objectives will appear here.
-    </div>
-
-</section>
-
 RESEARCH TOPIC:
 
 ${topic}
@@ -2272,6 +2281,170 @@ function clearProblemStatement(){
 
 
 /* =========================
+   RESEARCH OBJECTIVES GENERATOR
+========================= */
+
+async function generateResearchObjectives(){
+
+    const input =
+        document.getElementById("objectiveTopic");
+
+    const result =
+        document.getElementById("objectiveResult");
+
+    const button =
+        document.getElementById("objectiveGenerateBtn");
+
+
+    if(!input || !result || !button) return;
+
+
+    const topic =
+        input.value.trim();
+
+
+    if(!topic){
+
+        result.textContent =
+            "⚠️ Please enter a research topic.";
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    button.disabled=true;
+
+    button.textContent =
+        "⏳ Generating...";
+
+
+    result.textContent =
+        "🤖 AI Mari is generating your research objectives...";
+
+
+    const prompt=`
+
+You are AI Mari, an academic Research Assistant
+for Sociology Connect at Arsi University.
+
+IMPORTANT INSTRUCTIONS:
+
+1. Write ONLY research objectives.
+2. Write exactly:
+   - One General Objective
+   - Four Specific Objectives
+3. Make all objectives directly related to the topic.
+4. Use simple academic English.
+5. Use clear and researchable academic action verbs.
+6. Do not invent statistics, sources, citations,
+   locations, institutions or specific facts.
+7. Do not add research questions, methodology,
+   literature review, recommendations or references.
+8. If the topic says "in Ethiopia", keep the objectives
+   at the national level unless a specific location is provided.
+
+RESEARCH TOPIC:
+
+${topic}
+
+Use exactly this format:
+
+General Objective:
+1. ...
+
+Specific Objectives:
+1. ...
+2. ...
+3. ...
+4. ...
+
+Write the objectives now.
+
+`;
+
+
+    try{
+
+        const response =
+            await fetch(
+                "https://text.pollinations.ai/" +
+                encodeURIComponent(prompt)
+            );
+
+
+        if(!response.ok){
+
+            throw new Error("Request failed");
+
+        }
+
+
+        const answer =
+            await response.text();
+
+
+        if(!answer.trim()){
+
+            throw new Error("Empty response");
+
+        }
+
+
+        result.textContent =
+            "🎯 Research Objectives:\n\n" +
+            answer;
+
+
+    }catch(error){
+
+        result.textContent =
+            "❌ Sorry, the Research Objectives Generator could not connect right now. Please try again.";
+
+    }finally{
+
+        button.disabled=false;
+
+        button.textContent =
+            "🤖 Generate Objectives";
+
+    }
+
+}
+
+
+function clearObjectives(){
+
+    const input =
+        document.getElementById("objectiveTopic");
+
+    const result =
+        document.getElementById("objectiveResult");
+
+
+    if(input){
+
+        input.value="";
+
+    }
+
+
+    if(result){
+
+        result.textContent =
+            "Your research objectives will appear here.";
+
+    }
+
+
+    input?.focus();
+
+}
+
+
+/* =========================
    LOAD THEME
 ========================= */
 
@@ -2281,6 +2454,7 @@ window.addEventListener(
 );
 
 </script>
+
 
 </body>
 </html>

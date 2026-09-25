@@ -1186,14 +1186,20 @@ window.createPost = async () => {
   const user = auth.currentUser;
 
   if (!user) return alert("Login first");
-  if (!text) return;
+  if (!text) return alert("Write something first");
+
+  const profile = await getDoc(doc(db, "users", user.uid));
+  const data = profile.exists() ? profile.data() : {};
 
   await addDoc(collection(db, "posts"), {
     text,
     userId: user.uid,
-    name: user.email,
+    name: data.fullName || user.displayName || user.email.split("@")[0],
     createdAt: serverTimestamp()
   });
+
+  input.value = "";
+};
 
   input.value = "";
 };

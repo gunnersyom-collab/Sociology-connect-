@@ -92,9 +92,8 @@ const userInfo =
 let currentUser = null;
 let authReady = false;
 
-const ADMIN_EMAIL =
-    "admin@sociologyconnect.com";
-
+const ADMIN_EMAIL =  
+"yom@gmail.com";
 
 /* =========================================================
    ADMIN CHECK

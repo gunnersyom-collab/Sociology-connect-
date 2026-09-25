@@ -1,12 +1,16 @@
 /* =========================================================
-   SOCIOLOGY CONNECT 2.0 - SCRIPT.JS
+   SOCIOLOGY CONNECT 2.0
+   SCRIPT.JS
    PART 1
    IMPORTS
    ELEMENTS
    GLOBAL STATE
-   AUTH
    HELPERS
+   AUTH
 ========================================================= */
+
+
+/* ================= FIREBASE ================= */
 
 import { auth, db } from "./firebase.js";
 
@@ -30,7 +34,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
-/* ================= ELEMENTS ================= */
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const chatHistory =
   document.getElementById("chat-history");
@@ -72,15 +78,20 @@ const userInfo =
   document.getElementById("userInfo");
 
 
-/* ================= GLOBAL STATE ================= */
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
 
 let currentUser = null;
+
 let authReady = false;
 
 const ADMIN_EMAIL = "yom@gmail.com";
 
 
-/* ================= HELPERS ================= */
+/* =========================================================
+   ADMIN CHECK
+========================================================= */
 
 function isAdmin() {
 
@@ -94,6 +105,10 @@ function isAdmin() {
 }
 
 
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
 function escapeHTML(value) {
 
   return String(value ?? "")
@@ -105,6 +120,10 @@ function escapeHTML(value) {
 
 }
 
+
+/* =========================================================
+   FORMAT TIME
+========================================================= */
 
 function formatPostTime(timestamp) {
 
@@ -131,7 +150,7 @@ function formatPostTime(timestamp) {
   } catch (error) {
 
     console.warn(
-      "Time format error:",
+      "Time formatting error:",
       error
     );
 
@@ -142,7 +161,9 @@ function formatPostTime(timestamp) {
 }
 
 
-/* ================= USER NAME ================= */
+/* =========================================================
+   GET USER NAME
+========================================================= */
 
 async function getUserName(user) {
 
@@ -152,14 +173,16 @@ async function getUserName(user) {
 
   try {
 
+    const userRef =
+      doc(db, "users", user.uid);
+
     const snap =
-      await getDoc(
-        doc(db, "users", user.uid)
-      );
+      await getDoc(userRef);
 
     if (snap.exists()) {
 
-      const data = snap.data();
+      const data =
+        snap.data();
 
       return (
         data.fullName ||
@@ -174,7 +197,7 @@ async function getUserName(user) {
   } catch (error) {
 
     console.warn(
-      "User name error:",
+      "Could not load user name:",
       error
     );
 
@@ -189,181 +212,436 @@ async function getUserName(user) {
 }
 
 
-/* ================= AUTH ================= */
+/* =========================================================
+   AUTH STATE
+========================================================= */
 
 onAuthStateChanged(
   auth,
   async (user) => {
 
     currentUser = user;
+
     authReady = true;
+
+
+    /* ================= LOGGED IN ================= */
 
     if (user) {
 
       const name =
         await getUserName(user);
 
+
       if (userInfo) {
 
         userInfo.textContent =
-          `👤 ${name}`;
+          "👤 " + name;
 
       }
+
 
       if (loginLink) {
+
         loginLink.style.display =
           "none";
+
       }
+
 
       if (logoutBtn) {
+
         logoutBtn.style.display =
           "inline-block";
+
       }
 
-      if (typeof createAdminControls === "function") {
+
+      /*
+       * Admin controls are created
+       * after the page is ready.
+       */
+
+      if (
+        document.readyState !==
+        "loading"
+      ) {
+
         createAdminControls();
+
       }
 
-    } else {
+    }
+
+
+    /* ================= LOGGED OUT ================= */
+
+    else {
 
       if (userInfo) {
+
         userInfo.textContent = "";
+
       }
+
 
       if (loginLink) {
+
         loginLink.style.display =
           "inline-block";
+
       }
 
+
       if (logoutBtn) {
+
         logoutBtn.style.display =
           "none";
+
       }
+
 
       if (
         typeof removeAdminControls ===
         "function"
       ) {
+
         removeAdminControls();
+
       }
 
     }
 
   }
 );
-
 /* =========================================================
    PART 2
+   CREATE POST
    LIKE
    COMMENT
    SHARE
    DELETE
-   ADMIN CONTROLS
+   ADMIN
 ========================================================= */
 
-/* ================= LIKE POST ================= */
 
-async function toggleLike(postId, likeBtn) {
+/* =========================================================
+   CREATE POST
+========================================================= */
+
+async function createPost() {
+
+  if (!postInput) {
+    console.warn("⚠️ postInput not found");
+    return;
+  }
+
+  if (!authReady) {
+    alert("Please wait for authentication...");
+    return;
+  }
 
   if (!currentUser) {
     alert("Please login first.");
     return;
   }
 
-  const likeRef = doc(db, "posts", postId, "likes", currentUser.uid);
+  const text =
+    postInput.value.trim();
+
+  if (!text) {
+    alert("Write something first.");
+    return;
+  }
+
+  if (postBtn) {
+    postBtn.disabled = true;
+    postBtn.textContent = "Posting...";
+  }
 
   try {
 
-    const snap = await getDoc(likeRef);
+    const name =
+      await getUserName(currentUser);
 
-    if (snap.exists()) {
+    await addDoc(
+      collection(db, "posts"),
+      {
+        text: text,
 
-      await deleteDoc(likeRef);
+        userId:
+          currentUser.uid,
 
-    } else {
+        name: name,
 
-      await setDoc(likeRef, {
-        userId: currentUser.uid,
-        createdAt: serverTimestamp()
-      });
+        email:
+          currentUser.email || "",
 
+        createdAt:
+          serverTimestamp()
+      }
+    );
+
+    postInput.value = "";
+
+  } catch (error) {
+
+    console.error(
+      "❌ CREATE POST ERROR:",
+      error
+    );
+
+    alert(
+      "Unable to create post:\n" +
+      error.message
+    );
+
+  } finally {
+
+    if (postBtn) {
+      postBtn.disabled = false;
+      postBtn.textContent = "📤 Post";
     }
-
-    await updateLikeButton(postId, likeBtn);
-
-  } catch (e) {
-
-    console.error(e);
 
   }
 
 }
 
-/* ================= UPDATE LIKE BUTTON ================= */
 
-async function updateLikeButton(postId, likeBtn) {
+/* =========================================================
+   POST BUTTON
+========================================================= */
+
+postBtn?.addEventListener(
+  "click",
+  createPost
+);
+
+
+/* =========================================================
+   ENTER TO POST
+========================================================= */
+
+postInput?.addEventListener(
+  "keydown",
+  (event) => {
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+
+      event.preventDefault();
+
+      createPost();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LIKE POST
+========================================================= */
+
+async function toggleLike(
+  postId,
+  likeBtn
+) {
+
+  if (!currentUser) {
+
+    alert("Please login first.");
+
+    return;
+
+  }
+
+  const likeRef =
+    doc(
+      db,
+      "posts",
+      postId,
+      "likes",
+      currentUser.uid
+    );
+
+  try {
+
+    const snap =
+      await getDoc(likeRef);
+
+    if (snap.exists()) {
+
+      await deleteDoc(
+        likeRef
+      );
+
+    } else {
+
+      await setDoc(
+        likeRef,
+        {
+          userId:
+            currentUser.uid,
+
+          createdAt:
+            serverTimestamp()
+        }
+      );
+
+    }
+
+    await updateLikeButton(
+      postId,
+      likeBtn
+    );
+
+  } catch (error) {
+
+    console.error(
+      "❌ LIKE ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   UPDATE LIKE BUTTON
+========================================================= */
+
+async function updateLikeButton(
+  postId,
+  likeBtn
+) {
 
   if (!likeBtn) return;
 
   try {
 
-    const likesSnap = await getDocs(
-      collection(db, "posts", postId, "likes")
-    );
+    const likesSnapshot =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "likes"
+        )
+      );
 
-    const count = likesSnap.size;
+    const count =
+      likesSnapshot.size;
 
     const liked =
       currentUser &&
-      likesSnap.docs.some(d => d.id === currentUser.uid);
+      likesSnapshot.docs.some(
+        item =>
+          item.id ===
+          currentUser.uid
+      );
 
-    likeBtn.textContent = liked
-      ? `❤️ Liked (${count})`
-      : `🤍 Like (${count})`;
+    likeBtn.textContent =
+      liked
+        ? `❤️ Liked (${count})`
+        : `🤍 Like (${count})`;
 
-  } catch {}
+  } catch (error) {
+
+    console.error(
+      "❌ LIKE COUNT ERROR:",
+      error
+    );
+
+  }
 
 }
 
-/* ================= COMMENT POST ================= */
 
-async function commentPost(postId) {
+/* =========================================================
+   COMMENT POST
+========================================================= */
+
+async function commentPost(
+  postId
+) {
 
   if (!currentUser) {
+
     alert("Please login first.");
+
     return false;
+
   }
 
-  const text = prompt("Write your comment:");
+  const text =
+    prompt("Write your comment:");
 
-  if (!text || !text.trim()) return false;
+  if (
+    !text ||
+    !text.trim()
+  ) {
+
+    return false;
+
+  }
 
   try {
 
-    const name = await getUserName(currentUser);
+    const name =
+      await getUserName(
+        currentUser
+      );
 
     await addDoc(
-      collection(db, "posts", postId, "comments"),
+      collection(
+        db,
+        "posts",
+        postId,
+        "comments"
+      ),
       {
-        text: text.trim(),
-        userId: currentUser.uid,
-        name,
-        createdAt: serverTimestamp()
+        text:
+          text.trim(),
+
+        userId:
+          currentUser.uid,
+
+        name:
+          name,
+
+        createdAt:
+          serverTimestamp()
       }
     );
 
     return true;
 
-  } catch (e) {
+  } catch (error) {
 
-    console.error(e);
+    console.error(
+      "❌ COMMENT ERROR:",
+      error
+    );
+
+    alert(
+      "Unable to comment:\n" +
+      error.message
+    );
+
     return false;
 
   }
 
 }
 
-/* ================= LOAD COMMENTS ================= */
+
+/* =========================================================
+   LOAD COMMENTS
+========================================================= */
 
 async function loadComments(
   postId,
@@ -372,199 +650,528 @@ async function loadComments(
   show = false
 ) {
 
+  if (!card) return;
+
   try {
 
-    const snap = await getDocs(
-      collection(db, "posts", postId, "comments")
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "comments"
+        )
+      );
+
+
+    if (commentBtn) {
+
+      commentBtn.textContent =
+        `💬 Comment (${snapshot.size})`;
+
+    }
+
+
+    card
+      .querySelector(
+        ".comments-box"
+      )
+      ?.remove();
+
+
+    if (
+      !show ||
+      snapshot.empty
+    ) {
+
+      return;
+
+    }
+
+
+    const box =
+      document.createElement(
+        "div"
+      );
+
+    box.className =
+      "comments-box";
+
+
+    box.style.marginTop =
+      "12px";
+
+    box.style.padding =
+      "10px";
+
+    box.style.borderTop =
+      "1px solid #ddd";
+
+
+    const comments =
+      [...snapshot.docs]
+        .sort(
+          (a, b) => {
+
+            const first =
+              a.data()
+                .createdAt
+                ?.toMillis?.() || 0;
+
+            const second =
+              b.data()
+                .createdAt
+                ?.toMillis?.() || 0;
+
+            return first - second;
+
+          }
+        );
+
+
+    comments.forEach(
+      (commentDoc) => {
+
+        const data =
+          commentDoc.data();
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+        div.style.padding =
+          "8px 0";
+
+        div.style.borderBottom =
+          "1px solid #eee";
+
+
+        div.innerHTML = `
+          <strong>
+            ${escapeHTML(
+              data.name ||
+              "Student"
+            )}
+          </strong>
+
+          <br>
+
+          ${escapeHTML(
+            data.text ||
+            ""
+          )}
+        `;
+
+
+        box.appendChild(
+          div
+        );
+
+      }
     );
 
-    commentBtn &&
-      (commentBtn.textContent = `💬 Comment (${snap.size})`);
 
-    card.querySelector(".comments-box")?.remove();
+    card.appendChild(
+      box
+    );
 
-    if (!show || snap.empty) return;
+  } catch (error) {
 
-    const box = document.createElement("div");
-    box.className = "comments-box";
-
-    box.style.marginTop = "12px";
-    box.style.padding = "10px";
-    box.style.borderTop = "1px solid #ddd";
-
-    const comments = [...snap.docs].sort((a, b) => {
-      return (
-        (a.data().createdAt?.toMillis?.() || 0) -
-        (b.data().createdAt?.toMillis?.() || 0)
-      );
-    });
-
-    comments.forEach(item => {
-
-      const data = item.data();
-
-      const div = document.createElement("div");
-
-      div.style.padding = "8px 0";
-      div.style.borderBottom = "1px solid #eee";
-
-      div.innerHTML = `
-        <strong>${escapeHTML(data.name || "Student")}</strong>
-        <br>
-        ${escapeHTML(data.text || "")}
-      `;
-
-      box.appendChild(div);
-
-    });
-
-    card.appendChild(box);
-
-  } catch (e) {
-
-    console.error(e);
+    console.error(
+      "❌ LOAD COMMENTS ERROR:",
+      error
+    );
 
   }
 
 }
 
-/* ================= SHARE POST ================= */
 
-async function sharePost(postId, text) {
+/* =========================================================
+   SHARE POST
+========================================================= */
+
+async function sharePost(
+  postId,
+  text
+) {
 
   const url =
-    window.location.href.split("#")[0] +
+    window.location.href
+      .split("#")[0] +
     "#post-" +
     postId;
 
+
   try {
 
-    if (navigator.share) {
+    if (
+      navigator.share
+    ) {
 
       await navigator.share({
-        title: "Sociology Connect",
-        text,
-        url
+
+        title:
+          "Sociology Connect",
+
+        text:
+          text,
+
+        url:
+          url
+
       });
 
       return;
+
     }
 
-    await navigator.clipboard.writeText(url);
 
-    alert("Post link copied.");
+    if (
+      navigator.clipboard
+    ) {
 
-  } catch {}
+      await navigator
+        .clipboard
+        .writeText(url);
+
+      alert(
+        "Post link copied."
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Sharing is not supported on this browser."
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Share cancelled or failed:",
+      error
+    );
+
+  }
 
 }
 
-/* ================= DELETE POST ================= */
 
-async function deletePost(postId, ownerId) {
+/* =========================================================
+   DELETE POST
+========================================================= */
+
+async function deletePost(
+  postId,
+  ownerId
+) {
 
   if (!currentUser) {
-    alert("Please login first.");
+
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
 
-  if (!(isAdmin() || currentUser.uid === ownerId)) {
-    alert("You can delete only your own post.");
+
+  if (
+    !(
+      isAdmin() ||
+      currentUser.uid === ownerId
+    )
+  ) {
+
+    alert(
+      "You can delete only your own post."
+    );
+
     return;
+
   }
 
-  if (!confirm("Delete this post?")) return;
+
+  if (
+    !confirm(
+      "Delete this post?"
+    )
+  ) {
+
+    return;
+
+  }
+
 
   try {
 
-    const likes = await getDocs(
-      collection(db, "posts", postId, "likes")
-    );
+    /* DELETE LIKES */
 
-    for (const d of likes.docs) {
-      await deleteDoc(d.ref);
+    const likes =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "likes"
+        )
+      );
+
+
+    for (
+      const item
+      of likes.docs
+    ) {
+
+      await deleteDoc(
+        item.ref
+      );
+
     }
 
-    const comments = await getDocs(
-      collection(db, "posts", postId, "comments")
-    );
 
-    for (const d of comments.docs) {
-      await deleteDoc(d.ref);
+    /* DELETE COMMENTS */
+
+    const comments =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "comments"
+        )
+      );
+
+
+    for (
+      const item
+      of comments.docs
+    ) {
+
+      await deleteDoc(
+        item.ref
+      );
+
     }
 
-    await deleteDoc(doc(db, "posts", postId));
 
-  } catch (e) {
+    /* DELETE POST */
 
-    console.error(e);
+    await deleteDoc(
+      doc(
+        db,
+        "posts",
+        postId
+      )
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "❌ DELETE POST ERROR:",
+      error
+    );
+
+    alert(
+      "Unable to delete post:\n" +
+      error.message
+    );
 
   }
 
 }
 
-/* ================= CLEAR ALL POSTS (ADMIN) ================= */
+
+/* =========================================================
+   CLEAR ALL POSTS
+   ADMIN ONLY
+========================================================= */
 
 async function clearAllPosts() {
 
   if (!isAdmin()) {
-    alert("Admin only.");
+
+    alert(
+      "Admin only."
+    );
+
     return;
-  }
-
-  if (!confirm("Delete ALL posts?")) return;
-
-  const posts = await getDocs(collection(db, "posts"));
-
-  for (const post of posts.docs) {
-
-    const id = post.id;
-
-    const likes = await getDocs(
-      collection(db, "posts", id, "likes")
-    );
-
-    for (const d of likes.docs) {
-      await deleteDoc(d.ref);
-    }
-
-    const comments = await getDocs(
-      collection(db, "posts", id, "comments")
-    );
-
-    for (const d of comments.docs) {
-      await deleteDoc(d.ref);
-    }
-
-    await deleteDoc(post.ref);
 
   }
 
-  alert("All posts deleted.");
+
+  if (
+    !confirm(
+      "Delete ALL posts?"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    const posts =
+      await getDocs(
+        collection(
+          db,
+          "posts"
+        )
+      );
+
+
+    for (
+      const post
+      of posts.docs
+    ) {
+
+      const postId =
+        post.id;
+
+
+      /* DELETE LIKES */
+
+      const likes =
+        await getDocs(
+          collection(
+            db,
+            "posts",
+            postId,
+            "likes"
+          )
+        );
+
+
+      for (
+        const item
+        of likes.docs
+      ) {
+
+        await deleteDoc(
+          item.ref
+        );
+
+      }
+
+
+      /* DELETE COMMENTS */
+
+      const comments =
+        await getDocs(
+          collection(
+            db,
+            "posts",
+            postId,
+            "comments"
+          )
+        );
+
+
+      for (
+        const item
+        of comments.docs
+      ) {
+
+        await deleteDoc(
+          item.ref
+        );
+
+      }
+
+
+      /* DELETE POST */
+
+      await deleteDoc(
+        post.ref
+      );
+
+    }
+
+
+    alert(
+      "All posts deleted."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "❌ CLEAR POSTS ERROR:",
+      error
+    );
+
+    alert(
+      "Unable to delete all posts:\n" +
+      error.message
+    );
+
+  }
 
 }
 
-/* ================= ADMIN CONTROLS ================= */
+
+/* =========================================================
+   ADMIN CONTROLS
+========================================================= */
 
 function createAdminControls() {
 
-  if (!isAdmin()) return;
+  if (!isAdmin()) {
+    return;
+  }
 
-  if (document.getElementById("adminControls")) return;
+
+  if (
+    document.getElementById(
+      "adminControls"
+    )
+  ) {
+
+    return;
+
+  }
+
 
   const composer =
-    document.querySelector(".post-composer");
+    document.querySelector(
+      ".post-composer"
+    );
 
-  if (!composer) return;
 
-  const div = document.createElement("div");
+  if (!composer) {
+    return;
+  }
 
-  div.id = "adminControls";
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+  div.id =
+    "adminControls";
+
 
   div.innerHTML = `
     <hr>
-    <strong>👑 Admin Controls</strong><br><br>
 
-    <button id="adminClearPostsBtn"
+    <strong>
+      👑 Admin Controls
+    </strong>
+
+    <br><br>
+
+    <button
+      id="adminClearPostsBtn"
+      type="button"
       style="
         background:#dc3545;
         color:#fff;
@@ -572,34 +1179,53 @@ function createAdminControls() {
         padding:10px 15px;
         border-radius:8px;
         cursor:pointer;
-      ">
+      "
+    >
       🧹 Clear All Posts
     </button>
   `;
 
-  composer.appendChild(div);
+
+  composer.appendChild(
+    div
+  );
+
 
   document
-    .getElementById("adminClearPostsBtn")
-    ?.addEventListener("click", clearAllPosts);
+    .getElementById(
+      "adminClearPostsBtn"
+    )
+    ?.addEventListener(
+      "click",
+      clearAllPosts
+    );
 
 }
+
+
+/* =========================================================
+   REMOVE ADMIN CONTROLS
+========================================================= */
 
 function removeAdminControls() {
 
   document
-    .getElementById("adminControls")
+    .getElementById(
+      "adminControls"
+    )
     ?.remove();
 
 }
-
 /* =========================================================
    PART 3
    LOAD POSTS
    TRENDING POSTS
 ========================================================= */
 
-/* ================= LOAD POSTS ================= */
+
+/* =========================================================
+   LOAD POSTS
+========================================================= */
 
 function loadPosts() {
 
@@ -625,7 +1251,8 @@ function loadPosts() {
         postsContainer.innerHTML = `
           <div class="post-card">
             <p>
-              No posts yet. Be the first student to post! 📚
+              No posts yet.
+              Be the first student to post! 📚
             </p>
           </div>
         `;
@@ -634,19 +1261,28 @@ function loadPosts() {
         return;
       }
 
+
       for (const postDoc of snapshot.docs) {
 
-        const post = postDoc.data();
-        const postId = postDoc.id;
+        const post =
+          postDoc.data();
+
+        const postId =
+          postDoc.id;
 
         const name =
           post.name || "Student";
 
+
         const card =
           document.createElement("div");
 
-        card.className = "post-card";
-        card.id = "post-" + postId;
+        card.className =
+          "post-card";
+
+        card.id =
+          "post-" + postId;
+
 
         const canDelete =
           currentUser &&
@@ -655,7 +1291,9 @@ function loadPosts() {
             currentUser.uid === post.userId
           );
 
+
         card.innerHTML = `
+
           <div class="post-header">
 
             <div class="post-avatar">
@@ -671,16 +1309,22 @@ function loadPosts() {
               </div>
 
               <div class="post-time">
-                🕐 ${formatPostTime(post.createdAt)}
+                🕐 ${formatPostTime(
+                  post.createdAt
+                )}
               </div>
 
             </div>
 
           </div>
 
+
           <div class="post-text">
-            ${escapeHTML(post.text || "")}
+            ${escapeHTML(
+              post.text || ""
+            )}
           </div>
+
 
           <div class="post-actions">
 
@@ -718,31 +1362,42 @@ function loadPosts() {
           </div>
         `;
 
-        postsContainer.appendChild(card);
+
+        postsContainer.appendChild(
+          card
+        );
+
 
         const likeBtn =
-          card.querySelector(".like-btn");
+          card.querySelector(
+            ".like-btn"
+          );
 
         const commentBtn =
-          card.querySelector(".comment-btn");
+          card.querySelector(
+            ".comment-btn"
+          );
 
         const shareBtn =
-          card.querySelector(".share-btn");
+          card.querySelector(
+            ".share-btn"
+          );
 
         const deleteBtn =
-          card.querySelector(".delete-btn");
+          card.querySelector(
+            ".delete-btn"
+          );
 
 
         /* LIKE */
 
         likeBtn?.addEventListener(
           "click",
-          () => {
+          () =>
             toggleLike(
               postId,
               likeBtn
-            );
-          }
+            )
         );
 
 
@@ -753,7 +1408,9 @@ function loadPosts() {
           async () => {
 
             const added =
-              await commentPost(postId);
+              await commentPost(
+                postId
+              );
 
             await loadComments(
               postId,
@@ -772,14 +1429,11 @@ function loadPosts() {
 
         shareBtn?.addEventListener(
           "click",
-          () => {
-
+          () =>
             sharePost(
               postId,
               post.text || ""
-            );
-
-          }
+            )
         );
 
 
@@ -816,14 +1470,17 @@ function loadPosts() {
 
       }
 
+
       console.log(
         "✅ Posts loaded:",
         snapshot.size
       );
 
+
       loadTrendingPosts();
 
     },
+
 
     (error) => {
 
@@ -832,37 +1489,54 @@ function loadPosts() {
         error
       );
 
+
       postsContainer.innerHTML = `
         <div class="post-card">
           ❌ Unable to load posts.
+
           <br><br>
+
           <small>
-            Please login and try again.
+            ${escapeHTML(
+              error.message
+            )}
           </small>
         </div>
       `;
 
     }
+
   );
 
 }
 
 
-/* ================= TRENDING POSTS ================= */
+/* =========================================================
+   TRENDING POSTS
+========================================================= */
 
 async function loadTrendingPosts() {
 
   const trendingContainer =
-    document.getElementById("trendingContainer");
+    document.getElementById(
+      "trendingContainer"
+    );
 
-  if (!trendingContainer) return;
+  if (!trendingContainer) {
+    return;
+  }
+
 
   try {
 
     const postsSnapshot =
       await getDocs(
-        collection(db, "posts")
+        collection(
+          db,
+          "posts"
+        )
       );
+
 
     if (postsSnapshot.empty) {
 
@@ -875,16 +1549,20 @@ async function loadTrendingPosts() {
       return;
     }
 
+
     const posts = [];
 
+
     for (
-      const postDoc of postsSnapshot.docs
+      const postDoc
+      of postsSnapshot.docs
     ) {
 
       const post =
         postDoc.data();
 
-      const likesSnap =
+
+      const likesSnapshot =
         await getDocs(
           collection(
             db,
@@ -894,7 +1572,8 @@ async function loadTrendingPosts() {
           )
         );
 
-      const commentsSnap =
+
+      const commentsSnapshot =
         await getDocs(
           collection(
             db,
@@ -904,9 +1583,18 @@ async function loadTrendingPosts() {
           )
         );
 
+
+      const likes =
+        likesSnapshot.size;
+
+      const comments =
+        commentsSnapshot.size;
+
+
       posts.push({
 
-        id: postDoc.id,
+        id:
+          postDoc.id,
 
         name:
           post.name || "Student",
@@ -915,446 +1603,871 @@ async function loadTrendingPosts() {
           post.text || "",
 
         likes:
-          likesSnap.size,
+          likes,
 
         comments:
-          commentsSnap.size,
+          comments,
 
         score:
-          likesSnap.size +
-          commentsSnap.size
+          likes + comments
 
       });
 
     }
+
 
     posts.sort(
       (a, b) =>
         b.score - a.score
     );
 
-    trendingContainer.innerHTML = "";
+
+    trendingContainer.innerHTML =
+      "";
+
 
     posts
       .slice(0, 5)
-      .forEach(post => {
+      .forEach(
+        (post) => {
 
-        const card =
-          document.createElement("div");
+          const card =
+            document.createElement(
+              "div"
+            );
 
-        card.className =
-          "post-card";
+          card.className =
+            "post-card";
 
-        card.innerHTML = `
-          <div class="post-header">
 
-            <div class="post-avatar">
-              ${escapeHTML(
-                post.name
-                  .charAt(0)
-                  .toUpperCase()
-              )}
-            </div>
+          card.innerHTML = `
 
-            <div>
+            <div class="post-header">
 
-              <div class="post-name">
+              <div class="post-avatar">
                 ${escapeHTML(
                   post.name
+                    .charAt(0)
+                    .toUpperCase()
                 )}
               </div>
 
-              <div class="post-time">
-                🔥 Trending
+              <div>
+
+                <div class="post-name">
+                  ${escapeHTML(
+                    post.name
+                  )}
+                </div>
+
+                <div class="post-time">
+                  🔥 Trending
+                </div>
+
               </div>
 
             </div>
 
-          </div>
 
-          <div class="post-text">
-            ${escapeHTML(
-              post.text
-            )}
-          </div>
+            <div class="post-text">
+              ${escapeHTML(
+                post.text
+              )}
+            </div>
 
-          <div class="post-actions">
 
-            <button disabled>
-              ❤️ ${post.likes}
-            </button>
+            <div class="post-actions">
 
-            <button disabled>
-              💬 ${post.comments}
-            </button>
+              <button disabled>
+                ❤️ ${post.likes}
+              </button>
 
-            <button disabled>
-              🔥 Popular
-            </button>
+              <button disabled>
+                💬 ${post.comments}
+              </button>
 
-          </div>
-        `;
+              <button disabled>
+                🔥 Popular
+              </button>
 
-        trendingContainer
-          .appendChild(card);
+            </div>
+          `;
 
-      });
+
+          trendingContainer.appendChild(
+            card
+          );
+
+        }
+      );
+
 
   } catch (error) {
 
     console.error(
-      "TRENDING ERROR:",
+      "❌ TRENDING ERROR:",
       error
     );
+
 
     trendingContainer.innerHTML = `
       <div class="post-card">
         ❌ Unable to load trending posts.
+
+        <br><br>
+
+        <small>
+          ${escapeHTML(
+            error.message
+          )}
+        </small>
       </div>
     `;
 
   }
 
 }
-                  
 /* =========================================================
    PART 4
    NEWS
    EVENTS
 ========================================================= */
 
-/* ================= LOAD NEWS ================= */
+
+/* =========================================================
+   LOAD NEWS
+========================================================= */
 
 function loadNews() {
 
   const newsContainer =
-    document.getElementById("newsContainer");
+    document.getElementById(
+      "newsContainer"
+    );
 
-  if (!newsContainer) return;
+  if (!newsContainer) {
+    return;
+  }
 
-  const newsQuery = query(
-    collection(db, "news"),
-    orderBy("createdAt", "desc")
-  );
 
-  onSnapshot(newsQuery, (snapshot) => {
+  const newsQuery =
+    query(
+      collection(
+        db,
+        "news"
+      ),
+      orderBy(
+        "createdAt",
+        "desc"
+      )
+    );
 
-    newsContainer.innerHTML = "";
 
-    if (snapshot.empty) {
+  onSnapshot(
+
+    newsQuery,
+
+    (snapshot) => {
+
+      newsContainer.innerHTML =
+        "";
+
+
+      if (snapshot.empty) {
+
+        newsContainer.innerHTML = `
+          <div class="card">
+            📰 No latest news available yet.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      snapshot.forEach(
+        (docSnap) => {
+
+          const news =
+            docSnap.data();
+
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className =
+            "card";
+
+
+          card.innerHTML = `
+
+            <h3>
+              📢 ${escapeHTML(
+                news.title ||
+                "Latest News"
+              )}
+            </h3>
+
+            <p>
+              ${escapeHTML(
+                news.description ||
+                ""
+              )}
+            </p>
+
+            ${
+              news.createdAt
+                ? `
+                  <small>
+                    🕐 ${formatPostTime(
+                      news.createdAt
+                    )}
+                  </small>
+                `
+                : ""
+            }
+
+          `;
+
+
+          newsContainer.appendChild(
+            card
+          );
+
+        }
+      );
+
+    },
+
+    (error) => {
+
+      console.error(
+        "❌ NEWS ERROR:",
+        error
+      );
+
 
       newsContainer.innerHTML = `
         <div class="card">
-          📰 No latest news available yet.
+          ❌ Unable to load news.
         </div>
       `;
-      return;
 
     }
 
-    snapshot.forEach(docSnap => {
-
-      const news = docSnap.data();
-
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <h3>📢 ${escapeHTML(news.title || "Latest News")}</h3>
-
-        <p>${escapeHTML(news.description || "")}</p>
-
-        ${
-          news.createdAt
-            ? `<small style="color:#777;">
-                 🕐 ${formatPostTime(news.createdAt)}
-               </small>`
-            : ""
-        }
-      `;
-
-      newsContainer.appendChild(card);
-
-    });
-
-  }, () => {
-
-    newsContainer.innerHTML = `
-      <div class="card">
-        ❌ Unable to load news.
-      </div>
-    `;
-
-  });
+  );
 
 }
 
-/* ================= LOAD EVENTS ================= */
+
+/* =========================================================
+   LOAD EVENTS
+========================================================= */
 
 function loadEvents() {
 
   const eventsContainer =
-    document.getElementById("eventsContainer");
+    document.getElementById(
+      "eventsContainer"
+    );
 
-  if (!eventsContainer) return;
+  if (!eventsContainer) {
+    return;
+  }
 
-  const eventsQuery = query(
-    collection(db, "events"),
-    orderBy("date", "asc")
-  );
 
-  onSnapshot(eventsQuery, (snapshot) => {
+  const eventsQuery =
+    query(
+      collection(
+        db,
+        "events"
+      ),
+      orderBy(
+        "date",
+        "asc"
+      )
+    );
 
-    eventsContainer.innerHTML = "";
 
-    if (snapshot.empty) {
+  onSnapshot(
+
+    eventsQuery,
+
+    (snapshot) => {
+
+      eventsContainer.innerHTML =
+        "";
+
+
+      if (snapshot.empty) {
+
+        eventsContainer.innerHTML = `
+          <div class="event-card">
+            📅 No events available.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      snapshot.forEach(
+        (docSnap) => {
+
+          const event =
+            docSnap.data();
+
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className =
+            "event-card";
+
+
+          card.innerHTML = `
+
+            <strong>
+              📅 ${escapeHTML(
+                event.title ||
+                "Event"
+              )}
+            </strong>
+
+            <br><br>
+
+            ${escapeHTML(
+              event.description ||
+              ""
+            )}
+
+            ${
+              event.date
+                ? `
+                  <br><br>
+                  <small>
+                    📅 ${escapeHTML(
+                      event.date
+                    )}
+                  </small>
+                `
+                : ""
+            }
+
+          `;
+
+
+          eventsContainer.appendChild(
+            card
+          );
+
+        }
+      );
+
+    },
+
+    (error) => {
+
+      console.error(
+        "❌ EVENTS ERROR:",
+        error
+      );
+
 
       eventsContainer.innerHTML = `
         <div class="event-card">
-          📅 No events available.
+          ❌ Unable to load events.
         </div>
       `;
-      return;
 
     }
 
-    snapshot.forEach(docSnap => {
-
-      const event = docSnap.data();
-
-      const card = document.createElement("div");
-      card.className = "event-card";
-
-      card.innerHTML = `
-        <strong>📅 ${escapeHTML(event.title || "Event")}</strong>
-
-        <br><br>
-
-        ${escapeHTML(event.description || "")}
-
-        ${
-          event.date
-            ? `<br><br><small>📅 ${escapeHTML(event.date)}</small>`
-            : ""
-        }
-      `;
-
-      eventsContainer.appendChild(card);
-
-    });
-
-  }, () => {
-
-    eventsContainer.innerHTML = `
-      <div class="event-card">
-        ❌ Unable to load events.
-      </div>
-    `;
-
-  });
+  );
 
 }
+
 /* =========================================================
    PART 5
    AI MARI
 ========================================================= */
 
+
+/* =========================================================
+   SEND TO AI MARI
+========================================================= */
+
 async function sendToServer() {
 
-  if (!chatHistory || !userInput) return;
+  if (
+    !chatHistory ||
+    !userInput
+  ) {
+    return;
+  }
 
-  const text = userInput.value.trim();
 
-  if (!text) return;
+  const text =
+    userInput.value.trim();
 
-  const userBox = document.createElement("div");
-  userBox.className = "message user";
-  userBox.innerHTML = `<b>You:</b> ${escapeHTML(text)}`;
 
-  chatHistory.appendChild(userBox);
+  if (!text) {
+    return;
+  }
 
-  userInput.value = "";
 
-  const loading = document.createElement("div");
-  loading.className = "message ai";
-  loading.innerHTML =
-    "<b>AI Mari:</b><br><i>Typing... 🤖</i>";
+  /* USER MESSAGE */
 
-  chatHistory.appendChild(loading);
+  const userBox =
+    document.createElement(
+      "div"
+    );
 
-  chatHistory.scrollTop = chatHistory.scrollHeight;
+  userBox.className =
+    "message user";
 
-  sendBtn.disabled = true;
-  sendBtn.textContent = "Thinking...";
+
+  userBox.innerHTML = `
+    <b>You:</b>
+    ${escapeHTML(text)}
+  `;
+
+
+  chatHistory.appendChild(
+    userBox
+  );
+
+
+  userInput.value =
+    "";
+
+
+  /* LOADING */
+
+  const loading =
+    document.createElement(
+      "div"
+    );
+
+  loading.className =
+    "message ai";
+
+
+  loading.innerHTML = `
+    <b>AI Mari:</b>
+    <br>
+    <i>Typing... 🤖</i>
+  `;
+
+
+  chatHistory.appendChild(
+    loading
+  );
+
+
+  chatHistory.scrollTop =
+    chatHistory.scrollHeight;
+
+
+  if (sendBtn) {
+
+    sendBtn.disabled =
+      true;
+
+    sendBtn.textContent =
+      "Thinking...";
+
+  }
+
 
   try {
 
-    const response = await fetch(
-      `https://text.pollinations.ai/${encodeURIComponent(text)}?model=openai`
-    );
+    const response =
+      await fetch(
+        `https://text.pollinations.ai/${encodeURIComponent(
+          text
+        )}?model=openai`
+      );
 
-    const reply = await response.text();
+
+    if (!response.ok) {
+
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+
+    }
+
+
+    const reply =
+      await response.text();
+
 
     loading.remove();
 
-    const aiBox = document.createElement("div");
-    aiBox.className = "message ai";
+
+    const aiBox =
+      document.createElement(
+        "div"
+      );
+
+    aiBox.className =
+      "message ai";
+
 
     aiBox.innerHTML = `
-      <b>AI Mari:</b><br>
+
+      <b>AI Mari:</b>
+
+      <br>
 
       <span class="ai-text">
-        ${escapeHTML(reply)}
+        ${escapeHTML(
+          reply
+        )}
       </span>
 
       <br><br>
 
-      <button class="copy-btn">📋 Copy</button>
+      <button
+        type="button"
+        class="copy-btn">
+        📋 Copy
+      </button>
+
     `;
 
-    aiBox.querySelector(".copy-btn")
-      .addEventListener("click", async () => {
 
-        await navigator.clipboard.writeText(reply);
+    const copyBtn =
+      aiBox.querySelector(
+        ".copy-btn"
+      );
 
-        const btn =
-          aiBox.querySelector(".copy-btn");
 
-        btn.textContent = "✅ Copied";
+    copyBtn?.addEventListener(
+      "click",
+      async () => {
 
-        setTimeout(() => {
-          btn.textContent = "📋 Copy";
-        }, 1500);
+        try {
 
-      });
+          await navigator
+            .clipboard
+            .writeText(
+              reply
+            );
 
-    chatHistory.appendChild(aiBox);
+          copyBtn.textContent =
+            "✅ Copied";
 
-  } catch {
 
-    loading.innerHTML =
-      "<b>AI Mari:</b><br>❌ Connection failed.";
+          setTimeout(
+            () => {
+
+              copyBtn.textContent =
+                "📋 Copy";
+
+            },
+            1500
+          );
+
+        } catch {
+
+          alert(
+            "Copy failed."
+          );
+
+        }
+
+      }
+    );
+
+
+    chatHistory.appendChild(
+      aiBox
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "❌ AI MARI ERROR:",
+      error
+    );
+
+
+    loading.innerHTML = `
+      <b>AI Mari:</b>
+      <br>
+      ❌ Connection failed.
+    `;
 
   }
 
-  sendBtn.disabled = false;
-  sendBtn.textContent = "Send";
 
-  chatHistory.scrollTop = chatHistory.scrollHeight;
+  if (sendBtn) {
+
+    sendBtn.disabled =
+      false;
+
+    sendBtn.textContent =
+      "Send";
+
+  }
+
+
+  chatHistory.scrollTop =
+    chatHistory.scrollHeight;
 
 }
 
-sendBtn?.addEventListener("click", sendToServer);
 
-userInput?.addEventListener("keydown", e => {
+/* =========================================================
+   AI BUTTON
+========================================================= */
 
-  if (e.key === "Enter" && !e.shiftKey) {
+sendBtn?.addEventListener(
+  "click",
+  sendToServer
+);
 
-    e.preventDefault();
 
-    sendToServer();
+/* =========================================================
+   AI ENTER
+========================================================= */
+
+userInput?.addEventListener(
+  "keydown",
+  (event) => {
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+
+      event.preventDefault();
+
+      sendToServer();
+
+    }
 
   }
+);
 
-});
 /* =========================================================
    PART 6
    DARK MODE
    SEARCH
 ========================================================= */
 
+
+/* =========================================================
+   UPDATE THEME BUTTON
+========================================================= */
+
 function updateThemeButton() {
 
-  if (!themeBtn) return;
+  if (!themeBtn) {
+    return;
+  }
+
 
   themeBtn.textContent =
-    document.body.classList.contains("dark")
+    document.body.classList.contains(
+      "dark"
+    )
       ? "☀️"
       : "🌙";
 
 }
 
+
+/* =========================================================
+   APPLY SAVED THEME
+========================================================= */
+
 function applySavedTheme() {
 
   const saved =
-    localStorage.getItem("sociologyTheme");
+    localStorage.getItem(
+      "sociologyTheme"
+    );
 
-  if (saved === "dark") {
-    document.body.classList.add("dark");
+
+  if (
+    saved === "dark"
+  ) {
+
+    document.body.classList.add(
+      "dark"
+    );
+
+  } else {
+
+    document.body.classList.remove(
+      "dark"
+    );
+
   }
+
 
   updateThemeButton();
 
 }
 
+
+/* =========================================================
+   TOGGLE THEME
+========================================================= */
+
 function toggleTheme() {
 
-  document.body.classList.toggle("dark");
+  document.body.classList.toggle(
+    "dark"
+  );
+
 
   localStorage.setItem(
     "sociologyTheme",
-    document.body.classList.contains("dark")
+
+    document.body.classList.contains(
+      "dark"
+    )
       ? "dark"
       : "light"
   );
 
+
   updateThemeButton();
 
 }
 
-themeBtn?.addEventListener("click", toggleTheme);
+
+themeBtn?.addEventListener(
+  "click",
+  toggleTheme
+);
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
 
 function searchWebsite() {
 
-  if (!searchBar) return;
+  if (!searchBar) {
+    return;
+  }
+
 
   const q =
-    searchBar.value.toLowerCase().trim();
+    searchBar.value
+      .toLowerCase()
+      .trim();
+
 
   let count = 0;
 
-  document.querySelectorAll(
-    "#postsContainer > div,#news .card,#events .event-card"
-  ).forEach(item => {
 
-    const show =
-      item.textContent.toLowerCase().includes(q);
+  const items =
+    document.querySelectorAll(
+      "#postsContainer > div," +
+      "#news .card," +
+      "#events .event-card," +
+      "#trendingContainer .post-card"
+    );
 
-    item.style.display =
-      !q || show ? "" : "none";
 
-    if (!q || show) count++;
+  items.forEach(
+    (item) => {
 
-  });
+      const text =
+        item.textContent
+          .toLowerCase();
+
+
+      const show =
+        !q ||
+        text.includes(q);
+
+
+      item.style.display =
+        show
+          ? ""
+          : "none";
+
+
+      if (show) {
+        count++;
+      }
+
+    }
+  );
+
 
   const counter =
-    document.getElementById("searchCount");
+    document.getElementById(
+      "searchCount"
+    );
+
 
   if (counter) {
+
     counter.textContent =
-      q ? `${count} results found` : "";
+      q
+        ? `${count} results found`
+        : "";
+
   }
 
 }
 
-searchBar?.addEventListener("input", searchWebsite);
 
+searchBar?.addEventListener(
+  "input",
+  searchWebsite
+);
 /* =========================================================
    PART 7
    NOTIFICATIONS
    VOICE
    LOGOUT
+   SHORTCUTS
    START
 ========================================================= */
 
-/* ================= NOTIFICATIONS ================= */
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
 
 function updateNotificationBadge() {
 
-  if (!notifyBtn) return;
+  if (!notifyBtn) {
+    return;
+  }
 
-  const list =
-    JSON.parse(localStorage.getItem("sc_notify")) || [];
+
+  let list = [];
+
+
+  try {
+
+    list =
+      JSON.parse(
+        localStorage.getItem(
+          "sc_notify"
+        )
+      ) || [];
+
+  } catch {
+
+    list = [];
+
+  }
+
 
   notifyBtn.innerHTML =
     list.length
@@ -1363,10 +2476,31 @@ function updateNotificationBadge() {
 
 }
 
+
+/* =========================================================
+   SHOW NOTIFICATIONS
+========================================================= */
+
 function showNotifications() {
 
-  const list =
-    JSON.parse(localStorage.getItem("sc_notify")) || [];
+  let list = [];
+
+
+  try {
+
+    list =
+      JSON.parse(
+        localStorage.getItem(
+          "sc_notify"
+        )
+      ) || [];
+
+  } catch {
+
+    list = [];
+
+  }
+
 
   alert(
     list.length
@@ -1376,91 +2510,221 @@ function showNotifications() {
 
 }
 
-notifyBtn?.addEventListener("click", showNotifications);
 
-/* ================= VOICE ================= */
+notifyBtn?.addEventListener(
+  "click",
+  showNotifications
+);
+
+
+/* =========================================================
+   VOICE RECOGNITION
+========================================================= */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
+
 if (SpeechRecognition) {
 
-  const recognition = new SpeechRecognition();
+  const recognition =
+    new SpeechRecognition();
 
-  recognition.lang = "en-US";
 
-  micBtn?.addEventListener("click", () => {
+  recognition.lang =
+    "en-US";
 
-    recognition.start();
 
-    micBtn.textContent = "🔴";
+  recognition.interimResults =
+    false;
 
-  });
 
-  recognition.onresult = e => {
+  recognition.continuous =
+    false;
 
-    userInput.value =
-      e.results[0][0].transcript;
 
-    micBtn.textContent = "🎤";
+  micBtn?.addEventListener(
+    "click",
+    () => {
 
-  };
+      try {
 
-  recognition.onend = () => {
+        recognition.start();
 
-    micBtn.textContent = "🎤";
+        if (micBtn) {
+          micBtn.textContent =
+            "🔴";
+        }
 
-  };
+      } catch (error) {
+
+        console.warn(
+          "Voice start error:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+
+  recognition.onresult =
+    (event) => {
+
+      const transcript =
+        event
+          .results[0][0]
+          .transcript;
+
+
+      if (userInput) {
+
+        userInput.value =
+          transcript;
+
+      }
+
+
+      if (micBtn) {
+
+        micBtn.textContent =
+          "🎤";
+
+      }
+
+    };
+
+
+  recognition.onend =
+    () => {
+
+      if (micBtn) {
+
+        micBtn.textContent =
+          "🎤";
+
+      }
+
+    };
+
+
+  recognition.onerror =
+    () => {
+
+      if (micBtn) {
+
+        micBtn.textContent =
+          "🎤";
+
+      }
+
+    };
 
 }
 
-/* ================= LOGOUT ================= */
 
-logoutBtn?.addEventListener("click", async () => {
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-  try {
+logoutBtn?.addEventListener(
+  "click",
+  async () => {
 
-    await signOut(auth);
+    try {
 
-    window.location.href = "index.html";
+      await signOut(
+        auth
+      );
 
-  } catch (e) {
 
-    alert(e.message);
+      window.location.href =
+        "index.html";
+
+
+    } catch (error) {
+
+      console.error(
+        "❌ LOGOUT ERROR:",
+        error
+      );
+
+
+      alert(
+        error.message
+      );
+
+    }
 
   }
+);
 
-});
 
-/* ================= SHORTCUT ================= */
+/* =========================================================
+   KEYBOARD SHORTCUT
+========================================================= */
 
-document.addEventListener("keydown", e => {
+document.addEventListener(
+  "keydown",
+  (event) => {
 
-  if (e.ctrlKey && e.key.toLowerCase() === "k") {
+    if (
+      event.ctrlKey &&
+      event.key.toLowerCase() ===
+        "k"
+    ) {
 
-    e.preventDefault();
+      event.preventDefault();
 
-    searchBar?.focus();
+      searchBar?.focus();
+
+    }
 
   }
+);
 
-});
 
-/* ================= START ================= */
+/* =========================================================
+   START APPLICATION
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  applySavedTheme();
+    console.log(
+      "🚀 Sociology Connect starting..."
+    );
 
-  updateNotificationBadge();
 
-  loadPosts();
-  loadTrendingPosts();
-  loadNews();
-  loadEvents();
+    applySavedTheme();
 
-  console.log("✅ Sociology Connect 2.0 Ready");
 
-});
+    updateNotificationBadge();
 
+
+    loadPosts();
+
+
+    loadNews();
+
+
+    loadEvents();
+
+
+    /*
+     * loadPosts() already calls
+     * loadTrendingPosts().
+     *
+     * We don't call it twice here.
+     */
+
+
+    console.log(
+      "✅ Sociology Connect 2.0 Ready"
+    );
+
+  }
+);

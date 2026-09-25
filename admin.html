@@ -329,6 +329,26 @@ footer{
 
 </div>
 
+    <!-- QUICK ACTIONS -->
+
+<div class="card">
+
+<h2>⚡ Quick Actions</h2>
+
+<button onclick="refreshDashboard()">
+🔄 Refresh Dashboard
+</button>
+
+<button class="delete-btn" onclick="clearAllPosts()">
+🧹 Clear All Posts
+</button>
+
+<button style="background:#6c757d" onclick="logoutAdmin()">
+🚪 Logout
+</button>
+
+</div>
+
 <!-- ADD NEWS -->
 
 <div class="card" style="padding:30px;">
@@ -362,17 +382,54 @@ footer{
 
 </div>
 
+<!-- ADD EVENT -->
+
+<div class="card" style="padding:30px;">
+
+  <h2 style="font-size:30px;margin-bottom:8px;">
+    📅 Add Event / Deadline
+  </h2>
+
+  <p style="color:#666;margin-bottom:20px;line-height:1.6;">
+    Create upcoming events, deadlines, seminars, workshops, and department activities.
+  </p>
+
+  <label for="eventTitle">Event Title</label>
+
+  <input
+    id="eventTitle"
+    type="text"
+    placeholder="Example: Research Proposal Deadline">
+
+  <label for="eventDescription">Description</label>
+
+  <textarea
+    id="eventDescription"
+    placeholder="Write event information..."></textarea>
+
+  <label for="eventDate">Date</label>
+
+  <input
+    id="eventDate"
+    type="date">
+
+  <button
+    style="width:100%;padding:15px;font-size:17px;"
+    onclick="addEvent()">
+    📅 Add Event
+  </button>
+
+</div>
+
 <!-- NEWS LIST -->
 
 <div class="card">
 
-<h2>📰 Published News</h2>
+  <h2>📰 Published News</h2>
 
-<div id="newsList">
-
-<p>Loading news...</p>
-
-</div>
+  <div id="newsList">
+    <p>Loading news...</p>
+  </div>
 
 </div>
 
@@ -380,13 +437,11 @@ footer{
 
 <div class="card">
 
-<h2>📅 Events & Deadlines</h2>
+  <h2>📅 Events & Deadlines</h2>
 
-<div id="eventsList">
-
-<p>Loading events...</p>
-
-</div>
+  <div id="eventsList">
+    <p>Loading events...</p>
+  </div>
 
 </div>
 
@@ -405,10 +460,10 @@ footer{
 Arsi University – Sociology & Social Work
 
 </footer>
-
   <!-- FIREBASE ADMIN SCRIPT -->
 <script type="module">
 
+import { auth, db } from "./firebase.js";
 import { auth, db } from "./firebase.js";
 
 import {
@@ -422,6 +477,11 @@ import {
   orderBy
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    
 import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
@@ -798,24 +858,35 @@ window.deleteEvent = async(id)=>{
 
 /* ================= CLEAR ALL POSTS ================= */
 
-window.clearAllPosts = async()=>{
+window.clearAllPosts =
+async function(){
 
-  if(!confirm("⚠️ Delete ALL community posts?")){
+  if(
+    !confirm("⚠️ Delete ALL community posts?")
+  ){
     return;
   }
 
   try{
 
     const postsSnapshot =
-      await getDocs(collection(db,"posts"));
+      await getDocs(
+        collection(db,"posts")
+      );
 
     for(const post of postsSnapshot.docs){
 
-      const postId = post.id;
+      const postId =
+        post.id;
 
       const comments =
         await getDocs(
-          collection(db,"posts",postId,"comments")
+          collection(
+            db,
+            "posts",
+            postId,
+            "comments"
+          )
         );
 
       for(const comment of comments.docs){
@@ -824,7 +895,12 @@ window.clearAllPosts = async()=>{
 
       const likes =
         await getDocs(
-          collection(db,"posts",postId,"likes")
+          collection(
+            db,
+            "posts",
+            postId,
+            "likes"
+          )
         );
 
       for(const like of likes.docs){
@@ -835,15 +911,19 @@ window.clearAllPosts = async()=>{
 
     }
 
-    status.textContent="🧹 All posts deleted successfully.";
+    status.textContent =
+      "🧹 All posts deleted successfully.";
 
+    await loadNews();
+    await loadEvents();
     await updateStats();
 
   }catch(error){
 
     console.error(error);
 
-    status.textContent="❌ Could not delete all posts.";
+    status.textContent =
+      "❌ Could not delete all posts.";
 
   }
 

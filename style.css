@@ -456,6 +456,69 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
 body.dark .post-header small{
     color:#bbb;
 }
+/* =========================================================
+   PROFESSIONAL NEWS SECTION
+   ========================================================= */
+
+#news {
+    padding: 50px 20px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.section-icon {
+    font-size: 38px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.section-header p {
+    margin: 5px 0 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.news-grid .card {
+    padding: 22px;
+    border-radius: 15px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.news-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+}
+
+.news-grid .card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.news-grid .card p {
+    line-height: 1.6;
+    color: #555;
+}
+
+.news-loading {
+    text-align: center;
+}
 
 /* =========================================================
    END OF STYLE.CSS

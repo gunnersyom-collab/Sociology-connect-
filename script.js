@@ -5,8 +5,7 @@
    ELEMENTS
    GLOBAL STATE
    AUTH
-   SECURITY
-   CREATE POST
+   HELPERS
 ========================================================= */
 
 import { auth, db } from "./firebase.js";
@@ -30,23 +29,48 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+
 /* ================= ELEMENTS ================= */
 
-const chatHistory = document.getElementById("chat-history");
-const userInput = document.getElementById("userInput");
-const sendBtn = document.getElementById("sendBtn");
-const micBtn = document.getElementById("micBtn");
-const themeBtn = document.getElementById("themeBtn");
-const searchBar = document.getElementById("searchBar");
-const notifyBtn = document.getElementById("notifyBtn");
+const chatHistory =
+  document.getElementById("chat-history");
 
-const postsContainer = document.getElementById("postsContainer");
-const postInput = document.getElementById("postInput");
-const postBtn = document.getElementById("postBtn");
+const userInput =
+  document.getElementById("userInput");
 
-const logoutBtn = document.getElementById("logoutBtn");
-const loginLink = document.getElementById("loginLink");
-const userInfo = document.getElementById("userInfo");
+const sendBtn =
+  document.getElementById("sendBtn");
+
+const micBtn =
+  document.getElementById("micBtn");
+
+const themeBtn =
+  document.getElementById("themeBtn");
+
+const searchBar =
+  document.getElementById("searchBar");
+
+const notifyBtn =
+  document.getElementById("notifyBtn");
+
+const postsContainer =
+  document.getElementById("postsContainer");
+
+const postInput =
+  document.getElementById("postInput");
+
+const postBtn =
+  document.getElementById("postBtn");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+const loginLink =
+  document.getElementById("loginLink");
+
+const userInfo =
+  document.getElementById("userInfo");
+
 
 /* ================= GLOBAL STATE ================= */
 
@@ -55,78 +79,86 @@ let authReady = false;
 
 const ADMIN_EMAIL = "yom@gmail.com";
 
+
 /* ================= HELPERS ================= */
 
 function isAdmin() {
+
   return (
     currentUser &&
     currentUser.email &&
-    currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+    currentUser.email.toLowerCase() ===
+      ADMIN_EMAIL.toLowerCase()
   );
+
 }
 
+
 function escapeHTML(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
+
 
 function formatPostTime(timestamp) {
-  if (!timestamp) return "Just now";
+
+  if (!timestamp) {
+    return "Just now";
+  }
 
   try {
-    if (typeof timestamp.toDate === "function") {
-      return timestamp.toDate().toLocaleString("en-US", {
-        dateStyle: "medium",
-        timeStyle: "short"
-      });
+
+    if (
+      typeof timestamp.toDate ===
+      "function"
+    ) {
+
+      return timestamp
+        .toDate()
+        .toLocaleString("en-US", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        });
+
     }
-  } catch {}
+
+  } catch (error) {
+
+    console.warn(
+      "Time format error:",
+      error
+    );
+
+  }
 
   return "Just now";
+
 }
 
-/* ================= AUTH ================= */
-
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  authReady = true;
-
-  if (user) {
-    if (userInfo) {
-      userInfo.textContent =
-        "👤 " +
-        (user.displayName ||
-          user.email?.split("@")[0] ||
-          "Student");
-    }
-
-    loginLink && (loginLink.style.display = "none");
-    logoutBtn && (logoutBtn.style.display = "inline-block");
-
-    createAdminControls();
-  } else {
-    if (userInfo) userInfo.textContent = "";
-
-    loginLink && (loginLink.style.display = "inline-block");
-    logoutBtn && (logoutBtn.style.display = "none");
-
-    removeAdminControls();
-  }
-});
 
 /* ================= USER NAME ================= */
 
 async function getUserName(user) {
-  if (!user) return "Student";
+
+  if (!user) {
+    return "Student";
+  }
 
   try {
-    const snap = await getDoc(doc(db, "users", user.uid));
+
+    const snap =
+      await getDoc(
+        doc(db, "users", user.uid)
+      );
 
     if (snap.exists()) {
+
       const data = snap.data();
 
       return (
@@ -136,72 +168,90 @@ async function getUserName(user) {
         user.email?.split("@")[0] ||
         "Student"
       );
+
     }
-  } catch {}
+
+  } catch (error) {
+
+    console.warn(
+      "User name error:",
+      error
+    );
+
+  }
 
   return (
     user.displayName ||
     user.email?.split("@")[0] ||
     "Student"
   );
+
 }
 
-/* ================= CREATE POST ================= */
 
-async function createPost() {
-  if (!postInput) return;
+/* ================= AUTH ================= */
 
-  if (!authReady) {
-    alert("Please wait...");
-    return;
+onAuthStateChanged(
+  auth,
+  async (user) => {
+
+    currentUser = user;
+    authReady = true;
+
+    if (user) {
+
+      const name =
+        await getUserName(user);
+
+      if (userInfo) {
+
+        userInfo.textContent =
+          `👤 ${name}`;
+
+      }
+
+      if (loginLink) {
+        loginLink.style.display =
+          "none";
+      }
+
+      if (logoutBtn) {
+        logoutBtn.style.display =
+          "inline-block";
+      }
+
+      if (typeof createAdminControls === "function") {
+        createAdminControls();
+      }
+
+    } else {
+
+      if (userInfo) {
+        userInfo.textContent = "";
+      }
+
+      if (loginLink) {
+        loginLink.style.display =
+          "inline-block";
+      }
+
+      if (logoutBtn) {
+        logoutBtn.style.display =
+          "none";
+      }
+
+      if (
+        typeof removeAdminControls ===
+        "function"
+      ) {
+        removeAdminControls();
+      }
+
+    }
+
   }
+);
 
-  const text = postInput.value.trim();
-
-  if (!text) {
-    alert("Write something first.");
-    return;
-  }
-
-  if (!currentUser) {
-    alert("Please login first.");
-    return;
-  }
-
-  postBtn.disabled = true;
-  postBtn.textContent = "Posting...";
-
-  try {
-    const name = await getUserName(currentUser);
-
-    await addDoc(collection(db, "posts"), {
-      text,
-      userId: currentUser.uid,
-      name,
-      email: currentUser.email || "",
-      createdAt: serverTimestamp()
-    });
-
-    postInput.value = "";
-
-  } catch (e) {
-    alert(e.message);
-  }
-
-  postBtn.disabled = false;
-  postBtn.textContent = "📤 Post";
-}
-
-/* ================= EVENTS ================= */
-
-postBtn?.addEventListener("click", createPost);
-
-postInput?.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    createPost();
-  }
-});
 /* =========================================================
    PART 2
    LIKE

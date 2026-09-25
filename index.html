@@ -1205,12 +1205,28 @@ onSnapshot(q, (snap) => {
     const p = doc.data();
 
     feed.innerHTML += `
-      <div class="post-card">
-        <div class="post-header">
-          <strong>${p.name}</strong>
-        </div>
-        <p>${p.text}</p>
-      </div>`;
+<div class="post-card">
+
+  <div class="post-header">
+
+    <div class="avatar">👤</div>
+
+    <div>
+      <strong>${p.name || "Student"}</strong><br>
+      <small>${p.createdAt ? "Posted" : "Just now"}</small>
+    </div>
+
+  </div>
+
+  <p>${p.text || ""}</p>
+
+  <div class="post-actions">
+    <button>❤️ Like</button>
+    <button>💬 Comment</button>
+    <button>📤 Share</button>
+  </div>
+
+</div>`;
   });
 });
 </script>

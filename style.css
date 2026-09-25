@@ -592,6 +592,38 @@ footer{
   }
 
 }
+/* =========================================================
+   SEE MORE BUTTON
+   ========================================================= */
+
+.see-more-btn{
+    margin-top:8px;
+    padding:6px 12px;
+    border:none;
+    background:#eef6ff;
+    color:#007bff;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.see-more-btn:hover{
+    background:#007bff;
+    color:#ffffff;
+    transform:translateY(-1px);
+}
+
+body.dark .see-more-btn{
+    background:#333;
+    color:#4aa3ff;
+}
+
+body.dark .see-more-btn:hover{
+    background:#007bff;
+    color:#ffffff;
+}
 
 
 

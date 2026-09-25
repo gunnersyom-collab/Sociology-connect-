@@ -2732,13 +2732,3 @@ document.addEventListener(
 
   }
 );
-console.log("🔥 POST BUTTON TEST");
-
-if (postBtn) {
-  postBtn.addEventListener("click", () => {
-    console.log("✅ POST BUTTON CLICKED");
-    alert("Post button is working!");
-  });
-} else {
-  console.error("❌ postBtn NOT FOUND");
-}

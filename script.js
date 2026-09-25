@@ -74,25 +74,6 @@ function escapeHTML(value) {
     .replace(/'/g, "&#039;");
 }
 
-/* See More / Show Less */
-function formatPostText(text) {
-  const safe = escapeHTML(text || "");
-
-  if (safe.length <= 180) {
-    return safe.replace(/\n/g, "<br>");
-  }
-
-  const short = safe.substring(0, 180).replace(/\n/g, "<br>");
-  const full = safe.replace(/\n/g, "<br>");
-
-  return `
-    <span class="post-short">${short}...</span>
-    <span class="post-full" style="display:none;">${full}</span>
-    <br>
-    <button class="see-more-btn" type="button">See more</button>
-  `;
-}
-
 function formatPostTime(timestamp) {
   if (!timestamp) return "Just now";
 
@@ -107,6 +88,35 @@ function formatPostTime(timestamp) {
 
   return "Just now";
 }
+
+/* ================= AUTH ================= */
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  authReady = true;
+
+  if (user) {
+    if (userInfo) {
+      userInfo.textContent =
+        "👤 " +
+        (user.displayName ||
+          user.email?.split("@")[0] ||
+          "Student");
+    }
+
+    loginLink && (loginLink.style.display = "none");
+    logoutBtn && (logoutBtn.style.display = "inline-block");
+
+    createAdminControls();
+  } else {
+    if (userInfo) userInfo.textContent = "";
+
+    loginLink && (loginLink.style.display = "inline-block");
+    logoutBtn && (logoutBtn.style.display = "none");
+
+    removeAdminControls();
+  }
+});
 
 /* ================= USER NAME ================= */
 
@@ -578,123 +588,76 @@ function loadPosts() {
         (isAdmin() || currentUser.uid === post.userId);
 
       card.innerHTML = `
-  <div class="post-header">
+        <div class="post-header">
 
-    <div class="post-avatar">
-      ${escapeHTML(name.charAt(0).toUpperCase())}
-    </div>
+          <div class="post-avatar">
+            ${escapeHTML(name.charAt(0).toUpperCase())}
+          </div>
 
-    <div>
-      <div class="post-name">${escapeHTML(name)}</div>
-      <div class="post-time">
-        🕐 ${formatPostTime(post.createdAt)}
-      </div>
-    </div>
+          <div>
+            <div class="post-name">${escapeHTML(name)}</div>
+            <div class="post-time">
+              🕐 ${formatPostTime(post.createdAt)}
+            </div>
+          </div>
 
-  </div>
+        </div>
 
-  <div class="post-text">
-    ${formatPostText(post.text)}
-  </div>
+        <div class="post-text">
+          ${escapeHTML(post.text || "")}
+        </div>
 
-  <div class="post-actions">
+        <div class="post-actions">
 
-    <button class="like-btn">🤍 Like (0)</button>
+          <button class="like-btn">🤍 Like (0)</button>
 
-    <button class="comment-btn">
-      💬 Comment (0)
-    </button>
+          <button class="comment-btn">
+            💬 Comment (0)
+          </button>
 
-    <button class="share-btn">
-      📤 Share
-    </button>
+          <button class="share-btn">
+            📤 Share
+          </button>
 
-    ${canDelete
-      ? `<button class="delete-btn" style="color:#dc3545;">🗑️ Delete</button>`
-      : ""
-    }
+          ${canDelete
+            ? `<button class="delete-btn" style="color:#dc3545;">🗑️ Delete</button>`
+            : ""
+          }
 
-  </div>
-`;
+        </div>
+      `;
+
       postsContainer.appendChild(card);
 
-postsContainer.appendChild(card);
+      const likeBtn = card.querySelector(".like-btn");
+      const commentBtn = card.querySelector(".comment-btn");
+      const shareBtn = card.querySelector(".share-btn");
+      const deleteBtn = card.querySelector(".delete-btn");
 
-const seeMoreBtn = card.querySelector(".see-more-btn");
+      likeBtn?.addEventListener("click", () =>
+        toggleLike(postId, likeBtn)
+      );
 
-seeMoreBtn?.addEventListener("click", () => {
+      commentBtn?.addEventListener("click", async () => {
+        const added = await commentPost(postId);
+        await loadComments(postId, commentBtn, card, added);
+        loadTrendingPosts();
+      });
 
-  const shortText = card.querySelector(".post-short");
-  const fullText = card.querySelector(".post-full");
+      shareBtn?.addEventListener("click", () =>
+        sharePost(postId, post.text || "")
+      );
 
-  if (!shortText || !fullText) return;
+      deleteBtn?.addEventListener("click", async () => {
+        await deletePost(postId, post.userId);
+        loadTrendingPosts();
+      });
 
-  if (fullText.style.display === "none") {
+      await updateLikeButton(postId, likeBtn);
+      await loadComments(postId, commentBtn, card, false);
 
-    fullText.style.display = "inline";
-    shortText.style.display = "none";
-    seeMoreBtn.textContent = "Show less";
+    }
 
-  } else {
-
-    fullText.style.display = "none";
-    shortText.style.display = "inline";
-    seeMoreBtn.textContent = "See more";
-
-  }
-
-});
-
-const likeBtn = card.querySelector(".like-btn");
-const commentBtn = card.querySelector(".comment-btn");
-const shareBtn = card.querySelector(".share-btn");
-const deleteBtn = card.querySelector(".delete-btn");
-
-likeBtn?.addEventListener("click", () =>
-  toggleLike(postId, likeBtn)
-);
-
-commentBtn?.addEventListener("click", async () => {
-
-  const added = await commentPost(postId);
-
-  await loadComments(
-    postId,
-    commentBtn,
-    card,
-    added
-  );
-
-  loadTrendingPosts();
-
-});
-
-shareBtn?.addEventListener("click", () =>
-  sharePost(postId, post.text || "")
-);
-
-deleteBtn?.addEventListener("click", async () => {
-
-  await deletePost(
-    postId,
-    post.userId
-  );
-
-  loadTrendingPosts();
-
-});
-
-await updateLikeButton(
-  postId,
-  likeBtn
-);
-
-await loadComments(
-  postId,
-  commentBtn,
-  card,
-  false
-);
     loadTrendingPosts();
 
   }, (error) => {
@@ -822,6 +785,7 @@ async function loadTrendingPosts() {
   }
 
 }
+
 /* =========================================================
    PART 4
    NEWS
@@ -1268,3 +1232,4 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Sociology Connect 2.0 Ready");
 
 });
+

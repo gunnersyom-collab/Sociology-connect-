@@ -1767,7 +1767,6 @@ async function loadTrendingPosts() {
                                 post.name || "Student"
                             )}
                         </div>
-
 /* =========================================================
    LOAD TRENDING POSTS
    ========================================================= */
@@ -1775,18 +1774,14 @@ async function loadTrendingPosts() {
 async function loadTrendingPosts() {
 
     const trendingContainer = document.getElementById("trendingContainer");
-
     if (!trendingContainer) return;
 
     try {
-
         const postsSnapshot = await getDocs(collection(db, "posts"));
 
         if (postsSnapshot.empty) {
             trendingContainer.innerHTML = `
-                <div class="post-card">
-                    🔥 No trending posts yet.
-                </div>
+                <div class="post-card">🔥 No trending posts yet.</div>
             `;
             return;
         }
@@ -1794,7 +1789,6 @@ async function loadTrendingPosts() {
         const posts = [];
 
         for (const postDoc of postsSnapshot.docs) {
-
             const post = postDoc.data();
 
             const likes = await getDocs(
@@ -1819,8 +1813,7 @@ async function loadTrendingPosts() {
 
         trendingContainer.innerHTML = "";
 
-        posts.slice(0, 5).forEach((post) => {
-
+        posts.slice(0, 5).forEach(post => {
             const card = document.createElement("div");
             card.className = "post-card";
 
@@ -1829,16 +1822,13 @@ async function loadTrendingPosts() {
                     <div class="post-avatar">
                         ${escapeHTML(post.name.charAt(0).toUpperCase())}
                     </div>
-
                     <div>
                         <div class="post-name">${escapeHTML(post.name)}</div>
                         <div class="post-time">🔥 Trending</div>
                     </div>
                 </div>
 
-                <div class="post-text">
-                    ${escapeHTML(post.text)}
-                </div>
+                <div class="post-text">${escapeHTML(post.text)}</div>
 
                 <div class="post-actions">
                     <button disabled>❤️ ${post.likes}</button>
@@ -1851,17 +1841,15 @@ async function loadTrendingPosts() {
         });
 
     } catch (error) {
-
         console.error("❌ TRENDING ERROR:", error);
 
         trendingContainer.innerHTML = `
-            <div class="post-card">
-                ❌ Unable to load trending posts.
-            </div>
+            <div class="post-card">❌ Unable to load trending posts.</div>
         `;
     }
 }
 
+loadTrendingPosts();
 /* Start Trending */
 loadTrendingPosts();
 

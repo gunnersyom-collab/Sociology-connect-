@@ -881,7 +881,49 @@ body.dark .post-actions button{
 body.dark .post-actions button:hover{
     background:#333 !important;
 }
+
+/* =========================================================
+   POST ACTIONS FIX
+   ========================================================= */
+
+.post-actions{
+    display:flex !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    gap:6px !important;
+    margin-top:14px !important;
+    padding-top:12px !important;
+    border-top:1px solid #ddd !important;
+}
+
+.post-actions button{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    flex:1 !important;
+    background:none !important;
+    border:none !important;
+    color:#007bff !important;
+    padding:8px 6px !important;
+    cursor:pointer !important;
+    font-size:14px !important;
+    font-weight:600 !important;
+}
+
+.post-actions button:hover{
+    background:#eef6ff !important;
+    border-radius:8px !important;
+}
+
+body.dark .post-actions{
+    border-top-color:#444 !important;
+}
+
+body.dark .post-actions button{
+    color:#4aa3ff !important;
+}
 </style>
+
 </head>
 <body>
 
@@ -1056,12 +1098,15 @@ body.dark .post-actions button:hover{
         Popular posts based on likes and comments.
     </p>
 
-    <div class="card">
-        Trending posts will appear here.
+    <div id="trendingContainer" class="trending-grid">
+
+        <div class="post-card">
+            🔥 Loading trending posts...
+        </div>
+
     </div>
 
 </section>
-
 
 <!-- =========================================================
      ABOUT

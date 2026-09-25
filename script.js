@@ -1,1044 +1,2264 @@
 /* =========================================================
-SOCIOLOGY CONNECT - SCRIPT.JS
-AI MARI + FIREBASE POSTS + DARK MODE + SEARCH
-
-VOICE + NOTIFICATIONS
-========================================================= */
+   SOCIOLOGY CONNECT - SCRIPT.JS
+   ---------------------------------------------------------
+   AI MARI
+   FIREBASE POSTS
+   LIKE
+   COMMENT
+   SHARE
+   DARK MODE
+   SEARCH
+   VOICE
+   NOTIFICATIONS
+   ========================================================= */
 
 
 /* =========================================================
-FIREBASE IMPORTS
-========================================================= */
+   FIREBASE IMPORTS
+   ========================================================= */
 
 import { auth, db } from "./firebase.js";
 
 import {
-collection,
-addDoc,
-serverTimestamp,
-query,
-orderBy,
-onSnapshot,
-doc,
-getDoc
+    collection,
+    addDoc,
+    serverTimestamp,
+    query,
+    orderBy,
+    onSnapshot,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
 /* =========================================================
-ELEMENTS
-========================================================= */
+   ELEMENTS
+   ========================================================= */
 
 const chatHistory =
-document.getElementById("chat-history");
+    document.getElementById("chat-history");
 
 const userInput =
-document.getElementById("userInput");
+    document.getElementById("userInput");
 
 const sendBtn =
-document.getElementById("sendBtn");
+    document.getElementById("sendBtn");
 
 const micBtn =
-document.getElementById("micBtn");
+    document.getElementById("micBtn");
 
 const themeBtn =
-document.getElementById("themeBtn");
+    document.getElementById("themeBtn");
 
 const searchBar =
-document.getElementById("searchBar");
+    document.getElementById("searchBar");
 
 const notifyBtn =
-document.getElementById("notifyBtn");
+    document.getElementById("notifyBtn");
 
 const postsContainer =
-document.getElementById("postsContainer");
+    document.getElementById("postsContainer");
 
 const postInput =
-document.getElementById("postInput");
+    document.getElementById("postInput");
+
+const postBtn =
+    document.getElementById("postBtn");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const loginLink =
+    document.getElementById("loginLink");
+
+const userInfo =
+    document.getElementById("userInfo");
+
 
 /* =========================================================
-SECURITY
-========================================================= */
+   GLOBAL USER STATE
+   ========================================================= */
+
+let currentUser = null;
+
+let authReady = false;
+
+
+/* =========================================================
+   SECURITY
+   ========================================================= */
 
 function escapeHTML(value) {
 
-return String(value || "")  
-    .replace(/&/g, "&amp;")  
-    .replace(/</g, "&lt;")  
-    .replace(/>/g, "&gt;")  
-    .replace(/"/g, "&quot;")  
-    .replace(/'/g, "&#039;");
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
+
 /* =========================================================
-FIREBASE POSTS
-========================================================= */
+   FORMAT DATE
+   ========================================================= */
 
-/* ================= CREATE POST ================= */
+function formatPostTime(timestamp) {
 
-window.createPost = async function () {
+    if (!timestamp) {
+        return "Just now";
+    }
 
-if (!postInput) {  
-    console.error(  
-        "postInput was not found."  
-    );  
-    return;  
-}  
+    try {
 
-const text =  
-    postInput.value.trim();  
+        if (
+            typeof timestamp.toDate === "function"
+        ) {
 
-const user =  
-    auth.currentUser;  
+            return timestamp
+                .toDate()
+                .toLocaleString(
+                    "en-US",
+                    {
+                        dateStyle: "medium",
+                        timeStyle: "short"
+                    }
+                );
 
+        }
 
-/* ---------- LOGIN CHECK ---------- */  
+        return "Just now";
 
-if (!user) {  
+    } catch {
 
-    alert(  
-        "Please login first."  
-    );  
+        return "Just now";
 
-    return;  
-
-}  
-
-
-/* ---------- EMPTY POST CHECK ---------- */  
-
-if (!text) {  
-
-    alert(  
-        "Write something first."  
-    );  
-
-    return;  
-
-}  
-
-
-try {  
-
-    /* ---------- GET USER PROFILE ---------- */  
-
-    const profileSnap =  
-        await getDoc(  
-            doc(  
-                db,  
-                "users",  
-                user.uid  
-            )  
-        );  
-
-
-    const profileData =  
-        profileSnap.exists()  
-            ? profileSnap.data()  
-            : {};  
-
-
-    /* ---------- USER NAME ---------- */  
-
-    const name =  
-        profileData.fullName ||  
-        user.displayName ||  
-        (  
-            user.email  
-                ? user.email.split("@")[0]  
-                : "Student"  
-        );  
-
-
-    /* ---------- SAVE POST ---------- */  
-
-    await addDoc(  
-        collection(db, "posts"),  
-        {  
-
-            text: text,  
-
-            userId: user.uid,  
-
-            name: name,  
-
-            createdAt:  
-                serverTimestamp()  
-
-        }  
-    );  
-
-
-    /* ---------- CLEAR INPUT ---------- */  
-
-    postInput.value = "";  
-
-
-    console.log(  
-        "✅ Post created successfully."  
-    );  
-
-
-} catch (error) {  
-
-    console.error(  
-        "❌ Create post error:",  
-        error  
-    );  
-
-    alert(  
-        "Post failed: " +  
-        error.message  
-    );  
+    }
 
 }
 
-};
 
 /* =========================================================
-LOAD POSTS FROM FIRESTORE
-========================================================= */
+   FIREBASE AUTH STATE
+   ========================================================= */
 
-if (postsContainer) {
+onAuthStateChanged(
+    auth,
+    (user) => {
 
-const postsQuery =  
-    query(  
-        collection(db, "posts"),  
-        orderBy(  
-            "createdAt",  
-            "desc"  
-        )  
-    );  
+        currentUser = user;
 
+        authReady = true;
 
-onSnapshot(  
+        if (user) {
 
-    postsQuery,  
+            console.log(
+                "✅ Logged in:",
+                user.email
+            );
 
-    (snapshot) => {  
+            if (userInfo) {
 
-        postsContainer.innerHTML = "";  
+                userInfo.textContent =
+                    "👤 " +
+                    (
+                        user.displayName ||
+                        user.email?.split("@")[0] ||
+                        "Student"
+                    );
 
+            }
 
-        if (snapshot.empty) {  
+            if (loginLink) {
 
-            postsContainer.innerHTML = `  
-                <div class="post-card">  
-                    <p>  
-                        No posts yet. Be the first  
-                        student to post something! 📚  
-                    </p>  
-                </div>  
-            `;  
+                loginLink.style.display =
+                    "none";
 
-            return;  
+            }
 
-        }  
+            if (logoutBtn) {
 
+                logoutBtn.style.display =
+                    "inline-block";
 
-        snapshot.forEach(  
-            (postDoc) => {  
+            }
 
-                const post =  
-                    postDoc.data();  
+        } else {
 
+            console.log(
+                "ℹ️ No user logged in."
+            );
 
-                const card =  
-                    document.createElement(  
-                        "div"  
-                    );  
+            if (userInfo) {
 
+                userInfo.textContent = "";
 
-                card.className =  
-                    "post-card";  
+            }
 
+            if (loginLink) {
 
-                card.innerHTML = `  
+                loginLink.style.display =
+                    "inline-block";
 
-                    <div class="post-header">  
+            }
 
-                        <div class="avatar">  
-                            👤  
-                        </div>  
+            if (logoutBtn) {
 
-                        <div>  
+                logoutBtn.style.display =
+                    "none";
 
-                            <strong>  
-                                ${escapeHTML(  
-                                    post.name ||  
-                                    "Student"  
-                                )}  
-                            </strong>  
+            }
 
-                            <br>  
+        }
 
-                            <small>  
-                                ${post.createdAt  
-                                    ? "Posted"  
-                                    : "Just now"}  
-                            </small>  
-
-                        </div>  
-
-                    </div>  
-
-
-                    <p>  
-                        ${escapeHTML(  
-                            post.text || ""  
-                        )}  
-                    </p>  
-
-
-                    <div class="post-actions">  
-
-                        <button  
-                            type="button"  
-                            class="like-btn"  
-                        >  
-                            ❤️ Like  
-                        </button>  
-
-
-                        <button  
-                            type="button"  
-                            class="comment-btn"  
-                        >  
-                            💬 Comment  
-                        </button>  
-
-
-                        <button  
-                            type="button"  
-                            class="share-btn"  
-                        >  
-                            📤 Share  
-                        </button>  
-
-                    </div>  
-
-                `;  
-
-
-                postsContainer.appendChild(  
-                    card  
-                );  
-
-            }  
-        );  
-
-    },  
-
-
-    (error) => {  
-
-        console.error(  
-            "❌ Load posts error:",  
-            error  
-        );  
-
-
-        postsContainer.innerHTML = `  
-            <div class="post-card">  
-                <p>  
-                    Unable to load posts.  
-                </p>  
-            </div>  
-        `;  
-
-    }  
-
+    }
 );
 
-}
 
 /* =========================================================
-AI MARI
-========================================================= */
+   GET USER NAME
+   ========================================================= */
+
+async function getUserName(user) {
+
+    if (!user) {
+        return "Student";
+    }
+
+    try {
+
+        const profileRef =
+            doc(
+                db,
+                "users",
+                user.uid
+            );
+
+        const profileSnap =
+            await getDoc(profileRef);
+
+        if (profileSnap.exists()) {
+
+            const data =
+                profileSnap.data();
+
+            return (
+                data.fullName ||
+                data.name ||
+                user.displayName ||
+                user.email?.split("@")[0] ||
+                "Student"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Profile not available:",
+            error
+        );
+
+    }
+
+    return (
+        user.displayName ||
+        user.email?.split("@")[0] ||
+        "Student"
+    );
+
+}
+
+
+/* =========================================================
+   CREATE POST
+   ========================================================= */
+
+async function createPost() {
+
+    if (!postInput) {
+
+        console.error(
+            "❌ postInput not found."
+        );
+
+        return;
+
+    }
+
+
+    if (!authReady) {
+
+        alert(
+            "Please wait a moment and try again."
+        );
+
+        return;
+
+    }
+
+
+    const text =
+        postInput.value.trim();
+
+
+    if (!text) {
+
+        alert(
+            "Write something first."
+        );
+
+        postInput.focus();
+
+        return;
+
+    }
+
+
+    if (!currentUser) {
+
+        alert(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+
+    if (postBtn) {
+
+        postBtn.disabled = true;
+
+        postBtn.textContent =
+            "Posting...";
+
+    }
+
+
+    try {
+
+        const name =
+            await getUserName(
+                currentUser
+            );
+
+
+        await addDoc(
+            collection(
+                db,
+                "posts"
+            ),
+            {
+
+                text: text,
+
+                userId:
+                    currentUser.uid,
+
+                name:
+                    name,
+
+                email:
+                    currentUser.email || "",
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        postInput.value = "";
+
+        console.log(
+            "✅ Post created successfully."
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ CREATE POST ERROR:",
+            error
+        );
+
+        alert(
+            "Post failed:\n\n" +
+            error.message
+        );
+
+    } finally {
+
+        if (postBtn) {
+
+            postBtn.disabled = false;
+
+            postBtn.textContent =
+                "📤 Post";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   POST BUTTON
+   ========================================================= */
+
+postBtn?.addEventListener(
+    "click",
+    createPost
+);
+
+
+/* =========================================================
+   ENTER TO POST
+   ========================================================= */
+
+postInput?.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            createPost();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   LIKE POST
+   ========================================================= */
+
+async function toggleLike(
+    postId,
+    likeButton
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login to like a post."
+        );
+
+        return;
+
+    }
+
+
+    const likeRef =
+        doc(
+            db,
+            "posts",
+            postId,
+            "likes",
+            currentUser.uid
+        );
+
+
+    try {
+
+        const likeSnap =
+            await getDoc(
+                likeRef
+            );
+
+
+        if (likeSnap.exists()) {
+
+            await deleteDoc(
+                likeRef
+            );
+
+            console.log(
+                "💔 Like removed."
+            );
+
+        } else {
+
+            await setDoc(
+                likeRef,
+                {
+
+                    userId:
+                        currentUser.uid,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+            );
+
+            console.log(
+                "❤️ Post liked."
+            );
+
+        }
+
+
+        await updateLikeButton(
+            postId,
+            likeButton
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ LIKE ERROR:",
+            error
+        );
+
+        alert(
+            "Like failed:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE LIKE BUTTON
+   ========================================================= */
+
+async function updateLikeButton(
+    postId,
+    likeButton
+) {
+
+    if (!likeButton) {
+        return;
+    }
+
+
+    try {
+
+        const likesRef =
+            collection(
+                db,
+                "posts",
+                postId,
+                "likes"
+            );
+
+
+        const likesSnap =
+            await getDocs(
+                likesRef
+            );
+
+
+        const count =
+            likesSnap.size;
+
+
+        let liked = false;
+
+
+        if (currentUser) {
+
+            liked =
+                likesSnap.docs.some(
+                    (item) =>
+                        item.id ===
+                        currentUser.uid
+                );
+
+        }
+
+
+        likeButton.textContent =
+            liked
+                ? `❤️ Liked (${count})`
+                : `🤍 Like (${count})`;
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ LIKE COUNT ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COMMENT POST
+   ========================================================= */
+
+async function commentPost(
+    postId
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login to comment."
+        );
+
+        return false;
+
+    }
+
+
+    const comment =
+        prompt(
+            "💬 Write your comment:"
+        );
+
+
+    if (
+        comment === null ||
+        !comment.trim()
+    ) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        const name =
+            await getUserName(
+                currentUser
+            );
+
+
+        await addDoc(
+            collection(
+                db,
+                "posts",
+                postId,
+                "comments"
+            ),
+            {
+
+                text:
+                    comment.trim(),
+
+                userId:
+                    currentUser.uid,
+
+                name:
+                    name,
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        console.log(
+            "💬 Comment added."
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ COMMENT ERROR:",
+            error
+        );
+
+        alert(
+            "Comment failed:\n\n" +
+            error.message
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD COMMENTS
+   ========================================================= */
+
+async function loadComments(
+    postId,
+    commentButton,
+    card,
+    showComments = false
+) {
+
+    try {
+
+        const commentsRef =
+            collection(
+                db,
+                "posts",
+                postId,
+                "comments"
+            );
+
+
+        const commentsSnap =
+            await getDocs(
+                commentsRef
+            );
+
+
+        const count =
+            commentsSnap.size;
+
+
+        if (commentButton) {
+
+            commentButton.textContent =
+                `💬 Comment (${count})`;
+
+        }
+
+
+        const oldBox =
+            card.querySelector(
+                ".comments-box"
+            );
+
+
+        if (oldBox) {
+
+            oldBox.remove();
+
+        }
+
+
+        if (
+            count === 0 ||
+            !showComments
+        ) {
+
+            return;
+
+        }
+
+
+        const commentsBox =
+            document.createElement(
+                "div"
+            );
+
+
+        commentsBox.className =
+            "comments-box";
+
+
+        commentsBox.style.marginTop =
+            "12px";
+
+        commentsBox.style.padding =
+            "10px";
+
+        commentsBox.style.borderTop =
+            "1px solid #ddd";
+
+        commentsBox.style.borderRadius =
+            "10px";
+
+
+        const sortedComments =
+            [...commentsSnap.docs]
+                .sort(
+                    (a, b) => {
+
+                        const ta =
+                            a.data()
+                                .createdAt
+                                ?.toMillis?.() || 0;
+
+                        const tb =
+                            b.data()
+                                .createdAt
+                                ?.toMillis?.() || 0;
+
+                        return ta - tb;
+
+                    }
+                );
+
+
+        sortedComments.forEach(
+            (commentDoc) => {
+
+                const data =
+                    commentDoc.data();
+
+
+                const commentDiv =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                commentDiv.style.padding =
+                    "8px 0";
+
+
+                commentDiv.style.borderBottom =
+                    "1px solid #eee";
+
+
+                commentDiv.innerHTML = `
+
+                    <strong>
+                        ${escapeHTML(
+                            data.name ||
+                            "Student"
+                        )}
+                    </strong>
+
+                    <br>
+
+                    <span>
+                        ${escapeHTML(
+                            data.text ||
+                            ""
+                        )}
+                    </span>
+
+                `;
+
+
+                commentsBox.appendChild(
+                    commentDiv
+                );
+
+            }
+        );
+
+
+        card.appendChild(
+            commentsBox
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ LOAD COMMENTS ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SHARE POST
+   ========================================================= */
+
+async function sharePost(
+    postId,
+    postText
+) {
+
+    const shareUrl =
+        window.location.href.split("#")[0] +
+        "#post-" +
+        postId;
+
+
+    try {
+
+        /* ---------- MOBILE SHARE ---------- */
+
+        if (
+            navigator.share
+        ) {
+
+            await navigator.share({
+
+                title:
+                    "Sociology Connect",
+
+                text:
+                    postText,
+
+                url:
+                    shareUrl
+
+            });
+
+
+            console.log(
+                "📤 Post shared."
+            );
+
+            return;
+
+        }
+
+
+        /* ---------- COPY LINK ---------- */
+
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            await navigator.clipboard
+                .writeText(
+                    shareUrl
+                );
+
+
+            alert(
+                "✅ Post link copied!"
+            );
+
+            return;
+
+        }
+
+
+        /* ---------- FALLBACK ---------- */
+
+        const temporaryInput =
+            document.createElement(
+                "input"
+            );
+
+
+        temporaryInput.value =
+            shareUrl;
+
+
+        document.body.appendChild(
+            temporaryInput
+        );
+
+
+        temporaryInput.select();
+
+
+        document.execCommand(
+            "copy"
+        );
+
+
+        temporaryInput.remove();
+
+
+        alert(
+            "✅ Post link copied!"
+        );
+
+
+    } catch (error) {
+
+        if (
+            error.name ===
+            "AbortError"
+        ) {
+
+            return;
+
+        }
+
+
+        console.error(
+            "❌ SHARE ERROR:",
+            error
+        );
+
+        alert(
+            "Share failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD POSTS
+   ========================================================= */
+
+function loadPosts() {
+
+    if (!postsContainer) {
+
+        console.error(
+            "❌ postsContainer not found."
+        );
+
+        return;
+
+    }
+
+
+    const postsQuery =
+        query(
+            collection(
+                db,
+                "posts"
+            ),
+            orderBy(
+                "createdAt",
+                "desc"
+            )
+        );
+
+
+    onSnapshot(
+
+        postsQuery,
+
+        async (snapshot) => {
+
+            postsContainer.innerHTML = "";
+
+
+            if (snapshot.empty) {
+
+                postsContainer.innerHTML = `
+
+                    <div class="post-card">
+
+                        <p>
+                            No posts yet.
+                            Be the first student
+                            to post something! 📚
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            for (
+                const postDoc
+                of snapshot.docs
+            ) {
+
+                const post =
+                    postDoc.data();
+
+
+                const postId =
+                    postDoc.id;
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "post-card";
+
+
+                card.id =
+                    "post-" +
+                    postId;
+
+
+                const name =
+                    post.name ||
+                    "Student";
+
+
+                const firstLetter =
+                    name
+                        .charAt(0)
+                        .toUpperCase();
+
+
+                card.innerHTML = `
+
+                    <div class="post-header">
+
+                        <div
+                            class="post-avatar"
+                            aria-label="User avatar"
+                        >
+                            ${escapeHTML(
+                                firstLetter
+                            )}
+                        </div>
+
+
+                        <div>
+
+                            <div class="post-name">
+
+                                ${escapeHTML(
+                                    name
+                                )}
+
+                            </div>
+
+
+                            <div class="post-time">
+
+                                🕐
+                                ${formatPostTime(
+                                    post.createdAt
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="post-text">
+
+                        ${escapeHTML(
+                            post.text ||
+                            ""
+                        )}
+
+                    </div>
+
+
+                    <div class="post-actions">
+
+                        <button
+                            type="button"
+                            class="like-btn"
+                        >
+                            🤍 Like (0)
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="comment-btn"
+                        >
+                            💬 Comment (0)
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="share-btn"
+                        >
+                            📤 Share
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                postsContainer.appendChild(
+                    card
+                );
+
+
+                const likeButton =
+                    card.querySelector(
+                        ".like-btn"
+                    );
+
+
+                const commentButton =
+                    card.querySelector(
+                        ".comment-btn"
+                    );
+
+
+                const shareButton =
+                    card.querySelector(
+                        ".share-btn"
+                    );
+
+
+                /* =================================================
+                   LIKE EVENT
+                   ================================================= */
+
+                likeButton?.addEventListener(
+                    "click",
+                    async () => {
+
+                        await toggleLike(
+                            postId,
+                            likeButton
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   COMMENT EVENT
+                   ================================================= */
+
+                commentButton?.addEventListener(
+                    "click",
+                    async () => {
+
+                        const added =
+                            await commentPost(
+                                postId
+                            );
+
+
+                        if (added) {
+
+                            await loadComments(
+                                postId,
+                                commentButton,
+                                card,
+                                true
+                            );
+
+                        } else {
+
+                            await loadComments(
+                                postId,
+                                commentButton,
+                                card,
+                                false
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /* =================================================
+                   SHARE EVENT
+                   ================================================= */
+
+                shareButton?.addEventListener(
+                    "click",
+                    async () => {
+
+                        await sharePost(
+                            postId,
+                            post.text ||
+                            ""
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   INITIAL LIKE COUNT
+                   ================================================= */
+
+                await updateLikeButton(
+                    postId,
+                    likeButton
+                );
+
+
+                /* =================================================
+                   INITIAL COMMENT COUNT
+                   ================================================= */
+
+                await loadComments(
+                    postId,
+                    commentButton,
+                    card,
+                    false
+                );
+
+            }
+
+        },
+
+        (error) => {
+
+            console.error(
+                "❌ LOAD POSTS ERROR:",
+                error
+            );
+
+
+            postsContainer.innerHTML = `
+
+                <div class="post-card">
+
+                    <p>
+                        ❌ Unable to load posts.
+                    </p>
+
+                    <small>
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </small>
+
+                </div>
+
+            `;
+
+        }
+
+    );
+
+}
+
+
+loadPosts();
+
+
+/* =========================================================
+   AI MARI
+   ========================================================= */
 
 async function sendToServer() {
 
-if (!chatHistory || !userInput)  
-    return;  
+    if (
+        !chatHistory ||
+        !userInput
+    ) {
 
+        return;
 
-const text =  
-    userInput.value.trim();  
+    }
 
 
-if (!text)  
-    return;  
+    const text =
+        userInput.value.trim();
 
 
-/* ---------- USER MESSAGE ---------- */  
+    if (!text) {
 
-const userMessage =  
-    document.createElement("div");  
+        return;
 
+    }
 
-userMessage.className =  
-    "message user";  
 
+    /* =====================================================
+       USER MESSAGE
+       ===================================================== */
 
-userMessage.innerHTML =  
-    "<b>You:</b> " +  
-    escapeHTML(text);  
+    const userMessage =
+        document.createElement(
+            "div"
+        );
 
 
-chatHistory.appendChild(  
-    userMessage  
-);  
+    userMessage.className =
+        "message user";
 
 
-/* ---------- CLEAR INPUT ---------- */  
+    userMessage.innerHTML =
+        "<b>You:</b> " +
+        escapeHTML(text);
 
-userInput.value = "";  
 
+    chatHistory.appendChild(
+        userMessage
+    );
 
-/* ---------- SEND BUTTON ---------- */  
 
-if (sendBtn) {  
+    userInput.value = "";
 
-    sendBtn.disabled = true;  
 
-    sendBtn.textContent =  
-        "Thinking...";  
+    /* =====================================================
+       SEND BUTTON
+       ===================================================== */
 
-}  
+    if (sendBtn) {
 
+        sendBtn.disabled = true;
 
-/* ---------- LOADING ---------- */  
+        sendBtn.textContent =
+            "Thinking...";
 
-const loading =  
-    document.createElement("div");  
+    }
 
 
-loading.className =  
-    "message ai";  
+    /* =====================================================
+       LOADING
+       ===================================================== */
 
+    const loading =
+        document.createElement(
+            "div"
+        );
 
-loading.innerHTML =  
-    "<b>AI Mari:</b><br>" +  
-    "<i>Typing...</i>";  
 
+    loading.className =
+        "message ai";
 
-chatHistory.appendChild(  
-    loading  
-);  
 
+    loading.innerHTML = `
 
-chatHistory.scrollTop =  
-    chatHistory.scrollHeight;  
+        <b>AI Mari:</b><br>
 
+        <i>Typing... 🤖</i>
 
-try {  
+    `;
 
-    /* ---------- AI REQUEST ---------- */  
 
-    const res =  
-        await fetch(  
-            "https://text.pollinations.ai/" +  
-            encodeURIComponent(text)  
-        );  
+    chatHistory.appendChild(
+        loading
+    );
 
 
-    if (!res.ok) {  
+    chatHistory.scrollTop =
+        chatHistory.scrollHeight;
 
-        throw new Error(  
-            "AI server error"  
-        );  
 
-    }  
+    try {
 
+        /* =================================================
+           AI REQUEST
+           ================================================= */
 
-    const reply =  
-        await res.text();  
+        const apiUrl =
+            "https://text.pollinations.ai/" +
+            encodeURIComponent(text);
 
 
-    /* ---------- REMOVE LOADING ---------- */  
+        const response =
+            await fetch(
+                apiUrl,
+                {
+                    method: "GET"
+                }
+            );
 
-    loading.remove();  
 
+        if (!response.ok) {
 
-    /* ---------- AI MESSAGE ---------- */  
+            throw new Error(
+                "AI server returned HTTP " +
+                response.status
+            );
 
-    const aiMessage =  
-        document.createElement("div");  
+        }
 
 
-    aiMessage.className =  
-        "message ai";  
+        const reply =
+            await response.text();
 
 
-    aiMessage.innerHTML = `  
+        if (
+            !reply ||
+            !reply.trim()
+        ) {
 
-        <b>AI Mari:</b><br>  
+            throw new Error(
+                "Empty AI response."
+            );
 
-        <span class="ai-text">  
-            ${escapeHTML(reply)}  
-        </span>  
+        }
 
-        <br><br>  
 
-        <button  
-            class="copy-btn"  
-            type="button"  
-        >  
-            📋 Copy  
-        </button>  
+        loading.remove();
 
-    `;  
 
+        /* =================================================
+           AI MESSAGE
+           ================================================= */
 
-    /* ---------- COPY BUTTON ---------- */  
+        const aiMessage =
+            document.createElement(
+                "div"
+            );
 
-    const copyButton =  
-        aiMessage.querySelector(  
-            ".copy-btn"  
-        );  
 
+        aiMessage.className =
+            "message ai";
 
-    if (copyButton) {  
 
-        copyButton.addEventListener(  
-            "click",  
-            async () => {  
+        aiMessage.innerHTML = `
 
-                try {  
+            <b>AI Mari:</b><br>
 
-                    await navigator  
-                        .clipboard  
-                        .writeText(reply);  
+            <span class="ai-text">
 
+                ${escapeHTML(
+                    reply
+                )}
 
-                    copyButton.textContent =  
-                        "✅ Copied!";  
+            </span>
 
+            <br><br>
 
-                    setTimeout(  
-                        () => {  
+            <button
+                class="copy-btn"
+                type="button"
+            >
+                📋 Copy
+            </button>
 
-                            copyButton.textContent =  
-                                "📋 Copy";  
+        `;
 
-                        },  
-                        1500  
-                    );  
 
+        /* =================================================
+           COPY AI RESPONSE
+           ================================================= */
 
-                } catch {  
+        const copyButton =
+            aiMessage.querySelector(
+                ".copy-btn"
+            );
 
-                    alert(  
-                        "Copy failed."  
-                    );  
 
-                }  
+        copyButton?.addEventListener(
+            "click",
+            async () => {
 
-            }  
-        );  
+                try {
 
-    }  
+                    if (
+                        navigator.clipboard
+                    ) {
 
+                        await navigator
+                            .clipboard
+                            .writeText(
+                                reply
+                            );
 
-    /* ---------- ADD AI MESSAGE ---------- */  
+                    } else {
 
-    chatHistory.appendChild(  
-        aiMessage  
-    );  
+                        const temp =
+                            document.createElement(
+                                "textarea"
+                            );
 
+                        temp.value =
+                            reply;
 
-    /* ---------- KEEP CHAT VISIBLE ---------- */  
+                        document.body
+                            .appendChild(
+                                temp
+                            );
 
-    chatHistory.scrollTop =  
-        chatHistory.scrollHeight;  
+                        temp.select();
 
+                        document.execCommand(
+                            "copy"
+                        );
 
-} catch (error) {  
+                        temp.remove();
 
-    console.error(  
-        "AI Mari Error:",  
-        error  
-    );  
+                    }
 
 
-    /* ---------- REMOVE LOADING ---------- */  
+                    copyButton.textContent =
+                        "✅ Copied!";
 
-    loading.remove();  
 
+                    setTimeout(
+                        () => {
 
-    /* ---------- ERROR MESSAGE ---------- */  
+                            copyButton.textContent =
+                                "📋 Copy";
 
-    const errorMessage =  
-        document.createElement(  
-            "div"  
-        );  
+                        },
+                        1500
+                    );
 
 
-    errorMessage.className =  
-        "message ai";  
+                } catch (error) {
 
+                    console.error(
+                        "Copy error:",
+                        error
+                    );
 
-    errorMessage.innerHTML = `  
+                    alert(
+                        "Copy failed."
+                    );
 
-        <b>AI Mari:</b><br>  
+                }
 
-        <span class="ai-text">  
-            Sorry, connection failed.  
-            Please try again.  
-        </span>  
+            }
+        );
 
-    `;  
 
+        chatHistory.appendChild(
+            aiMessage
+        );
 
-    chatHistory.appendChild(  
-        errorMessage  
-    );  
 
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
 
-    chatHistory.scrollTop =  
-        chatHistory.scrollHeight;  
 
-} finally {  
+    } catch (error) {
 
-    if (sendBtn) {  
+        console.error(
+            "❌ AI MARI ERROR:",
+            error
+        );
 
-        sendBtn.disabled = false;  
 
-        sendBtn.textContent =  
-            "Send";  
+        loading.remove();
 
-    }  
+
+        const errorMessage =
+            document.createElement(
+                "div"
+            );
+
+
+        errorMessage.className =
+            "message ai";
+
+
+        errorMessage.innerHTML = `
+
+            <b>AI Mari:</b><br>
+
+            <span class="ai-text">
+
+                ❌ Sorry, AI connection failed.
+                Please check your internet connection
+                and try again.
+
+            </span>
+
+        `;
+
+
+        chatHistory.appendChild(
+            errorMessage
+        );
+
+
+        chatHistory.scrollTop =
+            chatHistory.scrollHeight;
+
+
+    } finally {
+
+        if (sendBtn) {
+
+            sendBtn.disabled =
+                false;
+
+            sendBtn.textContent =
+                "Send";
+
+        }
+
+    }
 
 }
 
-}
 
 /* =========================================================
-AI SEND EVENTS
-========================================================= */
+   AI SEND BUTTON
+   ========================================================= */
 
 sendBtn?.addEventListener(
-"click",
-sendToServer
+    "click",
+    sendToServer
 );
 
-userInput?.addEventListener(
-"keydown",
-(event) => {
-
-if (  
-        event.key === "Enter" &&  
-        !event.shiftKey  
-    ) {  
-
-        event.preventDefault();  
-
-        sendToServer();  
-
-    }  
-
-}
-
-);
 
 /* =========================================================
-DARK MODE
-========================================================= */
+   AI ENTER KEY
+   ========================================================= */
+
+userInput?.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            sendToServer();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
 
 function updateThemeButton() {
 
-if (!themeBtn)  
-    return;  
+    if (!themeBtn) {
+
+        return;
+
+    }
 
 
-if (  
-    document.body.classList  
-        .contains("dark")  
-) {  
+    const isDark =
+        document.body.classList.contains(
+            "dark"
+        );
 
-    themeBtn.textContent =  
-        "☀️";  
 
-    themeBtn.title =  
-        "Light Mode";  
+    themeBtn.textContent =
+        isDark
+            ? "☀️"
+            : "🌙";
 
-} else {  
 
-    themeBtn.textContent =  
-        "🌙";  
-
-    themeBtn.title =  
-        "Dark Mode";  
+    themeBtn.title =
+        isDark
+            ? "Light Mode"
+            : "Dark Mode";
 
 }
 
-}
-
-/* ---------- APPLY SAVED THEME ---------- */
 
 function applySavedTheme() {
 
-const savedTheme =  
-    localStorage.getItem(  
-        "sociologyTheme"  
-    );  
+    const savedTheme =
+        localStorage.getItem(
+            "sociologyTheme"
+        );
 
 
-if (  
-    savedTheme === "dark"  
-) {  
+    if (
+        savedTheme === "dark"
+    ) {
 
-    document.body.classList.add(  
-        "dark"  
-    );  
+        document.body.classList.add(
+            "dark"
+        );
 
-} else {  
+    } else {
 
-    document.body.classList.remove(  
-        "dark"  
-    );  
+        document.body.classList.remove(
+            "dark"
+        );
 
-}  
+    }
 
 
-updateThemeButton();
+    updateThemeButton();
 
 }
 
-/* ---------- TOGGLE THEME ---------- */
+
+function toggleTheme() {
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+    const isDark =
+        document.body.classList.contains(
+            "dark"
+        );
+
+
+    localStorage.setItem(
+        "sociologyTheme",
+        isDark
+            ? "dark"
+            : "light"
+    );
+
+
+    updateThemeButton();
+
+
+    console.log(
+        isDark
+            ? "🌙 Dark mode enabled."
+            : "☀️ Light mode enabled."
+    );
+
+}
+
 
 window.toggleTheme =
-function () {
-
-document.body.classList.toggle(  
-        "dark"  
-    );  
+    toggleTheme;
 
 
-    const darkMode =  
-        document.body.classList.contains(  
-            "dark"  
-        );  
+themeBtn?.addEventListener(
+    "click",
+    toggleTheme
+);
 
-
-    localStorage.setItem(  
-        "sociologyTheme",  
-        darkMode  
-            ? "dark"  
-            : "light"  
-    );  
-
-
-    updateThemeButton();  
-
-};
 
 /* =========================================================
-SEARCH
-========================================================= */
+   SEARCH
+   ========================================================= */
 
 function searchWebsite() {
 
-if (!searchBar)  
-    return;  
+    if (!searchBar) {
+
+        return;
+
+    }
 
 
-const q =  
-    searchBar.value  
-        .toLowerCase()  
-        .trim();  
+    const q =
+        searchBar.value
+            .toLowerCase()
+            .trim();
 
 
-let visible = 0;  
+    let visible =
+        0;
 
 
-document.querySelectorAll(  
-    "#postsContainer > div, " +  
-    "#news .card, " +  
-    "#events .event-card"  
-).forEach(  
-    (element) => {  
+    document.querySelectorAll(
+        "#postsContainer > div, " +
+        "#news .card, " +
+        "#events .event-card"
+    ).forEach(
+        (element) => {
 
-        const match =  
-            !q ||  
-            element.textContent  
-                .toLowerCase()  
-                .includes(q);  
+            const text =
+                element.textContent
+                    .toLowerCase();
 
 
-        element.style.display =  
-            match  
-                ? ""  
-                : "none";  
+            const match =
+                !q ||
+                text.includes(q);
 
 
-        if (match) {  
-
-            visible++;  
-
-        }  
-
-    }  
-);  
+            element.style.display =
+                match
+                    ? ""
+                    : "none";
 
 
-const resources =  
-    document.getElementById(  
-        "resources"  
-    );  
+            if (match) {
+
+                visible++;
+
+            }
+
+        }
+    );
 
 
-if (resources) {  
-
-    const match =  
-        !q ||  
-        resources.textContent  
-            .toLowerCase()  
-            .includes(q);  
+    const resources =
+        document.getElementById(
+            "resources"
+        );
 
 
-    resources.style.display =  
-        match  
-            ? ""  
-            : "none";  
+    if (resources) {
 
-}  
-
-
-const counter =  
-    document.getElementById(  
-        "searchCount"  
-    );  
+        const match =
+            !q ||
+            resources.textContent
+                .toLowerCase()
+                .includes(q);
 
 
-if (counter) {  
+        resources.style.display =
+            match
+                ? ""
+                : "none";
 
-    counter.textContent =  
-        q  
-            ? `${visible} results found`  
-            : "";  
+    }
+
+
+    const counter =
+        document.getElementById(
+            "searchCount"
+        );
+
+
+    if (counter) {
+
+        counter.textContent =
+            q
+                ? `${visible} results found`
+                : "";
+
+    }
 
 }
 
-}
 
 searchBar?.addEventListener(
-"input",
-searchWebsite
+    "input",
+    searchWebsite
 );
 
+
 /* =========================================================
-NOTIFICATIONS
-========================================================= */
+   NOTIFICATIONS
+   ========================================================= */
 
 function updateNotificationBadge() {
 
-if (!notifyBtn)  
-    return;  
+    if (!notifyBtn) {
+
+        return;
+
+    }
 
 
-const list =  
-    JSON.parse(  
-        localStorage.getItem(  
-            "sc_notify"  
-        )  
-    ) || [];  
+    const notifications =
+        JSON.parse(
+            localStorage.getItem(
+                "sc_notify"
+            )
+        ) || [];
 
 
-notifyBtn.innerHTML =  
-    list.length  
-        ? `🔔 <span style="color:red">${list.length}</span>`  
-        : "🔔";
+    notifyBtn.innerHTML =
+        notifications.length
+            ? `🔔 <span style="color:red;font-weight:bold;">${notifications.length}</span>`
+            : "🔔";
 
 }
 
+
+function showNotifications() {
+
+    const notifications =
+        JSON.parse(
+            localStorage.getItem(
+                "sc_notify"
+            )
+        ) || [];
+
+
+    if (
+        notifications.length === 0
+    ) {
+
+        alert(
+            "🔔 No new notifications."
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "🔔 Notifications\n\n" +
+        notifications
+            .slice(0, 10)
+            .join("\n\n")
+    );
+
+}
+
+
 window.showNotifications =
-function () {
-
-const list =  
-        JSON.parse(  
-            localStorage.getItem(  
-                "sc_notify"  
-            )  
-        ) || [];  
+    showNotifications;
 
 
-    if (list.length === 0) {  
+notifyBtn?.addEventListener(
+    "click",
+    showNotifications
+);
 
-        alert(  
-            "🔔 No new notifications."  
-        );  
-
-        return;  
-
-    }  
-
-
-    alert(  
-        "🔔 Notifications\n\n" +  
-        list  
-            .slice(0, 10)  
-            .join("\n\n")  
-    );  
-
-};
 
 /* =========================================================
-VOICE INPUT
-========================================================= */
+   VOICE INPUT
+   ========================================================= */
 
-let recognition = null;
-
-if (
-"webkitSpeechRecognition"
-in window
-) {
-
-recognition =  
-    new webkitSpeechRecognition();  
+let recognition =
+    null;
 
 
-recognition.lang =  
-    "en-US";  
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
 
-recognition.continuous =  
-    false;  
+if (SpeechRecognition) {
+
+    recognition =
+        new SpeechRecognition();
 
 
-recognition.interimResults =  
-    false;  
+    recognition.lang =
+        "en-US";
 
 
-micBtn?.addEventListener(  
-    "click",  
-    () => {  
-
-        try {  
-
-            recognition.start();  
+    recognition.continuous =
+        false;
 
 
-            if (micBtn) {  
-
-                micBtn.textContent =  
-                    "🔴";  
-
-            }  
-
-        } catch (error) {  
-
-            console.log(  
-                "Voice already running."  
-            );  
-
-        }  
-
-    }  
-);  
+    recognition.interimResults =
+        false;
 
 
-recognition.onresult =  
-    (event) => {  
+    micBtn?.addEventListener(
+        "click",
+        () => {
 
-        if (!userInput)  
-            return;  
+            try {
 
-
-        userInput.value =  
-            event.results[0][0]  
-                .transcript;  
+                recognition.start();
 
 
-        userInput.focus();  
+                if (micBtn) {
+
+                    micBtn.textContent =
+                        "🔴";
+
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Voice already running."
+                );
+
+            }
+
+        }
+    );
 
 
-        if (micBtn) {  
+    recognition.onresult =
+        (event) => {
 
-            micBtn.textContent =  
-                "🎤";  
+            if (!userInput) {
 
-        }  
+                return;
 
-    };  
-
-
-recognition.onend =  
-    () => {  
-
-        if (micBtn) {  
-
-            micBtn.textContent =  
-                "🎤";  
-
-        }  
-
-    };  
+            }
 
 
-recognition.onerror =  
-    () => {  
+            userInput.value =
+                event.results[0][0]
+                    .transcript;
 
-        if (micBtn) {  
 
-            micBtn.textContent =  
-                "🎤";  
+            userInput.focus();
 
-        }  
 
-    };
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onend =
+        () => {
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        (error) => {
+
+            console.log(
+                "Voice error:",
+                error
+            );
+
+
+            if (micBtn) {
+
+                micBtn.textContent =
+                    "🎤";
+
+            }
+
+        };
 
 } else {
 
-if (micBtn) {  
+    if (micBtn) {
 
-    micBtn.title =  
-        "Voice input is not supported.";  
+        micBtn.title =
+            "Voice input is not supported by this browser.";
+
+    }
 
 }
 
-}
 
 /* =========================================================
-START
-========================================================= */
+   LOGOUT
+   ========================================================= */
+
+logoutBtn?.addEventListener(
+    "click",
+    async () => {
+
+        try {
+
+            const {
+                signOut
+            } = await import(
+                "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js"
+            );
+
+
+            await signOut(
+                auth
+            );
+
+
+            alert(
+                "✅ Logged out successfully."
+            );
+
+
+            window.location.href =
+                "index.html";
+
+
+        } catch (error) {
+
+            console.error(
+                "❌ Logout error:",
+                error
+            );
+
+
+            alert(
+                "Logout failed:\n\n" +
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   KEYBOARD SHORTCUT
+   ========================================================= */
 
 document.addEventListener(
-"DOMContentLoaded",
-() => {
+    "keydown",
+    (event) => {
 
-applySavedTheme();  
+        if (
+            event.ctrlKey &&
+            event.key.toLowerCase() === "k"
+        ) {
 
-    updateNotificationBadge();  
+            event.preventDefault();
 
+            searchBar?.focus();
 
-    document.addEventListener(  
-        "keydown",  
-        (event) => {  
+        }
 
-            if (  
-                event.ctrlKey &&  
-                event.key.toLowerCase() === "k"  
-            ) {  
-
-                event.preventDefault();  
-
-                searchBar?.focus();  
-
-            }  
-
-        }  
-    );  
+    }
+);
 
 
-    console.log(  
-        "✅ Sociology Connect Professional Script Loaded."  
-    );  
+/* =========================================================
+   START
+   ========================================================= */
 
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    console.log(  
-        "✅ Firebase Post System Loaded."  
-    );  
+        applySavedTheme();
 
-}
+        updateNotificationBadge();
 
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "✅ Sociology Connect loaded."
+        );
+
+        console.log(
+            "✅ Firebase connected."
+        );
+
+        console.log(
+            "✅ Post system loaded."
+        );
+
+        console.log(
+            "❤️ Like system loaded."
+        );
+
+        console.log(
+            "💬 Comment system loaded."
+        );
+
+        console.log(
+            "📤 Share system loaded."
+        );
+
+        console.log(
+            "🤖 AI Mari loaded."
+        );
+
+        console.log(
+            "🌙 Dark Mode loaded."
+        );
+
+        console.log(
+            "🔎 Search loaded."
+        );
+
+        console.log(
+            "🔔 Notifications loaded."
+        );
+
+        console.log(
+            "🎤 Voice system loaded."
+        );
+
+        console.log(
+            "================================"
+        );
+
+    }
 );

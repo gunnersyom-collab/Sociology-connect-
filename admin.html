@@ -773,7 +773,6 @@ window.addNews = async()=>{
 
 };
 
-
 /* ================= LOAD NEWS ================= */
 
 async function loadNews(){
@@ -830,6 +829,13 @@ async function loadNews(){
           <p>
             ${escapeHTML(data.description)}
           </p>
+
+          <button
+            onclick="editNews('${item.id}')">
+
+            ✏️ Edit
+
+          </button>
 
           <button
             class="delete-btn"
@@ -896,7 +902,53 @@ async(id)=>{
   }
 
 };
+/* ================= EDIT NEWS ================= */
 
+window.editNews =
+async(id)=>{
+
+  const title =
+    prompt("Enter new news title:");
+
+  if(title === null || !title.trim()){
+    return;
+  }
+
+  const description =
+    prompt("Enter new news description:");
+
+  if(description === null || !description.trim()){
+    return;
+  }
+
+  try{
+
+    await setDoc(
+      doc(db,"news",id),
+      {
+        title: title.trim(),
+        description: description.trim()
+      },
+      { merge:true }
+    );
+
+    status.textContent =
+      "✅ News updated successfully!";
+
+    await loadNews();
+
+    await updateStats();
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent =
+      "❌ Could not update news.";
+
+  }
+
+};
 
 /* ================= ADD EVENT ================= */
 
@@ -1047,6 +1099,13 @@ async function loadEvents(){
           </small>
 
           <button
+            onclick="editEvent('${item.id}')">
+
+            ✏️ Edit
+
+          </button>
+
+          <button
             class="delete-btn"
             onclick="deleteEvent('${item.id}')">
 
@@ -1071,7 +1130,6 @@ async function loadEvents(){
   }
 
 }
-
 
 /* ================= DELETE EVENT ================= */
 
@@ -1112,7 +1170,61 @@ async(id)=>{
 
 };
 
+/* ================= EDIT EVENT ================= */
 
+window.editEvent =
+async(id)=>{
+
+  const title =
+    prompt("Enter new event title:");
+
+  if(title === null || !title.trim()){
+    return;
+  }
+
+  const description =
+    prompt("Enter new event description:");
+
+  if(description === null || !description.trim()){
+    return;
+  }
+
+  const date =
+    prompt("Enter new event date (YYYY-MM-DD):");
+
+  if(date === null || !date.trim()){
+    return;
+  }
+
+  try{
+
+    await setDoc(
+      doc(db,"events",id),
+      {
+        title: title.trim(),
+        description: description.trim(),
+        date: date.trim()
+      },
+      { merge:true }
+    );
+
+    status.textContent =
+      "✅ Event updated successfully!";
+
+    await loadEvents();
+
+    await updateStats();
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent =
+      "❌ Could not update event.";
+
+  }
+
+};
 /* ================= CLEAR ALL POSTS ================= */
 
 window.clearAllPosts =

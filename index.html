@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,7 +10,6 @@
 <meta name="description"
 content="Sociology Connect is an academic and social platform for Sociology and Social Work students at Arsi University.">
 
-<!-- MAIN CSS FILE -->
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -32,81 +32,41 @@ body{
     font-family:Arial,sans-serif;
     background:#f5f7fa;
     color:#222;
-    transition:
-        background .3s ease,
-        color .3s ease;
+    transition:background .3s ease,color .3s ease;
 }
 
+
 /* =========================================================
-   HEADER 2.0
+   HEADER
    ========================================================= */
 
 header{
     background:linear-gradient(135deg,#0d6efd,#00b4ff);
     color:white;
     padding:20px;
+    text-align:center;
 }
 
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.brand img{
-    width:55px;
-    height:55px;
-    border-radius:12px;
+header > img{
+    width:65px;
+    height:65px;
+    border-radius:15px;
     object-fit:contain;
-}
-
-.brand h1{
-    font-size:24px;
-    margin:0;
-}
-
-.brand small{
-    opacity:.9;
-}
-
-.top-icons{
-    display:flex;
-    gap:10px;
-}
-
-.icon-btn,
-.avatar-link{
-    width:42px;
-    height:42px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:rgba(255,255,255,.18);
-    border:none;
-    border-radius:50%;
-    color:white;
-    text-decoration:none;
-    font-size:18px;
-}
-
-.hero-card{
-    margin-top:18px;
-    background:rgba(255,255,255,.15);
-    padding:18px;
-    border-radius:20px;
-    backdrop-filter:blur(10px);
-}
-
-.hero-card h2{
     margin-bottom:8px;
 }
 
+header h1{
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+header p{
+    margin-top:5px;
+}
+
+header strong{
+    color:white;
+}
 
 
 /* =========================================================
@@ -131,7 +91,7 @@ nav a{
     color:white;
     text-decoration:none;
     font-weight:bold;
-    padding:7px 9px;
+    padding:7px 10px;
     border-radius:8px;
 }
 
@@ -143,15 +103,33 @@ nav a:hover{
     background:white;
     color:#007bff;
     border:none;
-    padding:7px 12px;
+    padding:8px 13px;
     border-radius:20px;
     cursor:pointer;
     font-weight:bold;
 }
 
+.nav-btn:hover{
+    background:#eaf3ff;
+}
+
 #userInfo{
     color:white;
     font-weight:bold;
+}
+
+
+/* =========================================================
+   NAV ACTIONS
+   ========================================================= */
+
+.nav-actions{
+    background:#007bff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    padding:8px;
 }
 
 
@@ -171,6 +149,11 @@ nav a:hover{
     border:1px solid #ccc;
     border-radius:25px;
     font-size:15px;
+    outline:none;
+}
+
+#searchBar:focus{
+    border-color:#007bff;
 }
 
 
@@ -185,9 +168,7 @@ section{
     max-width:1000px;
     border-radius:15px;
     box-shadow:0 3px 10px rgba(0,0,0,.08);
-    transition:
-        background .3s ease,
-        color .3s ease;
+    transition:background .3s ease,color .3s ease;
 }
 
 section h2{
@@ -240,7 +221,7 @@ section ol{
 
 
 /* =========================================================
-   POST
+   POST COMPOSER
    ========================================================= */
 
 .post-composer{
@@ -263,21 +244,24 @@ section ol{
     margin-bottom:10px;
 }
 
-textarea,
-input{
+#postInput{
     width:100%;
+    min-height:100px;
     padding:12px;
     border:1px solid #ccc;
     border-radius:10px;
     font-size:15px;
-}
-
-textarea{
-    min-height:100px;
     resize:vertical;
+    outline:none;
+    font-family:Arial,sans-serif;
 }
 
-button{
+#postInput:focus{
+    border-color:#007bff;
+}
+
+#postBtn{
+    margin-top:10px;
     background:#007bff;
     color:white;
     padding:10px 18px;
@@ -287,13 +271,24 @@ button{
     font-weight:bold;
 }
 
-button:hover{
+#postBtn:hover{
     background:#0056b3;
 }
 
+#postBtn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+
+/* =========================================================
+   POSTS
+   ========================================================= */
+
 #postsContainer{
     max-width:650px;
-    margin:auto;
+    margin:20px auto;
+    padding:0 10px;
 }
 
 .post-card{
@@ -302,6 +297,7 @@ button:hover{
     border-radius:15px;
     box-shadow:0 3px 10px rgba(0,0,0,.08);
     margin:15px auto;
+    word-wrap:break-word;
 }
 
 .post-header{
@@ -314,8 +310,32 @@ button:hover{
 .post-avatar{
     width:45px;
     height:45px;
+    min-width:45px;
     border-radius:50%;
     object-fit:cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#007bff;
+    color:white;
+    font-weight:bold;
+}
+
+.post-name{
+    font-weight:bold;
+    color:#222;
+}
+
+.post-time{
+    font-size:12px;
+    color:#777;
+    margin-top:3px;
+}
+
+.post-text{
+    margin-top:10px;
+    line-height:1.7;
+    white-space:pre-wrap;
 }
 
 .post-actions{
@@ -330,6 +350,8 @@ button:hover{
     background:none;
     color:#007bff;
     padding:6px;
+    border:none;
+    cursor:pointer;
 }
 
 
@@ -406,32 +428,19 @@ button:hover{
     border-radius:15px;
     padding:18px;
     box-shadow:0 3px 10px rgba(0,0,0,.08);
-    transition:
-        background .3s ease,
-        color .3s ease;
 }
-
-
-/* Chat history */
 
 #chat-history{
     height:280px;
     overflow-y:auto;
     overflow-x:hidden;
-    background:#f8f8f8 !important;
-    color:#111111 !important;
+    background:#f8f8f8;
+    color:#111;
     padding:12px;
     border-radius:10px;
     margin-bottom:10px;
     border:1px solid #e0e0e0;
-    transition:
-        background .3s ease,
-        color .3s ease,
-        border-color .3s ease;
 }
-
-
-/* All messages */
 
 #chat-history .message{
     margin:10px 0;
@@ -443,53 +452,47 @@ button:hover{
     overflow-wrap:break-word;
 }
 
-
-/* User */
-
 #chat-history .message.user{
-    background:#007bff !important;
-    color:#ffffff !important;
+    background:#007bff;
+    color:white;
     margin-left:auto;
     margin-right:0;
-    border:none !important;
 }
-
-#chat-history .message.user,
-#chat-history .message.user *{
-    color:#ffffff !important;
-}
-
-
-/* AI - LIGHT MODE */
 
 #chat-history .message.ai{
-    background:#ffffff !important;
-    color:#111111 !important;
-    border:1px solid #dddddd !important;
+    background:white;
+    color:#111;
+    border:1px solid #ddd;
     margin-left:0;
     margin-right:auto;
 }
 
-#chat-history .message.ai,
-#chat-history .message.ai *{
-    color:#111111 !important;
-}
-
-
-/* Copy button */
-
 #chat-history .copy-btn{
-    background:#007bff !important;
-    color:#ffffff !important;
-    border:none !important;
+    background:#007bff;
+    color:white;
+    border:none;
     border-radius:8px;
     padding:6px 12px;
     margin-top:8px;
     cursor:pointer;
 }
 
-#chat-history .copy-btn:hover{
-    background:#0056b3 !important;
+.chat-input{
+    display:flex;
+    gap:7px;
+}
+
+.chat-input input{
+    flex:1;
+}
+
+.chat-input button{
+    background:#007bff;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
 }
 
 
@@ -499,153 +502,95 @@ button:hover{
 
 body.dark{
     background:#121212 !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
-
-
-/* Sections */
 
 body.dark section{
     background:#1d1d1d !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
 
 body.dark section h2{
     color:#4aa3ff !important;
 }
 
-
-/* Post composer */
-
 body.dark .post-composer{
     background:#1d1d1d !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
 
-
-/* Inputs */
-
-body.dark textarea,
+body.dark #postInput,
 body.dark input,
 body.dark #searchBar{
     background:#2b2b2b !important;
-    color:#ffffff !important;
-    border-color:#555555 !important;
+    color:#fff !important;
+    border-color:#555 !important;
 }
 
-body.dark textarea::placeholder,
+body.dark #postInput::placeholder,
 body.dark input::placeholder{
-    color:#aaaaaa !important;
+    color:#aaa !important;
 }
-
-
-/* Cards */
 
 body.dark .card,
 body.dark .event-card,
 body.dark .resource-box,
 body.dark .post-card{
     background:#2b2b2b !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
 
+body.dark .post-name{
+    color:#fff !important;
+}
 
-/* Contact */
+body.dark .post-time{
+    color:#aaa !important;
+}
+
+body.dark .post-actions{
+    border-color:#444 !important;
+}
 
 body.dark .contact-section{
     background:#1d1d1d !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
-
-
-/* Chat container */
 
 body.dark #chat-container{
     background:#1d1d1d !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
-
-
-/* =========================================================
-   DARK MODE - AI MARI
-   ========================================================= */
 
 body.dark #chat-history{
-    background:#111111 !important;
-    color:#ffffff !important;
-    border:1px solid #333333 !important;
+    background:#111 !important;
+    color:#fff !important;
+    border-color:#333 !important;
 }
-
-
-/* AI response */
 
 body.dark #chat-history .message.ai{
     background:#2b2b2b !important;
-    color:#ffffff !important;
-    border:1px solid #555555 !important;
+    color:#fff !important;
+    border-color:#555 !important;
 }
-
-
-/* AI response text */
-
-body.dark #chat-history .message.ai,
-body.dark #chat-history .message.ai *,
-body.dark #chat-history .message.ai b,
-body.dark #chat-history .message.ai strong,
-body.dark #chat-history .message.ai p,
-body.dark #chat-history .message.ai span,
-body.dark #chat-history .message.ai div,
-body.dark #chat-history .message.ai li,
-body.dark #chat-history .message.ai i{
-    color:#ffffff !important;
-}
-
-
-/* User response */
 
 body.dark #chat-history .message.user{
     background:#007bff !important;
-    color:#ffffff !important;
-}
-
-body.dark #chat-history .message.user,
-body.dark #chat-history .message.user *{
-    color:#ffffff !important;
-}
-
-
-/* Copy button */
-
-body.dark #chat-history .copy-btn{
-    background:#0a84d0 !important;
-    color:#ffffff !important;
+    color:#fff !important;
 }
 
 
 /* =========================================================
-   SCROLLBAR
+   FOOTER
    ========================================================= */
 
-#chat-history::-webkit-scrollbar{
-    width:7px;
-}
-
-#chat-history::-webkit-scrollbar-track{
-    background:#eeeeee;
-    border-radius:10px;
-}
-
-#chat-history::-webkit-scrollbar-thumb{
-    background:#bbbbbb;
-    border-radius:10px;
-}
-
-body.dark #chat-history::-webkit-scrollbar-track{
-    background:#1a1a1a;
-}
-
-body.dark #chat-history::-webkit-scrollbar-thumb{
-    background:#555555;
+footer{
+    text-align:center;
+    background:#007bff;
+    color:white;
+    padding:25px 15px;
+    margin-top:30px;
+    line-height:1.8;
 }
 
 
@@ -667,6 +612,10 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
         font-size:13px;
     }
 
+    .nav-actions{
+        flex-wrap:wrap;
+    }
+
     section{
         margin:12px 10px;
         padding:16px;
@@ -674,6 +623,10 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
 
     .post-composer,
     #chat-container{
+        margin:15px 10px;
+    }
+
+    #postsContainer{
         margin:15px 10px;
     }
 
@@ -699,19 +652,24 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
 
 <body>
 
+
 <!-- =========================================================
      HEADER
      ========================================================= -->
 
 <header>
 
-<img src="1781866925745.png" alt="Sociology Connect Logo">
+    <img
+        src="1781866925745.png"
+        alt="Sociology Connect Logo">
 
-<h1>Sociology Connect</h1>
+    <h1>Sociology Connect</h1>
 
-<p>Arsi University – Sociology &amp; Social Work</p>
+    <p>Arsi University – Sociology &amp; Social Work</p>
 
-<p>Created by <strong>Horsa Gowe</strong></p>
+    <p>
+        Created by <strong>Horsa Gowe</strong>
+    </p>
 
 </header>
 
@@ -736,35 +694,44 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
 
     <a href="profile.html">👤 Profile</a>
 
-    <a href="login.html" id="loginLink">🔐 Login</a>
+    <a href="login.html" id="loginLink">
+        🔐 Login
+    </a>
 
     <span id="userInfo"></span>
 
 </nav>
 
-<button
-    id="logoutBtn"
-    class="nav-btn"
-    style="display:none;"
-    onclick="logout()">
-    Logout
-</button>
 
-<button
-    id="notifyBtn"
-    class="nav-btn"
-    onclick="showNotifications()">
-    🔔
-</button>
+<!-- =========================================================
+     NAV ACTION BUTTONS
+     ========================================================= -->
 
-<button
-    id="themeBtn"
-    class="nav-btn"
-    onclick="toggleTheme()">
-    🌙
-</button>
+<div class="nav-actions">
 
-</nav>
+    <button
+        id="logoutBtn"
+        class="nav-btn"
+        type="button"
+        style="display:none;">
+        Logout
+    </button>
+
+    <button
+        id="notifyBtn"
+        class="nav-btn"
+        type="button">
+        🔔
+    </button>
+
+    <button
+        id="themeBtn"
+        class="nav-btn"
+        type="button">
+        🌙
+    </button>
+
+</div>
 
 
 <!-- =========================================================
@@ -773,11 +740,10 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
 
 <div class="search-container">
 
-<input
-    id="searchBar"
-    type="search"
-    placeholder="🔎 Search posts, topics and resources..."
->
+    <input
+        id="searchBar"
+        type="search"
+        placeholder="🔎 Search posts, topics and resources...">
 
 </div>
 
@@ -788,43 +754,43 @@ body.dark #chat-history::-webkit-scrollbar-thumb{
 
 <section id="news">
 
-<h2>📰 Latest News</h2>
+    <h2>📰 Latest News</h2>
 
-<div class="news-grid">
+    <div class="news-grid">
 
-<div class="card">
+        <div class="card">
 
-<h3>📢 Department Announcements</h3>
+            <h3>📢 Department Announcements</h3>
 
-<p>
-New seminars, research opportunities and student updates.
-</p>
+            <p>
+                New seminars, research opportunities and student updates.
+            </p>
 
-</div>
-
-
-<div class="card">
-
-<h3>🎓 Academic Updates</h3>
-
-<p>
-Latest Sociology &amp; Social Work learning information.
-</p>
-
-</div>
+        </div>
 
 
-<div class="card">
+        <div class="card">
 
-<h3>🔬 Research Opportunities</h3>
+            <h3>🎓 Academic Updates</h3>
 
-<p>
-Research proposal guidance and opportunities.
-</p>
+            <p>
+                Latest Sociology &amp; Social Work learning information.
+            </p>
 
-</div>
+        </div>
 
-</div>
+
+        <div class="card">
+
+            <h3>🔬 Research Opportunities</h3>
+
+            <p>
+                Research proposal guidance and opportunities.
+            </p>
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -835,22 +801,22 @@ Research proposal guidance and opportunities.
 
 <div class="post-composer">
 
-<h3>💬 Share with the Community</h3>
+    <h3>💬 Share with the Community</h3>
 
-<p>
-Share academic ideas,
-announcements,
-questions and useful information.
-</p>
+    <p>
+        Share academic ideas, announcements,
+        questions and useful information.
+    </p>
 
-<textarea
-    id="postInput"
-    placeholder="What would you like to share today?">
-</textarea>
+    <textarea
+        id="postInput"
+        placeholder="What would you like to share today?"></textarea>
 
-<button onclick="createPost()">
-📤 Post
-</button>
+    <button
+        id="postBtn"
+        type="button">
+        📤 Post
+    </button>
 
 </div>
 
@@ -868,15 +834,15 @@ questions and useful information.
 
 <section id="trending">
 
-<h2>🔥 Trending Posts</h2>
+    <h2>🔥 Trending Posts</h2>
 
-<p style="color:#777;">
-Popular posts based on likes and comments.
-</p>
+    <p style="color:#777;">
+        Popular posts based on likes and comments.
+    </p>
 
-<div class="card">
-Trending posts will appear here.
-</div>
+    <div class="card">
+        Trending posts will appear here.
+    </div>
 
 </section>
 
@@ -887,13 +853,13 @@ Trending posts will appear here.
 
 <section id="about">
 
-<h2>About Sociology Connect</h2>
+    <h2>About Sociology Connect</h2>
 
-<p>
-Sociology Connect supports Sociology and Social Work students
-through academic resources, research guidance, communication
-and community engagement.
-</p>
+    <p>
+        Sociology Connect supports Sociology and Social Work
+        students through academic resources, research guidance,
+        communication and community engagement.
+    </p>
 
 </section>
 
@@ -904,17 +870,21 @@ and community engagement.
 
 <section id="features">
 
-<h2>🌟 Our Core Pillars</h2>
+    <h2>🌟 Our Core Pillars</h2>
 
-<ul>
+    <ul>
 
-<li>📚 Academic Resources</li>
-<li>🔬 Research Support</li>
-<li>💻 Techno-Sociology</li>
-<li>🤝 Community Engagement</li>
-<li>👥 Student Communication</li>
+        <li>📚 Academic Resources</li>
 
-</ul>
+        <li>🔬 Research Support</li>
+
+        <li>💻 Techno-Sociology</li>
+
+        <li>🤝 Community Engagement</li>
+
+        <li>👥 Student Communication</li>
+
+    </ul>
 
 </section>
 
@@ -925,19 +895,25 @@ and community engagement.
 
 <section id="research-guide">
 
-<h2>🔬 Research Guide</h2>
+    <h2>🔬 Research Guide</h2>
 
-<ol>
+    <ol>
 
-<li>Choose a research topic</li>
-<li>Review literature</li>
-<li>Create research questions</li>
-<li>Design methodology</li>
-<li>Collect data</li>
-<li>Analyze findings</li>
-<li>Write and cite properly</li>
+        <li>Choose a research topic</li>
 
-</ol>
+        <li>Review literature</li>
+
+        <li>Create research questions</li>
+
+        <li>Design methodology</li>
+
+        <li>Collect data</li>
+
+        <li>Analyze findings</li>
+
+        <li>Write and cite properly</li>
+
+    </ol>
 
 </section>
 
@@ -948,54 +924,54 @@ and community engagement.
 
 <section id="events">
 
-<h2>📅 Events &amp; Deadlines</h2>
+    <h2>📅 Events &amp; Deadlines</h2>
 
-<div class="event-grid">
+    <div class="event-grid">
 
-<div class="event-card">
+        <div class="event-card">
 
-<strong>📄 Research Proposal</strong>
+            <strong>📄 Research Proposal</strong>
 
-<br>
+            <br>
 
-Proposal updates.
+            Proposal updates.
 
-</div>
-
-
-<div class="event-card">
-
-<strong>🎤 Department Seminar</strong>
-
-<br>
-
-Seminar information.
-
-</div>
+        </div>
 
 
-<div class="event-card">
+        <div class="event-card">
 
-<strong>👥 Student Meeting</strong>
+            <strong>🎤 Department Seminar</strong>
 
-<br>
+            <br>
 
-Meeting announcements.
+            Seminar information.
 
-</div>
+        </div>
 
 
-<div class="event-card">
+        <div class="event-card">
 
-<strong>🎓 Graduation Updates</strong>
+            <strong>👥 Student Meeting</strong>
 
-<br>
+            <br>
 
-Graduation information.
+            Meeting announcements.
 
-</div>
+        </div>
 
-</div>
+
+        <div class="event-card">
+
+            <strong>🎓 Graduation Updates</strong>
+
+            <br>
+
+            Graduation information.
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -1006,9 +982,9 @@ Graduation information.
 
 <div class="image-wrapper">
 
-<img
-    src="social-workers-can-help.png"
-    alt="Social workers can help">
+    <img
+        src="social-workers-can-help.png"
+        alt="Social workers can help">
 
 </div>
 
@@ -1019,28 +995,28 @@ Graduation information.
 
 <section id="resources">
 
-<h2>📚 Academic Resources</h2>
+    <h2>📚 Academic Resources</h2>
 
-<p>
-Access useful Sociology and Social Work learning materials.
-</p>
+    <p>
+        Access useful Sociology and Social Work learning materials.
+    </p>
 
-<div class="resource-box">
+    <div class="resource-box">
 
-<strong>📄 Research Proposal</strong>
+        <strong>📄 Research Proposal</strong>
 
-<p>
-Open the available proposal document.
-</p>
+        <p>
+            Open the available proposal document.
+        </p>
 
-<a
-    href="IBRO PROP (3).pdf"
-    target="_blank"
-    class="download-btn">
-    📥 Open Proposal
-</a>
+        <a
+            href="IBRO PROP (3).pdf"
+            target="_blank"
+            class="download-btn">
+            📥 Open Proposal
+        </a>
 
-</div>
+    </div>
 
 </section>
 
@@ -1053,36 +1029,36 @@ Open the available proposal document.
     id="contact"
     class="contact-section">
 
-<h2>📞 Contact Sociology Connect</h2>
+    <h2>📞 Contact Sociology Connect</h2>
 
-<p>📧 Gunnersyom@gmail.com</p>
+    <p>📧 Gunnersyom@gmail.com</p>
 
-<p>📱 0934919856</p>
-
-<form
-    action="https://formspree.io/f/mppwdjda"
-    method="POST">
-
-<textarea
-    name="comment"
-    rows="5"
-    placeholder="Write your message..."
-    required>
-</textarea>
-
-<button type="submit">
-📤 Submit Message
-</button>
-
-</form>
+    <p>📱 0934919856</p>
 
 
-<a
-    class="telegram-btn"
-    href="https://t.me/HorsaGowe"
-    target="_blank">
-    ✈️ Connect on Telegram
-</a>
+    <form
+        action="https://formspree.io/f/mppwdjda"
+        method="POST">
+
+        <textarea
+            name="comment"
+            rows="5"
+            placeholder="Write your message..."
+            required></textarea>
+
+        <button type="submit">
+            📤 Submit Message
+        </button>
+
+    </form>
+
+
+    <a
+        class="telegram-btn"
+        href="https://t.me/HorsaGowe"
+        target="_blank">
+        ✈️ Connect on Telegram
+    </a>
 
 </section>
 
@@ -1093,49 +1069,48 @@ Open the available proposal document.
 
 <section id="chat-container">
 
-<h2>🤖 AI Mari</h2>
+    <h2>🤖 AI Mari</h2>
 
-<p style="color:#777;margin-bottom:10px;">
-Ask questions in Afaan Oromoo,
-Amharic or English.
-</p>
-
-
-<div id="chat-history">
-
-<div class="message ai">
-
-<b>AI Mari</b><br>
-
-Hello! 👋 I can help you in Afaan Oromoo,
-Amharic and English.
-
-</div>
-
-</div>
+    <p style="color:#777;margin-bottom:10px;">
+        Ask questions in Afaan Oromoo,
+        Amharic or English.
+    </p>
 
 
-<div class="chat-input">
+    <div id="chat-history">
 
-<input
-    id="userInput"
-    type="text"
-    placeholder="Ask your question..."
->
+        <div class="message ai">
 
-<button
-    id="micBtn"
-    type="button">
-    🎤
-</button>
+            <b>AI Mari</b><br>
 
-<button
-    id="sendBtn"
-    type="button">
-    Send
-</button>
+            Hello! 👋 I can help you in Afaan Oromoo,
+            Amharic and English.
 
-</div>
+        </div>
+
+    </div>
+
+
+    <div class="chat-input">
+
+        <input
+            id="userInput"
+            type="text"
+            placeholder="Ask your question...">
+
+        <button
+            id="micBtn"
+            type="button">
+            🎤
+        </button>
+
+        <button
+            id="sendBtn"
+            type="button">
+            Send
+        </button>
+
+    </div>
 
 </section>
 
@@ -1146,23 +1121,33 @@ Amharic and English.
 
 <footer>
 
-© 2026 Sociology Connect – Arsi University
+    © 2026 Sociology Connect – Arsi University
 
-<br>
+    <br>
 
-Sociology &amp; Social Work
+    Sociology &amp; Social Work
 
-<br>
+    <br>
 
-<small>Created by Horsa Gowe</small>
+    <small>Created by Horsa Gowe</small>
+
 </footer>
+
 
 <!-- =========================================================
      JAVASCRIPT
      ========================================================= -->
 
-<script type="module" src="script.js"></script>
-<script type="module" src="auth.js"></script>
+<script
+    type="module"
+    src="script.js">
+</script>
+
+<script
+    type="module"
+    src="auth.js">
+</script>
+
 
 </body>
 </html>

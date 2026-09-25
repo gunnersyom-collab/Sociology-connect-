@@ -841,46 +841,8 @@ async function loadTrendingPosts() {
                         </div>
                     </div>
 
-                </div>
-
-                <div class="post-text">
-                    ${escapeHTML(post.text)}
-                </div>
-
-                <div class="post-actions">
-
-                    <button disabled>
-                        ❤️ ${post.likes}
-                    </button>
-
-                    <button disabled>
-                        💬 ${post.comments}
-                    </button>
-
-                    <button disabled>
-                        🔥 Popular
-                    </button>
-
-                </div>
-            `;
-
-            trendingContainer.appendChild(card);
-        });
-
-    } catch (error) {
-
-        console.error("TRENDING ERROR:", error);
-
-        trendingContainer.innerHTML = `
-            <div class="post-card">
-                ❌ Unable to load trending posts.
-            </div>
-        `;
-    }
-}
-
+   
 /* =========================================================
-   PART 4
    NEWS
    EVENTS
    AI MARI

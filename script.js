@@ -1,12 +1,19 @@
 /* =========================================================
    SOCIOLOGY CONNECT - SCRIPT.JS
-   AI MARI + FIREBASE POSTS + DARK MODE + SEARCH
-   + VOICE + NOTIFICATIONS
+   AI MARI
+   FIREBASE POSTS
+   LIKE
+   COMMENT
+   SHARE
+   DARK MODE
+   SEARCH
+   VOICE
+   NOTIFICATIONS
    ========================================================= */
 
 
 /* =========================================================
-   FIREBASE IMPORTS
+   FIREBASE
    ========================================================= */
 
 import { auth, db } from "./firebase.js";
@@ -19,7 +26,11 @@ import {
     orderBy,
     onSnapshot,
     doc,
-    getDoc
+    getDoc,
+    getDocs,
+    setDoc,
+    deleteDoc,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
@@ -54,6 +65,16 @@ const postsContainer =
 const postInput =
     document.getElementById("postInput");
 
+const postBtn =
+    document.getElementById("postBtn");
+
+
+/* =========================================================
+   GLOBAL USER
+   ========================================================= */
+
+let currentUser = null;
+
 
 /* =========================================================
    SECURITY
@@ -72,57 +93,68 @@ function escapeHTML(value) {
 
 
 /* =========================================================
-   FIREBASE POSTS
+   DATE FORMAT
    ========================================================= */
 
+function formatPostTime(timestamp) {
 
-/* ================= CREATE POST ================= */
-
-window.createPost = async function () {
-
-    if (!postInput) {
-        console.error(
-            "postInput was not found."
-        );
-        return;
+    if (!timestamp) {
+        return "Just now";
     }
-
-    const text =
-        postInput.value.trim();
-
-    const user =
-        auth.currentUser;
-
-
-    /* ---------- LOGIN CHECK ---------- */
-
-    if (!user) {
-
-        alert(
-            "Please login first."
-        );
-
-        return;
-
-    }
-
-
-    /* ---------- EMPTY POST CHECK ---------- */
-
-    if (!text) {
-
-        alert(
-            "Write something first."
-        );
-
-        return;
-
-    }
-
 
     try {
 
-        /* ---------- GET USER PROFILE ---------- */
+        const date =
+            timestamp.toDate();
+
+        return date.toLocaleString(
+            "en-US",
+            {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }
+        );
+
+    } catch {
+
+        return "Just now";
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+   ========================================================= */
+
+onAuthStateChanged(
+    auth,
+    (user) => {
+
+        currentUser = user;
+
+        console.log(
+            user
+                ? "✅ Logged in: " + user.email
+                : "ℹ️ User not logged in"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   GET USER NAME
+   ========================================================= */
+
+async function getUserName(user) {
+
+    if (!user) {
+        return "Student";
+    }
+
+    try {
 
         const profileSnap =
             await getDoc(
@@ -133,36 +165,116 @@ window.createPost = async function () {
                 )
             );
 
+        if (profileSnap.exists()) {
 
-        const profileData =
-            profileSnap.exists()
-                ? profileSnap.data()
-                : {};
+            const data =
+                profileSnap.data();
+
+            return (
+                data.fullName ||
+                data.name ||
+                user.displayName ||
+                user.email?.split("@")[0] ||
+                "Student"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            "Profile unavailable:",
+            error
+        );
+
+    }
+
+    return (
+        user.displayName ||
+        user.email?.split("@")[0] ||
+        "Student"
+    );
+
+}
 
 
-        /* ---------- USER NAME ---------- */
+/* =========================================================
+   CREATE POST
+   ========================================================= */
+
+async function createPost() {
+
+    if (!postInput) {
+
+        console.error(
+            "❌ postInput not found."
+        );
+
+        return;
+
+    }
+
+
+    const text =
+        postInput.value.trim();
+
+
+    if (!text) {
+
+        alert(
+            "Please write something first."
+        );
+
+        return;
+
+    }
+
+
+    if (!currentUser) {
+
+        alert(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+
+    if (postBtn) {
+
+        postBtn.disabled = true;
+
+        postBtn.textContent =
+            "Posting...";
+
+    }
+
+
+    try {
 
         const name =
-            profileData.fullName ||
-            user.displayName ||
-            (
-                user.email
-                    ? user.email.split("@")[0]
-                    : "Student"
+            await getUserName(
+                currentUser
             );
 
 
-        /* ---------- SAVE POST ---------- */
-
         await addDoc(
-            collection(db, "posts"),
+            collection(
+                db,
+                "posts"
+            ),
             {
 
                 text: text,
 
-                userId: user.uid,
+                userId:
+                    currentUser.uid,
 
                 name: name,
+
+                email:
+                    currentUser.email || "",
 
                 createdAt:
                     serverTimestamp()
@@ -171,42 +283,506 @@ window.createPost = async function () {
         );
 
 
-        /* ---------- CLEAR INPUT ---------- */
-
         postInput.value = "";
 
 
         console.log(
-            "✅ Post created successfully."
+            "✅ POST CREATED"
         );
 
 
     } catch (error) {
 
         console.error(
-            "❌ Create post error:",
+            "❌ CREATE POST ERROR:",
             error
         );
 
         alert(
-            "Post failed: " +
+            "Post failed:\n" +
+            error.message
+        );
+
+    } finally {
+
+        if (postBtn) {
+
+            postBtn.disabled = false;
+
+            postBtn.textContent =
+                "📤 Post";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   POST BUTTON
+   ========================================================= */
+
+if (postBtn) {
+
+    postBtn.addEventListener(
+        "click",
+        createPost
+    );
+
+}
+
+
+/* =========================================================
+   ENTER TO POST
+   ========================================================= */
+
+postInput?.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            createPost();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   LIKE POST
+   ========================================================= */
+
+async function toggleLike(postId, button) {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login to like a post."
+        );
+
+        return;
+
+    }
+
+
+    const likeRef =
+        doc(
+            db,
+            "posts",
+            postId,
+            "likes",
+            currentUser.uid
+        );
+
+
+    try {
+
+        const likeSnap =
+            await getDoc(likeRef);
+
+
+        if (likeSnap.exists()) {
+
+            await deleteDoc(
+                likeRef
+            );
+
+            console.log(
+                "💔 Like removed"
+            );
+
+        } else {
+
+            await setDoc(
+                likeRef,
+                {
+                    userId:
+                        currentUser.uid,
+
+                    createdAt:
+                        serverTimestamp()
+                }
+            );
+
+            console.log(
+                "❤️ Post liked"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "❌ LIKE ERROR:",
+            error
+        );
+
+        alert(
+            "Like failed:\n" +
             error.message
         );
 
     }
 
-};
+}
 
 
 /* =========================================================
-   LOAD POSTS FROM FIRESTORE
+   LOAD LIKE COUNT
    ========================================================= */
 
-if (postsContainer) {
+async function loadLikeCount(
+    postId,
+    likeButton
+) {
+
+    try {
+
+        const likesSnap =
+            await getDocs(
+                collection(
+                    db,
+                    "posts",
+                    postId,
+                    "likes"
+                )
+            );
+
+
+        const count =
+            likesSnap.size;
+
+
+        const liked =
+            currentUser
+                ? likesSnap.docs.some(
+                    d =>
+                        d.id ===
+                        currentUser.uid
+                )
+                : false;
+
+
+        likeButton.textContent =
+            liked
+                ? `❤️ Liked (${count})`
+                : `🤍 Like (${count})`;
+
+
+    } catch (error) {
+
+        console.error(
+            "Like count error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COMMENT POST
+   ========================================================= */
+
+async function commentPost(
+    postId
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login to comment."
+        );
+
+        return;
+
+    }
+
+
+    const comment =
+        prompt(
+            "Write your comment:"
+        );
+
+
+    if (
+        !comment ||
+        !comment.trim()
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const name =
+            await getUserName(
+                currentUser
+            );
+
+
+        await addDoc(
+            collection(
+                db,
+                "posts",
+                postId,
+                "comments"
+            ),
+            {
+
+                text:
+                    comment.trim(),
+
+                userId:
+                    currentUser.uid,
+
+                name:
+                    name,
+
+                createdAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        alert(
+            "✅ Comment added!"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "❌ COMMENT ERROR:",
+            error
+        );
+
+        alert(
+            "Comment failed:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD COMMENTS
+   ========================================================= */
+
+async function loadComments(
+    postId,
+    commentButton,
+    card
+) {
+
+    try {
+
+        const commentsSnap =
+            await getDocs(
+                collection(
+                    db,
+                    "posts",
+                    postId,
+                    "comments"
+                )
+            );
+
+
+        const count =
+            commentsSnap.size;
+
+
+        commentButton.textContent =
+            `💬 Comment (${count})`;
+
+
+        const oldComments =
+            card.querySelector(
+                ".comments-box"
+            );
+
+
+        if (oldComments) {
+            oldComments.remove();
+        }
+
+
+        if (count === 0) {
+            return;
+        }
+
+
+        const commentsBox =
+            document.createElement(
+                "div"
+            );
+
+
+        commentsBox.className =
+            "comments-box";
+
+
+        commentsBox.style.marginTop =
+            "12px";
+
+        commentsBox.style.paddingTop =
+            "10px";
+
+        commentsBox.style.borderTop =
+            "1px solid #ddd";
+
+
+        commentsSnap.forEach(
+            (commentDoc) => {
+
+                const data =
+                    commentDoc.data();
+
+
+                const commentDiv =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                commentDiv.style.padding =
+                    "7px 0";
+
+
+                commentDiv.innerHTML = `
+                    <strong>
+                        ${escapeHTML(
+                            data.name ||
+                            "Student"
+                        )}
+                    </strong>
+                    <br>
+                    <span>
+                        ${escapeHTML(
+                            data.text ||
+                            ""
+                        )}
+                    </span>
+                `;
+
+
+                commentsBox.appendChild(
+                    commentDiv
+                );
+
+            }
+        );
+
+
+        card.appendChild(
+            commentsBox
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Comment loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SHARE POST
+   ========================================================= */
+
+async function sharePost(
+    postId,
+    postText
+) {
+
+    const shareUrl =
+        window.location.href.split("#")[0] +
+        "#post-" +
+        postId;
+
+
+    try {
+
+        if (
+            navigator.share
+        ) {
+
+            await navigator.share(
+                {
+                    title:
+                        "Sociology Connect",
+
+                    text:
+                        postText,
+
+                    url:
+                        shareUrl
+                }
+            );
+
+            return;
+
+        }
+
+
+        await navigator.clipboard.writeText(
+            shareUrl
+        );
+
+
+        alert(
+            "✅ Post link copied!"
+        );
+
+
+    } catch (error) {
+
+        console.log(
+            "Share cancelled or failed:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD POSTS
+   ========================================================= */
+
+function loadPosts() {
+
+    if (!postsContainer) {
+        return;
+    }
+
 
     const postsQuery =
         query(
-            collection(db, "posts"),
+            collection(
+                db,
+                "posts"
+            ),
             orderBy(
                 "createdAt",
                 "desc"
@@ -218,7 +794,7 @@ if (postsContainer) {
 
         postsQuery,
 
-        (snapshot) => {
+        async (snapshot) => {
 
             postsContainer.innerHTML = "";
 
@@ -228,8 +804,9 @@ if (postsContainer) {
                 postsContainer.innerHTML = `
                     <div class="post-card">
                         <p>
-                            No posts yet. Be the first
-                            student to post something! 📚
+                            No posts yet.
+                            Be the first student
+                            to post something! 📚
                         </p>
                     </div>
                 `;
@@ -239,96 +816,221 @@ if (postsContainer) {
             }
 
 
-            snapshot.forEach(
-                (postDoc) => {
+            for (
+                const postDoc
+                of snapshot.docs
+            ) {
 
-                    const post =
-                        postDoc.data();
+                const post =
+                    postDoc.data();
 
-
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    card.className =
-                        "post-card";
+                const postId =
+                    postDoc.id;
 
 
-                    card.innerHTML = `
-
-                        <div class="post-header">
-
-                            <div class="avatar">
-                                👤
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    ${escapeHTML(
-                                        post.name ||
-                                        "Student"
-                                    )}
-                                </strong>
-
-                                <br>
-
-                                <small>
-                                    ${post.createdAt
-                                        ? "Posted"
-                                        : "Just now"}
-                                </small>
-
-                            </div>
-
-                        </div>
-
-
-                        <p>
-                            ${escapeHTML(
-                                post.text || ""
-                            )}
-                        </p>
-
-
-                        <div class="post-actions">
-
-                            <button
-                                type="button"
-                                class="like-btn"
-                            >
-                                ❤️ Like
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="comment-btn"
-                            >
-                                💬 Comment
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="share-btn"
-                            >
-                                📤 Share
-                            </button>
-
-                        </div>
-
-                    `;
-
-
-                    postsContainer.appendChild(
-                        card
+                const card =
+                    document.createElement(
+                        "div"
                     );
 
-                }
-            );
+
+                card.className =
+                    "post-card";
+
+                card.id =
+                    "post-" +
+                    postId;
+
+
+                const firstLetter =
+                    (
+                        post.name ||
+                        "Student"
+                    )
+                    .charAt(0)
+                    .toUpperCase();
+
+
+                card.innerHTML = `
+
+                    <div class="post-header">
+
+                        <div
+                            class="post-avatar"
+                            style="
+                                background:#007bff;
+                                color:white;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-weight:bold;
+                            "
+                        >
+                            ${escapeHTML(
+                                firstLetter
+                            )}
+                        </div>
+
+
+                        <div>
+
+                            <div class="post-name">
+
+                                ${escapeHTML(
+                                    post.name ||
+                                    "Student"
+                                )}
+
+                            </div>
+
+
+                            <div class="post-time">
+
+                                🕐
+                                ${formatPostTime(
+                                    post.createdAt
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="post-text">
+
+                        ${escapeHTML(
+                            post.text ||
+                            ""
+                        )}
+
+                    </div>
+
+
+                    <div class="post-actions">
+
+                        <button
+                            type="button"
+                            class="like-btn"
+                        >
+                            🤍 Like
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="comment-btn"
+                        >
+                            💬 Comment
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="share-btn"
+                        >
+                            📤 Share
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                postsContainer.appendChild(
+                    card
+                );
+
+
+                const likeButton =
+                    card.querySelector(
+                        ".like-btn"
+                    );
+
+
+                const commentButton =
+                    card.querySelector(
+                        ".comment-btn"
+                    );
+
+
+                const shareButton =
+                    card.querySelector(
+                        ".share-btn"
+                    );
+
+
+                /* ---------- LIKE ---------- */
+
+                likeButton.addEventListener(
+                    "click",
+                    async () => {
+
+                        await toggleLike(
+                            postId,
+                            likeButton
+                        );
+
+                        await loadLikeCount(
+                            postId,
+                            likeButton
+                        );
+
+                    }
+                );
+
+
+                /* ---------- COMMENT ---------- */
+
+                commentButton.addEventListener(
+                    "click",
+                    async () => {
+
+                        await commentPost(
+                            postId
+                        );
+
+                        await loadComments(
+                            postId,
+                            commentButton,
+                            card
+                        );
+
+                    }
+                );
+
+
+                /* ---------- SHARE ---------- */
+
+                shareButton.addEventListener(
+                    "click",
+                    async () => {
+
+                        await sharePost(
+                            postId,
+                            post.text || ""
+                        );
+
+                    }
+                );
+
+
+                /* ---------- INITIAL COUNTS ---------- */
+
+                await loadLikeCount(
+                    postId,
+                    likeButton
+                );
+
+
+                await loadComments(
+                    postId,
+                    commentButton,
+                    card
+                );
+
+            }
 
         },
 
@@ -336,7 +1038,7 @@ if (postsContainer) {
         (error) => {
 
             console.error(
-                "❌ Load posts error:",
+                "❌ LOAD POSTS ERROR:",
                 error
             );
 
@@ -344,8 +1046,14 @@ if (postsContainer) {
             postsContainer.innerHTML = `
                 <div class="post-card">
                     <p>
-                        Unable to load posts.
+                        ❌ Unable to load posts.
                     </p>
+
+                    <small>
+                        ${escapeHTML(
+                            error.message
+                        )}
+                    </small>
                 </div>
             `;
 
@@ -356,28 +1064,36 @@ if (postsContainer) {
 }
 
 
+loadPosts();
+
+
 /* =========================================================
    AI MARI
    ========================================================= */
 
 async function sendToServer() {
 
-    if (!chatHistory || !userInput)
+    if (
+        !chatHistory ||
+        !userInput
+    ) {
         return;
+    }
 
 
     const text =
         userInput.value.trim();
 
 
-    if (!text)
+    if (!text) {
         return;
+    }
 
-
-    /* ---------- USER MESSAGE ---------- */
 
     const userMessage =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     userMessage.className =
@@ -394,12 +1110,8 @@ async function sendToServer() {
     );
 
 
-    /* ---------- CLEAR INPUT ---------- */
-
     userInput.value = "";
 
-
-    /* ---------- SEND BUTTON ---------- */
 
     if (sendBtn) {
 
@@ -411,10 +1123,10 @@ async function sendToServer() {
     }
 
 
-    /* ---------- LOADING ---------- */
-
     const loading =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     loading.className =
@@ -437,8 +1149,6 @@ async function sendToServer() {
 
     try {
 
-        /* ---------- AI REQUEST ---------- */
-
         const res =
             await fetch(
                 "https://text.pollinations.ai/" +
@@ -459,15 +1169,13 @@ async function sendToServer() {
             await res.text();
 
 
-        /* ---------- REMOVE LOADING ---------- */
-
         loading.remove();
 
 
-        /* ---------- AI MESSAGE ---------- */
-
         const aiMessage =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         aiMessage.className =
@@ -479,7 +1187,11 @@ async function sendToServer() {
             <b>AI Mari:</b><br>
 
             <span class="ai-text">
-                ${escapeHTML(reply)}
+
+                ${escapeHTML(
+                    reply
+                )}
+
             </span>
 
             <br><br>
@@ -494,64 +1206,56 @@ async function sendToServer() {
         `;
 
 
-        /* ---------- COPY BUTTON ---------- */
-
         const copyButton =
             aiMessage.querySelector(
                 ".copy-btn"
             );
 
 
-        if (copyButton) {
+        copyButton?.addEventListener(
+            "click",
+            async () => {
 
-            copyButton.addEventListener(
-                "click",
-                async () => {
+                try {
 
-                    try {
-
-                        await navigator
-                            .clipboard
-                            .writeText(reply);
-
-
-                        copyButton.textContent =
-                            "✅ Copied!";
-
-
-                        setTimeout(
-                            () => {
-
-                                copyButton.textContent =
-                                    "📋 Copy";
-
-                            },
-                            1500
+                    await navigator
+                        .clipboard
+                        .writeText(
+                            reply
                         );
 
 
-                    } catch {
+                    copyButton.textContent =
+                        "✅ Copied!";
 
-                        alert(
-                            "Copy failed."
-                        );
 
-                    }
+                    setTimeout(
+                        () => {
+
+                            copyButton.textContent =
+                                "📋 Copy";
+
+                        },
+                        1500
+                    );
+
+
+                } catch {
+
+                    alert(
+                        "Copy failed."
+                    );
 
                 }
-            );
 
-        }
+            }
+        );
 
-
-        /* ---------- ADD AI MESSAGE ---------- */
 
         chatHistory.appendChild(
             aiMessage
         );
 
-
-        /* ---------- KEEP CHAT VISIBLE ---------- */
 
         chatHistory.scrollTop =
             chatHistory.scrollHeight;
@@ -565,12 +1269,8 @@ async function sendToServer() {
         );
 
 
-        /* ---------- REMOVE LOADING ---------- */
-
         loading.remove();
 
-
-        /* ---------- ERROR MESSAGE ---------- */
 
         const errorMessage =
             document.createElement(
@@ -586,10 +1286,8 @@ async function sendToServer() {
 
             <b>AI Mari:</b><br>
 
-            <span class="ai-text">
-                Sorry, connection failed.
-                Please try again.
-            </span>
+            Sorry, connection failed.
+            Please try again.
 
         `;
 
@@ -598,9 +1296,6 @@ async function sendToServer() {
             errorMessage
         );
 
-
-        chatHistory.scrollTop =
-            chatHistory.scrollHeight;
 
     } finally {
 
@@ -619,7 +1314,7 @@ async function sendToServer() {
 
 
 /* =========================================================
-   AI SEND EVENTS
+   AI EVENTS
    ========================================================= */
 
 sendBtn?.addEventListener(
@@ -653,47 +1348,40 @@ userInput?.addEventListener(
 
 function updateThemeButton() {
 
-    if (!themeBtn)
+    if (!themeBtn) {
         return;
-
-
-    if (
-        document.body.classList
-            .contains("dark")
-    ) {
-
-        themeBtn.textContent =
-            "☀️";
-
-        themeBtn.title =
-            "Light Mode";
-
-    } else {
-
-        themeBtn.textContent =
-            "🌙";
-
-        themeBtn.title =
-            "Dark Mode";
-
     }
+
+
+    const dark =
+        document.body.classList.contains(
+            "dark"
+        );
+
+
+    themeBtn.textContent =
+        dark
+            ? "☀️"
+            : "🌙";
+
+
+    themeBtn.title =
+        dark
+            ? "Light Mode"
+            : "Dark Mode";
 
 }
 
 
-/* ---------- APPLY SAVED THEME ---------- */
-
 function applySavedTheme() {
 
-    const savedTheme =
+    const saved =
         localStorage.getItem(
             "sociologyTheme"
         );
 
 
-    if (
-        savedTheme === "dark"
-    ) {
+    if (saved === "dark") {
 
         document.body.classList.add(
             "dark"
@@ -713,8 +1401,6 @@ function applySavedTheme() {
 }
 
 
-/* ---------- TOGGLE THEME ---------- */
-
 window.toggleTheme =
     function () {
 
@@ -723,7 +1409,7 @@ window.toggleTheme =
         );
 
 
-        const darkMode =
+        const dark =
             document.body.classList.contains(
                 "dark"
             );
@@ -731,7 +1417,7 @@ window.toggleTheme =
 
         localStorage.setItem(
             "sociologyTheme",
-            darkMode
+            dark
                 ? "dark"
                 : "light"
         );
@@ -748,17 +1434,15 @@ window.toggleTheme =
 
 function searchWebsite() {
 
-    if (!searchBar)
+    if (!searchBar) {
         return;
+    }
 
 
     const q =
         searchBar.value
             .toLowerCase()
             .trim();
-
-
-    let visible = 0;
 
 
     document.querySelectorAll(
@@ -779,13 +1463,6 @@ function searchWebsite() {
                 match
                     ? ""
                     : "none";
-
-
-            if (match) {
-
-                visible++;
-
-            }
 
         }
     );
@@ -813,22 +1490,6 @@ function searchWebsite() {
 
     }
 
-
-    const counter =
-        document.getElementById(
-            "searchCount"
-        );
-
-
-    if (counter) {
-
-        counter.textContent =
-            q
-                ? `${visible} results found`
-                : "";
-
-    }
-
 }
 
 
@@ -844,8 +1505,9 @@ searchBar?.addEventListener(
 
 function updateNotificationBadge() {
 
-    if (!notifyBtn)
+    if (!notifyBtn) {
         return;
+    }
 
 
     const list =
@@ -858,7 +1520,7 @@ function updateNotificationBadge() {
 
     notifyBtn.innerHTML =
         list.length
-            ? `🔔 <span style="color:red">${list.length}</span>`
+            ? `🔔 ${list.length}`
             : "🔔";
 
 }
@@ -875,7 +1537,7 @@ window.showNotifications =
             ) || [];
 
 
-        if (list.length === 0) {
+        if (!list.length) {
 
             alert(
                 "🔔 No new notifications."
@@ -889,7 +1551,7 @@ window.showNotifications =
         alert(
             "🔔 Notifications\n\n" +
             list
-                .slice(0, 10)
+                .slice(0,10)
                 .join("\n\n")
         );
 
@@ -897,7 +1559,7 @@ window.showNotifications =
 
 
 /* =========================================================
-   VOICE INPUT
+   VOICE
    ========================================================= */
 
 let recognition = null;
@@ -932,15 +1594,12 @@ if (
 
                 recognition.start();
 
-
                 if (micBtn) {
-
                     micBtn.textContent =
                         "🔴";
-
                 }
 
-            } catch (error) {
+            } catch {
 
                 console.log(
                     "Voice already running."
@@ -955,8 +1614,9 @@ if (
     recognition.onresult =
         (event) => {
 
-            if (!userInput)
+            if (!userInput) {
                 return;
+            }
 
 
             userInput.value =
@@ -968,10 +1628,8 @@ if (
 
 
             if (micBtn) {
-
                 micBtn.textContent =
                     "🎤";
-
             }
 
         };
@@ -981,10 +1639,8 @@ if (
         () => {
 
             if (micBtn) {
-
                 micBtn.textContent =
                     "🎤";
-
             }
 
         };
@@ -994,23 +1650,11 @@ if (
         () => {
 
             if (micBtn) {
-
                 micBtn.textContent =
                     "🎤";
-
             }
 
         };
-
-
-} else {
-
-    if (micBtn) {
-
-        micBtn.title =
-            "Voice input is not supported.";
-
-    }
 
 }
 
@@ -1027,33 +1671,24 @@ document.addEventListener(
 
         updateNotificationBadge();
 
-
-        document.addEventListener(
-            "keydown",
-            (event) => {
-
-                if (
-                    event.ctrlKey &&
-                    event.key.toLowerCase() === "k"
-                ) {
-
-                    event.preventDefault();
-
-                    searchBar?.focus();
-
-                }
-
-            }
+        console.log(
+            "✅ Sociology Connect loaded."
         );
 
-
         console.log(
-            "✅ Sociology Connect Professional Script Loaded."
+            "✅ Firebase Post system loaded."
         );
 
+        console.log(
+            "❤️ Like system loaded."
+        );
 
         console.log(
-            "✅ Firebase Post System Loaded."
+            "💬 Comment system loaded."
+        );
+
+        console.log(
+            "📤 Share system loaded."
         );
 
     }

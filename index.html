@@ -836,7 +836,51 @@ body.dark #trendingContainer .post-card{
     background:#2b2b2b !important;
     color:#fff !important;
 }
-   
+
+   /* =========================================================
+   POST ACTIONS - FORCE VISIBILITY
+   ========================================================= */
+
+.post-actions{
+    display:flex !important;
+    justify-content:space-around !important;
+    align-items:center !important;
+    gap:8px !important;
+    margin-top:15px !important;
+    padding-top:12px !important;
+    border-top:1px solid #ddd !important;
+    width:100% !important;
+}
+
+.post-actions button{
+    display:inline-block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    background:transparent !important;
+    color:#007bff !important;
+    border:none !important;
+    padding:8px 10px !important;
+    cursor:pointer !important;
+    font-size:14px !important;
+    font-weight:bold !important;
+}
+
+.post-actions button:hover{
+    background:#eef6ff !important;
+    border-radius:8px !important;
+}
+
+body.dark .post-actions{
+    border-top-color:#444 !important;
+}
+
+body.dark .post-actions button{
+    color:#4aa3ff !important;
+}
+
+body.dark .post-actions button:hover{
+    background:#333 !important;
+}
 </style>
 </head>
 <body>

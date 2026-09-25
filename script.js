@@ -592,123 +592,12 @@ function removeAdminControls() {
     ?.remove();
 
 }
+
 /* =========================================================
    PART 3
    LOAD POSTS
    TRENDING POSTS
 ========================================================= */
-
-/* ================= LOAD POSTS ================= */
-
-function loadPosts() {
-
-  if (!postsContainer) return;
-
-  const postsQuery = query(
-    collection(db, "posts"),
-    orderBy("createdAt", "desc")
-  );
-
-  onSnapshot(postsQuery, async (snapshot) => {
-
-    postsContainer.innerHTML = "";
-
-    if (snapshot.empty) {
-      postsContainer.innerHTML = `
-        <div class="post-card">
-          <p>No posts yet. Be the first student to post! 📚</p>
-        </div>
-      `;
-      loadTrendingPosts();
-      return;
-    }
-
-    for (const postDoc of snapshot.docs) {
-
-      const post = postDoc.data();
-      const postId = postDoc.id;
-      const name = post.name || "Student";
-
-      const card = document.createElement("div");
-      card.className = "post-card";
-      card.id = "post-" + postId;
-
-      const canDelete =
-        currentUser &&
-        (isAdmin() || currentUser.uid === post.userId);
-
-      card.innerHTML = `
-        <div class="post-header">
-
-          <div class="post-avatar">
-            ${escapeHTML(name.charAt(0).toUpperCase())}
-          </div>
-
-          <div>
-            <div class="post-name">${escapeHTML(name)}</div>
-            <div class="post-time">
-              🕐 ${formatPostTime(post.createdAt)}
-            </div>
-          </div>
-
-        </div>
-
-        <div class="post-text">
-          ${escapeHTML(post.text || "")}
-        </div>
-
-        <div class="post-actions">
-
-          <button class="like-btn">🤍 Like (0)</button>
-
-          <button class="comment-btn">
-            💬 Comment (0)
-          </button>
-
-          <button class="share-btn">
-            📤 Share
-          </button>
-
-          ${canDelete
-            ? `<button class="delete-btn" style="color:#dc3545;">🗑️ Delete</button>`
-            : ""
-          }
-
-        </div>
-      `;
-
-      postsContainer.appendChild(card);
-
-      const likeBtn = card.querySelector(".like-btn");
-      const commentBtn = card.querySelector(".comment-btn");
-      const shareBtn = card.querySelector(".share-btn");
-      const deleteBtn = card.querySelector(".delete-btn");
-
-      likeBtn?.addEventListener("click", () =>
-        toggleLike(postId, likeBtn)
-      );
-
-      commentBtn?.addEventListener("click", async () => {
-        const added = await commentPost(postId);
-        await loadComments(postId, commentBtn, card, added);
-        loadTrendingPosts();
-      });
-
-      shareBtn?.addEventListener("click", () =>
-        sharePost(postId, post.text || "")
-      );
-
-      deleteBtn?.addEventListener("click", async () => {
-        await deletePost(postId, post.userId);
-        loadTrendingPosts();
-      });
-
-      await updateLikeButton(postId, likeBtn);
-      await loadComments(postId, commentBtn, card, false);
-
-    }
-
-    loadTrendingPosts();
 
 /* ================= LOAD POSTS ================= */
 
@@ -726,6 +615,7 @@ function loadPosts() {
 
   onSnapshot(
     postsQuery,
+
     async (snapshot) => {
 
       postsContainer.innerHTML = "";
@@ -740,6 +630,7 @@ function loadPosts() {
           </div>
         `;
 
+        loadTrendingPosts();
         return;
       }
 
@@ -749,8 +640,7 @@ function loadPosts() {
         const postId = postDoc.id;
 
         const name =
-          post.name ||
-          "Student";
+          post.name || "Student";
 
         const card =
           document.createElement("div");
@@ -830,8 +720,6 @@ function loadPosts() {
 
         postsContainer.appendChild(card);
 
-        /* ================= BUTTONS ================= */
-
         const likeBtn =
           card.querySelector(".like-btn");
 
@@ -844,7 +732,8 @@ function loadPosts() {
         const deleteBtn =
           card.querySelector(".delete-btn");
 
-        /* ================= LIKE ================= */
+
+        /* LIKE */
 
         likeBtn?.addEventListener(
           "click",
@@ -856,7 +745,8 @@ function loadPosts() {
           }
         );
 
-        /* ================= COMMENT ================= */
+
+        /* COMMENT */
 
         commentBtn?.addEventListener(
           "click",
@@ -877,7 +767,8 @@ function loadPosts() {
           }
         );
 
-        /* ================= SHARE ================= */
+
+        /* SHARE */
 
         shareBtn?.addEventListener(
           "click",
@@ -891,7 +782,8 @@ function loadPosts() {
           }
         );
 
-        /* ================= DELETE ================= */
+
+        /* DELETE */
 
         deleteBtn?.addEventListener(
           "click",
@@ -907,7 +799,8 @@ function loadPosts() {
           }
         );
 
-        /* ================= COUNTS ================= */
+
+        /* COUNTS */
 
         await updateLikeButton(
           postId,
@@ -951,7 +844,9 @@ function loadPosts() {
 
     }
   );
+
 }
+
 
 /* ================= TRENDING POSTS ================= */
 
@@ -965,7 +860,9 @@ async function loadTrendingPosts() {
   try {
 
     const postsSnapshot =
-      await getDocs(collection(db, "posts"));
+      await getDocs(
+        collection(db, "posts")
+      );
 
     if (postsSnapshot.empty) {
 
@@ -974,86 +871,141 @@ async function loadTrendingPosts() {
           🔥 No trending posts yet.
         </div>
       `;
+
       return;
     }
 
     const posts = [];
 
-    for (const postDoc of postsSnapshot.docs) {
+    for (
+      const postDoc of postsSnapshot.docs
+    ) {
 
-      const post = postDoc.data();
+      const post =
+        postDoc.data();
 
       const likesSnap =
         await getDocs(
-          collection(db, "posts", postDoc.id, "likes")
+          collection(
+            db,
+            "posts",
+            postDoc.id,
+            "likes"
+          )
         );
 
       const commentsSnap =
         await getDocs(
-          collection(db, "posts", postDoc.id, "comments")
+          collection(
+            db,
+            "posts",
+            postDoc.id,
+            "comments"
+          )
         );
 
       posts.push({
+
         id: postDoc.id,
-        name: post.name || "Student",
-        text: post.text || "",
-        likes: likesSnap.size,
-        comments: commentsSnap.size,
-        score: likesSnap.size + commentsSnap.size
+
+        name:
+          post.name || "Student",
+
+        text:
+          post.text || "",
+
+        likes:
+          likesSnap.size,
+
+        comments:
+          commentsSnap.size,
+
+        score:
+          likesSnap.size +
+          commentsSnap.size
+
       });
 
     }
 
-    posts.sort((a, b) => b.score - a.score);
+    posts.sort(
+      (a, b) =>
+        b.score - a.score
+    );
 
     trendingContainer.innerHTML = "";
 
-    posts.slice(0, 5).forEach(post => {
+    posts
+      .slice(0, 5)
+      .forEach(post => {
 
-      const card = document.createElement("div");
-      card.className = "post-card";
+        const card =
+          document.createElement("div");
 
-      card.innerHTML = `
-        <div class="post-header">
+        card.className =
+          "post-card";
 
-          <div class="post-avatar">
-            ${escapeHTML(post.name.charAt(0).toUpperCase())}
-          </div>
+        card.innerHTML = `
+          <div class="post-header">
 
-          <div>
-            <div class="post-name">
-              ${escapeHTML(post.name)}
+            <div class="post-avatar">
+              ${escapeHTML(
+                post.name
+                  .charAt(0)
+                  .toUpperCase()
+              )}
             </div>
 
-            <div class="post-time">
-              🔥 Trending
+            <div>
+
+              <div class="post-name">
+                ${escapeHTML(
+                  post.name
+                )}
+              </div>
+
+              <div class="post-time">
+                🔥 Trending
+              </div>
+
             </div>
+
           </div>
 
-        </div>
+          <div class="post-text">
+            ${escapeHTML(
+              post.text
+            )}
+          </div>
 
-        <div class="post-text">
-          ${escapeHTML(post.text)}
-        </div>
+          <div class="post-actions">
 
-        <div class="post-actions">
+            <button disabled>
+              ❤️ ${post.likes}
+            </button>
 
-          <button disabled>❤️ ${post.likes}</button>
+            <button disabled>
+              💬 ${post.comments}
+            </button>
 
-          <button disabled>💬 ${post.comments}</button>
+            <button disabled>
+              🔥 Popular
+            </button>
 
-          <button disabled>🔥 Popular</button>
+          </div>
+        `;
 
-        </div>
-      `;
+        trendingContainer
+          .appendChild(card);
 
-      trendingContainer.appendChild(card);
-
-    });
+      });
 
   } catch (error) {
 
-    console.error("TRENDING ERROR:", error);
+    console.error(
+      "TRENDING ERROR:",
+      error
+    );
 
     trendingContainer.innerHTML = `
       <div class="post-card">
@@ -1064,7 +1016,7 @@ async function loadTrendingPosts() {
   }
 
 }
-
+                  
 /* =========================================================
    PART 4
    NEWS

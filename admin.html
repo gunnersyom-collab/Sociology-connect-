@@ -331,57 +331,34 @@ footer{
 
 <!-- ADD NEWS -->
 
-<div class="card">
+<div class="card" style="padding:30px;">
 
-<h2>📰 Add Latest News</h2>
+  <h2 style="font-size:30px;margin-bottom:8px;">
+    📰 Add Latest News
+  </h2>
 
-<label for="newsTitle">News Title</label>
+  <p style="color:#666;margin-bottom:20px;line-height:1.6;">
+    Publish announcements, department updates, scholarship information, and important notices for Sociology Connect students.
+  </p>
 
-<input
-id="newsTitle"
-type="text"
-placeholder="Enter news title">
+  <label for="newsTitle">News Title</label>
 
-<label for="newsDescription">News Description</label>
+  <input
+    id="newsTitle"
+    type="text"
+    placeholder="Enter news title">
 
-<textarea
-id="newsDescription"
-placeholder="Write the news or announcement..."></textarea>
+  <label for="newsDescription">News Description</label>
 
-<button onclick="addNews()">
-📢 Publish News
-</button>
+  <textarea
+    id="newsDescription"
+    placeholder="Write the news or announcement..."></textarea>
 
-</div>
-
-<!-- ADD EVENT -->
-
-<div class="card">
-
-<h2>📅 Add Event / Deadline</h2>
-
-<label for="eventTitle">Event Title</label>
-
-<input
-id="eventTitle"
-type="text"
-placeholder="Example: Research Proposal Deadline">
-
-<label for="eventDescription">Description</label>
-
-<textarea
-id="eventDescription"
-placeholder="Write event information..."></textarea>
-
-<label for="eventDate">Date</label>
-
-<input
-id="eventDate"
-type="date">
-
-<button onclick="addEvent()">
-📅 Add Event
-</button>
+  <button
+    style="width:100%;padding:15px;font-size:17px;"
+    onclick="addNews()">
+    📢 Publish News
+  </button>
 
 </div>
 
@@ -871,7 +848,43 @@ window.clearAllPosts = async()=>{
   }
 
 };
+/* ================= REFRESH DASHBOARD ================= */
 
+window.refreshDashboard = async()=>{
+
+  status.textContent="🔄 Refreshing...";
+
+  await loadNews();
+  await loadEvents();
+  await updateStats();
+
+  status.textContent="✅ Dashboard refreshed.";
+
+};
+
+/* ================= ADMIN LOGOUT ================= */
+
+window.logoutAdmin = async()=>{
+
+  if(!confirm("Logout from Admin Dashboard?")){
+    return;
+  }
+
+  try{
+
+    await signOut(auth);
+
+    window.location.href="login.html";
+
+  }catch(error){
+
+    console.error(error);
+
+    status.textContent="❌ Logout failed.";
+
+  }
+
+};
 </script>
 
 </body>

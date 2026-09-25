@@ -1764,6 +1764,101 @@ function loadNews() {
 loadNews();
 
 /* =========================================================
+   LOAD EVENTS FROM FIRESTORE
+   ========================================================= */
+
+function loadEvents() {
+
+    const eventsContainer =
+        document.getElementById("eventsContainer");
+
+    if (!eventsContainer) {
+        return;
+    }
+
+    const eventsQuery =
+        query(
+            collection(db, "events"),
+            orderBy("date", "asc")
+        );
+
+    onSnapshot(
+        eventsQuery,
+
+        (snapshot) => {
+
+            eventsContainer.innerHTML = "";
+
+            if (snapshot.empty) {
+
+                eventsContainer.innerHTML = `
+                    <div class="event-card">
+                        📅 No events or deadlines available yet.
+                    </div>
+                `;
+
+                return;
+            }
+
+            snapshot.forEach((eventDoc) => {
+
+                const event =
+                    eventDoc.data();
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "event-card";
+
+                card.innerHTML = `
+                    <strong>
+                        📅 ${escapeHTML(
+                            event.title || "Event"
+                        )}
+                    </strong>
+
+                    <br><br>
+
+                    ${escapeHTML(
+                        event.description || ""
+                    )}
+
+                    ${
+                        event.date
+                        ? `
+                            <br><br>
+                            <small>
+                                📅 ${escapeHTML(event.date)}
+                            </small>
+                        `
+                        : ""
+                    }
+                `;
+
+                eventsContainer.appendChild(card);
+
+            });
+
+        },
+
+        (error) => {
+
+            console.error(
+                "❌ LOAD EVENTS ERROR:",
+                error
+            );
+
+            eventsContainer.innerHTML = `
+                <div class="event-card">
+                    ❌ Unable to load events.
+                </div>
+            `;
+        }
+    );
+}
+
+loadEvents();
+/* =========================================================
    AI MARI
    ========================================================= */
 

@@ -561,7 +561,7 @@ async function updateLikeButton(
     "Like failed:\n" +
     error.message
   );
-
+  }
 }
 /* =========================================================
    COMMENT POST

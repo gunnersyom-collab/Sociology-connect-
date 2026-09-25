@@ -1394,14 +1394,16 @@ function loadPosts() {
         /* LIKE */
 
         likeBtn?.addEventListener(
-          "click",
-          () =>
-            toggleLike(
-              postId,
-              likeBtn
-            )
-        );
+  "click",
+  () => {
+    console.log("❤️ LIKE BUTTON CLICKED:", postId);
 
+    toggleLike(
+      postId,
+      likeBtn
+    );
+  }
+);
 
         /* COMMENT */
 

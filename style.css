@@ -1,526 +1,597 @@
 /* =========================================================
-   SOCIOLOGY CONNECT - STYLE.CSS
-   SECTION + CONTACT + SOCIAL + AI MARI + DARK MODE
-   ========================================================= */
+   SOCIOLOGY CONNECT 2.0
+   STYLE.CSS - PART 1
+   RESET • ROOT • BODY • HEADER
+========================================================= */
 
+/* ================= RESET ================= */
 
-/* ================= SECTION CONTAINER ================= */
-
-.section-container{
-    padding:40px 20px;
-    margin:20px 0;
-    background:#ffffff;
-    color:#222222;
-    border-radius:16px;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
-    transition:.3s ease;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-.section-container:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 20px rgba(0,0,0,.12);
+html{
+  scroll-behavior:smooth;
 }
 
+/* ================= ROOT COLORS ================= */
 
-/* ================= CONTACT SECTION ================= */
+:root{
 
-.contact-section{
-    background:#f4f4f9;
-    color:#222222;
-    border-left:5px solid #007bff;
-    padding:25px;
-    border-radius:16px;
-}
+  --primary:#0a66c2;
+  --primary-dark:#004182;
 
-.contact-section h2{
-    color:#007bff;
-    margin-bottom:10px;
-}
+  --bg:#f3f6f8;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
 
-.contact-section p{
-    line-height:1.7;
-    color:#555555;
-}
+  --success:#16a34a;
+  --danger:#dc2626;
+  --warning:#f59e0b;
 
-
-/* ================= CONTACT FORM ================= */
-
-.contact-section input,
-.contact-section textarea{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:1px solid #d0d7de;
-    border-radius:10px;
-    font-size:15px;
-    background:#ffffff;
-    color:#111111;
-    transition:.3s;
-}
-
-.contact-section input:focus,
-.contact-section textarea:focus{
-    border-color:#007bff;
-    outline:none;
-    box-shadow:0 0 8px rgba(0,123,255,.25);
-}
-
-
-/* ================= TELEGRAM BUTTON ================= */
-
-.telegram-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:12px 25px;
-    background:#0088cc;
-    color:#ffffff;
-    text-decoration:none;
-    border-radius:10px;
-    font-weight:bold;
-    margin-top:15px;
-    transition:.3s ease;
-}
-
-.telegram-btn:hover{
-    background:#006fa3;
-    transform:translateY(-2px) scale(1.02);
-}
-
-
-/* ================= SOCIAL BUTTONS ================= */
-
-.social-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:20px;
-}
-
-.social-buttons a{
-    width:45px;
-    height:45px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#eef4ff;
-    border-radius:50%;
-    color:#007bff;
-    text-decoration:none;
-    transition:.3s;
-}
-
-.social-buttons a:hover{
-    background:#007bff;
-    color:#ffffff;
-    transform:scale(1.1);
-}
-
-
-/* =========================================================
-   AI MARI CHAT
-   ========================================================= */
-
-#chat-history{
-    height:280px;
-    overflow-y:auto;
-    overflow-x:hidden;
-    background:#f8f8f8;
-    color:#111111;
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:12px;
-    border:1px solid #e0e0e0;
-    transition:
-        background .3s ease,
-        color .3s ease,
-        border-color .3s ease;
-}
-
-
-/* ================= ALL MESSAGES ================= */
-
-#chat-history .message{
-    margin:10px 0;
-    padding:12px;
-    border-radius:14px;
-    max-width:85%;
-    line-height:1.6;
-    word-wrap:break-word;
-    overflow-wrap:break-word;
-    box-sizing:border-box;
-}
-
-
-/* ================= USER MESSAGE ================= */
-
-#chat-history .message.user{
-    background:#007bff !important;
-    color:#ffffff !important;
-    margin-left:auto;
-    margin-right:0;
-    border:none !important;
-}
-
-
-/* User text */
-
-#chat-history .message.user,
-#chat-history .message.user *,
-#chat-history .message.user b,
-#chat-history .message.user strong{
-    color:#ffffff !important;
-}
-
-
-/* ================= AI MESSAGE - LIGHT ================= */
-
-#chat-history .message.ai{
-    background:#ffffff !important;
-    color:#111111 !important;
-    border:1px solid #dddddd !important;
-    margin-left:0;
-    margin-right:auto;
-}
-
-
-/* AI text - LIGHT */
-
-#chat-history .message.ai,
-#chat-history .message.ai *,
-#chat-history .message.ai b,
-#chat-history .message.ai strong,
-#chat-history .message.ai p,
-#chat-history .message.ai span,
-#chat-history .message.ai div,
-#chat-history .message.ai li{
-    color:#111111 !important;
-}
-
-
-/* AI paragraph */
-
-#chat-history .message.ai p{
-    margin:0;
-}
-
-
-/* =========================================================
-   COPY BUTTON
-   ========================================================= */
-
-#chat-history .copy-btn{
-    margin-top:8px;
-    padding:6px 12px;
-    border:none !important;
-    border-radius:8px;
-    background:#007bff !important;
-    color:#ffffff !important;
-    cursor:pointer;
-    font-size:13px;
-}
-
-#chat-history .copy-btn:hover{
-    background:#0056b3 !important;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media(max-width:768px){
-
-    .section-container,
-    .contact-section{
-        padding:20px 15px;
-        margin:15px 10px;
-    }
-
-    .telegram-btn{
-        width:100%;
-        text-align:center;
-    }
-
-    .social-buttons{
-        justify-content:center;
-    }
-
-    #chat-history{
-        height:280px;
-    }
-
-    #chat-history .message{
-        max-width:92%;
-    }
+  --shadow:0 8px 24px rgba(0,0,0,.08);
 
 }
 
+/* ================= DARK MODE ================= */
 
-/* =========================================================
-   DARK MODE
-   ========================================================= */
+body.dark{
 
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --border:#334155;
+  --shadow:0 8px 24px rgba(0,0,0,.35);
 
-/* ================= SECTIONS ================= */
-
-body.dark .section-container{
-    background:#1f1f1f !important;
-    color:#ffffff !important;
 }
 
-body.dark .contact-section{
-    background:#1f1f1f !important;
-    color:#ffffff !important;
+/* ================= BODY ================= */
+
+body{
+
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:.3s;
+  line-height:1.6;
+
 }
 
-body.dark .contact-section h2{
-    color:#4aa3ff !important;
+/* ================= LINKS ================= */
+
+a{
+
+  text-decoration:none;
+  color:inherit;
+
 }
 
-body.dark .contact-section p{
-    color:#dddddd !important;
+/* ================= IMAGES ================= */
+
+img{
+
+  max-width:100%;
+  display:block;
+
 }
 
+/* ================= HEADER ================= */
 
-/* ================= CONTACT INPUTS ================= */
+header{
 
-body.dark .contact-section input,
-body.dark .contact-section textarea{
-    background:#2b2b2b !important;
-    color:#ffffff !important;
-    border-color:#444444 !important;
+  position:sticky;
+  top:0;
+  z-index:1000;
+
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+
+  color:white;
+
+  padding:18px;
+
+  box-shadow:var(--shadow);
+
+  backdrop-filter:blur(12px);
+
 }
 
-body.dark .contact-section input::placeholder,
-body.dark .contact-section textarea::placeholder{
-    color:#aaaaaa !important;
+.header-container{
+
+  max-width:1200px;
+  margin:auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+
 }
 
+/* ================= LOGO ================= */
 
-/* ================= TELEGRAM ================= */
+.logo{
 
-body.dark .telegram-btn{
-    background:#0a84d0 !important;
-    color:#ffffff !important;
+  display:flex;
+  align-items:center;
+  gap:12px;
+
 }
 
+.logo img{
 
-/* ================= SOCIAL ================= */
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.4);
 
-body.dark .social-buttons a{
-    background:#2b2b2b !important;
-    color:#4aa3ff !important;
 }
 
-body.dark .social-buttons a:hover{
-    background:#0a84d0 !important;
-    color:#ffffff !important;
+.logo h1{
+
+  font-size:1.35rem;
+  font-weight:700;
+
 }
 
+.logo p{
 
-/* =========================================================
-   DARK MODE - AI MARI
-   ========================================================= */
+  font-size:.82rem;
+  opacity:.9;
 
-/* Chat background */
-
-body.dark #chat-history{
-    background:#111111 !important;
-    color:#ffffff !important;
-    border:1px solid #333333 !important;
 }
 
+/* ================= HEADER BUTTONS ================= */
 
-/* Every message */
+.header-actions{
 
-body.dark #chat-history .message{
-    color:#ffffff !important;
+  display:flex;
+  align-items:center;
+  gap:10px;
+
 }
 
+.header-actions button,
+.header-actions a{
 
-/* AI response */
+  background:rgba(255,255,255,.15);
+  color:white;
 
-body.dark #chat-history .message.ai{
-    background:#2b2b2b !important;
-    color:#ffffff !important;
-    border:1px solid #555555 !important;
+  border:none;
+
+  padding:10px 14px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
 }
 
+.header-actions button:hover,
+.header-actions a:hover{
 
-/* AI response text */
+  background:white;
+  color:var(--primary);
 
-body.dark #chat-history .message.ai,
-body.dark #chat-history .message.ai *,
-body.dark #chat-history .message.ai b,
-body.dark #chat-history .message.ai strong,
-body.dark #chat-history .message.ai p,
-body.dark #chat-history .message.ai span,
-body.dark #chat-history .message.ai div,
-body.dark #chat-history .message.ai li,
-body.dark #chat-history .message.ai i{
-    color:#ffffff !important;
-}
-
-
-/* User response */
-
-body.dark #chat-history .message.user{
-    background:#007bff !important;
-    color:#ffffff !important;
-    border:none !important;
-}
-
-
-/* User response text */
-
-body.dark #chat-history .message.user,
-body.dark #chat-history .message.user *,
-body.dark #chat-history .message.user b,
-body.dark #chat-history .message.user strong,
-body.dark #chat-history .message.user p,
-body.dark #chat-history .message.user span,
-body.dark #chat-history .message.user div{
-    color:#ffffff !important;
-}
-
-
-/* Copy button - Dark */
-
-body.dark #chat-history .copy-btn{
-    background:#0a84d0 !important;
-    color:#ffffff !important;
-}
-
-body.dark #chat-history .copy-btn:hover{
-    background:#006fa3 !important;
-}
-
-
-/* =========================================================
-   CHAT SCROLLBAR
-   ========================================================= */
-
-#chat-history::-webkit-scrollbar{
-    width:7px;
-}
-
-#chat-history::-webkit-scrollbar-track{
-    background:#eeeeee;
-    border-radius:10px;
-}
-
-#chat-history::-webkit-scrollbar-thumb{
-    background:#bbbbbb;
-    border-radius:10px;
-}
-
-body.dark #chat-history::-webkit-scrollbar-track{
-    background:#1a1a1a;
-}
-
-body.dark #chat-history::-webkit-scrollbar-thumb{
-    background:#555555;
 }
 /* =========================================================
-   POST AVATAR UI
-   ========================================================= */
+   PART 2
+   NAVIGATION
+   HERO
+   SEARCH
+========================================================= */
 
-.avatar{
-    width:45px;
-    height:45px;
-    background:linear-gradient(135deg,#007bff,#00b4ff);
-    color:white;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    font-weight:bold;
-    flex-shrink:0;
+nav{
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:84px;
+  z-index:999;
+}
+
+.nav-container{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  padding:10px;
+  overflow-x:auto;
+}
+
+.nav-container a{
+  padding:10px 16px;
+  border-radius:999px;
+  font-weight:600;
+  color:var(--muted);
+  white-space:nowrap;
+  transition:.25s;
+}
+
+.nav-container a:hover,
+.nav-container a.active{
+  background:var(--primary);
+  color:#fff;
+}
+
+.hero{
+  max-width:1200px;
+  margin:25px auto;
+  padding:28px;
+  border-radius:24px;
+  background:linear-gradient(135deg,var(--primary),#2563eb);
+  color:white;
+  box-shadow:var(--shadow);
+}
+
+.hero h2{
+  font-size:2rem;
+  margin-bottom:10px;
+}
+
+.hero p{
+  opacity:.95;
+  margin-bottom:18px;
+}
+
+.search-box{
+  display:flex;
+  gap:10px;
+  background:var(--card);
+  padding:10px;
+  border-radius:16px;
+}
+
+.search-box input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:var(--text);
+  font-size:1rem;
+}
+
+.search-box button{
+  background:var(--primary);
+  color:white;
+  border:none;
+  border-radius:12px;
+  padding:10px 16px;
+  cursor:pointer;
+}
+
+/* =========================================================
+   PART 3
+   CARDS
+   POSTS
+========================================================= */
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+.card,
+.post-card,
+.event-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:var(--shadow);
+  transition:.25s;
+}
+
+.card:hover,
+.post-card:hover,
+.event-card:hover{
+  transform:translateY(-3px);
+}
+
+.post-composer textarea{
+  width:100%;
+  min-height:110px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px;
+  background:var(--bg);
+  color:var(--text);
+  resize:vertical;
+}
+
+.post-composer button{
+  margin-top:12px;
+  background:var(--primary);
+  color:white;
+  border:none;
+  padding:12px 18px;
+  border-radius:12px;
+  cursor:pointer;
 }
 
 .post-header{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
 }
 
-.post-header small{
-    color:#777;
-    font-size:12px;
+.post-avatar{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  background:var(--primary);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:1.1rem;
 }
 
-body.dark .post-header small{
-    color:#bbb;
+.post-name{
+  font-weight:bold;
+}
+
+.post-time{
+  font-size:.85rem;
+  color:var(--muted);
+}
+
+.post-text{
+  margin:14px 0;
+  white-space:pre-wrap;
 }
 /* =========================================================
-   PROFESSIONAL NEWS SECTION
-   ========================================================= */
+   PART 4
+   ACTION BUTTONS
+   COMMENTS
+========================================================= */
 
-#news {
-    padding: 50px 20px;
+.post-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  border-top:1px solid var(--border);
+  padding-top:12px;
 }
 
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 25px;
+.post-actions button{
+  flex:1;
+  min-width:90px;
+  border:none;
+  background:var(--bg);
+  color:var(--text);
+  padding:10px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.section-icon {
-    font-size: 38px;
+.post-actions button:hover{
+  background:var(--primary);
+  color:white;
 }
 
-.section-header h2 {
-    margin: 0;
-    font-size: 28px;
+.delete-btn:hover{
+  background:var(--danger)!important;
 }
 
-.section-header p {
-    margin: 5px 0 0;
-    color: #777;
-    font-size: 14px;
+.comments-box{
+  margin-top:12px;
+  border-top:1px solid var(--border);
+  padding-top:12px;
 }
 
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+.comments-box div{
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
 }
 
-.news-grid .card {
-    padding: 22px;
-    border-radius: 15px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+#trendingContainer .post-card{
+  border-left:5px solid var(--warning);
+}
+/* =========================================================
+   PART 5
+   NEWS
+   EVENTS
+   AI MARI
+========================================================= */
+
+#newsContainer .card{
+  border-left:5px solid var(--success);
 }
 
-.news-grid .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+#eventsContainer .event-card{
+  border-left:5px solid var(--primary);
 }
 
-.news-grid .card h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
+#chat-history{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+  height:420px;
+  overflow-y:auto;
 }
 
-.news-grid .card p {
-    line-height: 1.6;
-    color: #555;
+.message{
+  max-width:85%;
+  margin:10px 0;
+  padding:12px 14px;
+  border-radius:18px;
 }
 
-.news-loading {
-    text-align: center;
+.message.user{
+  margin-left:auto;
+  background:var(--primary);
+  color:white;
+}
+
+.message.ai{
+  background:var(--card);
+  border:1px solid var(--border);
+}
+
+.copy-btn{
+  margin-top:10px;
+  border:none;
+  background:var(--primary);
+  color:white;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.ai-input{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+
+.ai-input input{
+  flex:1;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  background:var(--card);
+  color:var(--text);
+}
+
+.ai-input button{
+  border:none;
+  background:var(--primary);
+  color:white;
+  border-radius:12px;
+  padding:12px 16px;
 }
 
 /* =========================================================
-   END OF STYLE.CSS
-   ========================================================= */
+   PART 6
+   FOOTER
+   ANIMATION
+========================================================= */
+
+footer{
+  margin-top:40px;
+  background:var(--card);
+  border-top:1px solid var(--border);
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+}
+
+.fade-in{
+  animation:fade .4s ease;
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+::-webkit-scrollbar{
+  width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+  background:var(--primary);
+  border-radius:20px;
+}
+
+::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+/* =========================================================
+   PART 7
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+  .header-container{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .hero{
+    padding:22px;
+  }
+
+}
+
+@media(max-width:768px){
+
+  .container{
+    padding:12px;
+  }
+
+  .hero h2{
+    font-size:1.6rem;
+  }
+
+  .search-box{
+    flex-direction:column;
+  }
+
+  .post-actions{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .message{
+    max-width:100%;
+  }
+
+}
+
+@media(max-width:480px){
+
+  .logo h1{
+    font-size:1.05rem;
+  }
+
+  .logo p{
+    font-size:.72rem;
+  }
+
+  .hero{
+    border-radius:18px;
+    padding:18px;
+  }
+
+  .post-card,
+  .card,
+  .event-card{
+    border-radius:16px;
+    padding:14px;
+  }
+
+  .post-avatar{
+    width:40px;
+    height:40px;
+  }
+
+  .post-actions{
+    grid-template-columns:1fr;
+  }
+
+}
+
+
 

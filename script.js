@@ -6,6 +6,8 @@
    LIKE
    COMMENT
    SHARE
+   DELETE POST
+   ADMIN CLEAR ALL POSTS
    DARK MODE
    SEARCH
    VOICE
@@ -34,7 +36,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 import {
-    onAuthStateChanged
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
@@ -87,8 +90,25 @@ const userInfo =
    ========================================================= */
 
 let currentUser = null;
-
 let authReady = false;
+
+const ADMIN_EMAIL =
+    "admin@sociologyconnect.com";
+
+
+/* =========================================================
+   ADMIN CHECK
+   ========================================================= */
+
+function isAdmin() {
+
+    return (
+        currentUser &&
+        currentUser.email?.toLowerCase() ===
+        ADMIN_EMAIL.toLowerCase()
+    );
+
+}
 
 
 /* =========================================================
@@ -155,7 +175,6 @@ onAuthStateChanged(
     (user) => {
 
         currentUser = user;
-
         authReady = true;
 
         if (user) {
@@ -178,18 +197,16 @@ onAuthStateChanged(
             }
 
             if (loginLink) {
-
-                loginLink.style.display =
-                    "none";
-
+                loginLink.style.display = "none";
             }
 
             if (logoutBtn) {
-
-                logoutBtn.style.display =
-                    "inline-block";
-
+                logoutBtn.style.display = "inline-block";
             }
+
+            /* ADMIN BUTTON */
+
+            createAdminControls();
 
         } else {
 
@@ -198,24 +215,18 @@ onAuthStateChanged(
             );
 
             if (userInfo) {
-
                 userInfo.textContent = "";
-
             }
 
             if (loginLink) {
-
-                loginLink.style.display =
-                    "inline-block";
-
+                loginLink.style.display = "inline-block";
             }
 
             if (logoutBtn) {
-
-                logoutBtn.style.display =
-                    "none";
-
+                logoutBtn.style.display = "none";
             }
+
+            removeAdminControls();
 
         }
 
@@ -285,15 +296,8 @@ async function getUserName(user) {
 async function createPost() {
 
     if (!postInput) {
-
-        console.error(
-            "❌ postInput not found."
-        );
-
         return;
-
     }
-
 
     if (!authReady) {
 
@@ -305,10 +309,8 @@ async function createPost() {
 
     }
 
-
     const text =
         postInput.value.trim();
-
 
     if (!text) {
 
@@ -322,7 +324,6 @@ async function createPost() {
 
     }
 
-
     if (!currentUser) {
 
         alert(
@@ -333,16 +334,12 @@ async function createPost() {
 
     }
 
-
     if (postBtn) {
 
         postBtn.disabled = true;
-
-        postBtn.textContent =
-            "Posting...";
+        postBtn.textContent = "Posting...";
 
     }
-
 
     try {
 
@@ -350,7 +347,6 @@ async function createPost() {
             await getUserName(
                 currentUser
             );
-
 
         await addDoc(
             collection(
@@ -376,13 +372,11 @@ async function createPost() {
             }
         );
 
-
         postInput.value = "";
 
         console.log(
             "✅ Post created successfully."
         );
-
 
     } catch (error) {
 
@@ -401,9 +395,7 @@ async function createPost() {
         if (postBtn) {
 
             postBtn.disabled = false;
-
-            postBtn.textContent =
-                "📤 Post";
+            postBtn.textContent = "📤 Post";
 
         }
 
@@ -411,10 +403,6 @@ async function createPost() {
 
 }
 
-
-/* =========================================================
-   POST BUTTON
-   ========================================================= */
 
 postBtn?.addEventListener(
     "click",
@@ -464,7 +452,6 @@ async function toggleLike(
 
     }
 
-
     const likeRef =
         doc(
             db,
@@ -474,14 +461,12 @@ async function toggleLike(
             currentUser.uid
         );
 
-
     try {
 
         const likeSnap =
             await getDoc(
                 likeRef
             );
-
 
         if (likeSnap.exists()) {
 
@@ -514,12 +499,10 @@ async function toggleLike(
 
         }
 
-
         await updateLikeButton(
             postId,
             likeButton
         );
-
 
     } catch (error) {
 
@@ -551,7 +534,6 @@ async function updateLikeButton(
         return;
     }
 
-
     try {
 
         const likesRef =
@@ -562,19 +544,15 @@ async function updateLikeButton(
                 "likes"
             );
 
-
         const likesSnap =
             await getDocs(
                 likesRef
             );
 
-
         const count =
             likesSnap.size;
 
-
         let liked = false;
-
 
         if (currentUser) {
 
@@ -587,12 +565,10 @@ async function updateLikeButton(
 
         }
 
-
         likeButton.textContent =
             liked
                 ? `❤️ Liked (${count})`
                 : `🤍 Like (${count})`;
-
 
     } catch (error) {
 
@@ -624,12 +600,10 @@ async function commentPost(
 
     }
 
-
     const comment =
         prompt(
             "💬 Write your comment:"
         );
-
 
     if (
         comment === null ||
@@ -640,14 +614,12 @@ async function commentPost(
 
     }
 
-
     try {
 
         const name =
             await getUserName(
                 currentUser
             );
-
 
         await addDoc(
             collection(
@@ -673,14 +645,11 @@ async function commentPost(
             }
         );
 
-
         console.log(
             "💬 Comment added."
         );
 
-
         return true;
-
 
     } catch (error) {
 
@@ -722,16 +691,13 @@ async function loadComments(
                 "comments"
             );
 
-
         const commentsSnap =
             await getDocs(
                 commentsRef
             );
 
-
         const count =
             commentsSnap.size;
-
 
         if (commentButton) {
 
@@ -740,39 +706,29 @@ async function loadComments(
 
         }
 
-
         const oldBox =
             card.querySelector(
                 ".comments-box"
             );
 
-
         if (oldBox) {
-
             oldBox.remove();
-
         }
-
 
         if (
             count === 0 ||
             !showComments
         ) {
-
             return;
-
         }
-
 
         const commentsBox =
             document.createElement(
                 "div"
             );
 
-
         commentsBox.className =
             "comments-box";
-
 
         commentsBox.style.marginTop =
             "12px";
@@ -782,10 +738,6 @@ async function loadComments(
 
         commentsBox.style.borderTop =
             "1px solid #ddd";
-
-        commentsBox.style.borderRadius =
-            "10px";
-
 
         const sortedComments =
             [...commentsSnap.docs]
@@ -807,27 +759,22 @@ async function loadComments(
                     }
                 );
 
-
         sortedComments.forEach(
             (commentDoc) => {
 
                 const data =
                     commentDoc.data();
 
-
                 const commentDiv =
                     document.createElement(
                         "div"
                     );
 
-
                 commentDiv.style.padding =
                     "8px 0";
 
-
                 commentDiv.style.borderBottom =
                     "1px solid #eee";
-
 
                 commentDiv.innerHTML = `
 
@@ -849,7 +796,6 @@ async function loadComments(
 
                 `;
 
-
                 commentsBox.appendChild(
                     commentDiv
                 );
@@ -857,11 +803,9 @@ async function loadComments(
             }
         );
 
-
         card.appendChild(
             commentsBox
         );
-
 
     } catch (error) {
 
@@ -889,14 +833,9 @@ async function sharePost(
         "#post-" +
         postId;
 
-
     try {
 
-        /* ---------- MOBILE SHARE ---------- */
-
-        if (
-            navigator.share
-        ) {
+        if (navigator.share) {
 
             await navigator.share({
 
@@ -911,7 +850,6 @@ async function sharePost(
 
             });
 
-
             console.log(
                 "📤 Post shared."
             );
@@ -919,9 +857,6 @@ async function sharePost(
             return;
 
         }
-
-
-        /* ---------- COPY LINK ---------- */
 
         if (
             navigator.clipboard &&
@@ -933,7 +868,6 @@ async function sharePost(
                     shareUrl
                 );
 
-
             alert(
                 "✅ Post link copied!"
             );
@@ -942,39 +876,29 @@ async function sharePost(
 
         }
 
-
-        /* ---------- FALLBACK ---------- */
-
         const temporaryInput =
             document.createElement(
                 "input"
             );
 
-
         temporaryInput.value =
             shareUrl;
-
 
         document.body.appendChild(
             temporaryInput
         );
 
-
         temporaryInput.select();
-
 
         document.execCommand(
             "copy"
         );
 
-
         temporaryInput.remove();
-
 
         alert(
             "✅ Post link copied!"
         );
-
 
     } catch (error) {
 
@@ -982,11 +906,8 @@ async function sharePost(
             error.name ===
             "AbortError"
         ) {
-
             return;
-
         }
-
 
         console.error(
             "❌ SHARE ERROR:",
@@ -998,6 +919,379 @@ async function sharePost(
         );
 
     }
+
+}
+
+
+/* =========================================================
+   DELETE ONE POST
+   ========================================================= */
+
+async function deletePost(
+    postId,
+    postOwnerId
+) {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+    const allowed =
+        isAdmin() ||
+        currentUser.uid === postOwnerId;
+
+    if (!allowed) {
+
+        alert(
+            "❌ You can only delete your own post."
+        );
+
+        return;
+
+    }
+
+    const confirmed =
+        confirm(
+            "🗑️ Delete this post?\n\n" +
+            "This will also delete its likes and comments."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        /* DELETE LIKES */
+
+        const likesSnapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "posts",
+                    postId,
+                    "likes"
+                )
+            );
+
+        for (
+            const likeDoc
+            of likesSnapshot.docs
+        ) {
+
+            await deleteDoc(
+                likeDoc.ref
+            );
+
+        }
+
+
+        /* DELETE COMMENTS */
+
+        const commentsSnapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "posts",
+                    postId,
+                    "comments"
+                )
+            );
+
+        for (
+            const commentDoc
+            of commentsSnapshot.docs
+        ) {
+
+            await deleteDoc(
+                commentDoc.ref
+            );
+
+        }
+
+
+        /* DELETE POST */
+
+        await deleteDoc(
+            doc(
+                db,
+                "posts",
+                postId
+            )
+        );
+
+        console.log(
+            "🗑️ Post deleted:",
+            postId
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ DELETE POST ERROR:",
+            error
+        );
+
+        alert(
+            "Delete failed:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN - CLEAR ALL POSTS
+   ========================================================= */
+
+async function clearAllPosts() {
+
+    if (!currentUser) {
+
+        alert(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+    if (!isAdmin()) {
+
+        alert(
+            "❌ Admin access required."
+        );
+
+        return;
+
+    }
+
+    const confirmed =
+        confirm(
+            "⚠️ CLEAR ALL POSTS?\n\n" +
+            "This will permanently delete ALL posts, likes and comments.\n\n" +
+            "This action cannot easily be undone."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const postsSnapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "posts"
+                )
+            );
+
+        if (postsSnapshot.empty) {
+
+            alert(
+                "There are no posts to clear."
+            );
+
+            return;
+
+        }
+
+        let deletedCount = 0;
+
+        for (
+            const postDoc
+            of postsSnapshot.docs
+        ) {
+
+            const postId =
+                postDoc.id;
+
+
+            /* DELETE LIKES */
+
+            const likesSnapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        postId,
+                        "likes"
+                    )
+                );
+
+            for (
+                const likeDoc
+                of likesSnapshot.docs
+            ) {
+
+                await deleteDoc(
+                    likeDoc.ref
+                );
+
+            }
+
+
+            /* DELETE COMMENTS */
+
+            const commentsSnapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        postId,
+                        "comments"
+                    )
+                );
+
+            for (
+                const commentDoc
+                of commentsSnapshot.docs
+            ) {
+
+                await deleteDoc(
+                    commentDoc.ref
+                );
+
+            }
+
+
+            /* DELETE POST */
+
+            await deleteDoc(
+                doc(
+                    db,
+                    "posts",
+                    postId
+                )
+            );
+
+            deletedCount++;
+
+        }
+
+        alert(
+            `✅ All posts cleared.\n\n${deletedCount} posts deleted.`
+        );
+
+    } catch (error) {
+
+        console.error(
+            "❌ CLEAR ALL ERROR:",
+            error
+        );
+
+        alert(
+            "Clear All failed:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN CONTROLS
+   ========================================================= */
+
+function createAdminControls() {
+
+    if (!isAdmin()) {
+        return;
+    }
+
+    if (
+        document.getElementById(
+            "adminClearPostsBtn"
+        )
+    ) {
+        return;
+    }
+
+    const composer =
+        document.querySelector(
+            ".post-composer"
+        );
+
+    if (!composer) {
+        return;
+    }
+
+    const adminBox =
+        document.createElement(
+            "div"
+        );
+
+    adminBox.id =
+        "adminControls";
+
+    adminBox.style.marginTop =
+        "15px";
+
+    adminBox.style.paddingTop =
+        "12px";
+
+    adminBox.style.borderTop =
+        "1px solid #ddd";
+
+    adminBox.innerHTML = `
+
+        <div style="
+            font-weight:bold;
+            margin-bottom:8px;
+        ">
+            👑 Admin Controls
+        </div>
+
+        <button
+            id="adminClearPostsBtn"
+            type="button"
+            style="
+                background:#dc3545;
+                color:white;
+                border:none;
+                padding:10px 15px;
+                border-radius:9px;
+                cursor:pointer;
+                font-weight:bold;
+            ">
+            🧹 Clear All Posts
+        </button>
+
+    `;
+
+    composer.appendChild(
+        adminBox
+    );
+
+    document
+        .getElementById(
+            "adminClearPostsBtn"
+        )
+        ?.addEventListener(
+            "click",
+            clearAllPosts
+        );
+
+}
+
+
+function removeAdminControls() {
+
+    document
+        .getElementById(
+            "adminControls"
+        )
+        ?.remove();
 
 }
 
@@ -1018,7 +1312,6 @@ function loadPosts() {
 
     }
 
-
     const postsQuery =
         query(
             collection(
@@ -1031,7 +1324,6 @@ function loadPosts() {
             )
         );
 
-
     onSnapshot(
 
         postsQuery,
@@ -1039,7 +1331,6 @@ function loadPosts() {
         async (snapshot) => {
 
             postsContainer.innerHTML = "";
-
 
             if (snapshot.empty) {
 
@@ -1061,7 +1352,6 @@ function loadPosts() {
 
             }
 
-
             for (
                 const postDoc
                 of snapshot.docs
@@ -1070,35 +1360,63 @@ function loadPosts() {
                 const post =
                     postDoc.data();
 
-
                 const postId =
                     postDoc.id;
-
 
                 const card =
                     document.createElement(
                         "div"
                     );
 
-
                 card.className =
                     "post-card";
-
 
                 card.id =
                     "post-" +
                     postId;
 
-
                 const name =
                     post.name ||
                     "Student";
-
 
                 const firstLetter =
                     name
                         .charAt(0)
                         .toUpperCase();
+
+
+                /* =================================================
+                   DELETE BUTTON
+                   ================================================= */
+
+                let deleteButtonHTML = "";
+
+                if (
+                    currentUser &&
+                    (
+                        isAdmin() ||
+                        currentUser.uid ===
+                        post.userId
+                    )
+                ) {
+
+                    deleteButtonHTML = `
+
+                        <button
+                            type="button"
+                            class="delete-btn"
+                            data-post-id="${escapeHTML(postId)}"
+                            data-owner-id="${escapeHTML(post.userId || "")}"
+                            style="
+                                color:#dc3545;
+                                font-weight:bold;
+                            ">
+                            🗑️ Delete
+                        </button>
+
+                    `;
+
+                }
 
 
                 card.innerHTML = `
@@ -1114,7 +1432,6 @@ function loadPosts() {
                             )}
                         </div>
 
-
                         <div>
 
                             <div class="post-name">
@@ -1124,7 +1441,6 @@ function loadPosts() {
                                 )}
 
                             </div>
-
 
                             <div class="post-time">
 
@@ -1155,25 +1471,34 @@ function loadPosts() {
                         <button
                             type="button"
                             class="like-btn"
-                        >
+                            data-post-id="${escapeHTML(postId)}">
+
                             🤍 Like (0)
+
                         </button>
 
 
                         <button
                             type="button"
                             class="comment-btn"
-                        >
+                            data-post-id="${escapeHTML(postId)}">
+
                             💬 Comment (0)
+
                         </button>
 
 
                         <button
                             type="button"
                             class="share-btn"
-                        >
+                            data-post-id="${escapeHTML(postId)}">
+
                             📤 Share
+
                         </button>
+
+
+                        ${deleteButtonHTML}
 
                     </div>
 
@@ -1190,16 +1515,19 @@ function loadPosts() {
                         ".like-btn"
                     );
 
-
                 const commentButton =
                     card.querySelector(
                         ".comment-btn"
                     );
 
-
                 const shareButton =
                     card.querySelector(
                         ".share-btn"
+                    );
+
+                const deleteButton =
+                    card.querySelector(
+                        ".delete-btn"
                     );
 
 
@@ -1233,26 +1561,12 @@ function loadPosts() {
                                 postId
                             );
 
-
-                        if (added) {
-
-                            await loadComments(
-                                postId,
-                                commentButton,
-                                card,
-                                true
-                            );
-
-                        } else {
-
-                            await loadComments(
-                                postId,
-                                commentButton,
-                                card,
-                                false
-                            );
-
-                        }
+                        await loadComments(
+                            postId,
+                            commentButton,
+                            card,
+                            added
+                        );
 
                     }
                 );
@@ -1268,8 +1582,24 @@ function loadPosts() {
 
                         await sharePost(
                             postId,
-                            post.text ||
-                            ""
+                            post.text || ""
+                        );
+
+                    }
+                );
+
+
+                /* =================================================
+                   DELETE EVENT
+                   ================================================= */
+
+                deleteButton?.addEventListener(
+                    "click",
+                    async () => {
+
+                        await deletePost(
+                            postId,
+                            post.userId
                         );
 
                     }
@@ -1307,7 +1637,6 @@ function loadPosts() {
                 "❌ LOAD POSTS ERROR:",
                 error
             );
-
 
             postsContainer.innerHTML = `
 
@@ -1347,77 +1676,51 @@ async function sendToServer() {
         !chatHistory ||
         !userInput
     ) {
-
         return;
-
     }
-
 
     const text =
         userInput.value.trim();
 
-
     if (!text) {
-
         return;
-
     }
 
-
-    /* =====================================================
-       USER MESSAGE
-       ===================================================== */
 
     const userMessage =
         document.createElement(
             "div"
         );
 
-
     userMessage.className =
         "message user";
-
 
     userMessage.innerHTML =
         "<b>You:</b> " +
         escapeHTML(text);
 
-
     chatHistory.appendChild(
         userMessage
     );
 
-
     userInput.value = "";
 
-
-    /* =====================================================
-       SEND BUTTON
-       ===================================================== */
 
     if (sendBtn) {
 
         sendBtn.disabled = true;
-
-        sendBtn.textContent =
-            "Thinking...";
+        sendBtn.textContent = "Thinking...";
 
     }
 
-
-    /* =====================================================
-       LOADING
-       ===================================================== */
 
     const loading =
         document.createElement(
             "div"
         );
 
-
     loading.className =
         "message ai";
-
 
     loading.innerHTML = `
 
@@ -1427,11 +1730,9 @@ async function sendToServer() {
 
     `;
 
-
     chatHistory.appendChild(
         loading
     );
-
 
     chatHistory.scrollTop =
         chatHistory.scrollHeight;
@@ -1439,14 +1740,9 @@ async function sendToServer() {
 
     try {
 
-        /* =================================================
-           AI REQUEST
-           ================================================= */
-
         const apiUrl =
             "https://text.pollinations.ai/" +
             encodeURIComponent(text);
-
 
         const response =
             await fetch(
@@ -1455,7 +1751,6 @@ async function sendToServer() {
                     method: "GET"
                 }
             );
-
 
         if (!response.ok) {
 
@@ -1466,10 +1761,8 @@ async function sendToServer() {
 
         }
 
-
         const reply =
             await response.text();
-
 
         if (
             !reply ||
@@ -1482,23 +1775,16 @@ async function sendToServer() {
 
         }
 
-
         loading.remove();
 
-
-        /* =================================================
-           AI MESSAGE
-           ================================================= */
 
         const aiMessage =
             document.createElement(
                 "div"
             );
 
-
         aiMessage.className =
             "message ai";
-
 
         aiMessage.innerHTML = `
 
@@ -1516,23 +1802,17 @@ async function sendToServer() {
 
             <button
                 class="copy-btn"
-                type="button"
-            >
+                type="button">
                 📋 Copy
             </button>
 
         `;
 
 
-        /* =================================================
-           COPY AI RESPONSE
-           ================================================= */
-
         const copyButton =
             aiMessage.querySelector(
                 ".copy-btn"
             );
-
 
         copyButton?.addEventListener(
             "click",
@@ -1575,10 +1855,8 @@ async function sendToServer() {
 
                     }
 
-
                     copyButton.textContent =
                         "✅ Copied!";
-
 
                     setTimeout(
                         () => {
@@ -1589,7 +1867,6 @@ async function sendToServer() {
                         },
                         1500
                     );
-
 
                 } catch (error) {
 
@@ -1612,7 +1889,6 @@ async function sendToServer() {
             aiMessage
         );
 
-
         chatHistory.scrollTop =
             chatHistory.scrollHeight;
 
@@ -1624,7 +1900,6 @@ async function sendToServer() {
             error
         );
 
-
         loading.remove();
 
 
@@ -1633,10 +1908,8 @@ async function sendToServer() {
                 "div"
             );
 
-
         errorMessage.className =
             "message ai";
-
 
         errorMessage.innerHTML = `
 
@@ -1652,25 +1925,19 @@ async function sendToServer() {
 
         `;
 
-
         chatHistory.appendChild(
             errorMessage
         );
 
-
         chatHistory.scrollTop =
             chatHistory.scrollHeight;
-
 
     } finally {
 
         if (sendBtn) {
 
-            sendBtn.disabled =
-                false;
-
-            sendBtn.textContent =
-                "Send";
+            sendBtn.disabled = false;
+            sendBtn.textContent = "Send";
 
         }
 
@@ -1679,19 +1946,11 @@ async function sendToServer() {
 }
 
 
-/* =========================================================
-   AI SEND BUTTON
-   ========================================================= */
-
 sendBtn?.addEventListener(
     "click",
     sendToServer
 );
 
-
-/* =========================================================
-   AI ENTER KEY
-   ========================================================= */
 
 userInput?.addEventListener(
     "keydown",
@@ -1719,23 +1978,18 @@ userInput?.addEventListener(
 function updateThemeButton() {
 
     if (!themeBtn) {
-
         return;
-
     }
-
 
     const isDark =
         document.body.classList.contains(
             "dark"
         );
 
-
     themeBtn.textContent =
         isDark
             ? "☀️"
             : "🌙";
-
 
     themeBtn.title =
         isDark
@@ -1751,7 +2005,6 @@ function applySavedTheme() {
         localStorage.getItem(
             "sociologyTheme"
         );
-
 
     if (
         savedTheme === "dark"
@@ -1769,7 +2022,6 @@ function applySavedTheme() {
 
     }
 
-
     updateThemeButton();
 
 }
@@ -1781,12 +2033,10 @@ function toggleTheme() {
         "dark"
     );
 
-
     const isDark =
         document.body.classList.contains(
             "dark"
         );
-
 
     localStorage.setItem(
         "sociologyTheme",
@@ -1795,15 +2045,7 @@ function toggleTheme() {
             : "light"
     );
 
-
     updateThemeButton();
-
-
-    console.log(
-        isDark
-            ? "🌙 Dark mode enabled."
-            : "☀️ Light mode enabled."
-    );
 
 }
 
@@ -1825,21 +2067,15 @@ themeBtn?.addEventListener(
 function searchWebsite() {
 
     if (!searchBar) {
-
         return;
-
     }
-
 
     const q =
         searchBar.value
             .toLowerCase()
             .trim();
 
-
-    let visible =
-        0;
-
+    let visible = 0;
 
     document.querySelectorAll(
         "#postsContainer > div, " +
@@ -1852,33 +2088,26 @@ function searchWebsite() {
                 element.textContent
                     .toLowerCase();
 
-
             const match =
                 !q ||
                 text.includes(q);
-
 
             element.style.display =
                 match
                     ? ""
                     : "none";
 
-
             if (match) {
-
                 visible++;
-
             }
 
         }
     );
 
-
     const resources =
         document.getElementById(
             "resources"
         );
-
 
     if (resources) {
 
@@ -1888,7 +2117,6 @@ function searchWebsite() {
                 .toLowerCase()
                 .includes(q);
 
-
         resources.style.display =
             match
                 ? ""
@@ -1896,12 +2124,10 @@ function searchWebsite() {
 
     }
 
-
     const counter =
         document.getElementById(
             "searchCount"
         );
-
 
     if (counter) {
 
@@ -1928,11 +2154,8 @@ searchBar?.addEventListener(
 function updateNotificationBadge() {
 
     if (!notifyBtn) {
-
         return;
-
     }
-
 
     const notifications =
         JSON.parse(
@@ -1940,7 +2163,6 @@ function updateNotificationBadge() {
                 "sc_notify"
             )
         ) || [];
-
 
     notifyBtn.innerHTML =
         notifications.length
@@ -1959,7 +2181,6 @@ function showNotifications() {
             )
         ) || [];
 
-
     if (
         notifications.length === 0
     ) {
@@ -1971,7 +2192,6 @@ function showNotifications() {
         return;
 
     }
-
 
     alert(
         "🔔 Notifications\n\n" +
@@ -1997,32 +2217,25 @@ notifyBtn?.addEventListener(
    VOICE INPUT
    ========================================================= */
 
-let recognition =
-    null;
-
+let recognition = null;
 
 const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
-
 
 if (SpeechRecognition) {
 
     recognition =
         new SpeechRecognition();
 
-
     recognition.lang =
         "en-US";
-
 
     recognition.continuous =
         false;
 
-
     recognition.interimResults =
         false;
-
 
     micBtn?.addEventListener(
         "click",
@@ -2032,15 +2245,11 @@ if (SpeechRecognition) {
 
                 recognition.start();
 
-
                 if (micBtn) {
-
-                    micBtn.textContent =
-                        "🔴";
-
+                    micBtn.textContent = "🔴";
                 }
 
-            } catch (error) {
+            } catch {
 
                 console.log(
                     "Voice already running."
@@ -2051,47 +2260,33 @@ if (SpeechRecognition) {
         }
     );
 
-
     recognition.onresult =
         (event) => {
 
             if (!userInput) {
-
                 return;
-
             }
-
 
             userInput.value =
                 event.results[0][0]
                     .transcript;
 
-
             userInput.focus();
 
-
             if (micBtn) {
-
-                micBtn.textContent =
-                    "🎤";
-
+                micBtn.textContent = "🎤";
             }
 
         };
-
 
     recognition.onend =
         () => {
 
             if (micBtn) {
-
-                micBtn.textContent =
-                    "🎤";
-
+                micBtn.textContent = "🎤";
             }
 
         };
-
 
     recognition.onerror =
         (error) => {
@@ -2101,12 +2296,8 @@ if (SpeechRecognition) {
                 error
             );
 
-
             if (micBtn) {
-
-                micBtn.textContent =
-                    "🎤";
-
+                micBtn.textContent = "🎤";
             }
 
         };
@@ -2133,26 +2324,16 @@ logoutBtn?.addEventListener(
 
         try {
 
-            const {
-                signOut
-            } = await import(
-                "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js"
-            );
-
-
             await signOut(
                 auth
             );
-
 
             alert(
                 "✅ Logged out successfully."
             );
 
-
             window.location.href =
                 "index.html";
-
 
         } catch (error) {
 
@@ -2160,7 +2341,6 @@ logoutBtn?.addEventListener(
                 "❌ Logout error:",
                 error
             );
-
 
             alert(
                 "Logout failed:\n\n" +
@@ -2234,6 +2414,14 @@ document.addEventListener(
 
         console.log(
             "📤 Share system loaded."
+        );
+
+        console.log(
+            "🗑️ Delete system loaded."
+        );
+
+        console.log(
+            "👑 Admin system loaded."
         );
 
         console.log(

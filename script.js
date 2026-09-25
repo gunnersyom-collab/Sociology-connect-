@@ -1663,6 +1663,105 @@ function loadPosts() {
 
 loadPosts();
 
+/* =========================================================
+   LOAD NEWS FROM FIRESTORE
+   ========================================================= */
+
+function loadNews() {
+
+    const newsContainer =
+        document.getElementById("newsContainer");
+
+    if (!newsContainer) {
+        return;
+    }
+
+    const newsQuery =
+        query(
+            collection(db, "news"),
+            orderBy("createdAt", "desc")
+        );
+
+    onSnapshot(
+        newsQuery,
+
+        (snapshot) => {
+
+            newsContainer.innerHTML = "";
+
+            if (snapshot.empty) {
+
+                newsContainer.innerHTML = `
+                    <div class="card">
+                        📰 No latest news available yet.
+                    </div>
+                `;
+
+                return;
+            }
+
+            snapshot.forEach((newsDoc) => {
+
+                const news =
+                    newsDoc.data();
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "card";
+
+                card.innerHTML = `
+                    <h3>
+                        📢 ${escapeHTML(
+                            news.title || "Latest News"
+                        )}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            news.description || ""
+                        )}
+                    </p>
+
+                    ${
+                        news.createdAt
+                        ? `
+                            <small style="color:#777;">
+                                🕐 ${formatPostTime(
+                                    news.createdAt
+                                )}
+                            </small>
+                        `
+                        : ""
+                    }
+                `;
+
+                newsContainer.appendChild(card);
+
+            });
+
+        },
+
+        (error) => {
+
+            console.error(
+                "❌ LOAD NEWS ERROR:",
+                error
+            );
+
+            newsContainer.innerHTML = `
+                <div class="card">
+                    ❌ Unable to load latest news.
+                </div>
+            `;
+
+        }
+    );
+
+}
+
+
+loadNews();
 
 /* =========================================================
    AI MARI

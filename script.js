@@ -660,18 +660,247 @@ function loadPosts() {
 
     loadTrendingPosts();
 
-  }, (error) => {
+/* ================= LOAD POSTS ================= */
 
-    console.error("LOAD POSTS ERROR:", error);
+function loadPosts() {
 
-    postsContainer.innerHTML = `
-      <div class="post-card">
-        ❌ Unable to load posts.
-      </div>
-    `;
+  if (!postsContainer) {
+    console.warn("⚠️ postsContainer not found");
+    return;
+  }
 
-  });
+  const postsQuery = query(
+    collection(db, "posts"),
+    orderBy("createdAt", "desc")
+  );
 
+  onSnapshot(
+    postsQuery,
+    async (snapshot) => {
+
+      postsContainer.innerHTML = "";
+
+      if (snapshot.empty) {
+
+        postsContainer.innerHTML = `
+          <div class="post-card">
+            <p>
+              No posts yet. Be the first student to post! 📚
+            </p>
+          </div>
+        `;
+
+        return;
+      }
+
+      for (const postDoc of snapshot.docs) {
+
+        const post = postDoc.data();
+        const postId = postDoc.id;
+
+        const name =
+          post.name ||
+          "Student";
+
+        const card =
+          document.createElement("div");
+
+        card.className = "post-card";
+        card.id = "post-" + postId;
+
+        const canDelete =
+          currentUser &&
+          (
+            isAdmin() ||
+            currentUser.uid === post.userId
+          );
+
+        card.innerHTML = `
+          <div class="post-header">
+
+            <div class="post-avatar">
+              ${escapeHTML(
+                name.charAt(0).toUpperCase()
+              )}
+            </div>
+
+            <div>
+
+              <div class="post-name">
+                ${escapeHTML(name)}
+              </div>
+
+              <div class="post-time">
+                🕐 ${formatPostTime(post.createdAt)}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="post-text">
+            ${escapeHTML(post.text || "")}
+          </div>
+
+          <div class="post-actions">
+
+            <button
+              type="button"
+              class="like-btn">
+              🤍 Like (0)
+            </button>
+
+            <button
+              type="button"
+              class="comment-btn">
+              💬 Comment (0)
+            </button>
+
+            <button
+              type="button"
+              class="share-btn">
+              📤 Share
+            </button>
+
+            ${
+              canDelete
+                ? `
+                  <button
+                    type="button"
+                    class="delete-btn"
+                    style="color:#dc3545;">
+                    🗑️ Delete
+                  </button>
+                `
+                : ""
+            }
+
+          </div>
+        `;
+
+        postsContainer.appendChild(card);
+
+        /* ================= BUTTONS ================= */
+
+        const likeBtn =
+          card.querySelector(".like-btn");
+
+        const commentBtn =
+          card.querySelector(".comment-btn");
+
+        const shareBtn =
+          card.querySelector(".share-btn");
+
+        const deleteBtn =
+          card.querySelector(".delete-btn");
+
+        /* ================= LIKE ================= */
+
+        likeBtn?.addEventListener(
+          "click",
+          () => {
+            toggleLike(
+              postId,
+              likeBtn
+            );
+          }
+        );
+
+        /* ================= COMMENT ================= */
+
+        commentBtn?.addEventListener(
+          "click",
+          async () => {
+
+            const added =
+              await commentPost(postId);
+
+            await loadComments(
+              postId,
+              commentBtn,
+              card,
+              added
+            );
+
+            loadTrendingPosts();
+
+          }
+        );
+
+        /* ================= SHARE ================= */
+
+        shareBtn?.addEventListener(
+          "click",
+          () => {
+
+            sharePost(
+              postId,
+              post.text || ""
+            );
+
+          }
+        );
+
+        /* ================= DELETE ================= */
+
+        deleteBtn?.addEventListener(
+          "click",
+          async () => {
+
+            await deletePost(
+              postId,
+              post.userId
+            );
+
+            loadTrendingPosts();
+
+          }
+        );
+
+        /* ================= COUNTS ================= */
+
+        await updateLikeButton(
+          postId,
+          likeBtn
+        );
+
+        await loadComments(
+          postId,
+          commentBtn,
+          card,
+          false
+        );
+
+      }
+
+      console.log(
+        "✅ Posts loaded:",
+        snapshot.size
+      );
+
+      loadTrendingPosts();
+
+    },
+
+    (error) => {
+
+      console.error(
+        "❌ LOAD POSTS ERROR:",
+        error
+      );
+
+      postsContainer.innerHTML = `
+        <div class="post-card">
+          ❌ Unable to load posts.
+          <br><br>
+          <small>
+            Please login and try again.
+          </small>
+        </div>
+      `;
+
+    }
+  );
 }
 
 /* ================= TRENDING POSTS ================= */

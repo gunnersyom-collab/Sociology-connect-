@@ -2726,9 +2726,4 @@ document.addEventListener(
      */
 
 
-    console.log(
-      "✅ Sociology Connect 2.0 Ready"
-    );
-
-  }
-);
+    

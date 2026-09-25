@@ -136,10 +136,9 @@ async function createPost() {
 
     await addDoc(collection(db, "posts"), {
       text,
-      name: pdata.fullName || user.displayName || "Student",
-      uid: user.uid,
-      createdAt: serverTimestamp()
-    });
+      name: pdata.fullName || user.displayName || user.email.split("@")[0],
+uid: user.uid,
+createdAt: serverTimestamp()
 
     input.value = "";
 

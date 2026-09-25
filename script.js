@@ -1,1695 +1,1044 @@
 /* =========================================================
-   SOCIOLOGY CONNECT - SCRIPT.JS
-   AI MARI
-   FIREBASE POSTS
-   LIKE
-   COMMENT
-   SHARE
-   DARK MODE
-   SEARCH
-   VOICE
-   NOTIFICATIONS
-   ========================================================= */
+SOCIOLOGY CONNECT - SCRIPT.JS
+AI MARI + FIREBASE POSTS + DARK MODE + SEARCH
+
+VOICE + NOTIFICATIONS
+========================================================= */
 
 
 /* =========================================================
-   FIREBASE
-   ========================================================= */
+FIREBASE IMPORTS
+========================================================= */
 
 import { auth, db } from "./firebase.js";
 
 import {
-    collection,
-    addDoc,
-    serverTimestamp,
-    query,
-    orderBy,
-    onSnapshot,
-    doc,
-    getDoc,
-    getDocs,
-    setDoc,
-    deleteDoc,
-    onAuthStateChanged
+collection,
+addDoc,
+serverTimestamp,
+query,
+orderBy,
+onSnapshot,
+doc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-
 /* =========================================================
-   ELEMENTS
-   ========================================================= */
+ELEMENTS
+========================================================= */
 
 const chatHistory =
-    document.getElementById("chat-history");
+document.getElementById("chat-history");
 
 const userInput =
-    document.getElementById("userInput");
+document.getElementById("userInput");
 
 const sendBtn =
-    document.getElementById("sendBtn");
+document.getElementById("sendBtn");
 
 const micBtn =
-    document.getElementById("micBtn");
+document.getElementById("micBtn");
 
 const themeBtn =
-    document.getElementById("themeBtn");
+document.getElementById("themeBtn");
 
 const searchBar =
-    document.getElementById("searchBar");
+document.getElementById("searchBar");
 
 const notifyBtn =
-    document.getElementById("notifyBtn");
+document.getElementById("notifyBtn");
 
 const postsContainer =
-    document.getElementById("postsContainer");
+document.getElementById("postsContainer");
 
 const postInput =
-    document.getElementById("postInput");
-
-const postBtn =
-    document.getElementById("postBtn");
-
+document.getElementById("postInput");
 
 /* =========================================================
-   GLOBAL USER
-   ========================================================= */
-
-let currentUser = null;
-
-
-/* =========================================================
-   SECURITY
-   ========================================================= */
+SECURITY
+========================================================= */
 
 function escapeHTML(value) {
 
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+return String(value || "")  
+    .replace(/&/g, "&amp;")  
+    .replace(/</g, "&lt;")  
+    .replace(/>/g, "&gt;")  
+    .replace(/"/g, "&quot;")  
+    .replace(/'/g, "&#039;");
 
 }
 
-
 /* =========================================================
-   DATE FORMAT
-   ========================================================= */
+FIREBASE POSTS
+========================================================= */
 
-function formatPostTime(timestamp) {
+/* ================= CREATE POST ================= */
 
-    if (!timestamp) {
-        return "Just now";
-    }
+window.createPost = async function () {
 
-    try {
+if (!postInput) {  
+    console.error(  
+        "postInput was not found."  
+    );  
+    return;  
+}  
 
-        const date =
-            timestamp.toDate();
+const text =  
+    postInput.value.trim();  
 
-        return date.toLocaleString(
-            "en-US",
-            {
-                dateStyle: "medium",
-                timeStyle: "short"
-            }
-        );
+const user =  
+    auth.currentUser;  
 
-    } catch {
 
-        return "Just now";
+/* ---------- LOGIN CHECK ---------- */  
 
-    }
+if (!user) {  
+
+    alert(  
+        "Please login first."  
+    );  
+
+    return;  
+
+}  
+
+
+/* ---------- EMPTY POST CHECK ---------- */  
+
+if (!text) {  
+
+    alert(  
+        "Write something first."  
+    );  
+
+    return;  
+
+}  
+
+
+try {  
+
+    /* ---------- GET USER PROFILE ---------- */  
+
+    const profileSnap =  
+        await getDoc(  
+            doc(  
+                db,  
+                "users",  
+                user.uid  
+            )  
+        );  
+
+
+    const profileData =  
+        profileSnap.exists()  
+            ? profileSnap.data()  
+            : {};  
+
+
+    /* ---------- USER NAME ---------- */  
+
+    const name =  
+        profileData.fullName ||  
+        user.displayName ||  
+        (  
+            user.email  
+                ? user.email.split("@")[0]  
+                : "Student"  
+        );  
+
+
+    /* ---------- SAVE POST ---------- */  
+
+    await addDoc(  
+        collection(db, "posts"),  
+        {  
+
+            text: text,  
+
+            userId: user.uid,  
+
+            name: name,  
+
+            createdAt:  
+                serverTimestamp()  
+
+        }  
+    );  
+
+
+    /* ---------- CLEAR INPUT ---------- */  
+
+    postInput.value = "";  
+
+
+    console.log(  
+        "✅ Post created successfully."  
+    );  
+
+
+} catch (error) {  
+
+    console.error(  
+        "❌ Create post error:",  
+        error  
+    );  
+
+    alert(  
+        "Post failed: " +  
+        error.message  
+    );  
 
 }
 
+};
 
 /* =========================================================
-   AUTH STATE
-   ========================================================= */
+LOAD POSTS FROM FIRESTORE
+========================================================= */
 
-onAuthStateChanged(
-    auth,
-    (user) => {
+if (postsContainer) {
 
-        currentUser = user;
+const postsQuery =  
+    query(  
+        collection(db, "posts"),  
+        orderBy(  
+            "createdAt",  
+            "desc"  
+        )  
+    );  
 
-        console.log(
-            user
-                ? "✅ Logged in: " + user.email
-                : "ℹ️ User not logged in"
-        );
 
-    }
+onSnapshot(  
+
+    postsQuery,  
+
+    (snapshot) => {  
+
+        postsContainer.innerHTML = "";  
+
+
+        if (snapshot.empty) {  
+
+            postsContainer.innerHTML = `  
+                <div class="post-card">  
+                    <p>  
+                        No posts yet. Be the first  
+                        student to post something! 📚  
+                    </p>  
+                </div>  
+            `;  
+
+            return;  
+
+        }  
+
+
+        snapshot.forEach(  
+            (postDoc) => {  
+
+                const post =  
+                    postDoc.data();  
+
+
+                const card =  
+                    document.createElement(  
+                        "div"  
+                    );  
+
+
+                card.className =  
+                    "post-card";  
+
+
+                card.innerHTML = `  
+
+                    <div class="post-header">  
+
+                        <div class="avatar">  
+                            👤  
+                        </div>  
+
+                        <div>  
+
+                            <strong>  
+                                ${escapeHTML(  
+                                    post.name ||  
+                                    "Student"  
+                                )}  
+                            </strong>  
+
+                            <br>  
+
+                            <small>  
+                                ${post.createdAt  
+                                    ? "Posted"  
+                                    : "Just now"}  
+                            </small>  
+
+                        </div>  
+
+                    </div>  
+
+
+                    <p>  
+                        ${escapeHTML(  
+                            post.text || ""  
+                        )}  
+                    </p>  
+
+
+                    <div class="post-actions">  
+
+                        <button  
+                            type="button"  
+                            class="like-btn"  
+                        >  
+                            ❤️ Like  
+                        </button>  
+
+
+                        <button  
+                            type="button"  
+                            class="comment-btn"  
+                        >  
+                            💬 Comment  
+                        </button>  
+
+
+                        <button  
+                            type="button"  
+                            class="share-btn"  
+                        >  
+                            📤 Share  
+                        </button>  
+
+                    </div>  
+
+                `;  
+
+
+                postsContainer.appendChild(  
+                    card  
+                );  
+
+            }  
+        );  
+
+    },  
+
+
+    (error) => {  
+
+        console.error(  
+            "❌ Load posts error:",  
+            error  
+        );  
+
+
+        postsContainer.innerHTML = `  
+            <div class="post-card">  
+                <p>  
+                    Unable to load posts.  
+                </p>  
+            </div>  
+        `;  
+
+    }  
+
 );
 
-
-/* =========================================================
-   GET USER NAME
-   ========================================================= */
-
-async function getUserName(user) {
-
-    if (!user) {
-        return "Student";
-    }
-
-    try {
-
-        const profileSnap =
-            await getDoc(
-                doc(
-                    db,
-                    "users",
-                    user.uid
-                )
-            );
-
-        if (profileSnap.exists()) {
-
-            const data =
-                profileSnap.data();
-
-            return (
-                data.fullName ||
-                data.name ||
-                user.displayName ||
-                user.email?.split("@")[0] ||
-                "Student"
-            );
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Profile unavailable:",
-            error
-        );
-
-    }
-
-    return (
-        user.displayName ||
-        user.email?.split("@")[0] ||
-        "Student"
-    );
-
 }
 
-
 /* =========================================================
-   CREATE POST
-   ========================================================= */
-
-async function createPost() {
-
-    if (!postInput) {
-
-        console.error(
-            "❌ postInput not found."
-        );
-
-        return;
-
-    }
-
-
-    const text =
-        postInput.value.trim();
-
-
-    if (!text) {
-
-        alert(
-            "Please write something first."
-        );
-
-        return;
-
-    }
-
-
-    if (!currentUser) {
-
-        alert(
-            "Please login first."
-        );
-
-        return;
-
-    }
-
-
-    if (postBtn) {
-
-        postBtn.disabled = true;
-
-        postBtn.textContent =
-            "Posting...";
-
-    }
-
-
-    try {
-
-        const name =
-            await getUserName(
-                currentUser
-            );
-
-
-        await addDoc(
-            collection(
-                db,
-                "posts"
-            ),
-            {
-
-                text: text,
-
-                userId:
-                    currentUser.uid,
-
-                name: name,
-
-                email:
-                    currentUser.email || "",
-
-                createdAt:
-                    serverTimestamp()
-
-            }
-        );
-
-
-        postInput.value = "";
-
-
-        console.log(
-            "✅ POST CREATED"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "❌ CREATE POST ERROR:",
-            error
-        );
-
-        alert(
-            "Post failed:\n" +
-            error.message
-        );
-
-    } finally {
-
-        if (postBtn) {
-
-            postBtn.disabled = false;
-
-            postBtn.textContent =
-                "📤 Post";
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   POST BUTTON
-   ========================================================= */
-
-if (postBtn) {
-
-    postBtn.addEventListener(
-        "click",
-        createPost
-    );
-
-}
-
-
-/* =========================================================
-   ENTER TO POST
-   ========================================================= */
-
-postInput?.addEventListener(
-    "keydown",
-    (event) => {
-
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
-
-            event.preventDefault();
-
-            createPost();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   LIKE POST
-   ========================================================= */
-
-async function toggleLike(postId, button) {
-
-    if (!currentUser) {
-
-        alert(
-            "Please login to like a post."
-        );
-
-        return;
-
-    }
-
-
-    const likeRef =
-        doc(
-            db,
-            "posts",
-            postId,
-            "likes",
-            currentUser.uid
-        );
-
-
-    try {
-
-        const likeSnap =
-            await getDoc(likeRef);
-
-
-        if (likeSnap.exists()) {
-
-            await deleteDoc(
-                likeRef
-            );
-
-            console.log(
-                "💔 Like removed"
-            );
-
-        } else {
-
-            await setDoc(
-                likeRef,
-                {
-                    userId:
-                        currentUser.uid,
-
-                    createdAt:
-                        serverTimestamp()
-                }
-            );
-
-            console.log(
-                "❤️ Post liked"
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "❌ LIKE ERROR:",
-            error
-        );
-
-        alert(
-            "Like failed:\n" +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   LOAD LIKE COUNT
-   ========================================================= */
-
-async function loadLikeCount(
-    postId,
-    likeButton
-) {
-
-    try {
-
-        const likesSnap =
-            await getDocs(
-                collection(
-                    db,
-                    "posts",
-                    postId,
-                    "likes"
-                )
-            );
-
-
-        const count =
-            likesSnap.size;
-
-
-        const liked =
-            currentUser
-                ? likesSnap.docs.some(
-                    d =>
-                        d.id ===
-                        currentUser.uid
-                )
-                : false;
-
-
-        likeButton.textContent =
-            liked
-                ? `❤️ Liked (${count})`
-                : `🤍 Like (${count})`;
-
-
-    } catch (error) {
-
-        console.error(
-            "Like count error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   COMMENT POST
-   ========================================================= */
-
-async function commentPost(
-    postId
-) {
-
-    if (!currentUser) {
-
-        alert(
-            "Please login to comment."
-        );
-
-        return;
-
-    }
-
-
-    const comment =
-        prompt(
-            "Write your comment:"
-        );
-
-
-    if (
-        !comment ||
-        !comment.trim()
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        const name =
-            await getUserName(
-                currentUser
-            );
-
-
-        await addDoc(
-            collection(
-                db,
-                "posts",
-                postId,
-                "comments"
-            ),
-            {
-
-                text:
-                    comment.trim(),
-
-                userId:
-                    currentUser.uid,
-
-                name:
-                    name,
-
-                createdAt:
-                    serverTimestamp()
-
-            }
-        );
-
-
-        alert(
-            "✅ Comment added!"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "❌ COMMENT ERROR:",
-            error
-        );
-
-        alert(
-            "Comment failed:\n" +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   LOAD COMMENTS
-   ========================================================= */
-
-async function loadComments(
-    postId,
-    commentButton,
-    card
-) {
-
-    try {
-
-        const commentsSnap =
-            await getDocs(
-                collection(
-                    db,
-                    "posts",
-                    postId,
-                    "comments"
-                )
-            );
-
-
-        const count =
-            commentsSnap.size;
-
-
-        commentButton.textContent =
-            `💬 Comment (${count})`;
-
-
-        const oldComments =
-            card.querySelector(
-                ".comments-box"
-            );
-
-
-        if (oldComments) {
-            oldComments.remove();
-        }
-
-
-        if (count === 0) {
-            return;
-        }
-
-
-        const commentsBox =
-            document.createElement(
-                "div"
-            );
-
-
-        commentsBox.className =
-            "comments-box";
-
-
-        commentsBox.style.marginTop =
-            "12px";
-
-        commentsBox.style.paddingTop =
-            "10px";
-
-        commentsBox.style.borderTop =
-            "1px solid #ddd";
-
-
-        commentsSnap.forEach(
-            (commentDoc) => {
-
-                const data =
-                    commentDoc.data();
-
-
-                const commentDiv =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                commentDiv.style.padding =
-                    "7px 0";
-
-
-                commentDiv.innerHTML = `
-                    <strong>
-                        ${escapeHTML(
-                            data.name ||
-                            "Student"
-                        )}
-                    </strong>
-                    <br>
-                    <span>
-                        ${escapeHTML(
-                            data.text ||
-                            ""
-                        )}
-                    </span>
-                `;
-
-
-                commentsBox.appendChild(
-                    commentDiv
-                );
-
-            }
-        );
-
-
-        card.appendChild(
-            commentsBox
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Comment loading error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   SHARE POST
-   ========================================================= */
-
-async function sharePost(
-    postId,
-    postText
-) {
-
-    const shareUrl =
-        window.location.href.split("#")[0] +
-        "#post-" +
-        postId;
-
-
-    try {
-
-        if (
-            navigator.share
-        ) {
-
-            await navigator.share(
-                {
-                    title:
-                        "Sociology Connect",
-
-                    text:
-                        postText,
-
-                    url:
-                        shareUrl
-                }
-            );
-
-            return;
-
-        }
-
-
-        await navigator.clipboard.writeText(
-            shareUrl
-        );
-
-
-        alert(
-            "✅ Post link copied!"
-        );
-
-
-    } catch (error) {
-
-        console.log(
-            "Share cancelled or failed:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   LOAD POSTS
-   ========================================================= */
-
-function loadPosts() {
-
-    if (!postsContainer) {
-        return;
-    }
-
-
-    const postsQuery =
-        query(
-            collection(
-                db,
-                "posts"
-            ),
-            orderBy(
-                "createdAt",
-                "desc"
-            )
-        );
-
-
-    onSnapshot(
-
-        postsQuery,
-
-        async (snapshot) => {
-
-            postsContainer.innerHTML = "";
-
-
-            if (snapshot.empty) {
-
-                postsContainer.innerHTML = `
-                    <div class="post-card">
-                        <p>
-                            No posts yet.
-                            Be the first student
-                            to post something! 📚
-                        </p>
-                    </div>
-                `;
-
-                return;
-
-            }
-
-
-            for (
-                const postDoc
-                of snapshot.docs
-            ) {
-
-                const post =
-                    postDoc.data();
-
-                const postId =
-                    postDoc.id;
-
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    "post-card";
-
-                card.id =
-                    "post-" +
-                    postId;
-
-
-                const firstLetter =
-                    (
-                        post.name ||
-                        "Student"
-                    )
-                    .charAt(0)
-                    .toUpperCase();
-
-
-                card.innerHTML = `
-
-                    <div class="post-header">
-
-                        <div
-                            class="post-avatar"
-                            style="
-                                background:#007bff;
-                                color:white;
-                                display:flex;
-                                align-items:center;
-                                justify-content:center;
-                                font-weight:bold;
-                            "
-                        >
-                            ${escapeHTML(
-                                firstLetter
-                            )}
-                        </div>
-
-
-                        <div>
-
-                            <div class="post-name">
-
-                                ${escapeHTML(
-                                    post.name ||
-                                    "Student"
-                                )}
-
-                            </div>
-
-
-                            <div class="post-time">
-
-                                🕐
-                                ${formatPostTime(
-                                    post.createdAt
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="post-text">
-
-                        ${escapeHTML(
-                            post.text ||
-                            ""
-                        )}
-
-                    </div>
-
-
-                    <div class="post-actions">
-
-                        <button
-                            type="button"
-                            class="like-btn"
-                        >
-                            🤍 Like
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="comment-btn"
-                        >
-                            💬 Comment
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="share-btn"
-                        >
-                            📤 Share
-                        </button>
-
-                    </div>
-
-                `;
-
-
-                postsContainer.appendChild(
-                    card
-                );
-
-
-                const likeButton =
-                    card.querySelector(
-                        ".like-btn"
-                    );
-
-
-                const commentButton =
-                    card.querySelector(
-                        ".comment-btn"
-                    );
-
-
-                const shareButton =
-                    card.querySelector(
-                        ".share-btn"
-                    );
-
-
-                /* ---------- LIKE ---------- */
-
-                likeButton.addEventListener(
-                    "click",
-                    async () => {
-
-                        await toggleLike(
-                            postId,
-                            likeButton
-                        );
-
-                        await loadLikeCount(
-                            postId,
-                            likeButton
-                        );
-
-                    }
-                );
-
-
-                /* ---------- COMMENT ---------- */
-
-                commentButton.addEventListener(
-                    "click",
-                    async () => {
-
-                        await commentPost(
-                            postId
-                        );
-
-                        await loadComments(
-                            postId,
-                            commentButton,
-                            card
-                        );
-
-                    }
-                );
-
-
-                /* ---------- SHARE ---------- */
-
-                shareButton.addEventListener(
-                    "click",
-                    async () => {
-
-                        await sharePost(
-                            postId,
-                            post.text || ""
-                        );
-
-                    }
-                );
-
-
-                /* ---------- INITIAL COUNTS ---------- */
-
-                await loadLikeCount(
-                    postId,
-                    likeButton
-                );
-
-
-                await loadComments(
-                    postId,
-                    commentButton,
-                    card
-                );
-
-            }
-
-        },
-
-
-        (error) => {
-
-            console.error(
-                "❌ LOAD POSTS ERROR:",
-                error
-            );
-
-
-            postsContainer.innerHTML = `
-                <div class="post-card">
-                    <p>
-                        ❌ Unable to load posts.
-                    </p>
-
-                    <small>
-                        ${escapeHTML(
-                            error.message
-                        )}
-                    </small>
-                </div>
-            `;
-
-        }
-
-    );
-
-}
-
-
-loadPosts();
-
-
-/* =========================================================
-   AI MARI
-   ========================================================= */
+AI MARI
+========================================================= */
 
 async function sendToServer() {
 
-    if (
-        !chatHistory ||
-        !userInput
-    ) {
-        return;
-    }
+if (!chatHistory || !userInput)  
+    return;  
 
 
-    const text =
-        userInput.value.trim();
+const text =  
+    userInput.value.trim();  
 
 
-    if (!text) {
-        return;
-    }
+if (!text)  
+    return;  
 
 
-    const userMessage =
-        document.createElement(
-            "div"
-        );
+/* ---------- USER MESSAGE ---------- */  
 
+const userMessage =  
+    document.createElement("div");  
 
-    userMessage.className =
-        "message user";
 
+userMessage.className =  
+    "message user";  
 
-    userMessage.innerHTML =
-        "<b>You:</b> " +
-        escapeHTML(text);
 
+userMessage.innerHTML =  
+    "<b>You:</b> " +  
+    escapeHTML(text);  
 
-    chatHistory.appendChild(
-        userMessage
-    );
 
+chatHistory.appendChild(  
+    userMessage  
+);  
 
-    userInput.value = "";
 
+/* ---------- CLEAR INPUT ---------- */  
 
-    if (sendBtn) {
+userInput.value = "";  
 
-        sendBtn.disabled = true;
 
-        sendBtn.textContent =
-            "Thinking...";
+/* ---------- SEND BUTTON ---------- */  
 
-    }
+if (sendBtn) {  
 
+    sendBtn.disabled = true;  
 
-    const loading =
-        document.createElement(
-            "div"
-        );
+    sendBtn.textContent =  
+        "Thinking...";  
 
+}  
 
-    loading.className =
-        "message ai";
 
+/* ---------- LOADING ---------- */  
 
-    loading.innerHTML =
-        "<b>AI Mari:</b><br>" +
-        "<i>Typing...</i>";
+const loading =  
+    document.createElement("div");  
 
 
-    chatHistory.appendChild(
-        loading
-    );
+loading.className =  
+    "message ai";  
 
 
-    chatHistory.scrollTop =
-        chatHistory.scrollHeight;
+loading.innerHTML =  
+    "<b>AI Mari:</b><br>" +  
+    "<i>Typing...</i>";  
 
 
-    try {
+chatHistory.appendChild(  
+    loading  
+);  
 
-        const res =
-            await fetch(
-                "https://text.pollinations.ai/" +
-                encodeURIComponent(text)
-            );
 
+chatHistory.scrollTop =  
+    chatHistory.scrollHeight;  
 
-        if (!res.ok) {
 
-            throw new Error(
-                "AI server error"
-            );
+try {  
 
-        }
+    /* ---------- AI REQUEST ---------- */  
 
+    const res =  
+        await fetch(  
+            "https://text.pollinations.ai/" +  
+            encodeURIComponent(text)  
+        );  
 
-        const reply =
-            await res.text();
 
+    if (!res.ok) {  
 
-        loading.remove();
+        throw new Error(  
+            "AI server error"  
+        );  
 
+    }  
 
-        const aiMessage =
-            document.createElement(
-                "div"
-            );
 
+    const reply =  
+        await res.text();  
 
-        aiMessage.className =
-            "message ai";
 
+    /* ---------- REMOVE LOADING ---------- */  
 
-        aiMessage.innerHTML = `
+    loading.remove();  
 
-            <b>AI Mari:</b><br>
 
-            <span class="ai-text">
+    /* ---------- AI MESSAGE ---------- */  
 
-                ${escapeHTML(
-                    reply
-                )}
+    const aiMessage =  
+        document.createElement("div");  
 
-            </span>
 
-            <br><br>
+    aiMessage.className =  
+        "message ai";  
 
-            <button
-                class="copy-btn"
-                type="button"
-            >
-                📋 Copy
-            </button>
 
-        `;
+    aiMessage.innerHTML = `  
 
+        <b>AI Mari:</b><br>  
 
-        const copyButton =
-            aiMessage.querySelector(
-                ".copy-btn"
-            );
+        <span class="ai-text">  
+            ${escapeHTML(reply)}  
+        </span>  
 
+        <br><br>  
 
-        copyButton?.addEventListener(
-            "click",
-            async () => {
+        <button  
+            class="copy-btn"  
+            type="button"  
+        >  
+            📋 Copy  
+        </button>  
 
-                try {
+    `;  
 
-                    await navigator
-                        .clipboard
-                        .writeText(
-                            reply
-                        );
 
+    /* ---------- COPY BUTTON ---------- */  
 
-                    copyButton.textContent =
-                        "✅ Copied!";
+    const copyButton =  
+        aiMessage.querySelector(  
+            ".copy-btn"  
+        );  
 
 
-                    setTimeout(
-                        () => {
+    if (copyButton) {  
 
-                            copyButton.textContent =
-                                "📋 Copy";
+        copyButton.addEventListener(  
+            "click",  
+            async () => {  
 
-                        },
-                        1500
-                    );
+                try {  
 
+                    await navigator  
+                        .clipboard  
+                        .writeText(reply);  
 
-                } catch {
 
-                    alert(
-                        "Copy failed."
-                    );
+                    copyButton.textContent =  
+                        "✅ Copied!";  
 
-                }
 
-            }
-        );
+                    setTimeout(  
+                        () => {  
 
+                            copyButton.textContent =  
+                                "📋 Copy";  
 
-        chatHistory.appendChild(
-            aiMessage
-        );
+                        },  
+                        1500  
+                    );  
 
 
-        chatHistory.scrollTop =
-            chatHistory.scrollHeight;
+                } catch {  
 
+                    alert(  
+                        "Copy failed."  
+                    );  
 
-    } catch (error) {
+                }  
 
-        console.error(
-            "AI Mari Error:",
-            error
-        );
+            }  
+        );  
 
+    }  
 
-        loading.remove();
 
+    /* ---------- ADD AI MESSAGE ---------- */  
 
-        const errorMessage =
-            document.createElement(
-                "div"
-            );
+    chatHistory.appendChild(  
+        aiMessage  
+    );  
 
 
-        errorMessage.className =
-            "message ai";
+    /* ---------- KEEP CHAT VISIBLE ---------- */  
 
+    chatHistory.scrollTop =  
+        chatHistory.scrollHeight;  
 
-        errorMessage.innerHTML = `
 
-            <b>AI Mari:</b><br>
+} catch (error) {  
 
-            Sorry, connection failed.
-            Please try again.
+    console.error(  
+        "AI Mari Error:",  
+        error  
+    );  
 
-        `;
 
+    /* ---------- REMOVE LOADING ---------- */  
 
-        chatHistory.appendChild(
-            errorMessage
-        );
+    loading.remove();  
 
 
-    } finally {
+    /* ---------- ERROR MESSAGE ---------- */  
 
-        if (sendBtn) {
+    const errorMessage =  
+        document.createElement(  
+            "div"  
+        );  
 
-            sendBtn.disabled = false;
 
-            sendBtn.textContent =
-                "Send";
+    errorMessage.className =  
+        "message ai";  
 
-        }
 
-    }
+    errorMessage.innerHTML = `  
+
+        <b>AI Mari:</b><br>  
+
+        <span class="ai-text">  
+            Sorry, connection failed.  
+            Please try again.  
+        </span>  
+
+    `;  
+
+
+    chatHistory.appendChild(  
+        errorMessage  
+    );  
+
+
+    chatHistory.scrollTop =  
+        chatHistory.scrollHeight;  
+
+} finally {  
+
+    if (sendBtn) {  
+
+        sendBtn.disabled = false;  
+
+        sendBtn.textContent =  
+            "Send";  
+
+    }  
 
 }
 
+}
 
 /* =========================================================
-   AI EVENTS
-   ========================================================= */
+AI SEND EVENTS
+========================================================= */
 
 sendBtn?.addEventListener(
-    "click",
-    sendToServer
+"click",
+sendToServer
 );
-
 
 userInput?.addEventListener(
-    "keydown",
-    (event) => {
+"keydown",
+(event) => {
 
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
+if (  
+        event.key === "Enter" &&  
+        !event.shiftKey  
+    ) {  
 
-            event.preventDefault();
+        event.preventDefault();  
 
-            sendToServer();
+        sendToServer();  
 
-        }
+    }  
 
-    }
+}
+
 );
 
-
 /* =========================================================
-   DARK MODE
-   ========================================================= */
+DARK MODE
+========================================================= */
 
 function updateThemeButton() {
 
-    if (!themeBtn) {
-        return;
-    }
+if (!themeBtn)  
+    return;  
 
 
-    const dark =
-        document.body.classList.contains(
-            "dark"
-        );
+if (  
+    document.body.classList  
+        .contains("dark")  
+) {  
 
+    themeBtn.textContent =  
+        "☀️";  
 
-    themeBtn.textContent =
-        dark
-            ? "☀️"
-            : "🌙";
+    themeBtn.title =  
+        "Light Mode";  
 
+} else {  
 
-    themeBtn.title =
-        dark
-            ? "Light Mode"
-            : "Dark Mode";
+    themeBtn.textContent =  
+        "🌙";  
+
+    themeBtn.title =  
+        "Dark Mode";  
 
 }
 
+}
+
+/* ---------- APPLY SAVED THEME ---------- */
 
 function applySavedTheme() {
 
-    const saved =
-        localStorage.getItem(
-            "sociologyTheme"
-        );
+const savedTheme =  
+    localStorage.getItem(  
+        "sociologyTheme"  
+    );  
 
 
-    if (saved === "dark") {
+if (  
+    savedTheme === "dark"  
+) {  
 
-        document.body.classList.add(
-            "dark"
-        );
+    document.body.classList.add(  
+        "dark"  
+    );  
 
-    } else {
+} else {  
 
-        document.body.classList.remove(
-            "dark"
-        );
+    document.body.classList.remove(  
+        "dark"  
+    );  
 
-    }
+}  
 
 
-    updateThemeButton();
+updateThemeButton();
 
 }
 
+/* ---------- TOGGLE THEME ---------- */
 
 window.toggleTheme =
-    function () {
+function () {
 
-        document.body.classList.toggle(
-            "dark"
-        );
-
-
-        const dark =
-            document.body.classList.contains(
-                "dark"
-            );
+document.body.classList.toggle(  
+        "dark"  
+    );  
 
 
-        localStorage.setItem(
-            "sociologyTheme",
-            dark
-                ? "dark"
-                : "light"
-        );
+    const darkMode =  
+        document.body.classList.contains(  
+            "dark"  
+        );  
 
 
-        updateThemeButton();
+    localStorage.setItem(  
+        "sociologyTheme",  
+        darkMode  
+            ? "dark"  
+            : "light"  
+    );  
 
-    };
 
+    updateThemeButton();  
+
+};
 
 /* =========================================================
-   SEARCH
-   ========================================================= */
+SEARCH
+========================================================= */
 
 function searchWebsite() {
 
-    if (!searchBar) {
-        return;
-    }
+if (!searchBar)  
+    return;  
 
 
-    const q =
-        searchBar.value
-            .toLowerCase()
-            .trim();
+const q =  
+    searchBar.value  
+        .toLowerCase()  
+        .trim();  
 
 
-    document.querySelectorAll(
-        "#postsContainer > div, " +
-        "#news .card, " +
-        "#events .event-card"
-    ).forEach(
-        (element) => {
-
-            const match =
-                !q ||
-                element.textContent
-                    .toLowerCase()
-                    .includes(q);
+let visible = 0;  
 
 
-            element.style.display =
-                match
-                    ? ""
-                    : "none";
+document.querySelectorAll(  
+    "#postsContainer > div, " +  
+    "#news .card, " +  
+    "#events .event-card"  
+).forEach(  
+    (element) => {  
 
-        }
-    );
-
-
-    const resources =
-        document.getElementById(
-            "resources"
-        );
-
-
-    if (resources) {
-
-        const match =
-            !q ||
-            resources.textContent
-                .toLowerCase()
-                .includes(q);
+        const match =  
+            !q ||  
+            element.textContent  
+                .toLowerCase()  
+                .includes(q);  
 
 
-        resources.style.display =
-            match
-                ? ""
-                : "none";
+        element.style.display =  
+            match  
+                ? ""  
+                : "none";  
 
-    }
+
+        if (match) {  
+
+            visible++;  
+
+        }  
+
+    }  
+);  
+
+
+const resources =  
+    document.getElementById(  
+        "resources"  
+    );  
+
+
+if (resources) {  
+
+    const match =  
+        !q ||  
+        resources.textContent  
+            .toLowerCase()  
+            .includes(q);  
+
+
+    resources.style.display =  
+        match  
+            ? ""  
+            : "none";  
+
+}  
+
+
+const counter =  
+    document.getElementById(  
+        "searchCount"  
+    );  
+
+
+if (counter) {  
+
+    counter.textContent =  
+        q  
+            ? `${visible} results found`  
+            : "";  
 
 }
 
+}
 
 searchBar?.addEventListener(
-    "input",
-    searchWebsite
+"input",
+searchWebsite
 );
 
-
 /* =========================================================
-   NOTIFICATIONS
-   ========================================================= */
+NOTIFICATIONS
+========================================================= */
 
 function updateNotificationBadge() {
 
-    if (!notifyBtn) {
-        return;
-    }
+if (!notifyBtn)  
+    return;  
 
 
-    const list =
-        JSON.parse(
-            localStorage.getItem(
-                "sc_notify"
-            )
-        ) || [];
+const list =  
+    JSON.parse(  
+        localStorage.getItem(  
+            "sc_notify"  
+        )  
+    ) || [];  
 
 
-    notifyBtn.innerHTML =
-        list.length
-            ? `🔔 ${list.length}`
-            : "🔔";
+notifyBtn.innerHTML =  
+    list.length  
+        ? `🔔 <span style="color:red">${list.length}</span>`  
+        : "🔔";
 
 }
 
-
 window.showNotifications =
-    function () {
+function () {
 
-        const list =
-            JSON.parse(
-                localStorage.getItem(
-                    "sc_notify"
-                )
-            ) || [];
-
-
-        if (!list.length) {
-
-            alert(
-                "🔔 No new notifications."
-            );
-
-            return;
-
-        }
+const list =  
+        JSON.parse(  
+            localStorage.getItem(  
+                "sc_notify"  
+            )  
+        ) || [];  
 
 
-        alert(
-            "🔔 Notifications\n\n" +
-            list
-                .slice(0,10)
-                .join("\n\n")
-        );
+    if (list.length === 0) {  
 
-    };
+        alert(  
+            "🔔 No new notifications."  
+        );  
 
+        return;  
+
+    }  
+
+
+    alert(  
+        "🔔 Notifications\n\n" +  
+        list  
+            .slice(0, 10)  
+            .join("\n\n")  
+    );  
+
+};
 
 /* =========================================================
-   VOICE
-   ========================================================= */
+VOICE INPUT
+========================================================= */
 
 let recognition = null;
 
-
 if (
-    "webkitSpeechRecognition"
-    in window
+"webkitSpeechRecognition"
+in window
 ) {
 
-    recognition =
-        new webkitSpeechRecognition();
+recognition =  
+    new webkitSpeechRecognition();  
 
 
-    recognition.lang =
-        "en-US";
+recognition.lang =  
+    "en-US";  
 
 
-    recognition.continuous =
-        false;
+recognition.continuous =  
+    false;  
 
 
-    recognition.interimResults =
-        false;
+recognition.interimResults =  
+    false;  
 
 
-    micBtn?.addEventListener(
-        "click",
-        () => {
+micBtn?.addEventListener(  
+    "click",  
+    () => {  
 
-            try {
+        try {  
 
-                recognition.start();
-
-                if (micBtn) {
-                    micBtn.textContent =
-                        "🔴";
-                }
-
-            } catch {
-
-                console.log(
-                    "Voice already running."
-                );
-
-            }
-
-        }
-    );
+            recognition.start();  
 
 
-    recognition.onresult =
-        (event) => {
+            if (micBtn) {  
 
-            if (!userInput) {
-                return;
-            }
+                micBtn.textContent =  
+                    "🔴";  
 
+            }  
 
-            userInput.value =
-                event.results[0][0]
-                    .transcript;
+        } catch (error) {  
 
+            console.log(  
+                "Voice already running."  
+            );  
 
-            userInput.focus();
+        }  
 
-
-            if (micBtn) {
-                micBtn.textContent =
-                    "🎤";
-            }
-
-        };
+    }  
+);  
 
 
-    recognition.onend =
-        () => {
+recognition.onresult =  
+    (event) => {  
 
-            if (micBtn) {
-                micBtn.textContent =
-                    "🎤";
-            }
-
-        };
+        if (!userInput)  
+            return;  
 
 
-    recognition.onerror =
-        () => {
+        userInput.value =  
+            event.results[0][0]  
+                .transcript;  
 
-            if (micBtn) {
-                micBtn.textContent =
-                    "🎤";
-            }
 
-        };
+        userInput.focus();  
+
+
+        if (micBtn) {  
+
+            micBtn.textContent =  
+                "🎤";  
+
+        }  
+
+    };  
+
+
+recognition.onend =  
+    () => {  
+
+        if (micBtn) {  
+
+            micBtn.textContent =  
+                "🎤";  
+
+        }  
+
+    };  
+
+
+recognition.onerror =  
+    () => {  
+
+        if (micBtn) {  
+
+            micBtn.textContent =  
+                "🎤";  
+
+        }  
+
+    };
+
+} else {
+
+if (micBtn) {  
+
+    micBtn.title =  
+        "Voice input is not supported.";  
 
 }
 
+}
 
 /* =========================================================
-   START
-   ========================================================= */
+START
+========================================================= */
 
 document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+"DOMContentLoaded",
+() => {
 
-        applySavedTheme();
+applySavedTheme();  
 
-        updateNotificationBadge();
+    updateNotificationBadge();  
 
-        console.log(
-            "✅ Sociology Connect loaded."
-        );
 
-        console.log(
-            "✅ Firebase Post system loaded."
-        );
+    document.addEventListener(  
+        "keydown",  
+        (event) => {  
 
-        console.log(
-            "❤️ Like system loaded."
-        );
+            if (  
+                event.ctrlKey &&  
+                event.key.toLowerCase() === "k"  
+            ) {  
 
-        console.log(
-            "💬 Comment system loaded."
-        );
+                event.preventDefault();  
 
-        console.log(
-            "📤 Share system loaded."
-        );
+                searchBar?.focus();  
 
-    }
+            }  
+
+        }  
+    );  
+
+
+    console.log(  
+        "✅ Sociology Connect Professional Script Loaded."  
+    );  
+
+
+    console.log(  
+        "✅ Firebase Post System Loaded."  
+    );  
+
+}
+
 );

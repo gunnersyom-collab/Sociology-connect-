@@ -1662,6 +1662,162 @@ function loadPosts() {
 
 
 loadPosts();
+/* =========================================================
+   LOAD TRENDING POSTS
+   ========================================================= */
+
+async function loadTrendingPosts() {
+
+    const trendingContainer =
+        document.getElementById("trendingContainer");
+
+    if (!trendingContainer) {
+        return;
+    }
+
+    try {
+
+        const postsSnapshot =
+            await getDocs(
+                collection(db, "posts")
+            );
+
+        if (postsSnapshot.empty) {
+
+            trendingContainer.innerHTML = `
+                <div class="post-card">
+                    🔥 No trending posts yet.
+                </div>
+            `;
+
+            return;
+        }
+
+        const posts = [];
+
+        for (const postDoc of postsSnapshot.docs) {
+
+            const post =
+                postDoc.data();
+
+            const likesSnapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        postDoc.id,
+                        "likes"
+                    )
+                );
+
+            const commentsSnapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        postDoc.id,
+                        "comments"
+                    )
+                );
+
+            posts.push({
+                id: postDoc.id,
+                ...post,
+                likes: likesSnapshot.size,
+                comments: commentsSnapshot.size,
+                score:
+                    likesSnapshot.size +
+                    commentsSnapshot.size
+            });
+        }
+
+        posts.sort(
+            (a, b) =>
+                b.score - a.score
+        );
+
+        const trending =
+            posts.slice(0, 5);
+
+        trendingContainer.innerHTML = "";
+
+        trending.forEach((post) => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "post-card";
+
+            card.innerHTML = `
+
+                <div class="post-header">
+
+                    <div class="post-avatar">
+                        ${escapeHTML(
+                            (post.name || "Student")
+                            .charAt(0)
+                            .toUpperCase()
+                        )}
+                    </div>
+
+                    <div>
+
+                        <div class="post-name">
+                            ${escapeHTML(
+                                post.name || "Student"
+                            )}
+                        </div>
+
+                        <div class="post-time">
+                            🔥 Trending
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="post-text">
+                    ${escapeHTML(
+                        post.text || ""
+                    )}
+                </div>
+
+                <div style="
+                    margin-top:12px;
+                    font-size:14px;
+                    color:#666;
+                ">
+                    ❤️ ${post.likes}
+                    &nbsp;&nbsp;
+                    💬 ${post.comments}
+                </div>
+
+            `;
+
+            trendingContainer.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "❌ TRENDING ERROR:",
+            error
+        );
+
+        trendingContainer.innerHTML = `
+            <div class="post-card">
+                ❌ Unable to load trending posts.
+            </div>
+        `;
+    }
+}
+
+loadTrendingPosts();
+
+/* =========================================================
+   LOAD NEWS FROM FIRESTORE
+   ========================================================= */
 
 /* =========================================================
    LOAD NEWS FROM FIRESTORE

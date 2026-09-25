@@ -549,18 +549,20 @@ async function updateLikeButton(
         ? `❤️ Liked (${count})`
         : `🤍 Like (${count})`;
 
-  } catch (error) {
+  
+} catch (error) {
 
-    console.error(
-      "❌ LIKE COUNT ERROR:",
-      error
-    );
+  console.error(
+    "❌ LIKE ERROR:",
+    error
+  );
 
-  }
+  alert(
+    "Like failed:\n" +
+    error.message
+  );
 
 }
-
-
 /* =========================================================
    COMMENT POST
 ========================================================= */

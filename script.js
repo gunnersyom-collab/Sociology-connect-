@@ -2089,104 +2089,53 @@ async function sendToServer() {
 
   try {
 
-    const response =
-      await fetch(
-        `https://text.pollinations.ai/${encodeURIComponent(
-          text
-        )}?model=openai`
-      );
+    const response = await fetch(
+  "https://sociology-connect.gunnersyom.workers.dev",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: text
+    })
+  }
+);
 
+if (!response.ok) {
+  throw new Error(`HTTP ${response.status}`);
+}
 
-    if (!response.ok) {
+const data = await response.json();
 
-      throw new Error(
-        `HTTP ${response.status}`
-      );
+const reply =
+  data.choices?.[0]?.message?.content || "No response.";
 
-    }
+loading.remove();
 
+const aiBox = document.createElement("div");
+aiBox.className = "message ai";
 
-    const reply =
-      await response.text();
+aiBox.innerHTML = `
+  <b>AI Mari:</b><br>
+  <span class="ai-text">${escapeHTML(reply)}</span>
+  <br><br>
+  <button type="button" class="copy-btn">📋 Copy</button>
+`;
 
+const copyBtn = aiBox.querySelector(".copy-btn");
 
-    loading.remove();
-
-
-    const aiBox =
-      document.createElement(
-        "div"
-      );
-
-    aiBox.className =
-      "message ai";
-
-
-    aiBox.innerHTML = `
-
-      <b>AI Mari:</b>
-
-      <br>
-
-      <span class="ai-text">
-        ${escapeHTML(
-          reply
-        )}
-      </span>
-
-      <br><br>
-
-      <button
-        type="button"
-        class="copy-btn">
-        📋 Copy
-      </button>
-
-    `;
-
-
-    const copyBtn =
-      aiBox.querySelector(
-        ".copy-btn"
-      );
-
-
-    copyBtn?.addEventListener(
-      "click",
-      async () => {
-
-        try {
-
-          await navigator
-            .clipboard
-            .writeText(
-              reply
-            );
-
-          copyBtn.textContent =
-            "✅ Copied";
-
-
-          setTimeout(
-            () => {
-
-              copyBtn.textContent =
-                "📋 Copy";
-
-            },
-            1500
-          );
-
-        } catch {
-
-          alert(
-            "Copy failed."
-          );
-
-        }
-
-      }
-    );
+copyBtn?.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(reply);
+    copyBtn.textContent = "✅ Copied";
+    setTimeout(() => {
+      copyBtn.textContent = "📋 Copy";
+    }, 1500);
+  } catch {
+    alert("Copy failed.");
+  }
+});
 
 
     chatHistory.appendChild(

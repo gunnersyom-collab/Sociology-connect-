@@ -2213,20 +2213,84 @@ async function sendToServer() {
 
   if (sendBtn) {
 
-    sendBtn.disabled =
-      false;
+const chatMessages = [];
 
-    sendBtn.textContent =
-      "Send";
+async function sendToServer() {
+
+  if (!chatHistory || !userInput) return;
+
+  const text = userInput.value.trim();
+  if (!text) return;
+
+  chatMessages.push({ role: "user", content: text });
+
+  const userBox = document.createElement("div");
+  userBox.className = "message user";
+  userBox.innerHTML = `<b>You:</b><br>${escapeHTML(text)}`;
+  chatHistory.appendChild(userBox);
+
+  userInput.value = "";
+
+  const aiBox = document.createElement("div");
+  aiBox.className = "message ai";
+  aiBox.innerHTML = `<b>AI Mari:</b><br><span class="ai-text">Typing... 🤖</span>`;
+  chatHistory.appendChild(aiBox);
+
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Thinking...";
+
+  try {
+
+    const response = await fetch("https://text.pollinations.ai/openai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "openai",
+        messages: chatMessages
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const data = await response.json();
+    const reply = data.choices?.[0]?.message?.content || "No response.";
+
+    chatMessages.push({ role: "assistant", content: reply });
+
+    aiBox.innerHTML = `
+      <b>AI Mari:</b><br>
+      <span class="ai-text">${escapeHTML(reply)}</span><br><br>
+      <button type="button" class="copy-btn">📋 Copy</button>
+    `;
+
+    aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(reply);
+    });
+
+  } catch (error) {
+
+    console.error("❌ AI MARI ERROR:", error);
+
+    aiBox.innerHTML = `
+      <b>AI Mari:</b><br>
+      ❌ Connection failed.
+    `;
+
+  } finally {
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send";
+    chatHistory.scrollTop = chatHistory.scrollHeight;
 
   }
 
-
-  chatHistory.scrollTop =
-    chatHistory.scrollHeight;
-
 }
-
 
 /* =========================================================
    AI BUTTON

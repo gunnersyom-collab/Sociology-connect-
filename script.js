@@ -2712,18 +2712,10 @@ document.addEventListener(
     loadPosts();
 
 
-    loadNews();
+    loadNews();     // 📰 News akka fiduuf kun dabalameera
 
 
-    loadEvents();
+    loadEvents();   // 📅 Events akka fiduuf kunis dabalameera
 
-
-    /*
-     * loadPosts() already calls
-     * loadTrendingPosts().
-     *
-     * We don't call it twice here.
-     */
-
-
-    
+  }
+);

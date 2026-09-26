@@ -1,7 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+/* =========================================================
+   SOCIOLOGY CONNECT 2.0
+   AUTH.JS
+   LOGIN
+   SIGNUP
+   LOGOUT
+   PROFILE
+========================================================= */
+
+import { auth, db } from "./firebase.js";
 
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
@@ -10,35 +18,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 import {
-  getFirestore,
   doc,
   setDoc,
   getDoc,
-  serverTimestamp,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-
-/* ================= FIREBASE ================= */
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBiwF8jW-hCDLmtbpAD6t99afAhcldGQfw",
-  authDomain: "sociologyconnect.firebaseapp.com",
-  projectId: "sociologyconnect",
-  storageBucket: "sociologyconnect.firebasestorage.app",
-  messagingSenderId: "500228908679",
-  appId: "1:500228908679:web:ebc9c7cd6bf7c38aa13a22",
-  measurementId: "G-BM74QJ4XTZ"
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 
 /* ================= HELPER ================= */
@@ -68,13 +52,31 @@ async function signup() {
       $("password")?.value || "";
 
 
-    if (!email || !password) {
-      alert("Please enter email and password.");
+    if (!fullName) {
+      alert("Please enter your full name.");
       return;
     }
 
 
-    const cred =
+    if (!email) {
+      alert("Please enter your email.");
+      return;
+    }
+
+
+    if (!password) {
+      alert("Please enter your password.");
+      return;
+    }
+
+
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+
+    const credential =
       await createUserWithEmailAndPassword(
         auth,
         email,
@@ -82,23 +84,27 @@ async function signup() {
       );
 
 
-    if (fullName) {
+    /* UPDATE FIREBASE PROFILE */
 
-      await updateProfile(
-        cred.user,
-        {
-          displayName: fullName
-        }
-      );
+    await updateProfile(
+      credential.user,
+      {
+        displayName: fullName
+      }
+    );
 
-    }
 
+    /* SAVE USER DATA */
 
     await setDoc(
-      doc(db, "users", cred.user.uid),
+      doc(
+        db,
+        "users",
+        credential.user.uid
+      ),
       {
-        uid: cred.user.uid,
-        email: cred.user.email,
+        uid: credential.user.uid,
+        email: credential.user.email,
         fullName: fullName,
         year: year,
         bio: bio,
@@ -107,16 +113,58 @@ async function signup() {
     );
 
 
-    alert("Account created successfully!");
+    alert(
+      "Account created successfully! 🎉"
+    );
 
-    location.href = "index.html";
+
+    window.location.href = "index.html";
 
 
-  } catch (e) {
+  } catch (error) {
 
-    console.error("SIGNUP ERROR:", e);
+    console.error(
+      "❌ SIGNUP ERROR:",
+      error
+    );
 
-    alert(e.message);
+
+    let message =
+      error.message;
+
+
+    if (
+      error.code ===
+      "auth/email-already-in-use"
+    ) {
+
+      message =
+        "This email is already registered.";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/invalid-email"
+    ) {
+
+      message =
+        "Please enter a valid email.";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/weak-password"
+    ) {
+
+      message =
+        "Password is too weak. Use at least 6 characters.";
+
+    }
+
+
+    alert(message);
 
   }
 
@@ -136,10 +184,10 @@ async function login() {
       $("password")?.value || "";
 
 
-    if (!email || !password) {
+    if (!email) {
 
       alert(
-        "Please enter your email and password."
+        "Please enter your email."
       );
 
       return;
@@ -147,21 +195,89 @@ async function login() {
     }
 
 
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
+    if (!password) {
+
+      alert(
+        "Please enter your password."
+      );
+
+      return;
+
+    }
+
+
+    const credential =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+
+    console.log(
+      "✅ LOGIN SUCCESS:",
+      credential.user.email
     );
 
 
-    location.href = "index.html";
+    window.location.href =
+      "index.html";
 
 
-  } catch (e) {
+  } catch (error) {
 
-    console.error("LOGIN ERROR:", e);
+    console.error(
+      "❌ LOGIN ERROR:",
+      error
+    );
 
-    alert(e.message);
+
+    let message =
+      error.message;
+
+
+    if (
+      error.code ===
+      "auth/invalid-credential"
+    ) {
+
+      message =
+        "Email or password is incorrect.";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/user-not-found"
+    ) {
+
+      message =
+        "No account found with this email.";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/wrong-password"
+    ) {
+
+      message =
+        "Incorrect password.";
+
+    }
+
+    else if (
+      error.code ===
+      "auth/invalid-email"
+    ) {
+
+      message =
+        "Please enter a valid email.";
+
+    }
+
+
+    alert(message);
 
   }
 
@@ -176,13 +292,26 @@ async function logout() {
 
     await signOut(auth);
 
-    location.href = "login.html";
+    console.log(
+      "✅ LOGOUT SUCCESS"
+    );
 
-  } catch (e) {
 
-    console.error("LOGOUT ERROR:", e);
+    window.location.href =
+      "login.html";
 
-    alert(e.message);
+
+  } catch (error) {
+
+    console.error(
+      "❌ LOGOUT ERROR:",
+      error
+    );
+
+
+    alert(
+      error.message
+    );
 
   }
 
@@ -198,27 +327,35 @@ async function loadProfile(user) {
 
   try {
 
-    const snap =
-      await getDoc(
-        doc(db, "users", user.uid)
+    const userRef =
+      doc(
+        db,
+        "users",
+        user.uid
       );
 
 
+    const snapshot =
+      await getDoc(userRef);
+
+
     const data =
-      snap.exists()
-        ? snap.data()
+      snapshot.exists()
+        ? snapshot.data()
         : {};
 
 
     const name =
       data.fullName ||
       user.displayName ||
-      user.email;
+      user.email?.split("@")[0] ||
+      "Student";
 
 
     if ($("userInfo")) {
 
-      $("userInfo").textContent = name;
+      $("userInfo").textContent =
+        "👤 " + name;
 
     }
 
@@ -234,7 +371,7 @@ async function loadProfile(user) {
     if ($("profileEmail")) {
 
       $("profileEmail").textContent =
-        user.email;
+        user.email || "";
 
     }
 
@@ -242,7 +379,8 @@ async function loadProfile(user) {
     if ($("profileYear")) {
 
       $("profileYear").textContent =
-        data.year || "Not added";
+        data.year ||
+        "Not added";
 
     }
 
@@ -250,220 +388,20 @@ async function loadProfile(user) {
     if ($("profileBio")) {
 
       $("profileBio").textContent =
-        data.bio || "No bio yet";
+        data.bio ||
+        "No bio yet";
 
     }
 
 
-  } catch (e) {
+  } catch (error) {
 
     console.error(
-      "PROFILE ERROR:",
-      e
+      "❌ PROFILE ERROR:",
+      error
     );
 
   }
-
-}
-
-
-/* ================= CREATE POST ================= */
-
-async function createPost() {
-
-  const user = auth.currentUser;
-
-
-  if (!user) {
-
-    alert("Please login first.");
-
-    return;
-
-  }
-
-
-  const input =
-    $("postInput");
-
-
-  if (!input) {
-
-    console.error(
-      "postInput not found."
-    );
-
-    return;
-
-  }
-
-
-  const text =
-    input.value.trim();
-
-
-  if (!text) {
-
-    alert(
-      "Write something first."
-    );
-
-    return;
-
-  }
-
-
-  try {
-
-    const profile =
-      await getDoc(
-        doc(db, "users", user.uid)
-      );
-
-
-    const pdata =
-      profile.exists()
-        ? profile.data()
-        : {};
-
-
-    await addDoc(
-      collection(db, "posts"),
-      {
-        text: text,
-
-        name:
-          pdata.fullName ||
-          user.displayName ||
-          user.email.split("@")[0],
-
-        uid: user.uid,
-
-        userId: user.uid,
-
-        createdAt:
-          serverTimestamp()
-      }
-    );
-
-
-    input.value = "";
-
-
-  } catch (e) {
-
-    console.error(
-      "CREATE POST ERROR:",
-      e
-    );
-
-    alert(e.message);
-
-  }
-
-}
-
-
-/* ================= LOAD POSTS ================= */
-
-function loadPosts() {
-
-  const container =
-    $("postsContainer");
-
-
-  if (!container) return;
-
-
-  const q =
-    query(
-      collection(db, "posts"),
-      orderBy(
-        "createdAt",
-        "desc"
-      )
-    );
-
-
-  onSnapshot(
-    q,
-
-    (snapshot) => {
-
-      container.innerHTML = "";
-
-
-      if (snapshot.empty) {
-
-        container.innerHTML = `
-          <div class="card">
-            No posts yet. Be the first to post.
-          </div>
-        `;
-
-        return;
-
-      }
-
-
-      snapshot.forEach(
-        (docSnap) => {
-
-          const post =
-            docSnap.data();
-
-
-          const card =
-            document.createElement("div");
-
-
-          card.className =
-            "card";
-
-
-          card.innerHTML = `
-            <h3>
-              ${post.name || "Student"}
-            </h3>
-
-            <p>
-              ${post.text || ""}
-            </p>
-
-            <small>
-              Just now
-            </small>
-          `;
-
-
-          container.appendChild(card);
-
-        }
-      );
-
-    },
-
-    (error) => {
-
-      console.error(
-        "LOAD POSTS ERROR:",
-        error
-      );
-
-
-      container.innerHTML = `
-        <div
-          class="card"
-          style="color:red;"
-        >
-          Failed to load posts.<br>
-          ${error.message}
-        </div>
-      `;
-
-    }
-
-  );
 
 }
 
@@ -472,7 +410,15 @@ function loadPosts() {
 
 onAuthStateChanged(
   auth,
-  (user) => {
+  async (user) => {
+
+    console.log(
+      "🔐 AUTH STATE:",
+      user
+        ? user.email
+        : "Not logged in"
+    );
+
 
     if (user) {
 
@@ -492,9 +438,7 @@ onAuthStateChanged(
       }
 
 
-      loadProfile(user);
-
-      loadPosts();
+      await loadProfile(user);
 
 
     } else {
@@ -502,7 +446,7 @@ onAuthStateChanged(
       if ($("loginLink")) {
 
         $("loginLink").style.display =
-          "inline";
+          "inline-block";
 
       }
 
@@ -514,25 +458,25 @@ onAuthStateChanged(
 
       }
 
-
-      loadPosts();
-
     }
 
   }
 );
 
 
-/* ================= GLOBAL ================= */
+/* ================= GLOBAL BUTTONS ================= */
 
-window.login = login;
+window.login =
+  login;
 
-window.signup = signup;
+window.signup =
+  signup;
 
-window.logout = logout;
+window.logout =
+  logout;
 
-window.createPost = createPost;
 
+/* ================= READY ================= */
 
 console.log(
   "✅ AUTH.JS READY"

@@ -1538,92 +1538,70 @@ const result = document.getElementById("objectiveResult");
 const button = document.getElementById("objectiveGenerateBtn");
 
 if(!input || !result || !button){
-
-console.error(
-"Objectives Generator: required element not found."
-);
-
+console.error("Objectives Generator: required element not found.");
 return;
-
 }
 
 const topic = input.value.trim();
 
 if(!topic){
-
-result.textContent =
-"⚠️ Please enter a research topic.";
-
+result.textContent = "⚠️ Please enter a research topic.";
 return;
-
 }
 
 button.disabled = true;
 button.textContent = "⏳ Generating...";
-result.textContent =
-"🤖 AI Mari is developing your research objectives...";
+result.textContent = "🤖 AI Mari is developing your research objectives...";
 
 const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Develop research objectives for the following research topic:
+Create research objectives ONLY from the research topic below.
 
 RESEARCH TOPIC:
 ${topic}
 
-IMPORTANT OBJECTIVE RULES:
+STRICT RULES:
 
 GENERAL OBJECTIVE:
 - Write exactly ONE general objective.
-- The general objective must directly express the main purpose
-  of the research topic.
-- Begin with an appropriate academic action verb such as:
-  To examine, To assess, To explore, To investigate,
-  To determine, or To analyze.
+- It must directly reflect the main purpose of the topic.
+- Use one appropriate academic action verb.
 
 SPECIFIC OBJECTIVES:
 - Write exactly FOUR specific objectives.
-- Each specific objective must directly support the general objective.
-- Each objective must focus on a different aspect of the topic.
-- Use clear academic action verbs such as:
-  identify, examine, assess, explore, determine, analyze,
-  describe, compare, or investigate.
-- Avoid vague verbs such as "to know", "to understand",
-  or "to learn".
-- Do not repeat the same idea.
-- Keep the objectives realistic for university-level
-  Sociology or Social Work research.
+- Each must directly relate to the research topic.
+- Each must support the general objective.
+- Each must cover a different aspect of the topic.
+- Use clear academic action verbs.
 
-VERY IMPORTANT — DO NOT INVENT INFORMATION:
-- Do NOT invent research timelines.
-- Do NOT invent follow-up periods.
-- Do NOT invent sample sizes.
-- Do NOT invent participants.
-- Do NOT invent locations.
-- Do NOT invent demographic variables.
-- Do NOT invent measurements.
-- Do NOT invent research design.
-- Do NOT invent data collection methods.
-- Do NOT invent statistical analysis.
-- Do NOT invent program components.
-- Do NOT invent findings or expected results.
-- Do NOT add information that is not reasonably supported
-  by the research topic.
+VERY IMPORTANT:
+DO NOT invent information.
+
+Do NOT add:
+- short-term or long-term periods
+- follow-up periods
+- months or years
+- sample sizes
+- participants
+- locations
+- comparison groups
+- demographic variables
+- measurements
+- research design
+- methodology
+- data collection methods
+- statistical methods
+- new variables
+- new concepts that are not clearly present in the topic
+- expected findings
+- recommendations
 
 If the topic does not provide a specific detail,
-keep the objective general rather than inventing that detail.
+DO NOT invent it. Keep the objective general.
 
-FORMAT RULES:
-- Output ONLY the objectives.
-- Do not add explanations.
-- Do not add labels inside individual objectives.
-- Do not add examples.
-- Do not add research questions.
-- Do not add methodology.
-- Do not add recommendations.
-
-Use exactly this structure:
+OUTPUT ONLY:
 
 General Objective:
 To ...
@@ -1634,8 +1612,7 @@ Specific Objectives:
 3. To ...
 4. To ...
 
-Research Topic:
-${topic}
+Do not add explanations or labels to individual objectives.
 `;
 
 try{
@@ -1652,31 +1629,20 @@ headers: {
 );
 
 if(!response.ok){
-
-throw new Error(
-"HTTP " + response.status
-);
-
+throw new Error("HTTP " + response.status);
 }
 
 const answer = await response.text();
 
 if(!answer || !answer.trim()){
-
-throw new Error(
-"Empty AI response"
-);
-
+throw new Error("Empty AI response");
 }
 
 result.textContent = answer.trim();
 
 }catch(error){
 
-console.error(
-"Objectives Generator ERROR:",
-error
-);
+console.error("Objectives Generator ERROR:", error);
 
 result.textContent =
 "❌ Objectives Generator unavailable. Please try again.";
@@ -1684,8 +1650,7 @@ result.textContent =
 }finally{
 
 button.disabled = false;
-button.textContent =
-"🤖 Generate Objectives";
+button.textContent = "🤖 Generate Objectives";
 
 }
 
@@ -1694,27 +1659,19 @@ button.textContent =
 
 function clearObjectives(){
 
-const input =
-document.getElementById("objectiveTopic");
-
-const result =
-document.getElementById("objectiveResult");
+const input = document.getElementById("objectiveTopic");
+const result = document.getElementById("objectiveResult");
 
 if(input){
-
 input.value = "";
-
 }
 
 if(result){
-
 result.textContent =
 "Your research objectives will appear here.";
-
 }
 
 }
-
  
 /* =====================================================  
    ENTER SUPPORT  

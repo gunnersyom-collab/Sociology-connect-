@@ -1813,23 +1813,32 @@ ${question}
 
 try{
 
-const response =
-await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
+    const answer = await askMari(prompt);
 
-if(!response.ok){
+    if(!answer || !answer.trim()){
+        throw new Error("Empty AI response");
+    }
 
-throw new Error(
-"HTTP " + response.status
-);
+    result.textContent = answer.trim();
+
+}catch(error){
+
+    console.error(
+        "Research AI ERROR:",
+        error
+    );
+
+    result.textContent =
+    "❌ AI Mari could not connect. Please try again.";
+
+}finally{
+
+    button.disabled = false;
+
+    button.textContent =
+    "🤖 Ask AI Mari";
+
+}
 
 }
 
@@ -1985,60 +1994,33 @@ Do not add explanations before or after the questions.
 
 try{
 
-const response =
-await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
+    const answer = await askMari(prompt);
 
-if(!response.ok){
+    if(!answer || !answer.trim()){
+        throw new Error("Empty AI response");
+    }
 
-throw new Error(
-"HTTP " + response.status
-);
-
-}
-
-const answer =
-await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error(
-"Empty AI response"
-);
-
-}
-
-result.textContent =
-answer.trim();
+    result.textContent = answer.trim();
 
 }catch(error){
 
-console.error(
-"Research Questions ERROR:",
-error
-);
+    console.error(
+        "Research Questions ERROR:",
+        error
+    );
 
-result.textContent =
-"❌ AI Mari could not generate research questions. Please try again.";
+    result.textContent =
+    "❌ AI Mari could not generate research questions. Please try again.";
 
 }finally{
 
-button.disabled = false;
+    button.disabled = false;
 
-button.textContent =
-"🤖 Generate Questions";
-
-}
+    button.textContent =
+    "🤖 Generate Questions";
 
 }
+
 
 
 /* =====================================================
@@ -2157,58 +2139,26 @@ ${info}
 
 try{
 
-const response =
-await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
+    const answer = await askMari(prompt);
 
-if(!response.ok){
+    if(!answer || !answer.trim()){
+        throw new Error("Empty AI response");
+    }
 
-throw new Error(
-"HTTP " + response.status
-);
-
-}
-
-const answer =
-await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error(
-"Empty AI response"
-);
-
-}
-
-result.textContent =
-answer.trim();
+    result.textContent = answer.trim();
 
 }catch(error){
 
-console.error(
-"APA Generator ERROR:",
-error
-);
+    console.error("APA Generator ERROR:", error);
 
-result.textContent =
-"❌ APA Generator unavailable. Please try again.";
+    result.textContent =
+    "❌ APA Generator unavailable. Please try again.";
 
 }finally{
 
-button.disabled = false;
+    button.disabled = false;
 
-button.textContent =
-"📚 Generate APA";
-
-}
+    button.textContent = "📚 Generate APA";
 
 }
 
@@ -2325,58 +2275,27 @@ OUTPUT ONLY THE ABSTRACT.
 
 try{
 
-const response =
-await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
+    const answer = await askMari(prompt);
 
-if(!response.ok){
+    if(!answer || !answer.trim()){
+        throw new Error("Empty AI response");
+    }
 
-throw new Error(
-"HTTP " + response.status
-);
-
-}
-
-const answer =
-await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error(
-"Empty AI response"
-);
-
-}
-
-result.textContent =
-answer.trim();
+    result.textContent = answer.trim();
 
 }catch(error){
 
-console.error(
-"Abstract Generator ERROR:",
-error
-);
+    console.error("Abstract Generator ERROR:", error);
 
-result.textContent =
-"❌ Abstract Generator unavailable. Please try again.";
+    result.textContent =
+    "❌ Abstract Generator unavailable. Please try again.";
 
 }finally{
 
-button.disabled = false;
+    button.disabled = false;
 
-button.textContent =
-"🤖 Generate Abstract";
-
-}
+    button.textContent =
+    "🤖 Generate Abstract";
 
 }
 
@@ -2512,36 +2431,11 @@ OUTPUT ONLY THE FINAL PROBLEM STATEMENT.
 
 try{
 
-const response = await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
+    let text = await askMari(prompt);
 
-if(!response.ok){
-
-throw new Error(
-"HTTP error: " + response.status
-);
-
-}
-
-let text =
-await response.text();
-
-if(!text.trim()){
-
-throw new Error(
-"Empty response received."
-);
-
-}
-
+    if(!text || !text.trim()){
+        throw new Error("Empty response received.");
+    }
 
 /* =====================================================
    CLEAN AI RESPONSE
@@ -2921,63 +2815,13 @@ Only provide ONE general objective and
 FOUR specific objectives.
 `;
 
-
-try{
-
-const response =
-await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
-
-if(!response.ok){
-
-throw new Error(
-"HTTP " + response.status
-);
-
-}
-
-const answer =
-await response.text();
+const answer = await askMari(prompt);
 
 if(!answer || !answer.trim()){
-
-throw new Error(
-"Empty AI response"
-);
-
+    throw new Error("Empty AI response");
 }
 
-result.textContent =
-answer.trim();
-
-}catch(error){
-
-console.error(
-"Objectives Generator ERROR:",
-error
-);
-
-result.textContent =
-"❌ Objectives Generator unavailable. Please try again.";
-
-}finally{
-
-button.disabled = false;
-
-button.textContent =
-"🤖 Generate Objectives";
-
-}
-
-}
+result.textContent = answer.trim();
 
 
 function clearObjectives(){

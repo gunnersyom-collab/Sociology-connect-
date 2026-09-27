@@ -1486,18 +1486,22 @@ async function sendToServer() {
     });
 
     aiBox.innerHTML = `
-      <b>AI Mari:</b><br>
+  <b>AI Mari:</b><br>
 
-      <span class="ai-text">
-        ${escapeHTML(reply)}
-      </span>
+  <span class="ai-text">
+    ${escapeHTML(reply)}
+  </span>
 
-      <br><br>
+  <br><br>
 
-      <button class="copy-btn">
-        📋 Copy
-      </button>
-    `;
+  <button class="copy-btn">
+    📋 Copy
+  </button>
+
+  <button class="speak-btn" type="button">
+    🔊 Listen
+  </button>
+`;
 
     aiBox
       .querySelector(".copy-btn")

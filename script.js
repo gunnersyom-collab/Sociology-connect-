@@ -1477,15 +1477,15 @@ async function sendToServer() {
     }
 
     const reply =
-      data.reply ||
-      "No response received.";
+  data.reply ||
+  "No response received.";
 
-    chatMessages.push({
-      role: "assistant",
-      content: reply
-    });
+chatMessages.push({
+  role: "assistant",
+  content: reply
+});
 
-    aiBox.innerHTML = `
+aiBox.innerHTML = `
   <b>AI Mari:</b><br>
 
   <span class="ai-text">
@@ -1494,14 +1494,26 @@ async function sendToServer() {
 
   <br><br>
 
-  <button class="copy-btn">
-    📋 Copy
-  </button>
+  <button class="copy-btn">📋 Copy</button>
 
-  <button class="speak-btn" type="button">
-    🔊 Listen
-  </button>
+  <button class="speak-btn">🔊 Listen</button>
 `;
+
+aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(reply);
+  } catch {
+    alert("Copy failed.");
+  }
+});
+
+aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
+  const speech = new SpeechSynthesisUtterance(reply);
+  speech.lang = "en-US";
+  speech.rate = 0.95;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(speech);
+});
 
     aiBox
       .querySelector(".copy-btn")

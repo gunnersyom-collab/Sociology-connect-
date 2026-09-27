@@ -894,7 +894,8 @@ result.textContent = "AI Mari's answer will appear here.";
 }
 
 }
-/* =====================================================
+
+ /* =====================================================
    RESEARCH QUESTIONS
 ===================================================== */
 
@@ -909,53 +910,43 @@ if(!input || !result || !button) return;
 const topic = input.value.trim();
 
 if(!topic){
-
 result.textContent = "⚠️ Please enter a research topic.";
-
 return;
-
 }
 
 button.disabled = true;
 button.textContent = "⏳ Generating...";
+result.textContent = "🤖 AI Mari is generating research questions...";
 
 const prompt = `
 You are AI Mari, a university research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Generate exactly 5 clear, specific, and researchable research questions
-based on this research topic:
+Generate exactly 5 clear and researchable research questions
+for this topic:
 
 ${topic}
 
-LANGUAGE RULES:
-- If the topic is in English, answer in clear academic English.
-- If the topic is in Afaan Oromoo, answer in natural, correct Afaan Oromoo.
-- If the topic is in Amharic, answer in natural, correct Amharic.
+Language rules:
 - Answer in the same language as the topic.
-- Do not translate word-for-word from English into Afaan Oromoo.
-- Do not invent Oromo words.
-- Use commonly understood Afaan Oromoo.
-- Keep important academic terms in English in parentheses when needed.
-- Never use meaningless or machine-translated Oromo expressions.
+- English → clear academic English.
+- Afaan Oromoo → natural, correct Afaan Oromoo.
+- Amharic → natural, correct Amharic.
+- Do not translate word-for-word.
+- Do not invent words.
 
-RESEARCH RULES:
-- Generate exactly 5 research questions.
-- Questions must directly relate to the topic.
+Research rules:
+- Generate exactly 5 questions.
 - Questions must be specific and researchable.
-- Avoid yes/no questions unless clearly appropriate.
-- Questions should be suitable for a university-level Sociology or Social Work study.
-- Do not invent statistics, authors, studies, citations, or references.
+- Keep them suitable for Sociology and Social Work.
+- Do not invent statistics, studies, authors, citations, or references.
 
-FORMAT:
-1. Research Question 1
-2. Research Question 2
-3. Research Question 3
-4. Research Question 4
-5. Research Question 5
-
-Research Topic:
-${topic}
+Format:
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
 `;
 
 try{
@@ -965,12 +956,14 @@ const response = await fetch(
 );
 
 if(!response.ok){
-
 throw new Error("HTTP " + response.status);
-
 }
 
 const answer = await response.text();
+
+if(!answer.trim()){
+throw new Error("Empty response");
+}
 
 result.textContent = answer;
 
@@ -984,12 +977,11 @@ result.textContent =
 }finally{
 
 button.disabled = false;
-button.textContent = "❓ Generate Questions";
+button.textContent = "🤖 Generate Questions";
 
 }
 
 }
-
 
 function clearQuestions(){
 
@@ -997,20 +989,14 @@ const input = document.getElementById("questionTopic");
 const result = document.getElementById("questionResult");
 
 if(input){
-
 input.value = "";
-
 }
 
 if(result){
-
-result.textContent =
-"Your research questions will appear here.";
-
+result.textContent = "Your research questions will appear here.";
 }
 
-}
-  
+} 
 /* =====================================================  
    APA  
 ===================================================== */  

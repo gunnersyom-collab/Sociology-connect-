@@ -895,7 +895,7 @@ result.textContent = "AI Mari's answer will appear here.";
 
 }
 
- /* =====================================================
+/* =====================================================
    RESEARCH QUESTIONS
 ===================================================== */
 
@@ -905,13 +905,24 @@ const input = document.getElementById("questionTopic");
 const result = document.getElementById("questionResult");
 const button = document.getElementById("questionBtn");
 
-if(!input || !result || !button) return;
+if(!input || !result || !button){
+
+console.error(
+"Research Questions: questionTopic, questionResult, or questionBtn not found."
+);
+
+return;
+
+}
 
 const topic = input.value.trim();
 
 if(!topic){
+
 result.textContent = "⚠️ Please enter a research topic.";
+
 return;
+
 }
 
 button.disabled = true;
@@ -922,50 +933,68 @@ const prompt = `
 You are AI Mari, a university research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Generate exactly 5 clear and researchable research questions
-for this topic:
+Generate exactly 5 clear and academically appropriate research
+questions based on this research topic:
 
 ${topic}
 
-Language rules:
-- Answer in the same language as the topic.
+IMPORTANT LANGUAGE RULES:
+- Answer in the same language used by the student.
 - English → clear academic English.
-- Afaan Oromoo → natural, correct Afaan Oromoo.
-- Amharic → natural, correct Amharic.
+- Afaan Oromoo → natural and correct Afaan Oromoo.
+- Amharic → natural and correct Amharic.
 - Do not translate word-for-word.
-- Do not invent words.
+- Do not invent words or academic terminology.
+- If an academic term is difficult in Afaan Oromoo, keep the
+  standard English term in parentheses.
 
-Research rules:
-- Generate exactly 5 questions.
-- Questions must be specific and researchable.
-- Keep them suitable for Sociology and Social Work.
-- Do not invent statistics, studies, authors, citations, or references.
+RESEARCH RULES:
+- Generate exactly 5 research questions.
+- Every question must directly relate to the topic.
+- Questions must be specific, clear, and researchable.
+- Questions should be appropriate for a university-level
+  Sociology or Social Work study.
+- Do not invent statistics, studies, authors, citations,
+  references, or research findings.
 
-Format:
+FORMAT:
 1. ...
 2. ...
 3. ...
 4. ...
 5. ...
+
+Research Topic:
+${topic}
 `;
 
 try{
 
 const response = await fetch(
-"https://text.pollinations.ai/" + encodeURIComponent(prompt)
+"https://text.pollinations.ai/" + encodeURIComponent(prompt),
+{
+method: "GET",
+headers: {
+"Accept": "text/plain"
+}
+}
 );
 
 if(!response.ok){
+
 throw new Error("HTTP " + response.status);
+
 }
 
 const answer = await response.text();
 
-if(!answer.trim()){
-throw new Error("Empty response");
+if(!answer || !answer.trim()){
+
+throw new Error("Empty AI response");
+
 }
 
-result.textContent = answer;
+result.textContent = answer.trim();
 
 }catch(error){
 
@@ -983,20 +1012,28 @@ button.textContent = "🤖 Generate Questions";
 
 }
 
+
 function clearQuestions(){
 
 const input = document.getElementById("questionTopic");
 const result = document.getElementById("questionResult");
 
 if(input){
+
 input.value = "";
+
 }
 
 if(result){
-result.textContent = "Your research questions will appear here.";
+
+result.textContent =
+"Your research questions will appear here.";
+
 }
 
-} 
+}
+
+
 /* =====================================================  
    APA  
 ===================================================== */  

@@ -1527,6 +1527,7 @@ button.textContent="🤖 Generate Objectives";
 
 }
 
+ 
 /* =====================================================
    OBJECTIVES
 ===================================================== */
@@ -1538,70 +1539,157 @@ const result = document.getElementById("objectiveResult");
 const button = document.getElementById("objectiveGenerateBtn");
 
 if(!input || !result || !button){
-console.error("Objectives Generator: required element not found.");
+
+console.error(
+"Objectives Generator: required element not found."
+);
+
 return;
+
 }
 
 const topic = input.value.trim();
 
 if(!topic){
-result.textContent = "⚠️ Please enter a research topic.";
+
+result.textContent =
+"⚠️ Please enter a research topic.";
+
 return;
+
 }
 
 button.disabled = true;
 button.textContent = "⏳ Generating...";
-result.textContent = "🤖 AI Mari is developing your research objectives...";
+
+result.textContent =
+"🤖 AI Mari is developing your research objectives...";
+
 
 const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Create research objectives ONLY from the research topic below.
+Your task is to create research objectives ONLY from the
+research topic provided by the student.
 
 RESEARCH TOPIC:
 ${topic}
 
-STRICT RULES:
 
-GENERAL OBJECTIVE:
-- Write exactly ONE general objective.
-- It must directly reflect the main purpose of the topic.
+===============================
+GENERAL OBJECTIVE
+===============================
+
+Write exactly ONE general objective.
+
+The general objective must:
+
+- Directly represent the main purpose of the topic.
+- Stay focused on the exact topic.
 - Use one appropriate academic action verb.
+- Be clear and concise.
+- Not introduce new concepts.
 
-SPECIFIC OBJECTIVES:
-- Write exactly FOUR specific objectives.
-- Each must directly relate to the research topic.
-- Each must support the general objective.
-- Each must cover a different aspect of the topic.
-- Use clear academic action verbs.
 
-VERY IMPORTANT:
-DO NOT invent information.
+===============================
+SPECIFIC OBJECTIVES
+===============================
 
-Do NOT add:
-- short-term or long-term periods
+Write exactly FOUR specific objectives.
+
+Each specific objective must:
+
+- Directly relate to the research topic.
+- Support the general objective.
+- Focus on a different aspect of the topic.
+- Be clear and researchable.
+- Use an appropriate academic action verb.
+- Avoid repeating the same idea.
+
+
+===============================
+STRICT NO-INVENTION RULE
+===============================
+
+DO NOT invent information that the student did not provide.
+
+DO NOT add:
+
+- short-term outcomes
+- long-term outcomes
 - follow-up periods
-- months or years
+- months
+- years
+- before-and-after measurements
 - sample sizes
 - participants
-- locations
+- study locations
+- demographic groups
 - comparison groups
-- demographic variables
-- measurements
+- control groups
+- experimental groups
+- specific measurements
+- research instruments
 - research design
 - methodology
 - data collection methods
 - statistical methods
 - new variables
-- new concepts that are not clearly present in the topic
+- new concepts
+- program components
 - expected findings
 - recommendations
 
-If the topic does not provide a specific detail,
-DO NOT invent it. Keep the objective general.
+For example, DO NOT automatically add concepts such as:
 
-OUTPUT ONLY:
+- self-efficacy
+- decision-making
+- leadership
+- participation
+- socioeconomic status
+- gender
+- age
+- follow-up assessment
+
+unless they are clearly included in the student's topic.
+
+If a detail is not provided by the student,
+KEEP THE OBJECTIVE GENERAL.
+
+Do not assume information.
+
+
+===============================
+ACADEMIC QUALITY
+===============================
+
+The objectives must be appropriate for a university-level
+Sociology or Social Work research proposal.
+
+Use academic action verbs such as:
+
+To examine
+To assess
+To explore
+To identify
+To investigate
+To determine
+To analyze
+To describe
+
+Avoid vague verbs such as:
+
+To know
+To understand
+To learn
+
+
+===============================
+OUTPUT FORMAT
+===============================
+
+Output ONLY this structure:
 
 General Objective:
 To ...
@@ -1612,8 +1700,34 @@ Specific Objectives:
 3. To ...
 4. To ...
 
-Do not add explanations or labels to individual objectives.
+IMPORTANT:
+
+- Do not add explanations.
+- Do not add examples.
+- Do not add headings inside individual objectives.
+- Do not add methodology.
+- Do not add research questions.
+- Do not add recommendations.
+- Do not add invented information.
+- Do not change the research topic.
+
+
+FINAL CHECK BEFORE ANSWERING:
+
+Check every objective.
+
+Ask yourself:
+
+"Did I introduce any information that was not provided
+or clearly implied by the research topic?"
+
+If YES:
+Remove that information.
+
+Only provide the final four specific objectives and
+one general objective.
 `;
+
 
 try{
 
@@ -1629,20 +1743,31 @@ headers: {
 );
 
 if(!response.ok){
-throw new Error("HTTP " + response.status);
+
+throw new Error(
+"HTTP " + response.status
+);
+
 }
 
 const answer = await response.text();
 
 if(!answer || !answer.trim()){
-throw new Error("Empty AI response");
+
+throw new Error(
+"Empty AI response"
+);
+
 }
 
 result.textContent = answer.trim();
 
 }catch(error){
 
-console.error("Objectives Generator ERROR:", error);
+console.error(
+"Objectives Generator ERROR:",
+error
+);
 
 result.textContent =
 "❌ Objectives Generator unavailable. Please try again.";
@@ -1650,7 +1775,9 @@ result.textContent =
 }finally{
 
 button.disabled = false;
-button.textContent = "🤖 Generate Objectives";
+
+button.textContent =
+"🤖 Generate Objectives";
 
 }
 
@@ -1659,20 +1786,29 @@ button.textContent = "🤖 Generate Objectives";
 
 function clearObjectives(){
 
-const input = document.getElementById("objectiveTopic");
-const result = document.getElementById("objectiveResult");
+const input =
+document.getElementById("objectiveTopic");
+
+const result =
+document.getElementById("objectiveResult");
 
 if(input){
+
 input.value = "";
+
 }
 
 if(result){
+
 result.textContent =
 "Your research objectives will appear here.";
+
 }
 
 }
- 
+
+
+
 /* =====================================================  
    ENTER SUPPORT  
 ===================================================== */  

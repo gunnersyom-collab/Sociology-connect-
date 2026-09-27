@@ -1883,7 +1883,6 @@ result.textContent =
 
 }
 
-
 /* =====================================================
    RESEARCH QUESTIONS
 ===================================================== */
@@ -1891,15 +1890,18 @@ result.textContent =
 async function generateResearchQuestions(){
 
 const input =
-document.getElementById("questionTopic");
+document.getElementById("researchQuestionInput");
 
 const result =
-document.getElementById("questionResult");
+document.getElementById("researchQuestionResult");
 
 const button =
 document.getElementById("questionGenerateBtn");
 
-if(!input || !result || !button){
+const countSelect =
+document.getElementById("questionCount");
+
+if(!input || !result || !button || !countSelect){
 
 console.error(
 "Research Questions: required element not found."
@@ -1911,6 +1913,9 @@ return;
 
 const topic =
 input.value.trim();
+
+const count =
+parseInt(countSelect.value) || 5;
 
 if(!topic){
 
@@ -1934,32 +1939,40 @@ const prompt = `
 You are AI Mari, a university research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Generate research questions ONLY from the research topic below.
+Generate exactly ${count} research questions from the
+research topic below.
 
 RESEARCH TOPIC:
-${topic}
+"${topic}"
 
-RULES:
+IMPORTANT RULES:
 
-- If the student specifies a number, generate exactly that number.
-- If no number is specified, generate 10 questions.
-- There is no fixed maximum when the student requests more.
-- Every question must directly relate to the topic.
+- Generate exactly ${count} questions.
+- Every question MUST directly relate to the exact research topic.
+- Do NOT change or replace the main topic.
+- Do NOT introduce unrelated variables.
+- Keep the main concepts and population mentioned in the topic.
 - Questions must be clear, specific and researchable.
-- Keep them appropriate for university-level Sociology or Social Work.
-- Do not invent statistics, studies, authors, citations or references.
-- Do not invent participants, locations, timelines, samples,
-  comparison groups or research design.
-- Do not introduce new variables that are not in the topic.
+- Questions must be suitable for university-level Sociology,
+  Social Work, Social Sciences and Humanity research.
+- Avoid repeating the same question in different words.
+- Explore different important aspects of the topic.
+- Do not invent statistics, findings, studies, authors,
+  citations or references.
+- Do not invent participants, locations, timelines,
+  samples, comparison groups or research designs.
+- Do not add information that is not contained in the topic.
 
-FORMAT:
+OUTPUT FORMAT:
 
-1. ...
-2. ...
-3. ...
+1. Research question
+2. Research question
+3. Research question
+...
+${count}. Research question
 
-Research Topic:
-${topic}
+Output ONLY the numbered research questions.
+Do not add explanations before or after the questions.
 `;
 
 
@@ -2021,13 +2034,17 @@ button.textContent =
 }
 
 
-function clearQuestions(){
+/* =====================================================
+   CLEAR RESEARCH QUESTIONS
+===================================================== */
+
+function clearResearchQuestions(){
 
 const input =
-document.getElementById("questionTopic");
+document.getElementById("researchQuestionInput");
 
 const result =
-document.getElementById("questionResult");
+document.getElementById("researchQuestionResult");
 
 if(input){
 input.value = "";
@@ -2041,7 +2058,6 @@ result.textContent =
 }
 
 }
-
 
 /* =====================================================
    APA 7

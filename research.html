@@ -2535,9 +2535,9 @@ text.substring(1,text.length - 1)
 
 if(!text){
 
-throw new Error(
-"Could not extract the problem statement."
-);
+    throw new Error(
+        "Could not extract the problem statement."
+    );
 
 }
 
@@ -2546,25 +2546,24 @@ text;
 
 }catch(error){
 
-console.error(
-"Problem Statement Generator Error:",
-error
-);
+    console.error(
+        "Problem Statement Generator Error:",
+        error
+    );
 
-result.textContent =
-"⚠️ Sorry, AI Mari could not generate the problem statement. Please try again.";
+    result.textContent =
+    "⚠️ Sorry, AI Mari could not generate the problem statement. Please try again.";
 
 }finally{
 
-button.disabled = false;
+    button.disabled = false;
 
-button.textContent =
-"🤖 Generate Problem Statement";
-
-}
+    button.textContent =
+    "🤖 Generate Problem Statement";
 
 }
 
+} // ← generateProblemStatement() cufa
 
 /* =====================================================
    CLEAR PROBLEM STATEMENT
@@ -2648,7 +2647,30 @@ Create research objectives ONLY from the research topic below.
 
 RESEARCH TOPIC:
 ${topic}
+You must provide:
 
+1. One General Objective
+2. Three to Five Specific Objectives
+
+Requirements:
+- Objectives must directly match the research topic.
+- Use clear academic English.
+- Start specific objectives with action verbs.
+- Keep them realistic and researchable.
+- Do not add unrelated information.
+- Do not explain the objectives.
+
+FORMAT:
+General Objective:
+[one clear objective]
+
+Specific Objectives:
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
+`;
 
 GENERAL OBJECTIVE:
 

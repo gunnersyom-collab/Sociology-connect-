@@ -25,19 +25,28 @@ app.post('/api/chat', async (req, res) => {
             });
         }
 
+        if (!process.env.GEMINI_API_KEY) {
+            console.error('GEMINI_API_KEY is missing');
+
+            return res.status(500).json({
+                error: 'Gemini API key is not configured'
+            });
+        }
+
         const response = await fetch(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=' +
-            process.env.GEMINI_API_KEY,
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',
             {
                 method: 'POST',
 
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': process.env.GEMINI_API_KEY
                 },
 
                 body: JSON.stringify({
                     contents: [
                         {
+                            role: 'user',
                             parts: [
                                 {
                                     text: message
@@ -56,21 +65,28 @@ app.post('/api/chat', async (req, res) => {
             console.error('Gemini API Error:', data);
 
             return res.status(response.status).json({
-                error: 'Gemini API request failed'
+                error:
+                    data?.error?.message ||
+                    'Gemini API request failed'
             });
         }
 
         const reply =
-            data.candidates?.[0]?.content?.parts?.[0]?.text;
+            data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (!reply) {
+
+            console.error(
+                'Gemini returned no text:',
+                JSON.stringify(data)
+            );
 
             return res.status(500).json({
                 error: 'No AI response received'
             });
         }
 
-        res.json({
+        return res.json({
             reply: reply
         });
 
@@ -78,7 +94,7 @@ app.post('/api/chat', async (req, res) => {
 
         console.error('Server Error:', error);
 
-        res.status(500).json({
+        return res.status(500).json({
             error: 'AI server error'
         });
     }
@@ -90,13 +106,13 @@ app.post('/api/chat', async (req, res) => {
 // START SERVER
 // =====================================================
 
+const PORT = process.env.PORT || 3000;
+
 app.listen(
-    process.env.PORT || 3000,
+    PORT,
     () => {
         console.log(
-            `Sociology Connect server running on port ${
-                process.env.PORT || 3000
-            }`
+            `Sociology Connect server running on port ${PORT}`
         );
     }
 );

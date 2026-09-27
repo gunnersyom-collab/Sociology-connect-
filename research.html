@@ -2228,7 +2228,7 @@ result.textContent =
 }
 
 
-/* =====================================================
+ /* =====================================================
    ABSTRACT
 ===================================================== */
 
@@ -2278,29 +2278,41 @@ const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Write a clear academic research abstract for:
+Write one clear academic research abstract based ONLY on
+the research topic provided below.
 
-${topic}
+RESEARCH TOPIC:
+"${topic}"
 
-RULES:
+STRICT RULES:
 
 - Write approximately 150–250 words.
-- Use clear and simple academic English.
-- Stay directly focused on the topic.
-- Do not invent statistics, percentages, participants,
-  locations, findings, authors, citations or references.
-- Do not present future findings as completed findings.
-- Describe the research purpose or problem.
-- Mention the main objective or focus.
-- If methodology is not provided, describe it generally.
-- Do not invent a specific research design.
-- Mention the expected academic or social contribution
-  only in general terms.
-- Use future-oriented language when appropriate.
-- Do not add headings inside the paragraph.
+- Use clear, simple and formal academic English.
+- Stay directly focused on the exact research topic.
+- Keep the main variables, concepts and population mentioned
+  in the topic.
+- Explain the background or research problem briefly.
+- State the main purpose or objective of the study.
+- Explain what the study focuses on.
+- If methodology is NOT provided in the topic, DO NOT invent
+  a specific methodology, research design, sample, participants,
+  location, data collection method or analysis method.
+- Do NOT invent statistics, percentages, findings, results,
+  authors, citations or references.
+- Do NOT claim that something was discovered or proved if
+  the research has not been conducted.
+- Do NOT create imaginary participants or organizations.
+- Use future-oriented language when the study is proposed.
+- Describe the possible academic or social contribution only
+  in general terms.
+- Do not add headings, bullet points or numbered lists.
+- Write the answer as ONE coherent academic paragraph.
 
-Research Topic:
-${topic}
+IMPORTANT:
+The abstract must remain faithful to the exact research topic.
+Do not introduce unrelated subjects.
+
+OUTPUT ONLY THE ABSTRACT.
 `;
 
 
@@ -2362,6 +2374,10 @@ button.textContent =
 }
 
 
+/* =====================================================
+   CLEAR ABSTRACT
+===================================================== */
+
 function clearAbstract(){
 
 const input =
@@ -2382,7 +2398,6 @@ result.textContent =
 }
 
 }
-
 
 /* =====================================================
    PROBLEM STATEMENT

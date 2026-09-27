@@ -1534,7 +1534,6 @@ searchResearch();
 
 }
 
-
 /* =====================================================
    TOPIC GENERATOR
    SOCIAL SCIENCES + SOCIAL SERVICES + HUMANITY
@@ -1542,375 +1541,157 @@ searchResearch();
 
 async function generateTopic(){
 
-const input = document.getElementById("topicInput");
-const result = document.getElementById("generatorResult");
-const button = document.getElementById("topicGenerateBtn");
+    const input = document.getElementById("topicInput");
+    const result = document.getElementById("generatorResult");
 
-if(!input || !result || !button){
-console.error("Topic Generator: required element not found.");
-return;
-}
+    const topic = input.value.trim();
 
-const topic = input.value.trim();
+    if(!topic){
+        result.textContent =
+        "Please enter a research field or topic first.";
+        return;
+    }
 
-if(!topic){
-result.textContent = "⚠️ Please enter a research field or topic.";
-input.focus();
-return;
-}
+    result.textContent = "🤖 Generating research topics...";
 
-button.disabled = true;
-button.textContent = "⏳ Generating...";
+    const prompt = `
+You are an academic research topic generator for university students.
 
-result.textContent =
-"🤖 AI Mari is generating Social Sciences, Social Services & Humanity research topics...";
+Generate exactly 10 clear, realistic and researchable research topics.
 
-const prompt = `
-You are AI Mari, an academic research assistant for
-Sociology Connect – Arsi University (Sociology & Social Work).
+IMPORTANT RULE:
+The student's input is the MAIN SUBJECT.
+Every single research topic MUST directly focus on the student's input.
 
-STUDENT INPUT:
-${topic}
+Student's input:
+"${topic}"
 
-Your task is to generate university-level research topics
-based directly on the student's input.
+The topics may use perspectives from:
 
-=====================================================
-THREE MAIN AREAS
-=====================================================
-
-Every topic must belong to, or clearly connect with,
-one or more of these three areas:
-
-1. SOCIAL SCIENCES
-2. SOCIAL SERVICES
-3. HUMANITY
-
-=====================================================
-1. SOCIAL SCIENCES
-=====================================================
-
-Social Sciences may include:
-
+1. SOCIAL SCIENCES:
 - Sociology
 - Social Work
-- Social Psychology from a social perspective
 - Anthropology
+- Psychology
 - Gender Studies
 - Family Studies
 - Youth Studies
 - Community Studies
-- Culture
-- Social Relationships
-- Social Institutions
-- Social Inequality
-- Social Change
 - Social Problems
+- Social Change
+- Culture
+- Social Inequality
 - Migration
-- Urban and Rural Society
 - Population and Society
-- Poverty from a social perspective
-- Disability and Society
-- Education and Society
-- Religion and Society
-- Social Development
+- Urban and Rural Society
 
-=====================================================
-2. SOCIAL SERVICES
-=====================================================
+2. SOCIAL SERVICES:
+- Social support services
+- Child protection services
+- Family support services
+- Disability support services
+- Elderly support services
+- Community support services
+- Welfare services
+- Social care
 
-Social Services may include:
-
-- Social Welfare
-- Social Protection
-- Community Support
-- Community-Based Social Work
-- Child Protection
-- Youth Support
-- Family Support
-- Women Support
-- Elderly Care
-- Disability Support
-- Poverty Support
-- Humanitarian Assistance
-- Support for Vulnerable Groups
-- Social Rehabilitation
-- Community Development
-- Refugee and Displaced-Person Support
-- Crisis and Disaster Social Support
-
-=====================================================
-3. HUMANITY
-=====================================================
-
-Humanity-related areas may include:
-
+3. HUMANITY:
 - Human Rights
 - Human Dignity
 - Social Justice
 - Equality
-- Social Inclusion
 - Human Welfare
-- Protection of Vulnerable People
-- Respect for Human Dignity
+- Social Inclusion
+- Empowerment
 - Community Solidarity
-- Humanitarian Support
-- Freedom and Social Responsibility
+- Protection of Vulnerable Groups
 
-=====================================================
-MOST IMPORTANT RULE
-=====================================================
+STRICT REQUIREMENTS:
 
-The student's input MUST remain the MAIN SUBJECT.
+- Keep "${topic}" as the central subject in ALL 10 topics.
+- Do NOT replace the student's topic with another subject.
+- Do NOT move away from the student's input.
+- Mix Social Sciences, Social Services and Humanity perspectives when appropriate.
+- Social Services is allowed and should be included when relevant.
+- Keep the topics suitable for Sociology, Social Work and related Social Sciences students.
+- Topics must be suitable for university-level research.
+- Use simple and clear academic English.
+- Do not invent statistics, percentages, findings, citations or references.
+- Do not add a specific country, city, organization, age group or population unless the student included it.
+- Avoid topics mainly about engineering, computer science, business, marketing, finance, sports or agriculture.
+- Avoid purely medical or clinical topics.
+- Do not create political campaign or election topics unless the student's input specifically requires them.
 
-Do not change the student's subject.
+OUTPUT FORMAT:
 
-Example:
+1. Research topic
+2. Research topic
+3. Research topic
+4. Research topic
+5. Research topic
+6. Research topic
+7. Research topic
+8. Research topic
+9. Research topic
+10. Research topic
 
-If the student enters:
-
-Youth
-
-generate topics about:
-
-Youth + Social Sciences
-Youth + Social Services
-Youth + Humanity
-
-If the student enters:
-
-Family
-
-generate topics about:
-
-Family + Social Sciences
-Family + Social Services
-Family + Humanity
-
-If the student enters:
-
-Poverty
-
-generate topics about:
-
-Poverty + Sociology
-Poverty + Social Welfare
-Poverty + Social Protection
-Poverty + Social Justice
-Poverty + Community Support
-
-If the student enters:
-
-Disability
-
-generate topics about:
-
-Disability + Social Inclusion
-Disability + Human Rights
-Disability + Social Work
-Disability + Social Support
-Disability + Community Participation
-
-=====================================================
-AVOID UNRELATED TOPICS
-=====================================================
-
-Do NOT generate topics primarily about:
-
-- Political campaigns
-- Elections
-- Political parties
-- Political mobilization
-- Digital activism
-- Business
-- Marketing
-- Entrepreneurship
-- Engineering
-- Computer Science
-- Technology
-- Sports
-- Agriculture
-- Pure Economics
-- Finance
-- Pure Clinical Medicine
-
-unless the student's input specifically requires
-a Social Sciences, Social Services or Humanity connection.
-
-=====================================================
-IMPORTANT FOR SOCIAL SCIENCE TOPICS
-=====================================================
-
-Do not force every topic to contain the words
-"Social Services" or "Humanity".
-
-A topic can be a Social Sciences topic naturally.
-
-For example:
-
-- The Role of Family Structure in Youth Social Development
-- Gender Inequality and Women's Social Participation
-- Social Causes of Poverty among Rural Communities
-- Migration and Social Integration among Young People
-- Cultural Factors Influencing Community Relationships
-
-These are acceptable because they are clearly
-Social Sciences topics.
-
-Social Services and Humanity topics can also include:
-
-- Youth Access to Social Welfare Services
-- Community-Based Social Work and Youth Empowerment
-- Human Rights and Social Inclusion of Persons with Disabilities
-- Social Protection and the Welfare of Vulnerable Families
-- Community Support for Older People
-
-=====================================================
-QUALITY REQUIREMENTS
-=====================================================
-
-Every topic must:
-
-1. Directly relate to the student's input.
-2. Clearly fit Social Sciences, Social Services or Humanity.
-3. Be suitable for Sociology or Social Work.
-4. Be suitable for university research.
-5. Be clear and researchable.
-6. Be different from the other topics.
-7. Use academic English.
-8. Avoid unnecessary complexity.
-9. Avoid invented facts.
-
-=====================================================
-NO INVENTED INFORMATION
-=====================================================
-
-Do NOT invent:
-
-- Statistics
-- Percentages
-- Authors
-- Studies
-- Citations
-- References
-- Findings
-- Sample sizes
-- Participants
-- Organizations
-- Dates
-- Locations
-
-unless the student explicitly provides them.
-
-=====================================================
-NUMBER OF TOPICS
-=====================================================
-
-If the student requests a specific number,
-generate EXACTLY that number.
-
-If no number is requested,
-generate EXACTLY 10 topics.
-
-=====================================================
-FINAL QUALITY CHECK
-=====================================================
-
-Before outputting each topic, check:
-
-1. Is it directly related to the student's input?
-2. Is it a Social Sciences, Social Services or Humanity topic?
-3. Is it suitable for Sociology or Social Work?
-4. Is it genuinely researchable?
-5. Is it different from the other topics?
-6. Does it avoid unrelated fields?
-
-If any answer is NO,
-replace the topic.
-
-=====================================================
-OUTPUT FORMAT
-=====================================================
-
-Output ONLY numbered research topic titles.
-
-No introduction.
-No explanations.
-No descriptions.
-No citations.
-
-Format:
-
-1. Research topic title
-2. Research topic title
-3. Research topic title
-4. Research topic title
-5. Research topic title
-6. Research topic title
-7. Research topic title
-8. Research topic title
-9. Research topic title
-10. Research topic title
+Output ONLY the 10 numbered research topics.
+Do not add explanations before or after the list.
 `;
 
-try{
+    try{
 
-const response = await fetch(
-"https://text.pollinations.ai/" +
-encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
+        const response = await fetch(
+            "https://text.pollinations.ai/" +
+            encodeURIComponent(prompt),
+            {
+                method:"GET",
+                headers:{
+                    "Accept":"text/plain"
+                }
+            }
+        );
 
-if(!response.ok){
-throw new Error("HTTP " + response.status);
-}
+        if(!response.ok){
+            throw new Error("HTTP " + response.status);
+        }
 
-const answer = await response.text();
+        const answer = await response.text();
 
-if(!answer || !answer.trim()){
-throw new Error("Empty AI response");
-}
+        if(!answer || !answer.trim()){
+            throw new Error("Empty AI response");
+        }
 
-result.textContent = answer.trim();
+        result.textContent = answer.trim();
 
-}catch(error){
+    }catch(error){
 
-console.error("Topic Generator ERROR:", error);
+        console.error("Topic Generator Error:", error);
 
-result.textContent =
-"❌ AI Mari could not generate research topics. Please try again.";
-
-}finally{
-
-button.disabled = false;
-button.textContent = "🤖 Generate Topics";
-
+        result.textContent =
+        "❌ Sorry, something went wrong. Please try again.";
+    }
 }
 
-}
 
+/* =====================================================
+   CLEAR TOPIC GENERATOR
+===================================================== */
 
 function clearTopic(){
 
-const input = document.getElementById("topicInput");
-const result = document.getElementById("generatorResult");
+    const input = document.getElementById("topicInput");
+    const result = document.getElementById("generatorResult");
 
-if(input){
-input.value = "";
+    if(input){
+        input.value = "";
+    }
+
+    if(result){
+        result.textContent =
+        "Your Social Sciences, Social Services & Humanity research topics will appear here.";
+    }
 }
-
-if(result){
-result.textContent =
-"Your Social Sciences & Humanity research topics will appear here.";
-}
-
-}
-
 
 /* =====================================================
    AI RESEARCH ASSISTANT

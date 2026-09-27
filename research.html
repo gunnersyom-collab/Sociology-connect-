@@ -1445,56 +1445,160 @@ result.textContent=
 }
 
 }
-  
-/* =====================================================  
-   OBJECTIVES  
-===================================================== */  
-  
-async function generateResearchObjectives(){  
-  
-const input=document.getElementById("objectiveTopic");  
-const result=document.getElementById("objectiveResult");  
-const button=document.getElementById("objectiveGenerateBtn");  
-  
-const topic=input.value.trim();  
-  
-if(!topic){  
-  
-result.textContent="⚠️ Please enter a research topic.";  
-  
-return;  
-  
-}  
-  
-button.disabled=true;  
-button.textContent="⏳ Generating...";  
-  
-try{  
-  
-const response=await fetch("https://text.pollinations.ai/"+encodeURIComponent(`Write one general objective and four specific objectives for:\n${topic}`));  
-  
-result.textContent="🎯 Research Objectives:\n\n"+await response.text();  
-  
-}catch{  
-  
-result.textContent="❌ Objectives Generator unavailable.";  
-  
-}finally{  
-  
-button.disabled=false;  
-button.textContent="🤖 Generate Objectives";  
-  
-}  
-  
-}  
-  
-function clearObjectives(){  
-  
-document.getElementById("objectiveTopic").value="";  
-document.getElementById("objectiveResult").textContent="Your research objectives will appear here.";  
-  
-}  
-  
+  /* =====================================================
+   OBJECTIVES
+===================================================== */
+
+async function generateResearchObjectives(){
+
+const input=document.getElementById("objectiveTopic");
+const result=document.getElementById("objectiveResult");
+const button=document.getElementById("objectiveGenerateBtn");
+
+if(!input || !result || !button){
+
+console.error("Objectives Generator: required element not found.");
+
+return;
+
+}
+
+const topic=input.value.trim();
+
+if(!topic){
+
+result.textContent="⚠️ Please enter a research topic.";
+
+return;
+
+}
+
+button.disabled=true;
+button.textContent="⏳ Generating...";
+result.textContent="🤖 AI Mari is developing your research objectives...";
+
+const prompt=`
+You are AI Mari, an academic research assistant for
+Sociology Connect – Arsi University (Sociology & Social Work).
+
+Develop research objectives for the following research topic:
+
+RESEARCH TOPIC:
+${topic}
+
+OBJECTIVE RULES:
+
+GENERAL OBJECTIVE:
+- Write exactly ONE general objective.
+- It must express the main purpose of the study.
+- It should directly match the research topic.
+- Begin with an appropriate academic action verb such as:
+  "To examine", "To assess", "To explore", "To investigate",
+  "To determine", or "To analyze".
+
+SPECIFIC OBJECTIVES:
+- Write exactly FOUR specific objectives.
+- Each objective must support the general objective.
+- Each objective must focus on one clear aspect of the research.
+- Use measurable and research-appropriate action verbs such as:
+  identify, assess, examine, explore, determine, analyze,
+  describe, compare, or investigate.
+- Avoid vague verbs such as "to know", "to understand", or
+  "to learn".
+- Do not repeat the same idea in different objectives.
+- Keep every objective directly connected to the research topic.
+- Make the objectives realistic for a university-level
+  Sociology or Social Work study.
+- Do not invent statistics, findings, authors, citations,
+  references, organizations, or dates.
+- Do not add research questions.
+- Do not add methodology.
+- Do not add explanations after each objective.
+
+IMPORTANT:
+The objectives must be suitable for a research proposal.
+They should be clear, concise, specific, and logically connected.
+
+FORMAT:
+
+General Objective:
+To ...
+
+Specific Objectives:
+1. To ...
+2. To ...
+3. To ...
+4. To ...
+
+Research Topic:
+${topic}
+`;
+
+try{
+
+const response=await fetch(
+"https://text.pollinations.ai/"+encodeURIComponent(prompt),
+{
+method:"GET",
+headers:{
+"Accept":"text/plain"
+}
+}
+);
+
+if(!response.ok){
+
+throw new Error("HTTP "+response.status);
+
+}
+
+const answer=await response.text();
+
+if(!answer || !answer.trim()){
+
+throw new Error("Empty AI response");
+
+}
+
+result.textContent=answer.trim();
+
+}catch(error){
+
+console.error("Objectives Generator ERROR:",error);
+
+result.textContent=
+"❌ Objectives Generator unavailable. Please try again.";
+
+}finally{
+
+button.disabled=false;
+button.textContent="🤖 Generate Objectives";
+
+}
+
+}
+
+
+function clearObjectives(){
+
+const input=document.getElementById("objectiveTopic");
+const result=document.getElementById("objectiveResult");
+
+if(input){
+
+input.value="";
+
+}
+
+if(result){
+
+result.textContent=
+"Your research objectives will appear here.";
+
+}
+
+}
+ 
 /* =====================================================  
    ENTER SUPPORT  
 ===================================================== */  

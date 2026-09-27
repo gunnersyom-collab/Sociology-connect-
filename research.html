@@ -949,7 +949,10 @@ IMPORTANT LANGUAGE RULES:
   standard English term in parentheses.
 
 RESEARCH RULES:
-- Generate exactly 5 research questions.
+- Generate the number of research questions requested by the student.
+- If the student specifies a number, generate exactly that number.
+- If no number is specified, generate 10 research questions.
+- Do not impose a fixed maximum limit.
 - Every question must directly relate to the topic.
 - Questions must be specific, clear, and researchable.
 - Questions should be appropriate for a university-level
@@ -961,12 +964,11 @@ FORMAT:
 1. ...
 2. ...
 3. ...
-4. ...
-5. ...
+
+Continue numbering until the requested number of questions is reached.
 
 Research Topic:
 ${topic}
-`;
 
 try{
 

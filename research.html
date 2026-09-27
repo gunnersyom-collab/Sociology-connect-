@@ -875,49 +875,58 @@ AI Mari's answer will appear here.
 </section>
 
 
+
 <!-- =====================================================
-     RESEARCH QUESTIONS
+     RESEARCH QUESTION GENERATOR
 ===================================================== -->
 
-<section class="ai-research">
+<section>
 
 <h2>❓ Research Question Generator</h2>
 
 <p>
-Enter your research topic and AI Mari will generate
-clear research questions.
+Enter your research topic and AI Mari will generate clear and
+researchable questions based directly on your topic.
 </p>
 
+<div class="generator">
+
 <textarea
-id="questionTopic"
-placeholder="Example: Youth Unemployment in Ethiopia"
+id="researchQuestionInput"
+placeholder="Example: The Effects of Community-Based Social Work Programs on Youth Empowerment..."
 ></textarea>
 
-<div class="ai-research-actions">
+<label for="questionCount">
+<strong>Number of Questions:</strong>
+</label>
+
+<select id="questionCount">
+<option value="5" selected>5 Questions</option>
+<option value="10">10 Questions</option>
+<option value="15">15 Questions</option>
+<option value="20">20 Questions</option>
+</select>
 
 <button
 type="button"
 id="questionGenerateBtn"
-onclick="generateResearchQuestions()"
->
+onclick="generateResearchQuestions()">
 🤖 Generate Questions
 </button>
 
 <button
 type="button"
-onclick="clearQuestions()"
->
+onclick="clearResearchQuestions()">
 🗑️ Clear
 </button>
 
-</div>
-
-<div id="questionResult">
+<div id="researchQuestionResult">
 Your research questions will appear here.
 </div>
 
-</section>
+</div>
 
+</section>
 
 <!-- =====================================================
      APA 7

@@ -1690,15 +1690,20 @@
 
     async function askMari(prompt){
 
-        const response = await fetch("/api/chat",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                message:prompt
-            })
-        });
+        const response = await fetch(
+            "https://sociology-connect.onrender.com/api/chat",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+                    message:prompt
+                })
+            }
+        );
 
         const data = await response.json();
 

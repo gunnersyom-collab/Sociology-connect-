@@ -788,120 +788,40 @@ Create basic APA 7 reference formats.
 
 </section>
 
-/* =====================================================
-   TOPIC GENERATOR
-===================================================== */
 
-async function generateTopic(){
+<!-- =====================================================
+     TOPIC GENERATOR
+===================================================== -->
 
-const input = document.getElementById("topicInput");
-const result = document.getElementById("generatorResult");
-const button = document.getElementById("topicGenerateBtn");
+<section>
 
-if(!input || !result || !button){
-console.error("Topic Generator: required element not found.");
-return;
-}
+<h2>💡 Research Topic Generator</h2>
 
-const topic = input.value.trim();
+<p>Enter a field and generate possible research topics.</p>
 
-if(!topic){
-result.textContent = "⚠️ Please enter a research field or topic.";
-input.focus();
-return;
-}
+<div class="generator">
 
-button.disabled = true;
-button.textContent = "⏳ Generating...";
-result.textContent = "🤖 AI Mari is generating research topics...";
+<textarea
+id="topicInput"
+placeholder="Example: Youth, Family, Gender, Social Work..."
+></textarea>
 
-const prompt = `
-You are AI Mari, an academic research assistant for Sociology Connect – Arsi University (Sociology & Social Work).
+<button
+type="button"
+onclick="generateTopic()"
+>
+🤖 Generate Topic
+</button>
 
-Generate research topics related to:
+<div id="generatorResult">
+Your research topics will appear here.
+</div>
 
-${topic}
+</div>
 
-LANGUAGE RULES:
-- Respond in the same language used by the student.
-- English → English.
-- Afaan Oromoo → Afaan Oromoo.
-- Amharic → Amharic.
-- Do not unnecessarily mix languages.
+</section>
 
-RESEARCH RULES:
-- If the student requests a number, generate exactly that number.
-- If no number is requested, generate exactly 10 research topics.
-- Do not impose a maximum limit.
-- Every topic must directly relate to the given field or topic.
-- Every topic must be suitable for a university-level Sociology or Social Work study.
-- Output ONLY numbered topic titles.
-- Do NOT write introductions such as "Here are five topics."
-- Do NOT add explanations or descriptions.
-- Do NOT invent statistics, authors, citations, locations, participants or research findings.
 
-FORMAT:
-1. Topic title
-2. Topic title
-3. Topic title
-
-Continue numbering until the requested number is reached.
-`;
-
-try{
-
-const response = await fetch(
-"https://text.pollinations.ai/" + encodeURIComponent(prompt),
-{
-method: "GET",
-headers: {
-"Accept": "text/plain"
-}
-}
-);
-
-if(!response.ok){
-throw new Error("HTTP " + response.status);
-}
-
-const answer = await response.text();
-
-if(!answer || !answer.trim()){
-throw new Error("Empty AI response");
-}
-
-result.textContent = answer.trim();
-
-}catch(error){
-
-console.error("Topic Generator ERROR:", error);
-
-result.textContent =
-"❌ AI Mari could not generate research topics. Please try again.";
-
-}finally{
-
-button.disabled = false;
-button.textContent = "🤖 Generate Topics";
-
-}
-
-}
-
-function clearTopic(){
-
-const input = document.getElementById("topicInput");
-const result = document.getElementById("generatorResult");
-
-if(input){
-input.value = "";
-}
-
-if(result){
-result.textContent = "Your research topics will appear here.";
-}
-
-}
 <!-- =====================================================
      AI RESEARCH ASSISTANT
 ===================================================== -->

@@ -1479,8 +1479,6 @@ Sociology & Social Work
 <script>
 
 /* =====================================================
-
-/* =====================================================
    AI MARI (Gemini Backend)
 ===================================================== */
 
@@ -1531,7 +1529,6 @@ function loadTheme(){
     }
 
 }
-
 /* =====================================================
    SEARCH
 ===================================================== */
@@ -1679,38 +1676,23 @@ Output ONLY the 10 numbered research topics.
 Do not add explanations before or after the list.
 `;
 
-    try{
+try{
 
-        const response = await fetch(
-            "https://text.pollinations.ai/" +
-            encodeURIComponent(prompt),
-            {
-                method:"GET",
-                headers:{
-                    "Accept":"text/plain"
-                }
-            }
-        );
+    const answer = await askMari(prompt);
 
-        if(!response.ok){
-            throw new Error("HTTP " + response.status);
-        }
-
-        const answer = await response.text();
-
-        if(!answer || !answer.trim()){
-            throw new Error("Empty AI response");
-        }
-
-        result.textContent = answer.trim();
-
-    }catch(error){
-
-        console.error("Topic Generator Error:", error);
-
-        result.textContent =
-        "❌ Sorry, something went wrong. Please try again.";
+    if(!answer || !answer.trim()){
+        throw new Error("Empty AI response");
     }
+
+    result.textContent = answer.trim();
+
+}catch(error){
+
+    console.error("Topic Generator Error:", error);
+
+    result.textContent =
+    "❌ Sorry, something went wrong. Please try again.";
+
 }
 
 

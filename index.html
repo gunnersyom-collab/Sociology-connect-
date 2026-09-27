@@ -922,6 +922,45 @@ body.dark .post-actions{
 body.dark .post-actions button{
     color:#4aa3ff !important;
 }
+<style>
+
+/* AI MARI CHAT BUBBLES */
+#chat-history{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.message{
+  max-width:85%;
+  padding:12px 16px;
+  border-radius:18px;
+  line-height:1.5;
+  word-wrap:break-word;
+  animation:fadeIn .25s ease;
+}
+
+.message.ai{
+  align-self:flex-start;
+  background:#eef5ff;
+  color:#172033;
+}
+
+.message.user{
+  align-self:flex-end;
+  background:#0b8cff;
+  color:#fff;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* CSS kee kan biraa itti fufa... */
+
+</style>
+
 </style>
 
 </head>

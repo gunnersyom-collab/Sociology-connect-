@@ -957,6 +957,11 @@ When answering in Afaan Oromoo:
     - academic meaning
     - naturalness
     - terminology
+    15. If you cannot produce a natural Oromo sentence, do not guess.
+    Use simple Oromo and retain the English academic term in
+    parentheses.
+    Never generate an Oromo word whose meaning you are not
+    confident about.
 
 =========================================================
 IMPORTANT OROMO TERMINOLOGY

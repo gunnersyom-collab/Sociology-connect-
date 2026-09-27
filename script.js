@@ -1,4 +1,3 @@
-
 /* =========================================================
    SOCIOLOGY CONNECT 2.0
    SCRIPT.JS
@@ -102,12 +101,14 @@ async function getUserName(user) {
 
     if (snap.exists()) {
       const data = snap.data();
+
       return data.fullName ||
         data.name ||
         user.displayName ||
         user.email?.split("@")[0] ||
         "Student";
     }
+
   } catch (e) {
     console.warn(e);
   }
@@ -128,9 +129,17 @@ onAuthStateChanged(auth, async (user) => {
 
     const name = await getUserName(user);
 
-    if (userInfo) userInfo.textContent = "👤 " + name;
-    if (loginLink) loginLink.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
+    if (userInfo) {
+      userInfo.textContent = "👤 " + name;
+    }
+
+    if (loginLink) {
+      loginLink.style.display = "none";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display = "inline-block";
+    }
 
     if (document.readyState !== "loading") {
       createAdminControls();
@@ -138,16 +147,27 @@ onAuthStateChanged(auth, async (user) => {
 
   } else {
 
-    if (userInfo) userInfo.textContent = "";
-    if (loginLink) loginLink.style.display = "inline-block";
-    if (logoutBtn) logoutBtn.style.display = "none";
+    if (userInfo) {
+      userInfo.textContent = "";
+    }
+
+    if (loginLink) {
+      loginLink.style.display = "inline-block";
+    }
+
+    if (logoutBtn) {
+      logoutBtn.style.display = "none";
+    }
 
     if (typeof removeAdminControls === "function") {
       removeAdminControls();
     }
+
   }
 
 });
+
+
 /* =========================================================
    PART 2
    CREATE POST
@@ -163,11 +183,20 @@ onAuthStateChanged(auth, async (user) => {
 async function createPost() {
 
   if (!postInput) return;
-  if (!authReady) return alert("Please wait...");
-  if (!currentUser) return alert("Please login first.");
+
+  if (!authReady) {
+    return alert("Please wait...");
+  }
+
+  if (!currentUser) {
+    return alert("Please login first.");
+  }
 
   const text = postInput.value.trim();
-  if (!text) return alert("Write something first.");
+
+  if (!text) {
+    return alert("Write something first.");
+  }
 
   postBtn.disabled = true;
   postBtn.textContent = "Posting...";
@@ -205,11 +234,15 @@ postBtn?.addEventListener("click", createPost);
 postInput?.addEventListener("keydown", (e) => {
 
   if (e.key === "Enter" && !e.shiftKey) {
+
     e.preventDefault();
+
     createPost();
+
   }
 
 });
+
 
 /* LIKE */
 
@@ -220,25 +253,32 @@ async function toggleLike(postId, likeBtn) {
     return;
   }
 
-  const likeRef = doc(db, "posts", postId, "likes", currentUser.uid);
+  const likeRef =
+    doc(db, "posts", postId, "likes", currentUser.uid);
 
   try {
 
     const snap = await getDoc(likeRef);
 
     if (snap.exists()) {
+
       await deleteDoc(likeRef);
+
     } else {
+
       await setDoc(likeRef, {
         userId: currentUser.uid,
         createdAt: serverTimestamp()
       });
+
     }
 
     await updateLikeButton(postId, likeBtn);
 
   } catch (e) {
+
     console.error(e);
+
   }
 
 }
@@ -249,13 +289,18 @@ async function updateLikeButton(postId, likeBtn) {
 
   try {
 
-    const likes = await getDocs(collection(db, "posts", postId, "likes"));
+    const likes =
+      await getDocs(
+        collection(db, "posts", postId, "likes")
+      );
 
     const count = likes.size;
 
     const liked =
       currentUser &&
-      likes.docs.some(item => item.id === currentUser.uid);
+      likes.docs.some(
+        item => item.id === currentUser.uid
+      );
 
     likeBtn.textContent =
       liked
@@ -263,33 +308,50 @@ async function updateLikeButton(postId, likeBtn) {
         : `🤍 Like (${count})`;
 
   } catch (e) {
+
     console.error(e);
+
   }
 
 }
+
 
 /* COMMENT */
 
 async function commentPost(postId) {
 
   if (!currentUser) {
+
     alert("Please login first.");
+
     return false;
   }
 
   const text = prompt("Write your comment:");
-  if (!text || !text.trim()) return false;
+
+  if (!text || !text.trim()) {
+    return false;
+  }
 
   try {
 
-    const name = await getUserName(currentUser);
+    const name =
+      await getUserName(currentUser);
 
-    await addDoc(collection(db, "posts", postId, "comments"), {
-      text: text.trim(),
-      userId: currentUser.uid,
-      name,
-      createdAt: serverTimestamp()
-    });
+    await addDoc(
+      collection(
+        db,
+        "posts",
+        postId,
+        "comments"
+      ),
+      {
+        text: text.trim(),
+        userId: currentUser.uid,
+        name,
+        createdAt: serverTimestamp()
+      }
+    );
 
     return true;
 
@@ -299,48 +361,81 @@ async function commentPost(postId) {
     console.error(e);
 
     return false;
+
   }
 
 }
 
-async function loadComments(postId, commentBtn, card, show = false) {
+async function loadComments(
+  postId,
+  commentBtn,
+  card,
+  show = false
+) {
 
   if (!card) return;
 
   try {
 
-    const snap = await getDocs(collection(db, "posts", postId, "comments"));
+    const snap =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "comments"
+        )
+      );
 
     if (commentBtn) {
-      commentBtn.textContent = `💬 Comment (${snap.size})`;
+
+      commentBtn.textContent =
+        `💬 Comment (${snap.size})`;
+
     }
 
-    card.querySelector(".comments-box")?.remove();
+    card
+      .querySelector(".comments-box")
+      ?.remove();
 
     if (!show || snap.empty) return;
 
-    const box = document.createElement("div");
+    const box =
+      document.createElement("div");
+
     box.className = "comments-box";
+
     box.style.marginTop = "12px";
     box.style.padding = "10px";
     box.style.borderTop = "1px solid #ddd";
 
     [...snap.docs]
       .sort((a, b) => {
-        const x = a.data().createdAt?.toMillis?.() || 0;
-        const y = b.data().createdAt?.toMillis?.() || 0;
+
+        const x =
+          a.data().createdAt?.toMillis?.() || 0;
+
+        const y =
+          b.data().createdAt?.toMillis?.() || 0;
+
         return x - y;
+
       })
       .forEach(item => {
 
         const c = item.data();
 
-        const div = document.createElement("div");
+        const div =
+          document.createElement("div");
+
         div.style.padding = "8px 0";
-        div.style.borderBottom = "1px solid #eee";
+        div.style.borderBottom =
+          "1px solid #eee";
 
         div.innerHTML = `
-          <strong>${escapeHTML(c.name || "Student")}</strong>
+          <strong>
+            ${escapeHTML(c.name || "Student")}
+          </strong>
           <br>
           ${escapeHTML(c.text || "")}
         `;
@@ -352,10 +447,13 @@ async function loadComments(postId, commentBtn, card, show = false) {
     card.appendChild(box);
 
   } catch (e) {
+
     console.error(e);
+
   }
 
 }
+
 
 /* SHARE */
 
@@ -378,61 +476,112 @@ async function sharePost(postId, text) {
     } else if (navigator.clipboard) {
 
       await navigator.clipboard.writeText(url);
+
       alert("Post link copied.");
 
     }
 
   } catch (e) {
+
     console.warn(e);
+
   }
 
 }
+
 
 /* DELETE */
 
 async function deletePost(postId, ownerId) {
 
-  if (!currentUser) return alert("Login first.");
+  if (!currentUser) {
+    return alert("Login first.");
+  }
 
-  if (!(isAdmin() || currentUser.uid === ownerId)) {
-    return alert("You can delete only your own post.");
+  if (
+    !(isAdmin() ||
+      currentUser.uid === ownerId)
+  ) {
+
+    return alert(
+      "You can delete only your own post."
+    );
+
   }
 
   if (!confirm("Delete this post?")) return;
 
   try {
 
-    const likes = await getDocs(collection(db, "posts", postId, "likes"));
-    for (const item of likes.docs) await deleteDoc(item.ref);
+    const likes =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "likes"
+        )
+      );
 
-    const comments = await getDocs(collection(db, "posts", postId, "comments"));
-    for (const item of comments.docs) await deleteDoc(item.ref);
+    for (const item of likes.docs) {
+      await deleteDoc(item.ref);
+    }
 
-    await deleteDoc(doc(db, "posts", postId));
+    const comments =
+      await getDocs(
+        collection(
+          db,
+          "posts",
+          postId,
+          "comments"
+        )
+      );
+
+    for (const item of comments.docs) {
+      await deleteDoc(item.ref);
+    }
+
+    await deleteDoc(
+      doc(db, "posts", postId)
+    );
 
   } catch (e) {
+
     alert(e.message);
+
   }
 
 }
+
 
 /* CLEAR ALL POSTS */
 
 async function clearAllPosts() {
 
-  if (!isAdmin()) return alert("Admin only.");
+  if (!isAdmin()) {
+    return alert("Admin only.");
+  }
 
   if (!confirm("Delete ALL posts?")) return;
 
-  const posts = await getDocs(collection(db, "posts"));
+  const posts =
+    await getDocs(
+      collection(db, "posts")
+    );
 
   for (const post of posts.docs) {
-    await deletePost(post.id, post.data().userId);
+
+    await deletePost(
+      post.id,
+      post.data().userId
+    );
+
   }
 
   alert("All posts deleted.");
 
 }
+
 
 /* ADMIN */
 
@@ -440,20 +589,40 @@ function createAdminControls() {
 
   if (!isAdmin()) return;
 
-  if (document.getElementById("adminControls")) return;
+  if (
+    document.getElementById(
+      "adminControls"
+    )
+  ) return;
 
-  const composer = document.querySelector(".post-composer");
+  const composer =
+    document.querySelector(
+      ".post-composer"
+    );
+
   if (!composer) return;
 
-  const div = document.createElement("div");
+  const div =
+    document.createElement("div");
+
   div.id = "adminControls";
 
   div.innerHTML = `
     <hr>
     <strong>👑 Admin Controls</strong>
     <br><br>
-    <button id="adminClearPostsBtn"
-      style="background:#dc3545;color:#fff;border:none;padding:10px 15px;border-radius:8px;cursor:pointer;">
+
+    <button
+      id="adminClearPostsBtn"
+      style="
+        background:#dc3545;
+        color:#fff;
+        border:none;
+        padding:10px 15px;
+        border-radius:8px;
+        cursor:pointer;
+      "
+    >
       🧹 Clear All Posts
     </button>
   `;
@@ -461,14 +630,27 @@ function createAdminControls() {
   composer.appendChild(div);
 
   document
-    .getElementById("adminClearPostsBtn")
-    ?.addEventListener("click", clearAllPosts);
+    .getElementById(
+      "adminClearPostsBtn"
+    )
+    ?.addEventListener(
+      "click",
+      clearAllPosts
+    );
 
 }
 
 function removeAdminControls() {
-  document.getElementById("adminControls")?.remove();
+
+  document
+    .getElementById(
+      "adminControls"
+    )
+    ?.remove();
+
 }
+
+
 /* =========================================================
    PART 3
    LOAD POSTS
@@ -481,144 +663,252 @@ function loadPosts() {
 
   if (!postsContainer) return;
 
-  const postsQuery = query(
-    collection(db, "posts"),
-    orderBy("createdAt", "desc")
-  );
+  const postsQuery =
+    query(
+      collection(db, "posts"),
+      orderBy("createdAt", "desc")
+    );
 
-  onSnapshot(postsQuery, async (snapshot) => {
+  onSnapshot(
+    postsQuery,
+    async (snapshot) => {
 
-    postsContainer.innerHTML = "";
+      postsContainer.innerHTML = "";
 
-    if (snapshot.empty) {
+      if (snapshot.empty) {
+
+        postsContainer.innerHTML = `
+          <div class="post-card">
+            No posts yet. Be the first student
+            to post! 📚
+          </div>
+        `;
+
+        loadTrendingPosts();
+
+        return;
+      }
+
+      for (const postDoc of snapshot.docs) {
+
+        const post = postDoc.data();
+
+        const postId =
+          postDoc.id;
+
+        const name =
+          post.name || "Student";
+
+        const card =
+          document.createElement("div");
+
+        card.className = "post-card";
+
+        card.id =
+          "post-" + postId;
+
+        const canDelete =
+          currentUser &&
+          (
+            isAdmin() ||
+            currentUser.uid === post.userId
+          );
+
+        card.innerHTML = `
+          <div class="post-header">
+
+            <div class="post-avatar">
+              ${escapeHTML(
+                name.charAt(0).toUpperCase()
+              )}
+            </div>
+
+            <div>
+
+              <div class="post-name">
+                ${escapeHTML(name)}
+              </div>
+
+              <div class="post-time">
+                🕐 ${formatPostTime(
+                  post.createdAt
+                )}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="post-text">
+            ${escapeHTML(
+              post.text || ""
+            )}
+          </div>
+
+          <div class="post-actions">
+
+            <button class="like-btn">
+              🤍 Like (0)
+            </button>
+
+            <button class="comment-btn">
+              💬 Comment (0)
+            </button>
+
+            <button class="share-btn">
+              📤 Share
+            </button>
+
+            ${
+              canDelete
+                ? `
+                  <button
+                    class="delete-btn"
+                    style="color:#dc3545"
+                  >
+                    🗑️ Delete
+                  </button>
+                `
+                : ""
+            }
+
+          </div>
+        `;
+
+        postsContainer.appendChild(card);
+
+        const likeBtn =
+          card.querySelector(
+            ".like-btn"
+          );
+
+        const commentBtn =
+          card.querySelector(
+            ".comment-btn"
+          );
+
+        const shareBtn =
+          card.querySelector(
+            ".share-btn"
+          );
+
+        const deleteBtn =
+          card.querySelector(
+            ".delete-btn"
+          );
+
+        likeBtn?.addEventListener(
+          "click",
+          () => {
+
+            toggleLike(
+              postId,
+              likeBtn
+            );
+
+          }
+        );
+
+        commentBtn?.addEventListener(
+          "click",
+          async () => {
+
+            const added =
+              await commentPost(
+                postId
+              );
+
+            await loadComments(
+              postId,
+              commentBtn,
+              card,
+              added
+            );
+
+            loadTrendingPosts();
+
+          }
+        );
+
+        shareBtn?.addEventListener(
+          "click",
+          () => {
+
+            sharePost(
+              postId,
+              post.text || ""
+            );
+
+          }
+        );
+
+        deleteBtn?.addEventListener(
+          "click",
+          async () => {
+
+            await deletePost(
+              postId,
+              post.userId
+            );
+
+            loadTrendingPosts();
+
+          }
+        );
+
+        await updateLikeButton(
+          postId,
+          likeBtn
+        );
+
+        await loadComments(
+          postId,
+          commentBtn,
+          card,
+          false
+        );
+
+      }
+
+      loadTrendingPosts();
+
+    },
+    (error) => {
+
+      console.error(
+        "LOAD POSTS ERROR:",
+        error
+      );
 
       postsContainer.innerHTML = `
         <div class="post-card">
-          No posts yet. Be the first student to post! 📚
+          ❌ Unable to load posts.
         </div>
       `;
 
-      loadTrendingPosts();
-      return;
     }
-
-    for (const postDoc of snapshot.docs) {
-
-      const post = postDoc.data();
-      const postId = postDoc.id;
-      const name = post.name || "Student";
-
-      const card = document.createElement("div");
-      card.className = "post-card";
-      card.id = "post-" + postId;
-
-      const canDelete =
-        currentUser &&
-        (isAdmin() || currentUser.uid === post.userId);
-
-      card.innerHTML = `
-        <div class="post-header">
-
-          <div class="post-avatar">
-            ${escapeHTML(name.charAt(0).toUpperCase())}
-          </div>
-
-          <div>
-            <div class="post-name">${escapeHTML(name)}</div>
-            <div class="post-time">
-              🕐 ${formatPostTime(post.createdAt)}
-            </div>
-          </div>
-
-        </div>
-
-        <div class="post-text">
-          ${escapeHTML(post.text || "")}
-        </div>
-
-        <div class="post-actions">
-
-          <button class="like-btn">🤍 Like (0)</button>
-
-          <button class="comment-btn">💬 Comment (0)</button>
-
-          <button class="share-btn">📤 Share</button>
-
-          ${canDelete ? `
-            <button class="delete-btn" style="color:#dc3545">
-              🗑️ Delete
-            </button>` : ""}
-
-        </div>
-      `;
-
-      postsContainer.appendChild(card);
-
-      const likeBtn = card.querySelector(".like-btn");
-      const commentBtn = card.querySelector(".comment-btn");
-      const shareBtn = card.querySelector(".share-btn");
-      const deleteBtn = card.querySelector(".delete-btn");
-
-      likeBtn?.addEventListener("click", () => {
-        toggleLike(postId, likeBtn);
-      });
-
-      commentBtn?.addEventListener("click", async () => {
-
-        const added = await commentPost(postId);
-
-        await loadComments(postId, commentBtn, card, added);
-
-        loadTrendingPosts();
-
-      });
-
-      shareBtn?.addEventListener("click", () => {
-        sharePost(postId, post.text || "");
-      });
-
-      deleteBtn?.addEventListener("click", async () => {
-
-        await deletePost(postId, post.userId);
-
-        loadTrendingPosts();
-
-      });
-
-      await updateLikeButton(postId, likeBtn);
-      await loadComments(postId, commentBtn, card, false);
-
-    }
-
-    loadTrendingPosts();
-
-  }, (error) => {
-
-    console.error("LOAD POSTS ERROR:", error);
-
-    postsContainer.innerHTML = `
-      <div class="post-card">
-        ❌ Unable to load posts.
-      </div>
-    `;
-
-  });
+  );
 
 }
+
 
 /* TRENDING POSTS */
 
 async function loadTrendingPosts() {
 
   const trendingContainer =
-    document.getElementById("trendingContainer");
+    document.getElementById(
+      "trendingContainer"
+    );
 
   if (!trendingContainer) return;
 
   try {
 
     const postsSnapshot =
-      await getDocs(collection(db, "posts"));
+      await getDocs(
+        collection(db, "posts")
+      );
 
     if (postsSnapshot.empty) {
 
@@ -633,68 +923,137 @@ async function loadTrendingPosts() {
 
     const posts = [];
 
-    for (const postDoc of postsSnapshot.docs) {
+    for (
+      const postDoc of postsSnapshot.docs
+    ) {
 
-      const post = postDoc.data();
+      const post =
+        postDoc.data();
 
       const likes =
-        (await getDocs(collection(db, "posts", postDoc.id, "likes"))).size;
+        (
+          await getDocs(
+            collection(
+              db,
+              "posts",
+              postDoc.id,
+              "likes"
+            )
+          )
+        ).size;
 
       const comments =
-        (await getDocs(collection(db, "posts", postDoc.id, "comments"))).size;
+        (
+          await getDocs(
+            collection(
+              db,
+              "posts",
+              postDoc.id,
+              "comments"
+            )
+          )
+        ).size;
 
       posts.push({
+
         id: postDoc.id,
-        name: post.name || "Student",
-        text: post.text || "",
+
+        name:
+          post.name || "Student",
+
+        text:
+          post.text || "",
+
         likes,
+
         comments,
-        score: likes + comments
+
+        score:
+          likes + comments
+
       });
 
     }
 
-    posts.sort((a, b) => b.score - a.score);
+    posts.sort(
+      (a, b) =>
+        b.score - a.score
+    );
 
     trendingContainer.innerHTML = "";
 
-    posts.slice(0, 5).forEach(post => {
+    posts
+      .slice(0, 5)
+      .forEach(post => {
 
-      const card = document.createElement("div");
-      card.className = "post-card";
+        const card =
+          document.createElement("div");
 
-      card.innerHTML = `
-        <div class="post-header">
+        card.className =
+          "post-card";
 
-          <div class="post-avatar">
-            ${escapeHTML(post.name.charAt(0).toUpperCase())}
+        card.innerHTML = `
+          <div class="post-header">
+
+            <div class="post-avatar">
+              ${escapeHTML(
+                post.name
+                  .charAt(0)
+                  .toUpperCase()
+              )}
+            </div>
+
+            <div>
+
+              <div class="post-name">
+                ${escapeHTML(
+                  post.name
+                )}
+              </div>
+
+              <div class="post-time">
+                🔥 Trending
+              </div>
+
+            </div>
+
           </div>
 
-          <div>
-            <div class="post-name">${escapeHTML(post.name)}</div>
-            <div class="post-time">🔥 Trending</div>
+          <div class="post-text">
+            ${escapeHTML(
+              post.text
+            )}
           </div>
 
-        </div>
+          <div class="post-actions">
 
-        <div class="post-text">
-          ${escapeHTML(post.text)}
-        </div>
+            <button disabled>
+              ❤️ ${post.likes}
+            </button>
 
-        <div class="post-actions">
-          <button disabled>❤️ ${post.likes}</button>
-          <button disabled>💬 ${post.comments}</button>
-          <button disabled>🔥 Popular</button>
-        </div>
-      `;
+            <button disabled>
+              💬 ${post.comments}
+            </button>
 
-      trendingContainer.appendChild(card);
+            <button disabled>
+              🔥 Popular
+            </button>
 
-    });
+          </div>
+        `;
+
+        trendingContainer.appendChild(
+          card
+        );
+
+      });
 
   } catch (error) {
 
-    console.error("TRENDING ERROR:", error);
+    console.error(
+      "TRENDING ERROR:",
+      error
+    );
 
     trendingContainer.innerHTML = `
       <div class="post-card">
@@ -705,6 +1064,8 @@ async function loadTrendingPosts() {
   }
 
 }
+
+
 /* =========================================================
    PART 4
    NEWS
@@ -715,143 +1076,217 @@ async function loadTrendingPosts() {
 
 function loadNews() {
 
-  const newsContainer = document.getElementById("newsContainer");
+  const newsContainer =
+    document.getElementById(
+      "newsContainer"
+    );
 
   if (!newsContainer) return;
 
-  const newsQuery = query(
-    collection(db, "news"),
-    orderBy("createdAt", "desc")
-  );
+  const newsQuery =
+    query(
+      collection(db, "news"),
+      orderBy("createdAt", "desc")
+    );
 
-  onSnapshot(newsQuery, (snapshot) => {
+  onSnapshot(
+    newsQuery,
+    (snapshot) => {
 
-    newsContainer.innerHTML = "";
+      newsContainer.innerHTML = "";
 
-    if (snapshot.empty) {
+      if (snapshot.empty) {
+
+        newsContainer.innerHTML = `
+          <div class="card">
+            📰 No latest news available yet.
+          </div>
+        `;
+
+        return;
+      }
+
+      snapshot.forEach(
+        (docSnap) => {
+
+          const news =
+            docSnap.data();
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className =
+            "card";
+
+          card.innerHTML = `
+            <h3>
+              📢 ${escapeHTML(
+                news.title ||
+                "Latest News"
+              )}
+            </h3>
+
+            <p>
+              ${escapeHTML(
+                news.description || ""
+              )}
+            </p>
+
+            ${
+              news.createdAt
+                ? `
+                  <small>
+                    🕐 ${formatPostTime(
+                      news.createdAt
+                    )}
+                  </small>
+                `
+                : ""
+            }
+          `;
+
+          newsContainer.appendChild(
+            card
+          );
+
+        }
+      );
+
+    },
+    (error) => {
+
+      console.error(
+        "NEWS ERROR:",
+        error
+      );
 
       newsContainer.innerHTML = `
         <div class="card">
-          📰 No latest news available yet.
+          ❌ Unable to load news.
         </div>
       `;
 
-      return;
     }
-
-    snapshot.forEach((docSnap) => {
-
-      const news = docSnap.data();
-
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <h3>📢 ${escapeHTML(news.title || "Latest News")}</h3>
-
-        <p>${escapeHTML(news.description || "")}</p>
-
-        ${
-          news.createdAt
-            ? `<small>🕐 ${formatPostTime(news.createdAt)}</small>`
-            : ""
-        }
-      `;
-
-      newsContainer.appendChild(card);
-
-    });
-
-  }, (error) => {
-
-    console.error("NEWS ERROR:", error);
-
-    newsContainer.innerHTML = `
-      <div class="card">
-        ❌ Unable to load news.
-      </div>
-    `;
-
-  });
+  );
 
 }
+
 
 /* LOAD EVENTS */
 
 function loadEvents() {
 
-  const eventsContainer = document.getElementById("eventsContainer");
+  const eventsContainer =
+    document.getElementById(
+      "eventsContainer"
+    );
 
   if (!eventsContainer) return;
 
-  const eventsQuery = query(
-    collection(db, "events"),
-    orderBy("date", "asc")
-  );
+  const eventsQuery =
+    query(
+      collection(db, "events"),
+      orderBy("date", "asc")
+    );
 
-  onSnapshot(eventsQuery, (snapshot) => {
+  onSnapshot(
+    eventsQuery,
+    (snapshot) => {
 
-    eventsContainer.innerHTML = "";
+      eventsContainer.innerHTML = "";
 
-    if (snapshot.empty) {
+      if (snapshot.empty) {
+
+        eventsContainer.innerHTML = `
+          <div class="event-card">
+            📅 No events available.
+          </div>
+        `;
+
+        return;
+      }
+
+      snapshot.forEach(
+        (docSnap) => {
+
+          const event =
+            docSnap.data();
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className =
+            "event-card";
+
+          card.innerHTML = `
+            <strong>
+              📅 ${escapeHTML(
+                event.title ||
+                "Event"
+              )}
+            </strong>
+
+            <br><br>
+
+            ${escapeHTML(
+              event.description || ""
+            )}
+
+            ${
+              event.date
+                ? `
+                  <br><br>
+                  <small>
+                    📅 ${escapeHTML(
+                      event.date
+                    )}
+                  </small>
+                `
+                : ""
+            }
+          `;
+
+          eventsContainer.appendChild(
+            card
+          );
+
+        }
+      );
+
+    },
+    (error) => {
+
+      console.error(
+        "EVENTS ERROR:",
+        error
+      );
 
       eventsContainer.innerHTML = `
         <div class="event-card">
-          📅 No events available.
+          ❌ Unable to load events.
         </div>
       `;
 
-      return;
     }
-
-    snapshot.forEach((docSnap) => {
-
-      const event = docSnap.data();
-
-      const card = document.createElement("div");
-      card.className = "event-card";
-
-      card.innerHTML = `
-        <strong>📅 ${escapeHTML(event.title || "Event")}</strong>
-
-        <br><br>
-
-        ${escapeHTML(event.description || "")}
-
-        ${
-          event.date
-            ? `<br><br><small>📅 ${escapeHTML(event.date)}</small>`
-            : ""
-        }
-      `;
-
-      eventsContainer.appendChild(card);
-
-    });
-
-  }, (error) => {
-
-    console.error("EVENTS ERROR:", error);
-
-    eventsContainer.innerHTML = `
-      <div class="event-card">
-        ❌ Unable to load events.
-      </div>
-    `;
-
-  });
+  );
 
 }
 
-    
+
 /* =========================================================
    PART 5
    AI MARI — GEMINI
 ========================================================= */
 
 const chatMessages = [
+
   {
     role: "system",
+
     content: `You are AI Mari, the official academic AI assistant of
 Sociology Connect – Arsi University (Sociology & Social Work).
 
@@ -945,7 +1380,9 @@ For Psychology:
 You are AI Mari, the academic AI assistant of
 Sociology Connect – Arsi University – Sociology & Social Work.`
   }
+
 ];
+
 
 /* =========================================================
    SEND MESSAGE TO RENDER / GEMINI SERVER
@@ -953,9 +1390,14 @@ Sociology Connect – Arsi University – Sociology & Social Work.`
 
 async function sendToServer() {
 
-  if (!chatHistory || !userInput || !sendBtn) return;
+  if (
+    !chatHistory ||
+    !userInput ||
+    !sendBtn
+  ) return;
 
-  const text = userInput.value.trim();
+  const text =
+    userInput.value.trim();
 
   if (!text) return;
 
@@ -964,61 +1406,79 @@ async function sendToServer() {
     content: text
   });
 
-  const userBox = document.createElement("div");
+  const userBox =
+    document.createElement("div");
 
-  userBox.className = "message user";
+  userBox.className =
+    "message user";
 
   userBox.innerHTML =
     `<b>You:</b><br>${escapeHTML(text)}`;
 
-  chatHistory.appendChild(userBox);
+  chatHistory.appendChild(
+    userBox
+  );
 
   userInput.value = "";
 
-  const aiBox = document.createElement("div");
+  const aiBox =
+    document.createElement("div");
 
-  aiBox.className = "message ai";
+  aiBox.className =
+    "message ai";
 
   aiBox.innerHTML = `
     <b>AI Mari:</b><br>
-    <span class="ai-text">Typing... 🤖</span>
+    <span class="ai-text">
+      Typing... 🤖
+    </span>
   `;
 
-  chatHistory.appendChild(aiBox);
+  chatHistory.appendChild(
+    aiBox
+  );
 
   chatHistory.scrollTop =
     chatHistory.scrollHeight;
 
   sendBtn.disabled = true;
-  sendBtn.textContent = "Thinking...";
+  sendBtn.textContent =
+    "Thinking...";
 
   try {
 
-    const response = await fetch(
-      "https://sociology-connect.onrender.com/api/chat",
-      {
-        method: "POST",
+    const response =
+      await fetch(
+        "https://sociology-connect.onrender.com/api/chat",
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json"
-        },
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-        body: JSON.stringify({
-          message: text
-        })
-      }
-    );
+          body: JSON.stringify({
+            message: text
+          })
+        }
+      );
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     if (!response.ok) {
+
       throw new Error(
-        data.error || "AI request failed"
+        data.error ||
+        "AI request failed"
       );
+
     }
 
     const reply =
-      data.reply || "No response received.";
+      data.reply ||
+      "No response received.";
 
     chatMessages.push({
       role: "assistant",
@@ -1027,40 +1487,58 @@ async function sendToServer() {
 
     aiBox.innerHTML = `
       <b>AI Mari:</b><br>
-      <span class="ai-text">${escapeHTML(reply)}</span>
+
+      <span class="ai-text">
+        ${escapeHTML(reply)}
+      </span>
+
       <br><br>
-      <button class="copy-btn">📋 Copy</button>
+
+      <button class="copy-btn">
+        📋 Copy
+      </button>
     `;
 
     aiBox
       .querySelector(".copy-btn")
-      ?.addEventListener("click", async () => {
+      ?.addEventListener(
+        "click",
+        async () => {
 
-        try {
+          try {
 
-          await navigator.clipboard.writeText(reply);
+            await navigator
+              .clipboard
+              .writeText(reply);
 
-        } catch {
+          } catch {
 
-          alert("Copy failed.");
+            alert("Copy failed.");
+
+          }
 
         }
-
-      });
+      );
 
   } catch (error) {
 
-    console.error("AI MARI ERROR:", error);
+    console.error(
+      "AI MARI ERROR:",
+      error
+    );
 
     aiBox.innerHTML = `
       <b>AI Mari:</b><br>
-      ❌ AI Mari could not connect. Please try again.
+      ❌ AI Mari could not connect.
+      Please try again.
     `;
 
   } finally {
 
     sendBtn.disabled = false;
-    sendBtn.textContent = "Send";
+
+    sendBtn.textContent =
+      "Send";
 
     chatHistory.scrollTop =
       chatHistory.scrollHeight;
@@ -1068,6 +1546,7 @@ async function sendToServer() {
   }
 
 }
+
 
 /* =========================================================
    SEND BUTTON
@@ -1078,6 +1557,7 @@ sendBtn?.addEventListener(
   sendToServer
 );
 
+
 /* =========================================================
    ENTER KEY
 ========================================================= */
@@ -1086,7 +1566,10 @@ userInput?.addEventListener(
   "keydown",
   (e) => {
 
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (
+      e.key === "Enter" &&
+      !e.shiftKey
+    ) {
 
       e.preventDefault();
 
@@ -1097,7 +1580,7 @@ userInput?.addEventListener(
   }
 );
 
-          
+
 /* =========================================================
    PART 6
    DARK MODE
@@ -1117,31 +1600,48 @@ function updateThemeButton() {
 
 }
 
+
 /* APPLY SAVED THEME */
 
 function applySavedTheme() {
 
-  const saved = localStorage.getItem("sociologyTheme");
+  const saved =
+    localStorage.getItem(
+      "sociologyTheme"
+    );
 
   if (saved === "dark") {
-    document.body.classList.add("dark");
+
+    document.body.classList.add(
+      "dark"
+    );
+
   } else {
-    document.body.classList.remove("dark");
+
+    document.body.classList.remove(
+      "dark"
+    );
+
   }
 
   updateThemeButton();
 
 }
 
+
 /* TOGGLE THEME */
 
 function toggleTheme() {
 
-  document.body.classList.toggle("dark");
+  document.body.classList.toggle(
+    "dark"
+  );
 
   localStorage.setItem(
     "sociologyTheme",
-    document.body.classList.contains("dark")
+    document.body.classList.contains(
+      "dark"
+    )
       ? "dark"
       : "light"
   );
@@ -1150,7 +1650,11 @@ function toggleTheme() {
 
 }
 
-themeBtn?.addEventListener("click", toggleTheme);
+themeBtn?.addEventListener(
+  "click",
+  toggleTheme
+);
+
 
 /* SEARCH */
 
@@ -1158,35 +1662,55 @@ function searchWebsite() {
 
   if (!searchBar) return;
 
-  const q = searchBar.value.toLowerCase().trim();
+  const q =
+    searchBar.value
+      .toLowerCase()
+      .trim();
 
   let count = 0;
 
-  const items = document.querySelectorAll(
-    "#postsContainer > div, #news .card, #events .event-card, #trendingContainer .post-card"
-  );
+  const items =
+    document.querySelectorAll(
+      "#postsContainer > div, #news .card, #events .event-card, #trendingContainer .post-card"
+    );
 
   items.forEach(item => {
 
-    const text = item.textContent.toLowerCase();
+    const text =
+      item.textContent.toLowerCase();
 
-    const show = !q || text.includes(q);
+    const show =
+      !q ||
+      text.includes(q);
 
-    item.style.display = show ? "" : "none";
+    item.style.display =
+      show ? "" : "none";
 
     if (show) count++;
 
   });
 
-  const counter = document.getElementById("searchCount");
+  const counter =
+    document.getElementById(
+      "searchCount"
+    );
 
   if (counter) {
-    counter.textContent = q ? `${count} results found` : "";
+
+    counter.textContent =
+      q
+        ? `${count} results found`
+        : "";
+
   }
 
 }
 
-searchBar?.addEventListener("input", searchWebsite);
+searchBar?.addEventListener(
+  "input",
+  searchWebsite
+);
+
 
 /* =========================================================
    PART 7
@@ -1206,32 +1730,64 @@ function updateNotificationBadge() {
   let list = [];
 
   try {
-    list = JSON.parse(localStorage.getItem("sc_notify")) || [];
+
+    list =
+      JSON.parse(
+        localStorage.getItem(
+          "sc_notify"
+        )
+      ) || [];
+
   } catch {
+
     list = [];
+
   }
 
-  notifyBtn.innerHTML = list.length
-    ? `🔔 <span style="color:red">${list.length}</span>`
-    : "🔔";
+  notifyBtn.innerHTML =
+    list.length
+      ? `🔔 <span style="color:red">${list.length}</span>`
+      : "🔔";
+
 }
+
 
 function showNotifications() {
 
   let list = [];
 
   try {
-    list = JSON.parse(localStorage.getItem("sc_notify")) || [];
+
+    list =
+      JSON.parse(
+        localStorage.getItem(
+          "sc_notify"
+        )
+      ) || [];
+
   } catch {
+
     list = [];
+
   }
 
-  alert(list.length ? list.join("\n\n") : "🔔 No new notifications.");
+  alert(
+    list.length
+      ? list.join("\n\n")
+      : "🔔 No new notifications."
+  );
+
 }
 
-notifyBtn?.addEventListener("click", showNotifications);
+notifyBtn?.addEventListener(
+  "click",
+  showNotifications
+);
 
-/* VOICE RECOGNITION */
+
+/* =========================================================
+   VOICE RECOGNITION
+========================================================= */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
@@ -1239,89 +1795,185 @@ const SpeechRecognition =
 
 if (SpeechRecognition) {
 
-  const recognition = new SpeechRecognition();
+  const recognition =
+    new SpeechRecognition();
 
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
-  recognition.continuous = false;
+  recognition.lang =
+    "en-US";
 
-  micBtn?.addEventListener("click", () => {
+  recognition.interimResults =
+    false;
 
-    try {
-      recognition.start();
-      micBtn.textContent = "🔴";
-    } catch (e) {
-      console.warn(e);
+  recognition.continuous =
+    false;
+
+
+  micBtn?.addEventListener(
+    "click",
+    () => {
+
+      try {
+
+        recognition.start();
+
+        micBtn.textContent =
+          "🔴 Listening...";
+
+        if (userInput) {
+
+          userInput.placeholder =
+            "Listening...";
+
+        }
+
+      } catch (e) {
+
+        console.warn(e);
+
+      }
+
     }
+  );
 
-  });
 
-  recognition.onresult = (e) => {
+  recognition.onresult =
+    (e) => {
 
-    if (userInput) {
-      userInput.value = e.results[0][0].transcript;
-    }
+      if (userInput) {
 
-    micBtn.textContent = "🎤";
-  };
+        userInput.value =
+          e.results[0][0].transcript;
 
-  recognition.onend = () => {
-    micBtn.textContent = "🎤";
-  };
+        userInput.placeholder =
+          "Ask your question...";
 
-  recognition.onerror = () => {
-    micBtn.textContent = "🎤";
-  };
+      }
+
+    };
+
+
+  recognition.onend =
+    () => {
+
+      micBtn.textContent =
+        "🎤";
+
+      if (userInput) {
+
+        userInput.placeholder =
+          "Ask your question...";
+
+      }
+
+    };
+
+
+  recognition.onerror =
+    (e) => {
+
+      console.warn(
+        "Voice recognition error:",
+        e.error
+      );
+
+      micBtn.textContent =
+        "🎤";
+
+      if (userInput) {
+
+        userInput.placeholder =
+          "Ask your question...";
+
+      }
+
+    };
+
+} else {
+
+  if (micBtn) {
+
+    micBtn.disabled =
+      true;
+
+    micBtn.title =
+      "Voice input is not supported in this browser";
+
+  }
+
 }
+
 
 /* LOGOUT */
 
-logoutBtn?.addEventListener("click", async () => {
+logoutBtn?.addEventListener(
+  "click",
+  async () => {
 
-  try {
+    try {
 
-    await signOut(auth);
+      await signOut(auth);
 
-    window.location.href = "index.html";
+      window.location.href =
+        "index.html";
 
-  } catch (error) {
+    } catch (error) {
 
-    console.error(error);
+      console.error(error);
 
-    alert(error.message);
+      alert(error.message);
+
+    }
 
   }
+);
 
-});
 
 /* SHORTCUT */
 
-document.addEventListener("keydown", (e) => {
+document.addEventListener(
+  "keydown",
+  (e) => {
 
-  if (e.ctrlKey && e.key.toLowerCase() === "k") {
+    if (
+      e.ctrlKey &&
+      e.key.toLowerCase() === "k"
+    ) {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    searchBar?.focus();
+      searchBar?.focus();
+
+    }
 
   }
+);
 
-});
 
-/* START APPLICATION */
+/* =========================================================
+   START APPLICATION
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-  console.log("🚀 Sociology Connect starting...");
+    console.log(
+      "🚀 Sociology Connect starting..."
+    );
 
-  applySavedTheme();
-  updateNotificationBadge();
+    applySavedTheme();
 
-  loadPosts();
-  loadNews();
-  loadEvents();
+    updateNotificationBadge();
 
-  console.log("✅ Sociology Connect Ready");
+    loadPosts();
 
-});
+    loadNews();
 
+    loadEvents();
+
+    console.log(
+      "✅ Sociology Connect Ready"
+    );
+
+  }
+);

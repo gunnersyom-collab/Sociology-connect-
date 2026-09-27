@@ -1,312 +1,642 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Research Hub | Sociology Connect</title>  <style>  
-  
-/* =========================  
-   GLOBAL  
-========================= */  
-  
-*{  
-margin:0;  
-padding:0;  
-box-sizing:border-box;  
-}  
-  
-html{  
-scroll-behavior:smooth;  
-}  
-  
-body{  
-font-family:Arial,sans-serif;  
-background:#f5f7fa;  
-color:#222;  
-transition:.3s;  
-}  
-  
-button,input,textarea{  
-font-family:inherit;  
-}  
-  
-/* =========================  
-   HEADER  
-========================= */  
-  
-header{  
-background:linear-gradient(135deg,#007bff,#0056b3);  
-color:#fff;  
-text-align:center;  
-padding:25px 15px;  
-}  
-  
-header img{  
-width:80px;  
-height:80px;  
-border-radius:50%;  
-object-fit:cover;  
-margin-bottom:10px;  
-}  
-  
-header h1{  
-font-size:30px;  
-margin-bottom:8px;  
-}  
-  
-/* =========================  
-   NAV  
-========================= */  
-  
-nav{  
-background:#fff;  
-display:flex;  
-justify-content:center;  
-align-items:center;  
-gap:10px;  
-flex-wrap:wrap;  
-padding:12px;  
-position:sticky;  
-top:0;  
-z-index:100;  
-box-shadow:0 2px 8px rgba(0,0,0,.08);  
-}  
-  
-nav a,  
-nav button{  
-text-decoration:none;  
-color:#222;  
-font-weight:bold;  
-border:none;  
-background:none;  
-padding:8px 12px;  
-border-radius:8px;  
-cursor:pointer;  
-}  
-  
-nav a:hover,  
-nav button:hover{  
-background:#007bff;  
-color:#fff;  
-}  
-  
-/* =========================  
-   CONTAINER  
-========================= */  
-  
-.container{  
-width:92%;  
-max-width:1100px;  
-margin:auto;  
-}  
-  
-/* =========================  
-   HERO  
-========================= */  
-  
-.hero{  
-text-align:center;  
-padding:45px 15px 30px;  
-}  
-  
-.hero h2{  
-font-size:30px;  
-color:#007bff;  
-margin-bottom:12px;  
-}  
-  
-.hero p{  
-max-width:750px;  
-margin:auto;  
-line-height:1.7;  
-color:#666;  
-}  
-  
-/* =========================  
-   NEW HERO INFOGRAPHIC  
-========================= */  
-  
-.hero-plus{  
-margin:30px 0;  
-padding:35px 20px;  
-border-radius:20px;  
-background:linear-gradient(135deg,#0d6efd,#0056b3);  
-color:white;  
-text-align:center;  
-}  
-  
-.hero-plus h2{  
-color:white;  
-margin-bottom:10px;  
-}  
-  
-.hero-sub{  
-max-width:700px;  
-margin:auto;  
-line-height:1.7;  
-color:#eef6ff;  
-}  
-  
-.stats-grid{  
-display:grid;  
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));  
-gap:15px;  
-margin-top:25px;  
-}  
-  
-.stat-box{  
-background:rgba(255,255,255,.12);  
-backdrop-filter:blur(8px);  
-border:1px solid rgba(255,255,255,.25);  
-padding:20px;  
-border-radius:18px;  
-transition:.3s;  
-}  
-  
-.stat-box:hover{  
-transform:translateY(-5px);  
-}  
-  
-.stat-icon{  
-font-size:30px;  
-margin-bottom:10px;  
-}  
-  
-.stat-box h3{  
-font-size:26px;  
-}  
-  
-/* =========================  
-   SEARCH  
-========================= */  
-  
-.search-box{  
-display:flex;  
-gap:10px;  
-margin:20px 0 30px;  
-}  
-  
-.search-box input{  
-flex:1;  
-padding:14px;  
-border:1px solid #ccc;  
-border-radius:10px;  
-}  
-  
-.search-box button{  
-background:#007bff;  
-color:white;  
-border:none;  
-padding:14px 20px;  
-border-radius:10px;  
-cursor:pointer;  
-}  
-  
-/* =========================  
-   SECTION  
-========================= */  
-  
-section{  
-background:white;  
-padding:25px;  
-margin:25px 0;  
-border-radius:15px;  
-box-shadow:0 3px 12px rgba(0,0,0,.07);  
-}  
-  
-section h2{  
-color:#007bff;  
-margin-bottom:15px;  
-}  
-  
-/* =========================  
-   GRID  
-========================= */  
-  
-.grid{  
-display:grid;  
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));  
-gap:20px;  
-}  
-  
-.card{  
-background:#f8faff;  
-padding:20px;  
-border-radius:12px;  
-border:1px solid #e2e8f0;  
-transition:.25s;  
-}  
-  
-.card:hover{  
-transform:translateY(-5px);  
-box-shadow:0 6px 16px rgba(0,0,0,.08);  
-}  
-  
-.card h3{  
-color:#007bff;  
-margin-bottom:10px;  
-}  
-  
-.card p{  
-color:#666;  
-line-height:1.6;  
-}  
-  
-/* =========================  
-   DARK MODE  
-========================= */  
-  
-body.dark{  
-background:#111;  
-color:white;  
-}  
-  
-body.dark nav{  
-background:#181818;  
-}  
-  
-body.dark nav a,  
-body.dark nav button{  
-color:white;  
-}  
-  
-body.dark section{  
-background:#181818;  
-}  
-  
-body.dark .card{  
-background:#232323;  
-border-color:#444;  
-}  
-  
-body.dark .card p,  
-body.dark .hero p{  
-color:#ccc;  
-}  
-  
-body.dark .hero-plus{  
-background:linear-gradient(135deg,#0b3d91,#082b63);  
-}  
-  
-/* =========================  
-   MOBILE  
-========================= */  
-  
-@media(max-width:600px){  
-  
-header h1{  
-font-size:24px;  
-}  
-  
-.hero h2{  
-font-size:24px;  
-}  
-  
-.search-box{  
-flex-direction:column;  
-}  
-  
-}  
-  
-</style>  </head>  <body>  <header>  <img src="1781866925745.png" alt="Sociology Connect Logo">  <h1>Sociology Connect</h1>  <p>Arsi University – Sociology & Social Work</p>  <p>Created by <strong>Horsa Gowe</strong></p>  </header>  <nav>  <a href="index.html">🏠 Home</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Research Hub | Sociology Connect</title>
+
+<style>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f7fa;
+color:#222;
+transition:.3s;
+}
+
+button,
+input,
+textarea{
+font-family:inherit;
+}
+
+button{
+cursor:pointer;
+}
+
+textarea{
+width:100%;
+min-height:120px;
+padding:14px;
+border:1px solid #ccc;
+border-radius:10px;
+resize:vertical;
+margin-top:15px;
+font-size:15px;
+}
+
+textarea:focus,
+input:focus{
+outline:none;
+border-color:#007bff;
+box-shadow:0 0 0 3px rgba(0,123,255,.12);
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+header{
+background:linear-gradient(135deg,#007bff,#0056b3);
+color:#fff;
+text-align:center;
+padding:25px 15px;
+}
+
+header img{
+width:80px;
+height:80px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:10px;
+}
+
+header h1{
+font-size:30px;
+margin-bottom:8px;
+}
+
+/* =====================================================
+   NAV
+===================================================== */
+
+nav{
+background:#fff;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+padding:12px;
+position:sticky;
+top:0;
+z-index:100;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+transition:.3s;
+}
+
+nav a,
+nav button{
+text-decoration:none;
+color:#222;
+font-weight:bold;
+border:none;
+background:none;
+padding:8px 12px;
+border-radius:8px;
+transition:.2s;
+}
+
+nav a:hover,
+nav button:hover{
+background:#007bff;
+color:#fff;
+}
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container{
+width:92%;
+max-width:1100px;
+margin:auto;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+text-align:center;
+padding:45px 15px 30px;
+}
+
+.hero h2{
+font-size:30px;
+color:#007bff;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:750px;
+margin:auto;
+line-height:1.7;
+color:#666;
+}
+
+/* =====================================================
+   HERO INFOGRAPHIC
+===================================================== */
+
+.hero-plus{
+margin:30px 0;
+padding:35px 20px;
+border-radius:20px;
+background:linear-gradient(135deg,#0d6efd,#0056b3);
+color:white;
+text-align:center;
+}
+
+.hero-plus h2{
+color:white;
+margin-bottom:10px;
+}
+
+.hero-sub{
+max-width:700px;
+margin:auto;
+line-height:1.7;
+color:#eef6ff;
+}
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+margin-top:25px;
+}
+
+.stat-box{
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(8px);
+border:1px solid rgba(255,255,255,.25);
+padding:20px;
+border-radius:18px;
+transition:.3s;
+}
+
+.stat-box:hover{
+transform:translateY(-5px);
+}
+
+.stat-icon{
+font-size:30px;
+margin-bottom:10px;
+}
+
+.stat-box h3{
+font-size:26px;
+}
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-box{
+display:flex;
+gap:10px;
+margin:20px 0 30px;
+}
+
+.search-box input{
+flex:1;
+padding:14px;
+border:1px solid #ccc;
+border-radius:10px;
+font-size:15px;
+}
+
+.search-box button{
+background:#007bff;
+color:white;
+border:none;
+padding:14px 20px;
+border-radius:10px;
+}
+
+/* =====================================================
+   SECTION
+===================================================== */
+
+section{
+background:white;
+padding:25px;
+margin:25px 0;
+border-radius:15px;
+box-shadow:0 3px 12px rgba(0,0,0,.07);
+transition:.3s;
+}
+
+section h2{
+color:#007bff;
+margin-bottom:15px;
+}
+
+section p{
+line-height:1.6;
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.card{
+background:#f8faff;
+padding:20px;
+border-radius:12px;
+border:1px solid #e2e8f0;
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+box-shadow:0 6px 16px rgba(0,0,0,.08);
+}
+
+.card h3{
+color:#007bff;
+margin-bottom:10px;
+}
+
+.card p{
+color:#666;
+line-height:1.6;
+}
+
+/* =====================================================
+   GENERATORS
+===================================================== */
+
+.generator,
+.ai-research{
+margin-top:15px;
+}
+
+.generator button,
+.ai-research-actions button{
+background:#007bff;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:9px;
+margin-top:12px;
+}
+
+.generator button:hover,
+.ai-research-actions button:hover{
+background:#0056b3;
+}
+
+.ai-research-actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.ai-research-actions button:last-child{
+background:#555;
+}
+
+#generatorResult,
+#researchAIResult,
+#questionResult,
+#apaResult,
+#abstractResult,
+#problemResult,
+#objectiveResult{
+margin-top:18px;
+padding:18px;
+background:#f8faff;
+border:1px solid #e2e8f0;
+border-radius:12px;
+line-height:1.7;
+white-space:pre-wrap;
+overflow-wrap:anywhere;
+min-height:70px;
+}
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+body.dark{
+background:#111;
+color:white;
+}
+
+body.dark nav{
+background:#181818;
+box-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+
+body.dark nav a,
+body.dark nav button{
+color:white;
+}
+
+body.dark nav a:hover,
+body.dark nav button:hover{
+background:#007bff;
+color:white;
+}
+
+body.dark section{
+background:#181818;
+box-shadow:0 3px 12px rgba(0,0,0,.35);
+}
+
+body.dark .card{
+background:#232323;
+border-color:#444;
+}
+
+body.dark .card p,
+body.dark .hero p{
+color:#ccc;
+}
+
+body.dark .hero-plus{
+background:linear-gradient(135deg,#0b3d91,#082b63);
+}
+
+body.dark .search-box input,
+body.dark textarea{
+background:#232323;
+color:white;
+border-color:#555;
+}
+
+body.dark #generatorResult,
+body.dark #researchAIResult,
+body.dark #questionResult,
+body.dark #apaResult,
+body.dark #abstractResult,
+body.dark #problemResult,
+body.dark #objectiveResult{
+background:#232323;
+border-color:#444;
+color:#eee;
+}
+
+/* =====================================================
+   RESEARCH PROCESS
+===================================================== */
+
+.infographic{
+background:#fff;
+padding:30px 20px;
+margin:30px 0;
+border-radius:20px;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.info-text{
+text-align:center;
+color:#666;
+margin-bottom:25px;
+}
+
+.info-timeline{
+position:relative;
+padding-left:30px;
+}
+
+.info-timeline::before{
+content:"";
+position:absolute;
+left:20px;
+top:0;
+bottom:0;
+width:4px;
+background:linear-gradient(#007bff,#00b894);
+border-radius:4px;
+}
+
+.info-item{
+display:flex;
+gap:18px;
+margin-bottom:28px;
+}
+
+.info-icon{
+width:44px;
+height:44px;
+min-width:44px;
+border-radius:50%;
+background:#007bff;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:20px;
+}
+
+.info-card{
+background:#f8faff;
+padding:18px;
+border-radius:14px;
+border:1px solid #e5eefc;
+flex:1;
+transition:.3s;
+}
+
+.info-card:hover{
+transform:translateY(-4px);
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.info-card h3{
+color:#007bff;
+margin-bottom:8px;
+}
+
+/* =====================================================
+   COMPARE / APA
+===================================================== */
+
+.compare-grid,
+.apa-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+}
+
+.compare-box,
+.apa-card{
+background:#f8faff;
+padding:18px;
+border-radius:14px;
+border:1px solid #e5eefc;
+}
+
+.compare-box h3,
+.apa-card h3{
+color:#007bff;
+margin-bottom:10px;
+}
+
+.compare-box ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+body.dark .infographic{
+background:#181818;
+}
+
+body.dark .info-card,
+body.dark .compare-box,
+body.dark .apa-card{
+background:#232323;
+border-color:#444;
+}
+
+body.dark .info-text,
+body.dark .compare-box p,
+body.dark .apa-card p{
+color:#ccc;
+}
+
+/* =====================================================
+   FAQ
+===================================================== */
+
+.faq{
+padding:15px 0;
+border-bottom:1px solid #ddd;
+}
+
+.faq:last-child{
+border-bottom:none;
+}
+
+.faq h3{
+color:#007bff;
+margin-bottom:6px;
+}
+
+body.dark .faq{
+border-color:#444;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+text-align:center;
+padding:30px 15px;
+margin-top:30px;
+background:#0056b3;
+color:white;
+line-height:1.8;
+}
+
+footer small{
+opacity:.9;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:600px){
+
+header h1{
+font-size:24px;
+}
+
+.hero h2{
+font-size:24px;
+}
+
+.search-box{
+flex-direction:column;
+}
+
+.search-box button{
+width:100%;
+}
+
+section{
+padding:20px;
+}
+
+.info-timeline{
+padding-left:10px;
+}
+
+.info-timeline::before{
+left:0;
+}
+
+.info-item{
+gap:12px;
+}
+
+.info-icon{
+width:38px;
+height:38px;
+min-width:38px;
+font-size:17px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+<img src="1781866925745.png" alt="Sociology Connect Logo">
+
+<h1>Sociology Connect</h1>
+
+<p>Arsi University – Sociology & Social Work</p>
+
+<p>Created by <strong>Horsa Gowe</strong></p>
+
+</header>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav>
+
+<a href="index.html">🏠 Home</a>
 
 <a href="profile.html">👤 Profile</a>
 
@@ -314,497 +644,1013 @@ flex-direction:column;
 
 <a href="login.html">🔐 Login</a>
 
-<button onclick="toggleTheme()">🌙 Theme</button>
+<button type="button" onclick="toggleTheme()">🌙 Theme</button>
 
-</nav>  <main class="container">  <div class="hero">  <h2>📚 Research Hub</h2>  <p>  
-Welcome to the Sociology Connect Research Hub.  
-Students can use this page to develop research topics,  
-questions, objectives, abstracts, problem statements,  
-APA citations and other academic research materials.  
-</p>  </div>  <!-- ⭐ NEW INFOGRAPHIC (DABALAME QOFA) -->  <section class="hero-plus">  <h2>🔬 Research Excellence Starts Here</h2>  <p class="hero-sub">  
-Explore research ideas, proposals, methodology,  
-APA 7 and AI-powered academic support.  
-</p>  <div class="stats-grid">  <div class="stat-box">  
-<div class="stat-icon">📚</div>  
-<h3>100+</h3>  
-<p>Research Ideas</p>  
-</div>  <div class="stat-box">  
-<div class="stat-icon">🤖</div>  
-<h3>AI</h3>  
-<p>Research Assistant</p>  
-</div>  <div class="stat-box">  
-<div class="stat-icon">📝</div>  
-<h3>APA 7</h3>  
-<p>Citation Guide</p>  
-</div>  <div class="stat-box">  
-<div class="stat-icon">🎯</div>  
-<h3>8</h3>  
-<p>Research Steps</p>  
-</div>  </div>  </section>  <div class="search-box">  <input  
-type="text"  
-id="researchSearch"  
-placeholder="🔎 Search research topics, FAQ, areas..."  
-oninput="searchResearch()">
+</nav>
 
-<button onclick="clearSearch()">Clear</button>
 
-</div>  <section>  <h2>🛠️ Research Services</h2>  <div class="grid">  <div class="card">  
-<h3>💡 Topic Generator</h3>  
-<p>Generate simple and relevant research topics for Sociology and Social Work.</p>  
-</div>  <div class="card">  
-<h3>❓ Research Questions</h3>  
-<p>Create clear research questions from your research topic.</p>  
-</div>  <div class="card">  
-<h3>📝 Abstract Generator</h3>  
-<p>Generate a structured academic research abstract.</p>  
-</div>  <div class="card">  
-<h3>📄 Problem Statement</h3>  
-<p>Develop a clear and researchable problem statement.</p>  
-</div>  <div class="card">  
-<h3>🎯 Research Objectives</h3>  
-<p>Generate general and specific research objectives.</p>  
-</div>  <div class="card">  
-<h3>📚 APA 7 Citation</h3>  
-<p>Create basic APA 7 reference formats.</p>  
-</div>  </div>  </section>  
-<!-- =========================  
-     TOPIC GENERATOR  
-========================= -->  <section>  <h2>💡 Research Topic Generator</h2>  <p>Enter a field and generate possible research topics.</p>  <div class="generator">  <textarea  
-id="topicInput"  
-placeholder="Example: Youth, Family, Gender, Social Work..."></textarea>  <button  
-type="button"  
-onclick="generateTopic()">
+<main class="container">
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<div class="hero">
+
+<h2>📚 Research Hub</h2>
+
+<p>
+Welcome to the Sociology Connect Research Hub.
+Students can use this page to develop research topics,
+questions, objectives, abstracts, problem statements,
+APA citations and other academic research materials.
+</p>
+
+</div>
+
+
+<!-- =====================================================
+     HERO INFOGRAPHIC
+===================================================== -->
+
+<section class="hero-plus">
+
+<h2>🔬 Research Excellence Starts Here</h2>
+
+<p class="hero-sub">
+Explore research ideas, proposals, methodology,
+APA 7 and AI-powered academic support.
+</p>
+
+<div class="stats-grid">
+
+<div class="stat-box">
+<div class="stat-icon">📚</div>
+<h3>100+</h3>
+<p>Research Ideas</p>
+</div>
+
+<div class="stat-box">
+<div class="stat-icon">🤖</div>
+<h3>AI</h3>
+<p>Research Assistant</p>
+</div>
+
+<div class="stat-box">
+<div class="stat-icon">📝</div>
+<h3>APA 7</h3>
+<p>Citation Guide</p>
+</div>
+
+<div class="stat-box">
+<div class="stat-icon">🎯</div>
+<h3>8</h3>
+<p>Research Steps</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<div class="search-box">
+
+<input
+type="text"
+id="researchSearch"
+placeholder="🔎 Search research topics, FAQ, areas..."
+oninput="searchResearch()"
+>
+
+<button type="button" onclick="clearSearch()">Clear</button>
+
+</div>
+
+
+<!-- =====================================================
+     RESEARCH SERVICES
+===================================================== -->
+
+<section>
+
+<h2>🛠️ Research Services</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>💡 Topic Generator</h3>
+<p>
+Generate simple and relevant research topics for Sociology and Social Work.
+</p>
+</div>
+
+<div class="card">
+<h3>❓ Research Questions</h3>
+<p>
+Create clear research questions from your research topic.
+</p>
+</div>
+
+<div class="card">
+<h3>📝 Abstract Generator</h3>
+<p>
+Generate a structured academic research abstract.
+</p>
+</div>
+
+<div class="card">
+<h3>📄 Problem Statement</h3>
+<p>
+Develop a clear and researchable problem statement.
+</p>
+</div>
+
+<div class="card">
+<h3>🎯 Research Objectives</h3>
+<p>
+Generate general and specific research objectives.
+</p>
+</div>
+
+<div class="card">
+<h3>📚 APA 7 Citation</h3>
+<p>
+Create basic APA 7 reference formats.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TOPIC GENERATOR
+===================================================== -->
+
+<section>
+
+<h2>💡 Research Topic Generator</h2>
+
+<p>Enter a field and generate possible research topics.</p>
+
+<div class="generator">
+
+<textarea
+id="topicInput"
+placeholder="Example: Youth, Family, Gender, Social Work..."
+></textarea>
+
+<button
+type="button"
+onclick="generateTopic()"
+>
 🤖 Generate Topic
 </button>
 
-<div id="generatorResult">  
-Your research topics will appear here.  
-</div>  </div>  </section>  <!-- =========================  
-     AI RESEARCH ASSISTANT  
-========================= -->  <section class="ai-research">  <h2>🤖 AI Research Assistant</h2>  <p>  
-Ask AI Mari an academic research question.  
-You can ask about Sociology, Social Work,  
-research methodology or academic writing.  
-</p>  <textarea  
-id="researchAIInput"  
-placeholder="Example: What is qualitative research?"></textarea>  <div class="ai-research-actions">  <button  
-type="button"  
-id="researchAIBtn"  
-onclick="askResearchAI()">
+<div id="generatorResult">
+Your research topics will appear here.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     AI RESEARCH ASSISTANT
+===================================================== -->
+
+<section class="ai-research">
+
+<h2>🤖 AI Research Assistant</h2>
+
+<p>
+Ask AI Mari an academic research question.
+You can ask about Sociology, Social Work,
+research methodology or academic writing.
+</p>
+
+<textarea
+id="researchAIInput"
+placeholder="Example: What is qualitative research?"
+></textarea>
+
+<div class="ai-research-actions">
+
+<button
+type="button"
+id="researchAIBtn"
+onclick="askResearchAI()"
+>
 🤖 Ask AI Mari
 </button>
 
-<button  
-type="button"  
-onclick="clearResearchAI()">
+<button
+type="button"
+onclick="clearResearchAI()"
+>
 🗑️ Clear
 </button>
 
-</div>  <div id="researchAIResult">  
-AI Mari's answer will appear here.  
-</div>  </section>  <!-- =========================  
-     RESEARCH QUESTION GENERATOR  
-========================= -->  <section class="ai-research">  <h2>❓ Research Question Generator</h2>  <p>  
-Enter your research topic and AI Mari will generate  
-clear research questions.  
-</p>  <textarea  
-id="questionTopic"  
-placeholder="Example: Youth Unemployment in Ethiopia"></textarea>  <div class="ai-research-actions">  <button  
-type="button"  
-id="questionGenerateBtn"  
-onclick="generateResearchQuestions()">
+</div>
+
+<div id="researchAIResult">
+AI Mari's answer will appear here.
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     RESEARCH QUESTIONS
+===================================================== -->
+
+<section class="ai-research">
+
+<h2>❓ Research Question Generator</h2>
+
+<p>
+Enter your research topic and AI Mari will generate
+clear research questions.
+</p>
+
+<textarea
+id="questionTopic"
+placeholder="Example: Youth Unemployment in Ethiopia"
+></textarea>
+
+<div class="ai-research-actions">
+
+<button
+type="button"
+id="questionGenerateBtn"
+onclick="generateResearchQuestions()"
+>
 🤖 Generate Questions
 </button>
 
-<button  
-type="button"  
-onclick="clearQuestions()">
+<button
+type="button"
+onclick="clearQuestions()"
+>
 🗑️ Clear
 </button>
 
-</div>  <div id="questionResult">  
-Your research questions will appear here.  
-</div>  </section>  <!-- =========================  
-     APA 7 GENERATOR  
-========================= -->  <section class="ai-research">  <h2>📚 APA 7 Citation Generator</h2>  <p>  
-Enter basic source information and generate  
-a simple APA 7 reference.  
-</p>  <textarea  
-id="apaInput"  
-placeholder="Example: Author: John Smith, Year: 2024, Title: Social Change, Publisher: ABC Press"></textarea>  <div class="ai-research-actions">  <button  
-type="button"  
-id="apaGenerateBtn"  
-onclick="generateAPA()">
+</div>
+
+<div id="questionResult">
+Your research questions will appear here.
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     APA 7
+===================================================== -->
+
+<section class="ai-research">
+
+<h2>📚 APA 7 Citation Generator</h2>
+
+<p>
+Enter basic source information and generate
+a simple APA 7 reference.
+</p>
+
+<textarea
+id="apaInput"
+placeholder="Example: Author: John Smith, Year: 2024, Title: Social Change, Publisher: ABC Press"
+></textarea>
+
+<div class="ai-research-actions">
+
+<button
+type="button"
+id="apaGenerateBtn"
+onclick="generateAPA()"
+>
 📚 Generate APA
 </button>
 
-<button  
-type="button"  
-onclick="clearAPA()">
+<button
+type="button"
+onclick="clearAPA()"
+>
 🗑️ Clear
 </button>
 
-</div>  <div id="apaResult">  
-Your APA 7 citation will appear here.  
-</div>  </section>  <!-- =========================  
-     ABSTRACT GENERATOR  
-========================= -->  <section class="ai-research">  <h2>📄 Research Abstract Generator</h2>  <p>  
-Enter your research topic and AI Mari will generate  
-a simple academic abstract.  
-</p>  <textarea  
-id="abstractTopic"  
-placeholder="Example: Effects of Community-Based Social Work Programs on Youth Empowerment"></textarea>  <div class="ai-research-actions">  <button  
-type="button"  
-id="abstractGenerateBtn"  
-onclick="generateResearchAbstract()">
+</div>
+
+<div id="apaResult">
+Your APA 7 citation will appear here.
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ABSTRACT
+===================================================== -->
+
+<section class="ai-research">
+
+<h2>📄 Research Abstract Generator</h2>
+
+<p>
+Enter your research topic and AI Mari will generate
+a simple academic abstract.
+</p>
+
+<textarea
+id="abstractTopic"
+placeholder="Example: Effects of Community-Based Social Work Programs on Youth Empowerment"
+></textarea>
+
+<div class="ai-research-actions">
+
+<button
+type="button"
+id="abstractGenerateBtn"
+onclick="generateResearchAbstract()"
+>
 🤖 Generate Abstract
 </button>
 
-<button  
-type="button"  
-onclick="clearAbstract()">
+<button
+type="button"
+onclick="clearAbstract()"
+>
 🗑️ Clear
 </button>
 
-</div>  <div id="abstractResult">  
-Your research abstract will appear here.  
-</div>  </section>  <!-- =========================  
-     PROBLEM STATEMENT  
-========================= -->  <section class="ai-research">  <h2>📝 Problem Statement Generator</h2>  <p>  
-Enter your research topic and AI Mari will generate  
-a clear academic problem statement.  
-</p>  <textarea  
-id="problemTopic"  
-placeholder="Example: Youth Unemployment in Ethiopia"></textarea>  <div class="ai-research-actions">  <button  
-type="button"  
-id="problemGenerateBtn"  
-onclick="generateProblemStatement()">
+</div>
+
+<div id="abstractResult">
+Your research abstract will appear here.
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PROBLEM STATEMENT
+===================================================== -->
+
+<section class="ai-research">
+
+<h2>📝 Problem Statement Generator</h2>
+
+<p>
+Enter your research topic and AI Mari will generate
+a clear academic problem statement.
+</p>
+
+<textarea
+id="problemTopic"
+placeholder="Example: Youth Unemployment in Ethiopia"
+></textarea>
+
+<div class="ai-research-actions">
+
+<button
+type="button"
+id="problemGenerateBtn"
+onclick="generateProblemStatement()"
+>
 🤖 Generate Problem Statement
 </button>
 
-<button  
-type="button"  
-onclick="clearProblem()">
+<button
+type="button"
+onclick="clearProblem()"
+>
 🗑️ Clear
 </button>
 
-</div>  <div id="problemResult">  
-Your problem statement will appear here.  
-</div>  </section>  <!-- =========================  
-     RESEARCH OBJECTIVES  
-========================= -->  <section class="ai-research">  <h2>🎯 Research Objectives Generator</h2>  <p>  
-Enter your research topic and AI Mari will generate  
-one general objective and four specific objectives.  
-</p>  <textarea  
-id="objectiveTopic"  
-placeholder="Example: Youth Unemployment in Ethiopia"  
-aria-label="Research topic"></textarea>  <div class="ai-research-actions">  <button  
-type="button"  
-id="objectiveGenerateBtn"  
-onclick="generateResearchObjectives()">
+</div>
+
+<div id="problemResult">
+Your problem statement will appear here.
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     RESEARCH OBJECTIVES
+===================================================== -->
+
+<section class="ai-research">
+
+<h2>🎯 Research Objectives Generator</h2>
+
+<p>
+Enter your research topic and AI Mari will generate
+one general objective and four specific objectives.
+</p>
+
+<textarea
+id="objectiveTopic"
+placeholder="Example: Youth Unemployment in Ethiopia"
+aria-label="Research topic"
+></textarea>
+
+<div class="ai-research-actions">
+
+<button
+type="button"
+id="objectiveGenerateBtn"
+onclick="generateResearchObjectives()"
+>
 🤖 Generate Objectives
 </button>
 
-<button  
-type="button"  
-onclick="clearObjectives()">
+<button
+type="button"
+onclick="clearObjectives()"
+>
 🗑️ Clear
 </button>
 
-</div>  <div id="objectiveResult">  
-Your research objectives will appear here.  
-</div>  </section>  <!-- =====================================================  
-     RESEARCH PROCESS (INFOGRAPHIC VERSION)  
-===================================================== -->  <section class="infographic">  <h2>📊 Research Process Infographic</h2>  <p class="info-text">  
-Follow these 8 simple steps to complete a successful Sociology and Social Work research project.  
-</p>  <div class="info-timeline">  <div class="info-item">  
-<div class="info-icon">💡</div>  
-<div class="info-card">  
-<h3>1. Choose Topic</h3>  
-<p>Select a clear and relevant social issue.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">❗</div>  
-<div class="info-card">  
-<h3>2. Identify Problem</h3>  
-<p>Explain what needs investigation.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">📚</div>  
-<div class="info-card">  
-<h3>3. Literature Review</h3>  
-<p>Study previous research and identify gaps.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">❓</div>  
-<div class="info-card">  
-<h3>4. Research Questions</h3>  
-<p>Create focused and researchable questions.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">🎯</div>  
-<div class="info-card">  
-<h3>5. Objectives</h3>  
-<p>Write one general objective and specific objectives.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">📊</div>  
-<div class="info-card">  
-<h3>6. Methodology</h3>  
-<p>Choose qualitative, quantitative or mixed methods.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">📥</div>  
-<div class="info-card">  
-<h3>7. Data Collection</h3>  
-<p>Gather information ethically and systematically.</p>  
-</div>  
-</div>  <div class="info-item">  
-<div class="info-icon">📝</div>  
-<div class="info-card">  
-<h3>8. Report & References</h3>  
-<p>Present findings and use APA 7 referencing.</p>  
-</div>  
-</div>  </div>  </section>  <!-- =====================================================  
-     QUALITATIVE VS QUANTITATIVE (NEW)  
-===================================================== -->  <section class="infographic">  <h2>⚖️ Qualitative vs Quantitative Research</h2>  <div class="compare-grid">  <div class="compare-box">  <h3>🗣️ Qualitative</h3>  <p>Explores experiences, opinions and meanings.</p>  <ul>  
-<li>Interviews</li>  
-<li>Focus Groups</li>  
-<li>Observation</li>  
-<li>Thematic Analysis</li>  
-</ul>  </div>  <div class="compare-box">  <h3>📈 Quantitative</h3>  <p>Uses numbers and measurable data.</p>  <ul>  
-<li>Surveys</li>  
-<li>Questionnaires</li>  
-<li>Statistics</li>  
-<li>Charts & Tables</li>  
-</ul>  </div>  </div>  </section>  <!-- =====================================================  
-     RESEARCH AREAS  
-===================================================== -->  <section>  <h2>🌍 Research Areas</h2>  <div class="grid">  <div class="card">  
-<h3>👥 Sociology</h3>  
-<p>Society, social relationships, social institutions, culture and social change.</p>  
-</div>  <div class="card">  
-<h3>🤝 Social Work</h3>  
-<p>Social welfare, vulnerable groups, intervention, community practice and social support.</p>  
-</div>  <div class="card">  
-<h3>👨‍👩‍👧 Family Studies</h3>  
-<p>Family relationships, marriage, parenting and socialization.</p>  
-</div>  <div class="card">  
-<h3>🎓 Youth & Education</h3>  
-<p>Youth development, education, employment and empowerment.</p>  
-</div>  <div class="card">  
-<h3>⚖️ Gender & Equality</h3>  
-<p>Gender relations, equality and inclusion.</p>  
-</div>  <div class="card">  
-<h3>🌱 Community Development</h3>  
-<p>Community participation and social change.</p>  
-</div>  <div class="card">  
-<h3>🧠 Social Problems</h3>  
-<p>Poverty, unemployment, substance use and inequality.</p>  
-</div>  <div class="card">  
-<h3>🏘️ Rural & Urban Studies</h3>  
-<p>Migration, urbanization and rural development.</p>  
-</div>  </div>  </section>  <!-- =====================================================  
-     APA QUICK GUIDE (NEW)  
-===================================================== -->  <section class="infographic">  <h2>📚 APA 7 Quick Guide</h2>  <div class="apa-grid">  <div class="apa-card">  
-<h3>📖 Book</h3>  
-<p>Author. (Year). *Book Title*. Publisher.</p>  
-</div>  <div class="apa-card">  
-<h3>📄 Journal</h3>  
-<p>Author. (Year). Article Title. *Journal Name*.</p>  
-</div>  <div class="apa-card">  
-<h3>🌐 Website</h3>  
-<p>Organization. (Year). Page Title. URL</p>  
-</div>  </div>  </section>  <!-- =====================================================  
-     DATA COLLECTION METHODS (NEW)  
-===================================================== -->  <section class="infographic">  <h2>📥 Data Collection Methods</h2>  <div class="grid">  <div class="card">  
-<h3>📋 Survey</h3>  
-<p>Collect information from many respondents quickly.</p>  
-</div>  <div class="card">  
-<h3>🎤 Interview</h3>  
-<p>Explore people's experiences in depth.</p>  
-</div>  <div class="card">  
-<h3>👀 Observation</h3>  
-<p>Study behavior in natural settings.</p>  
-</div>  <div class="card">  
-<h3>📂 Document Review</h3>  
-<p>Analyze reports, policies and previous studies.</p>  
-</div>  </div>  </section>  <!-- =====================================================  
-     RESEARCH FAQ  
-===================================================== -->  <section>  <h2>❓ Research FAQ</h2>  <div class="faq">  
-<h3>What is research?</h3>  
-<p>Research is a systematic process of collecting, analyzing and interpreting information to answer a question.</p>  
-</div>  <div class="faq">  
-<h3>Why is research important?</h3>  
-<p>Research helps solve social problems and supports better decision-making.</p>  
-</div>  <div class="faq">  
-<h3>What is a research problem?</h3>  
-<p>A research problem is an issue that requires systematic investigation.</p>  
-</div>  <div class="faq">  
-<h3>What is a research objective?</h3>  
-<p>It explains what the researcher wants to achieve.</p>  
-</div>  <div class="faq">  
-<h3>What is research methodology?</h3>  
-<p>It explains how data will be collected and analyzed.</p>  
-</div>  <div class="faq">  
-<h3>What is a literature review?</h3>  
-<p>It examines previous academic studies related to the topic.</p>  
-</div>  <div class="faq">  
-<h3>What is qualitative research?</h3>  
-<p>It explores experiences, meanings and opinions.</p>  
-</div>  <div class="faq">  
-<h3>What is quantitative research?</h3>  
-<p>It uses numerical data and statistical methods.</p>  
-</div>  </section>  
-<!-- =========================  
-     FOOTER  
-========================= -->  </main>  <footer>  © 2026 Sociology Connect – Arsi University
+</div>
 
-<br>  Sociology & Social Work
+<div id="objectiveResult">
+Your research objectives will appear here.
+</div>
 
-<br>  <small>Created by Horsa Gowe</small>
+</section>
 
-</footer>  <script>  
-  
-/* =====================================================  
-   DARK MODE  
-===================================================== */  
-  
-function toggleTheme(){  
-  
-document.body.classList.toggle("dark");  
-  
-localStorage.setItem(  
-"researchTheme",  
-document.body.classList.contains("dark")  
-? "dark"  
-: "light"  
-);  
-  
-}  
-  
-function loadTheme(){  
-  
-const theme = localStorage.getItem("researchTheme");  
-  
-if(theme==="dark"){  
-document.body.classList.add("dark");  
-}  
-  
-}  
-  
-/* =====================================================  
-   SEARCH  
-===================================================== */  
-  
-function searchResearch(){  
-  
-const input=document.getElementById("researchSearch");  
-  
-if(!input) return;  
-  
-const query=input.value.toLowerCase().trim();  
-  
-document  
-.querySelectorAll(".card,.faq,.guide,.compare-box,.apa-card,.info-card")  
-.forEach(item=>{  
-  
-item.style.display=  
-!query ||  
-item.innerText.toLowerCase().includes(query)  
-? ""  
-: "none";  
-  
-});  
-  
-}  
-  
-function clearSearch(){  
-  
-const input=document.getElementById("researchSearch");  
-  
-if(input) input.value="";  
-  
-searchResearch();  
-  
-}  
-  
-/* =====================================================  
-   TOPIC GENERATOR  
-===================================================== */  
-  
-async function generateTopic(){  
-  
-const input=document.getElementById("topicInput");  
-const result=document.getElementById("generatorResult");  
-  
-if(!input || !result) return;  
-  
-const topic=input.value.trim();  
-  
-if(!topic){  
-  
-result.textContent="⚠️ Please enter a research field.";  
-  
-input.focus();  
-  
-return;  
-  
-}  
-  
-result.textContent="🤖 AI Mari is generating research topics...";  
-  
-const prompt=`  
-You are AI Mari, an academic research assistant for Sociology Connect at Arsi University.  
-  
-Generate 5 simple and relevant Sociology or Social Work research topics related to:  
-  
-${topic}  
-  
-Use simple academic English.  
-Do not invent statistics or citations.  
-`;  
-  
-try{  
-  
-const response=await fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt));  
-  
-const answer=await response.text();  
-  
-result.textContent="💡 Suggested Research Topics:\n\n"+answer;  
-  
-}catch{  
-  
-result.textContent="❌ Unable to generate research topics.";  
-  
-}  
-  
-}  
-  
-                 
+
+<!-- =====================================================
+     RESEARCH PROCESS
+===================================================== -->
+
+<section class="infographic">
+
+<h2>📊 Research Process Infographic</h2>
+
+<p class="info-text">
+Follow these 8 simple steps to complete a successful Sociology and Social Work research project.
+</p>
+
+<div class="info-timeline">
+
+<div class="info-item">
+<div class="info-icon">💡</div>
+<div class="info-card">
+<h3>1. Choose Topic</h3>
+<p>Select a clear and relevant social issue.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">❗</div>
+<div class="info-card">
+<h3>2. Identify Problem</h3>
+<p>Explain what needs investigation.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">📚</div>
+<div class="info-card">
+<h3>3. Literature Review</h3>
+<p>Study previous research and identify gaps.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">❓</div>
+<div class="info-card">
+<h3>4. Research Questions</h3>
+<p>Create focused and researchable questions.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">🎯</div>
+<div class="info-card">
+<h3>5. Objectives</h3>
+<p>Write one general objective and specific objectives.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">📊</div>
+<div class="info-card">
+<h3>6. Methodology</h3>
+<p>Choose qualitative, quantitative or mixed methods.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">📥</div>
+<div class="info-card">
+<h3>7. Data Collection</h3>
+<p>Gather information ethically and systematically.</p>
+</div>
+</div>
+
+<div class="info-item">
+<div class="info-icon">📝</div>
+<div class="info-card">
+<h3>8. Report & References</h3>
+<p>Present findings and use APA 7 referencing.</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     QUALITATIVE VS QUANTITATIVE
+===================================================== -->
+
+<section class="infographic">
+
+<h2>⚖️ Qualitative vs Quantitative Research</h2>
+
+<div class="compare-grid">
+
+<div class="compare-box">
+
+<h3>🗣️ Qualitative</h3>
+
+<p>
+Explores experiences, opinions and meanings.
+</p>
+
+<ul>
+<li>Interviews</li>
+<li>Focus Groups</li>
+<li>Observation</li>
+<li>Thematic Analysis</li>
+</ul>
+
+</div>
+
+
+<div class="compare-box">
+
+<h3>📈 Quantitative</h3>
+
+<p>
+Uses numbers and measurable data.
+</p>
+
+<ul>
+<li>Surveys</li>
+<li>Questionnaires</li>
+<li>Statistics</li>
+<li>Charts & Tables</li>
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     RESEARCH AREAS
+===================================================== -->
+
+<section>
+
+<h2>🌍 Research Areas</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>👥 Sociology</h3>
+<p>
+Society, social relationships, social institutions, culture and social change.
+</p>
+</div>
+
+<div class="card">
+<h3>🤝 Social Work</h3>
+<p>
+Social welfare, vulnerable groups, intervention, community practice and social support.
+</p>
+</div>
+
+<div class="card">
+<h3>👨‍👩‍👧 Family Studies</h3>
+<p>
+Family relationships, marriage, parenting and socialization.
+</p>
+</div>
+
+<div class="card">
+<h3>🎓 Youth & Education</h3>
+<p>
+Youth development, education, employment and empowerment.
+</p>
+</div>
+
+<div class="card">
+<h3>⚖️ Gender & Equality</h3>
+<p>
+Gender relations, equality and inclusion.
+</p>
+</div>
+
+<div class="card">
+<h3>🌱 Community Development</h3>
+<p>
+Community participation and social change.
+</p>
+</div>
+
+<div class="card">
+<h3>🧠 Social Problems</h3>
+<p>
+Poverty, unemployment, substance use and inequality.
+</p>
+</div>
+
+<div class="card">
+<h3>🏘️ Rural & Urban Studies</h3>
+<p>
+Migration, urbanization and rural development.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     APA QUICK GUIDE
+===================================================== -->
+
+<section class="infographic">
+
+<h2>📚 APA 7 Quick Guide</h2>
+
+<div class="apa-grid">
+
+<div class="apa-card">
+<h3>📖 Book</h3>
+<p>
+Author. (Year). <em>Book Title</em>. Publisher.
+</p>
+</div>
+
+<div class="apa-card">
+<h3>📄 Journal</h3>
+<p>
+Author. (Year). Article Title. <em>Journal Name</em>.
+</p>
+</div>
+
+<div class="apa-card">
+<h3>🌐 Website</h3>
+<p>
+Organization. (Year). Page Title. URL
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     DATA COLLECTION METHODS
+===================================================== -->
+
+<section class="infographic">
+
+<h2>📥 Data Collection Methods</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>📋 Survey</h3>
+<p>
+Collect information from many respondents quickly.
+</p>
+</div>
+
+<div class="card">
+<h3>🎤 Interview</h3>
+<p>
+Explore people's experiences in depth.
+</p>
+</div>
+
+<div class="card">
+<h3>👀 Observation</h3>
+<p>
+Study behavior in natural settings.
+</p>
+</div>
+
+<div class="card">
+<h3>📂 Document Review</h3>
+<p>
+Analyze reports, policies and previous studies.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     FAQ
+===================================================== -->
+
+<section>
+
+<h2>❓ Research FAQ</h2>
+
+<div class="faq">
+<h3>What is research?</h3>
+<p>
+Research is a systematic process of collecting, analyzing and interpreting information to answer a question.
+</p>
+</div>
+
+<div class="faq">
+<h3>Why is research important?</h3>
+<p>
+Research helps solve social problems and supports better decision-making.
+</p>
+</div>
+
+<div class="faq">
+<h3>What is a research problem?</h3>
+<p>
+A research problem is an issue that requires systematic investigation.
+</p>
+</div>
+
+<div class="faq">
+<h3>What is a research objective?</h3>
+<p>
+It explains what the researcher wants to achieve.
+</p>
+</div>
+
+<div class="faq">
+<h3>What is research methodology?</h3>
+<p>
+It explains how data will be collected and analyzed.
+</p>
+</div>
+
+<div class="faq">
+<h3>What is a literature review?</h3>
+<p>
+It examines previous academic studies related to the topic.
+</p>
+</div>
+
+<div class="faq">
+<h3>What is qualitative research?</h3>
+<p>
+It explores experiences, meanings and opinions.
+</p>
+</div>
+
+<div class="faq">
+<h3>What is quantitative research?</h3>
+<p>
+It uses numerical data and statistical methods.
+</p>
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+© 2026 Sociology Connect – Arsi University
+
+<br>
+
+Sociology & Social Work
+
+<br>
+
+<small>Created by Horsa Gowe</small>
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+function toggleTheme(){
+
+document.body.classList.toggle("dark");
+
+localStorage.setItem(
+"researchTheme",
+document.body.classList.contains("dark")
+? "dark"
+: "light"
+);
+
+}
+
+
+function loadTheme(){
+
+const theme = localStorage.getItem("researchTheme");
+
+if(theme === "dark"){
+document.body.classList.add("dark");
+}
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchResearch(){
+
+const input = document.getElementById("researchSearch");
+
+if(!input) return;
+
+const query = input.value.toLowerCase().trim();
+
+document
+.querySelectorAll(
+".card,.faq,.guide,.compare-box,.apa-card,.info-card"
+)
+.forEach(item=>{
+
+item.style.display =
+!query ||
+item.innerText.toLowerCase().includes(query)
+? ""
+: "none";
+
+});
+
+}
+
+
+function clearSearch(){
+
+const input =
+document.getElementById("researchSearch");
+
+if(input){
+input.value = "";
+}
+
+searchResearch();
+
+}
+
+
+/* =====================================================
+   TOPIC GENERATOR
+===================================================== */
+
+async function generateTopic(){
+
+const input =
+document.getElementById("topicInput");
+
+const result =
+document.getElementById("generatorResult");
+
+if(!input || !result) return;
+
+const topic =
+input.value.trim();
+
+if(!topic){
+
+result.textContent =
+"⚠️ Please enter a research field.";
+
+input.focus();
+
+return;
+
+}
+
+result.textContent =
+"🤖 AI Mari is generating research topics...";
+
+
+const prompt = `
+You are AI Mari, an academic research assistant for
+Sociology Connect at Arsi University.
+
+Generate 5 simple and relevant Sociology or Social Work
+research topics related to:
+
+${topic}
+
+Use simple academic English.
+Do not invent statistics or citations.
+`;
+
+try{
+
+const response = await fetch(
+"https://text.pollinations.ai/" +
+encodeURIComponent(prompt),
+{
+method:"GET",
+headers:{
+"Accept":"text/plain"
+}
+}
+);
+
+if(!response.ok){
+throw new Error("HTTP " + response.status);
+}
+
+const answer =
+await response.text();
+
+result.textContent =
+"💡 Suggested Research Topics:\n\n" +
+answer;
+
+}catch(error){
+
+console.error(
+"Topic Generator ERROR:",
+error
+);
+
+result.textContent =
+"❌ Unable to generate research topics.";
+
+}
+
+}
+
+
 /* =====================================================
    AI RESEARCH ASSISTANT
 ===================================================== */
 
 async function askResearchAI(){
 
-const input = document.getElementById("researchAIInput");
-const result = document.getElementById("researchAIResult");
-const button = document.getElementById("researchAIBtn");
+const input =
+document.getElementById("researchAIInput");
+
+const result =
+document.getElementById("researchAIResult");
+
+const button =
+document.getElementById("researchAIBtn");
 
 if(!input || !result || !button) return;
 
-const question = input.value.trim();
+const question =
+input.value.trim();
 
 if(!question){
 
-result.textContent = "⚠️ Please enter your research question.";
+result.textContent =
+"⚠️ Please enter your research question.";
 
 return;
 
 }
 
 button.disabled = true;
-button.textContent = "⏳ Thinking...";
+
+button.textContent =
+"⏳ Thinking...";
+
 
 const prompt = `
 You are AI Mari, an academic research assistant for
@@ -812,13 +1658,15 @@ Sociology Connect – Arsi University (Sociology & Social Work).
 
 Answer the student's question clearly and accurately.
 
-Language rules:
+LANGUAGE RULES:
+
 - If the student writes English, answer in English.
 - If the student writes Afaan Oromoo, answer in natural Afaan Oromoo.
 - If the student writes Amharic, answer in natural Amharic.
 - Do not unnecessarily mix languages.
 
 For Afaan Oromoo:
+
 - Use simple and natural Oromo.
 - Do not translate word by word.
 - Do not invent Oromo words.
@@ -827,13 +1675,24 @@ For Afaan Oromoo:
 - Keep academic terminology accurate.
 
 You are knowledgeable about:
-Sociology, Social Work, Psychology, Anthropology,
-Social Policy, Community Development, Gender,
-Rural Sociology, Urban Sociology, Research Methods,
-Qualitative Research, Quantitative Research,
-Academic Writing and APA 7.
+
+Sociology,
+Social Work,
+Psychology,
+Anthropology,
+Social Policy,
+Community Development,
+Gender,
+Rural Sociology,
+Urban Sociology,
+Research Methods,
+Qualitative Research,
+Quantitative Research,
+Academic Writing,
+APA 7.
 
 Never invent:
+
 - statistics
 - research data
 - authors
@@ -843,30 +1702,59 @@ Never invent:
 - references
 
 Answer the student's actual question first.
+
 Use simple university-level language.
+
 Give an example when useful.
 
 Student question:
+
 ${question}
 `;
 
+
 try{
 
-const response = await fetch(
-"https://text.pollinations.ai/" + encodeURIComponent(prompt)
+const response =
+await fetch(
+"https://text.pollinations.ai/" +
+encodeURIComponent(prompt),
+{
+method:"GET",
+headers:{
+"Accept":"text/plain"
+}
+}
 );
 
 if(!response.ok){
-throw new Error("HTTP " + response.status);
+
+throw new Error(
+"HTTP " + response.status
+);
+
 }
 
-const answer = await response.text();
+const answer =
+await response.text();
 
-result.textContent = answer;
+if(!answer || !answer.trim()){
+
+throw new Error(
+"Empty AI response"
+);
+
+}
+
+result.textContent =
+answer.trim();
 
 }catch(error){
 
-console.error("Research AI ERROR:", error);
+console.error(
+"Research AI ERROR:",
+error
+);
 
 result.textContent =
 "❌ AI Mari could not connect. Please try again.";
@@ -874,26 +1762,36 @@ result.textContent =
 }finally{
 
 button.disabled = false;
-button.textContent = "🤖 Ask AI Mari";
+
+button.textContent =
+"🤖 Ask AI Mari";
 
 }
 
 }
+
 
 function clearResearchAI(){
 
-const input = document.getElementById("researchAIInput");
-const result = document.getElementById("researchAIResult");
+const input =
+document.getElementById("researchAIInput");
+
+const result =
+document.getElementById("researchAIResult");
 
 if(input){
 input.value = "";
 }
 
 if(result){
-result.textContent = "AI Mari's answer will appear here.";
+
+result.textContent =
+"AI Mari's answer will appear here.";
+
 }
 
 }
+
 
 /* =====================================================
    RESEARCH QUESTIONS
@@ -901,9 +1799,14 @@ result.textContent = "AI Mari's answer will appear here.";
 
 async function generateResearchQuestions(){
 
-const input = document.getElementById("questionTopic");
-const result = document.getElementById("questionResult");
-const button = document.getElementById("questionGenerateBtn");
+const input =
+document.getElementById("questionTopic");
+
+const result =
+document.getElementById("questionResult");
+
+const button =
+document.getElementById("questionGenerateBtn");
 
 if(!input || !result || !button){
 
@@ -915,83 +1818,102 @@ return;
 
 }
 
-const topic = input.value.trim();
+const topic =
+input.value.trim();
 
 if(!topic){
 
-result.textContent = "⚠️ Please enter a research topic.";
+result.textContent =
+"⚠️ Please enter a research topic.";
 
 return;
 
 }
 
 button.disabled = true;
-button.textContent = "⏳ Generating...";
+
+button.textContent =
+"⏳ Generating...";
+
 result.textContent =
 "🤖 AI Mari is generating research questions...";
+
 
 const prompt = `
 You are AI Mari, a university research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Generate research questions for this research topic:
+Generate research questions ONLY from the research topic below.
 
+RESEARCH TOPIC:
 ${topic}
 
-RESEARCH RULES:
-- Generate the number of questions requested by the student.
+RULES:
+
 - If the student specifies a number, generate exactly that number.
 - If no number is specified, generate 10 questions.
-- Do not impose a fixed maximum limit.
+- There is no fixed maximum when the student requests more.
 - Every question must directly relate to the topic.
-- Questions must be specific, clear, and researchable.
-- Questions must be appropriate for university-level
-  Sociology or Social Work research.
-- Do not invent statistics, studies, authors, citations,
-  references, or research findings.
+- Questions must be clear, specific and researchable.
+- Keep them appropriate for university-level Sociology or Social Work.
+- Do not invent statistics, studies, authors, citations or references.
+- Do not invent participants, locations, timelines, samples,
+  comparison groups or research design.
+- Do not introduce new variables that are not in the topic.
 
 FORMAT:
+
 1. ...
 2. ...
 3. ...
-
-Continue numbering until the requested number is reached.
 
 Research Topic:
 ${topic}
 `;
 
+
 try{
 
-const response = await fetch(
-"https://text.pollinations.ai/" + encodeURIComponent(prompt),
+const response =
+await fetch(
+"https://text.pollinations.ai/" +
+encodeURIComponent(prompt),
 {
-method: "GET",
-headers: {
-"Accept": "text/plain"
+method:"GET",
+headers:{
+"Accept":"text/plain"
 }
 }
 );
 
 if(!response.ok){
 
-throw new Error("HTTP " + response.status);
+throw new Error(
+"HTTP " + response.status
+);
 
 }
 
-const answer = await response.text();
+const answer =
+await response.text();
 
 if(!answer || !answer.trim()){
 
-throw new Error("Empty AI response");
+throw new Error(
+"Empty AI response"
+);
 
 }
 
-result.textContent = answer.trim();
+result.textContent =
+answer.trim();
 
 }catch(error){
 
-console.error("Research Questions ERROR:", error);
+console.error(
+"Research Questions ERROR:",
+error
+);
 
 result.textContent =
 "❌ AI Mari could not generate research questions. Please try again.";
@@ -999,7 +1921,9 @@ result.textContent =
 }finally{
 
 button.disabled = false;
-button.textContent = "🤖 Generate Questions";
+
+button.textContent =
+"🤖 Generate Questions";
 
 }
 
@@ -1008,13 +1932,14 @@ button.textContent = "🤖 Generate Questions";
 
 function clearQuestions(){
 
-const input = document.getElementById("questionTopic");
-const result = document.getElementById("questionResult");
+const input =
+document.getElementById("questionTopic");
+
+const result =
+document.getElementById("questionResult");
 
 if(input){
-
 input.value = "";
-
 }
 
 if(result){
@@ -1026,39 +1951,54 @@ result.textContent =
 
 }
 
-  /* =====================================================
-   APA
+
+/* =====================================================
+   APA 7
 ===================================================== */
 
 async function generateAPA(){
 
-const input=document.getElementById("apaInput");
-const result=document.getElementById("apaResult");
-const button=document.getElementById("apaGenerateBtn");
+const input =
+document.getElementById("apaInput");
+
+const result =
+document.getElementById("apaResult");
+
+const button =
+document.getElementById("apaGenerateBtn");
 
 if(!input || !result || !button){
 
-console.error("APA Generator: required element not found.");
+console.error(
+"APA Generator: required element not found."
+);
 
 return;
 
 }
 
-const info=input.value.trim();
+const info =
+input.value.trim();
 
 if(!info){
 
-result.textContent="⚠️ Please enter source information.";
+result.textContent =
+"⚠️ Please enter source information.";
 
 return;
 
 }
 
-button.disabled=true;
-button.textContent="⏳ Generating...";
-result.textContent="🤖 AI Mari is formatting your APA 7 citation...";
+button.disabled = true;
 
-const prompt=`
+button.textContent =
+"⏳ Generating...";
+
+result.textContent =
+"🤖 AI Mari is formatting your APA 7 citation...";
+
+
+const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
@@ -1069,22 +2009,22 @@ SOURCE INFORMATION:
 ${info}
 
 APA 7 RULES:
+
 - Identify the source type when possible.
 - Format the reference according to APA 7th edition.
 - Preserve all real information provided by the student.
 - Do not invent missing information.
 - Do not create fake authors, dates, publishers, DOI numbers,
-  URLs, page numbers, or other bibliographic details.
+  URLs, page numbers or other bibliographic details.
 - Use APA 7 capitalization and punctuation rules.
 - Use sentence case where APA 7 requires it.
-- Use italics where APA 7 requires them.
-- For journal articles, include volume, issue, pages,
-  and DOI/URL when available.
+- Use italics where APA 7 requires it.
+- For journal articles, include volume, issue, pages and DOI/URL
+  only when available.
 - For books, include the publisher when available.
 - For websites, include the date and URL when provided.
 - If important information is missing, clearly identify it.
-- If the citation is already APA 7, check it and correct
-  only necessary formatting problems.
+- If the citation is already APA 7, correct only necessary problems.
 
 OUTPUT:
 
@@ -1100,10 +2040,13 @@ Source:
 ${info}
 `;
 
+
 try{
 
-const response=await fetch(
-"https://text.pollinations.ai/"+encodeURIComponent(prompt),
+const response =
+await fetch(
+"https://text.pollinations.ai/" +
+encodeURIComponent(prompt),
 {
 method:"GET",
 headers:{
@@ -1114,31 +2057,42 @@ headers:{
 
 if(!response.ok){
 
-throw new Error("HTTP "+response.status);
+throw new Error(
+"HTTP " + response.status
+);
 
 }
 
-const answer=await response.text();
+const answer =
+await response.text();
 
 if(!answer || !answer.trim()){
 
-throw new Error("Empty AI response");
+throw new Error(
+"Empty AI response"
+);
 
 }
 
-result.textContent=answer.trim();
+result.textContent =
+answer.trim();
 
 }catch(error){
 
-console.error("APA Generator ERROR:",error);
+console.error(
+"APA Generator ERROR:",
+error
+);
 
-result.textContent=
+result.textContent =
 "❌ APA Generator unavailable. Please try again.";
 
 }finally{
 
-button.disabled=false;
-button.textContent="📚 Generate APA";
+button.disabled = false;
+
+button.textContent =
+"📚 Generate APA";
 
 }
 
@@ -1147,23 +2101,25 @@ button.textContent="📚 Generate APA";
 
 function clearAPA(){
 
-const input=document.getElementById("apaInput");
-const result=document.getElementById("apaResult");
+const input =
+document.getElementById("apaInput");
+
+const result =
+document.getElementById("apaResult");
 
 if(input){
-
-input.value="";
-
+input.value = "";
 }
 
 if(result){
 
-result.textContent=
+result.textContent =
 "Your APA 7 citation will appear here.";
 
 }
 
 }
+
 
 /* =====================================================
    ABSTRACT
@@ -1171,384 +2127,27 @@ result.textContent=
 
 async function generateResearchAbstract(){
 
-const input=document.getElementById("abstractTopic");
-const result=document.getElementById("abstractResult");
-const button=document.getElementById("abstractGenerateBtn");
+const input =
+document.getElementById("abstractTopic");
 
-if(!input || !result || !button){
+const result =
+document.getElementById("abstractResult");
 
-console.error("Abstract Generator: required element not found.");
-
-return;
-
-}
-
-const topic=input.value.trim();
-
-if(!topic){
-
-result.textContent="⚠️ Please enter a research topic.";
-
-return;
-
-}
-
-button.disabled=true;
-button.textContent="⏳ Generating...";
-result.textContent="🤖 AI Mari is writing your research abstract...";
-
-const prompt=`
-You are AI Mari, an academic research assistant for
-Sociology Connect – Arsi University (Sociology & Social Work).
-
-Write a clear, academically appropriate research abstract
-for the research topic below.
-
-RESEARCH TOPIC:
-${topic}
-
-ABSTRACT RULES:
-- Write approximately 150–250 words.
-- Use clear and simple academic English.
-- Keep the abstract focused directly on the given topic.
-- Do not invent statistics, percentages, participants,
-  locations, findings, authors, citations, or references.
-- Because this may be a research proposal, do not present
-  future research findings as if they have already happened.
-- Clearly describe the research problem or purpose.
-- Mention the main research objective or focus.
-- Briefly describe an appropriate research approach or
-  methodology when it can reasonably be identified.
-- Mention the expected contribution or importance of the study.
-- Use future-oriented language when the study has not yet
-  been conducted.
-- Do not add citations or references unless the student
-  specifically provides them.
-- Do not add headings such as "Abstract", "Introduction",
-  or "Conclusion" inside the generated paragraph.
-- Keep the writing suitable for a university-level
-  Sociology or Social Work research proposal.
-
-IMPORTANT:
-Do not invent information that is not provided in the topic.
-If a specific methodological detail is unknown, describe it
-generally rather than making up details.
-
-Research Topic:
-${topic}
-`;
-
-try{
-
-const response=await fetch(
-"https://text.pollinations.ai/"+encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
-
-if(!response.ok){
-
-throw new Error("HTTP "+response.status);
-
-}
-
-const answer=await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error("Empty AI response");
-
-}
-
-result.textContent=answer.trim();
-
-}catch(error){
-
-console.error("Abstract Generator ERROR:",error);
-
-result.textContent=
-"❌ Abstract Generator unavailable. Please try again.";
-
-}finally{
-
-button.disabled=false;
-button.textContent="🤖 Generate Abstract";
-
-}
-
-}
-
-
-function clearAbstract(){
-
-const input=document.getElementById("abstractTopic");
-const result=document.getElementById("abstractResult");
-
-if(input){
-
-input.value="";
-
-}
-
-if(result){
-
-result.textContent=
-"Your research abstract will appear here.";
-
-}
-
-}
-  
-/* =====================================================
-   PROBLEM STATEMENT
-===================================================== */
-
-async function generateProblemStatement(){
-
-const input=document.getElementById("problemTopic");
-const result=document.getElementById("problemResult");
-const button=document.getElementById("problemGenerateBtn");
-
-if(!input || !result || !button){
-
-console.error("Problem Statement: required element not found.");
-
-return;
-
-}
-
-const topic=input.value.trim();
-
-if(!topic){
-
-result.textContent="⚠️ Please enter a research topic.";
-
-return;
-
-}
-
-button.disabled=true;
-button.textContent="⏳ Generating...";
-result.textContent="🤖 AI Mari is developing your problem statement...";
-
-const prompt=`
-You are AI Mari, an academic research assistant for
-Sociology Connect – Arsi University (Sociology & Social Work).
-
-Write a clear and academically appropriate research problem
-statement for the topic below.
-
-RESEARCH TOPIC:
-${topic}
-
-PROBLEM STATEMENT RULES:
-- Write approximately 250–400 words.
-- Use clear, simple academic English.
-- Focus directly on the research topic.
-- Explain the broader social or academic context of the problem.
-- Clearly identify the specific problem or gap that the study
-  intends to address.
-- Explain why the problem deserves research attention.
-- Explain the consequences or significance of the problem
-  when appropriate.
-- Identify the research gap without inventing studies or evidence.
-- Connect the problem to Sociology or Social Work where relevant.
-- Use Ethiopia or a specific location only if the student provides
-  that location.
-- Do not invent statistics, percentages, study findings,
-  authors, citations, references, organizations, or dates.
-- Do not present assumptions as established facts.
-- If evidence is not provided, use careful academic language such as
-  "there may be", "the study will examine", or
-  "limited evidence may suggest".
-- Because this may be a research proposal, use appropriate
-  future-oriented language when discussing what the study will do.
-- Do not include research objectives, research questions,
-  methodology, or recommendations as separate sections.
-- Do not add a heading such as "Problem Statement" inside the output.
-- Produce connected academic paragraphs.
-
-IMPORTANT:
-Do not create fake literature or citations.
-Do not claim that a specific study has found something unless
-the student provides that information.
-
-Research Topic:
-${topic}
-`;
-
-try{
-
-const response=await fetch(
-"https://text.pollinations.ai/"+encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
-
-if(!response.ok){
-
-throw new Error("HTTP "+response.status);
-
-}
-
-const answer=await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error("Empty AI response");
-
-}
-
-result.textContent=answer.trim();
-
-}catch(error){
-
-console.error("Problem Statement ERROR:",error);
-
-result.textContent=
-"❌ Problem Statement Generator unavailable. Please try again.";
-
-}finally{
-
-button.disabled=false;
-button.textContent="🤖 Generate Problem Statement";
-
-}
-
-}
-
-
-function clearProblem(){
-
-const input=document.getElementById("problemTopic");
-const result=document.getElementById("problemResult");
-
-if(input){
-
-input.value="";
-
-}
-
-if(result){
-
-result.textContent=
-"Your problem statement will appear here.";
-
-}
-
-}
-  
-- Write exactly FOUR specific objectives.
-- Each objective must support the general objective.
-- Each objective must focus on one clear aspect of the research.
-- Use measurable and research-appropriate action verbs such as:
-  identify, assess, examine, explore, determine, analyze,
-  describe, compare, or investigate.
-- Avoid vague verbs such as "to know", "to understand", or
-  "to learn".
-- Do not repeat the same idea in different objectives.
-- Keep every objective directly connected to the research topic.
-- Make the objectives realistic for a university-level
-  Sociology or Social Work study.
-- Do not invent statistics, findings, authors, citations,
-  references, organizations, or dates.
-- Do not add research questions.
-- Do not add methodology.
-- Do not add explanations after each objective.
-
-IMPORTANT:
-The objectives must be suitable for a research proposal.
-They should be clear, concise, specific, and logically connected.
-
-FORMAT:
-
-General Objective:
-To ...
-
-Specific Objectives:
-1. To ...
-2. To ...
-3. To ...
-4. To ...
-
-Research Topic:
-${topic}
-`;
-
-try{
-
-const response=await fetch(
-"https://text.pollinations.ai/"+encodeURIComponent(prompt),
-{
-method:"GET",
-headers:{
-"Accept":"text/plain"
-}
-}
-);
-
-if(!response.ok){
-
-throw new Error("HTTP "+response.status);
-
-}
-
-const answer=await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error("Empty AI response");
-
-}
-
-result.textContent=answer.trim();
-
-}catch(error){
-
-console.error("Objectives Generator ERROR:",error);
-
-result.textContent=
-"❌ Objectives Generator unavailable. Please try again.";
-
-}finally{
-
-button.disabled=false;
-button.textContent="🤖 Generate Objectives";
-
-}
-
-}
-
- 
-/* =====================================================
-   OBJECTIVES
-===================================================== */
-
-async function generateResearchObjectives(){
-
-const input = document.getElementById("objectiveTopic");
-const result = document.getElementById("objectiveResult");
-const button = document.getElementById("objectiveGenerateBtn");
+const button =
+document.getElementById("abstractGenerateBtn");
 
 if(!input || !result || !button){
 
 console.error(
-"Objectives Generator: required element not found."
+"Abstract Generator: required element not found."
 );
 
 return;
 
 }
 
-const topic = input.value.trim();
+const topic =
+input.value.trim();
 
 if(!topic){
 
@@ -1560,7 +2159,326 @@ return;
 }
 
 button.disabled = true;
-button.textContent = "⏳ Generating...";
+
+button.textContent =
+"⏳ Generating...";
+
+result.textContent =
+"🤖 AI Mari is writing your research abstract...";
+
+
+const prompt = `
+You are AI Mari, an academic research assistant for
+Sociology Connect – Arsi University (Sociology & Social Work).
+
+Write a clear academic research abstract for:
+
+${topic}
+
+RULES:
+
+- Write approximately 150–250 words.
+- Use clear and simple academic English.
+- Stay directly focused on the topic.
+- Do not invent statistics, percentages, participants,
+  locations, findings, authors, citations or references.
+- Do not present future findings as completed findings.
+- Describe the research purpose or problem.
+- Mention the main objective or focus.
+- If methodology is not provided, describe it generally.
+- Do not invent a specific research design.
+- Mention the expected academic or social contribution
+  only in general terms.
+- Use future-oriented language when appropriate.
+- Do not add headings inside the paragraph.
+
+Research Topic:
+${topic}
+`;
+
+
+try{
+
+const response =
+await fetch(
+"https://text.pollinations.ai/" +
+encodeURIComponent(prompt),
+{
+method:"GET",
+headers:{
+"Accept":"text/plain"
+}
+}
+);
+
+if(!response.ok){
+
+throw new Error(
+"HTTP " + response.status
+);
+
+}
+
+const answer =
+await response.text();
+
+if(!answer || !answer.trim()){
+
+throw new Error(
+"Empty AI response"
+);
+
+}
+
+result.textContent =
+answer.trim();
+
+}catch(error){
+
+console.error(
+"Abstract Generator ERROR:",
+error
+);
+
+result.textContent =
+"❌ Abstract Generator unavailable. Please try again.";
+
+}finally{
+
+button.disabled = false;
+
+button.textContent =
+"🤖 Generate Abstract";
+
+}
+
+}
+
+
+function clearAbstract(){
+
+const input =
+document.getElementById("abstractTopic");
+
+const result =
+document.getElementById("abstractResult");
+
+if(input){
+input.value = "";
+}
+
+if(result){
+
+result.textContent =
+"Your research abstract will appear here.";
+
+}
+
+}
+
+
+/* =====================================================
+   PROBLEM STATEMENT
+===================================================== */
+
+async function generateProblemStatement(){
+
+const input =
+document.getElementById("problemTopic");
+
+const result =
+document.getElementById("problemResult");
+
+const button =
+document.getElementById("problemGenerateBtn");
+
+if(!input || !result || !button){
+
+console.error(
+"Problem Statement: required element not found."
+);
+
+return;
+
+}
+
+const topic =
+input.value.trim();
+
+if(!topic){
+
+result.textContent =
+"⚠️ Please enter a research topic.";
+
+return;
+
+}
+
+button.disabled = true;
+
+button.textContent =
+"⏳ Generating...";
+
+result.textContent =
+"🤖 AI Mari is developing your problem statement...";
+
+
+const prompt = `
+You are AI Mari, an academic research assistant for
+Sociology Connect – Arsi University (Sociology & Social Work).
+
+Write a clear and academically appropriate research problem
+statement for:
+
+${topic}
+
+RULES:
+
+- Write approximately 250–400 words.
+- Use clear, simple academic English.
+- Focus directly on the topic.
+- Explain the broader social or academic context.
+- Identify the specific problem or gap.
+- Explain why the problem deserves research attention.
+- Do not invent statistics, percentages, studies, authors,
+  citations, references, organizations or dates.
+- Do not present assumptions as established facts.
+- Do not invent Ethiopia or another location unless provided.
+- Use careful language when evidence is not provided.
+- Do not include objectives, research questions, methodology
+  or recommendations as separate sections.
+- Produce connected academic paragraphs.
+
+IMPORTANT:
+
+Do not create fake literature or citations.
+
+Research Topic:
+${topic}
+`;
+
+
+try{
+
+const response =
+await fetch(
+"https://text.pollinations.ai/" +
+encodeURIComponent(prompt),
+{
+method:"GET",
+headers:{
+"Accept":"text/plain"
+}
+}
+);
+
+if(!response.ok){
+
+throw new Error(
+"HTTP " + response.status
+);
+
+}
+
+const answer =
+await response.text();
+
+if(!answer || !answer.trim()){
+
+throw new Error(
+"Empty AI response"
+);
+
+}
+
+result.textContent =
+answer.trim();
+
+}catch(error){
+
+console.error(
+"Problem Statement ERROR:",
+error
+);
+
+result.textContent =
+"❌ Problem Statement Generator unavailable. Please try again.";
+
+}finally{
+
+button.disabled = false;
+
+button.textContent =
+"🤖 Generate Problem Statement";
+
+}
+
+}
+
+
+function clearProblem(){
+
+const input =
+document.getElementById("problemTopic");
+
+const result =
+document.getElementById("problemResult");
+
+if(input){
+input.value = "";
+}
+
+if(result){
+
+result.textContent =
+"Your problem statement will appear here.";
+
+}
+
+}
+
+
+/* =====================================================
+   RESEARCH OBJECTIVES
+===================================================== */
+
+async function generateResearchObjectives(){
+
+const input =
+document.getElementById("objectiveTopic");
+
+const result =
+document.getElementById("objectiveResult");
+
+const button =
+document.getElementById("objectiveGenerateBtn");
+
+if(!input || !result || !button){
+
+console.error(
+"Objectives Generator: required element not found."
+);
+
+return;
+
+}
+
+const topic =
+input.value.trim();
+
+if(!topic){
+
+result.textContent =
+"⚠️ Please enter a research topic.";
+
+return;
+
+}
+
+button.disabled = true;
+
+button.textContent =
+"⏳ Generating...";
 
 result.textContent =
 "🤖 AI Mari is developing your research objectives...";
@@ -1570,16 +2488,13 @@ const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Your task is to create research objectives ONLY from the
-research topic provided by the student.
+Create research objectives ONLY from the research topic below.
 
 RESEARCH TOPIC:
 ${topic}
 
 
-===============================
-GENERAL OBJECTIVE
-===============================
+GENERAL OBJECTIVE:
 
 Write exactly ONE general objective.
 
@@ -1592,9 +2507,7 @@ The general objective must:
 - Not introduce new concepts.
 
 
-===============================
-SPECIFIC OBJECTIVES
-===============================
+SPECIFIC OBJECTIVES:
 
 Write exactly FOUR specific objectives.
 
@@ -1608,9 +2521,7 @@ Each specific objective must:
 - Avoid repeating the same idea.
 
 
-===============================
-STRICT NO-INVENTION RULE
-===============================
+STRICT NO-INVENTION RULE:
 
 DO NOT invent information that the student did not provide.
 
@@ -1641,7 +2552,7 @@ DO NOT add:
 - expected findings
 - recommendations
 
-For example, DO NOT automatically add concepts such as:
+Do NOT automatically add concepts such as:
 
 - self-efficacy
 - decision-making
@@ -1660,9 +2571,7 @@ KEEP THE OBJECTIVE GENERAL.
 Do not assume information.
 
 
-===============================
-ACADEMIC QUALITY
-===============================
+ACADEMIC QUALITY:
 
 The objectives must be appropriate for a university-level
 Sociology or Social Work research proposal.
@@ -1685,11 +2594,7 @@ To understand
 To learn
 
 
-===============================
-OUTPUT FORMAT
-===============================
-
-Output ONLY this structure:
+OUTPUT FORMAT:
 
 General Objective:
 To ...
@@ -1704,40 +2609,39 @@ IMPORTANT:
 
 - Do not add explanations.
 - Do not add examples.
-- Do not add headings inside individual objectives.
+- Do not add labels inside individual objectives.
 - Do not add methodology.
 - Do not add research questions.
 - Do not add recommendations.
 - Do not add invented information.
 - Do not change the research topic.
 
+FINAL CHECK:
 
-FINAL CHECK BEFORE ANSWERING:
+Before answering, check every objective.
 
-Check every objective.
-
-Ask yourself:
+Ask:
 
 "Did I introduce any information that was not provided
 or clearly implied by the research topic?"
 
-If YES:
-Remove that information.
+If YES, remove it.
 
-Only provide the final four specific objectives and
-one general objective.
+Only provide ONE general objective and
+FOUR specific objectives.
 `;
 
 
 try{
 
-const response = await fetch(
+const response =
+await fetch(
 "https://text.pollinations.ai/" +
 encodeURIComponent(prompt),
 {
-method: "GET",
-headers: {
-"Accept": "text/plain"
+method:"GET",
+headers:{
+"Accept":"text/plain"
 }
 }
 );
@@ -1750,7 +2654,8 @@ throw new Error(
 
 }
 
-const answer = await response.text();
+const answer =
+await response.text();
 
 if(!answer || !answer.trim()){
 
@@ -1760,7 +2665,8 @@ throw new Error(
 
 }
 
-result.textContent = answer.trim();
+result.textContent =
+answer.trim();
 
 }catch(error){
 
@@ -1808,122 +2714,38 @@ result.textContent =
 }
 
 
+/* =====================================================
+   ENTER SUPPORT
+===================================================== */
 
-/* =====================================================  
-   ENTER SUPPORT  
-===================================================== */  
-  
-document.addEventListener("keydown",function(e){  
-  
-if(e.key==="Enter" && e.target.id==="researchSearch"){  
-searchResearch();  
-}  
-  
-});  
-  
-/* =====================================================  
-   START  
-===================================================== */  
-  
-window.addEventListener("DOMContentLoaded",loadTheme);  
-  
-</script>  <!-- =========================  
-     INFOGRAPHIC CSS (NEW)  
-========================= -->  <style>  
-  
-.infographic{  
-background:#fff;  
-padding:30px 20px;  
-margin:30px 0;  
-border-radius:20px;  
-box-shadow:0 8px 25px rgba(0,0,0,.08);  
-}  
-  
-.info-text{  
-text-align:center;  
-color:#666;  
-margin-bottom:25px;  
-}  
-  
-.info-timeline{  
-position:relative;  
-padding-left:30px;  
-}  
-  
-.info-timeline::before{  
-content:"";  
-position:absolute;  
-left:20px;  
-top:0;  
-bottom:0;  
-width:4px;  
-background:linear-gradient(#007bff,#00b894);  
-border-radius:4px;  
-}  
-  
-.info-item{  
-display:flex;  
-gap:18px;  
-margin-bottom:28px;  
-}  
-  
-.info-icon{  
-width:44px;  
-height:44px;  
-border-radius:50%;  
-background:#007bff;  
-display:flex;  
-align-items:center;  
-justify-content:center;  
-color:white;  
-font-size:20px;  
-}  
-  
-.info-card{  
-background:#f8faff;  
-padding:18px;  
-border-radius:14px;  
-border:1px solid #e5eefc;  
-flex:1;  
-transition:.3s;  
-}  
-  
-.info-card:hover{  
-transform:translateY(-4px);  
-box-shadow:0 8px 20px rgba(0,0,0,.08);  
-}  
-  
-.compare-grid,  
-.apa-grid{  
-display:grid;  
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));  
-gap:18px;  
-}  
-  
-.compare-box,  
-.apa-card{  
-background:#f8faff;  
-padding:18px;  
-border-radius:14px;  
-border:1px solid #e5eefc;  
-}  
-  
-body.dark .infographic{  
-background:#181818;  
-}  
-  
-body.dark .info-card,  
-body.dark .compare-box,  
-body.dark .apa-card{  
-background:#232323;  
-border-color:#444;  
-}  
-  
-body.dark .info-text,  
-body.dark .compare-box p,  
-body.dark .apa-card p{  
-color:#ccc;  
-}  
-  
-</style>  </body>  
-</html>  
+document.addEventListener(
+"keydown",
+function(e){
+
+if(
+e.key === "Enter" &&
+e.target.id === "researchSearch"
+){
+
+searchResearch();
+
+}
+
+}
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+window.addEventListener(
+"DOMContentLoaded",
+loadTheme
+);
+
+</script>
+
+</body>
+
+</html>

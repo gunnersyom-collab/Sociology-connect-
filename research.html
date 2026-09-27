@@ -783,24 +783,160 @@ result.textContent="❌ Unable to generate research topics.";
 /* =====================================================  
    AI RESEARCH ASSISTANT  
 ===================================================== */  
-  
-async function askResearchAI(){  
-  
-const input=document.getElementById("researchAIInput");  
-const result=document.getElementById("researchAIResult");  
-const button=document.getElementById("researchAIBtn");  
-  
-if(!input || !result || !button) return;  
-  
-const question=input.value.trim();  
-  
-if(!question){  
-  
-result.textContent="⚠️ Please enter your research question.";  
-  
-return;  
-  
-}  
+  async function askResearchAI(){
+
+  const input = document.getElementById("researchAIInput");
+  const result = document.getElementById("researchAIResult");
+  const button = document.getElementById("researchAIBtn");
+
+  if(!input || !result || !button) return;
+
+  const question = input.value.trim();
+
+  if(!question){
+    result.textContent = "⚠️ Please enter your research question.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "⏳ AI Mari is thinking...";
+
+  result.textContent = "🤖 AI Mari is preparing an academic answer...";
+
+  const prompt = `
+You are AI Mari, the official academic research assistant of
+Sociology Connect – Arsi University (Sociology & Social Work).
+
+Answer the student's question accurately and clearly.
+
+LANGUAGE RULE:
+- If the student writes Afaan Oromoo, answer in natural Afaan Oromoo.
+- If the student writes Amharic, answer in natural Amharic.
+- If the student writes English, answer in English.
+- Do not unnecessarily mix languages.
+
+AFAN OROMOO:
+- Use natural Afaan Oromoo.
+- Do not translate English word-by-word.
+- Do not invent Oromo words.
+- Do not create strange academic terminology.
+- If you are unsure about an Oromo technical term, keep the
+  original English academic term in parentheses.
+- Prefer simple and correct Oromo over complicated language.
+
+ACADEMIC AREAS:
+You are especially knowledgeable about:
+- Sociology
+- Social Work
+- Psychology
+- Anthropology
+- Social Policy
+- Community Development
+- Gender and Society
+- Rural Sociology
+- Urban Sociology
+- Research Methods
+- Qualitative Research
+- Quantitative Research
+- Academic Writing
+- APA 7
+
+RESEARCH SUPPORT:
+Help students with:
+- Research topics
+- Research problems
+- Research questions
+- General objectives
+- Specific objectives
+- Literature reviews
+- Conceptual frameworks
+- Theoretical frameworks
+- Research methodology
+- Research design
+- Sampling
+- Data collection
+- Data analysis
+- Abstracts
+- Academic writing
+- APA 7
+
+ACADEMIC INTEGRITY:
+Never invent:
+- research data
+- statistics
+- authors
+- studies
+- quotations
+- citations
+- references
+
+If you are uncertain, say so clearly.
+
+RESPONSE STYLE:
+- Answer the actual question first.
+- Use simple university-level language.
+- Be clear and concise.
+- Use headings or bullet points when useful.
+- Give examples when helpful.
+- Do not make the answer unnecessarily long.
+
+STUDENT QUESTION:
+${question}
+`;
+
+  try {
+
+    const response = await fetch(
+      "https://text.pollinations.ai/openai",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "openai",
+          messages: [
+            {
+              role: "system",
+              content: prompt
+            },
+            {
+              role: "user",
+              content: question
+            }
+          ]
+        })
+      }
+    );
+
+    if(!response.ok){
+      throw new Error("HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    const answer =
+      data.choices?.[0]?.message?.content ||
+      "No answer was returned.";
+
+    result.textContent = answer;
+
+  } catch(error) {
+
+    console.error("Research AI ERROR:", error);
+
+    result.textContent =
+      "❌ AI Mari could not connect. Please try again.";
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "🤖 Ask AI Mari";
+
+  }
+
+}
+
   
 button.disabled=true;  
 button.textContent="⏳ Thinking...";  

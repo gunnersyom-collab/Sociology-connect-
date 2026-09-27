@@ -1828,7 +1828,6 @@ notifyBtn?.addEventListener(
   showNotifications
 );
 
-
 /* =========================================================
    VOICE RECOGNITION
 ========================================================= */
@@ -1839,113 +1838,79 @@ const SpeechRecognition =
 
 if (SpeechRecognition) {
 
-  const recognition =
-    new SpeechRecognition();
+  const recognition = new SpeechRecognition();
 
-  recognition.lang =
-    "en-US";
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.continuous = false;
 
-  recognition.interimResults =
-    false;
+  micBtn?.addEventListener("click", () => {
 
-  recognition.continuous =
-    false;
+    try {
 
+      recognition.start();
 
-  micBtn?.addEventListener(
-    "click",
-    () => {
+      micBtn.textContent = "🔴 Listening...";
 
-      try {
-
-        recognition.start();
-
-        micBtn.textContent =
-          "🔴 Listening...";
-
-        if (userInput) {
-
-          userInput.placeholder =
-            "Listening...";
-
-        }
-
-      } catch (e) {
-
-        console.warn(e);
-
+      if (userInput) {
+        userInput.placeholder = "Listening...";
       }
+
+    } catch (e) {
+
+      console.warn(e);
 
     }
-  );
 
+  });
 
-  recognition.onresult =
-    (e) => {
+  recognition.onresult = (e) => {
 
-      if (userInput) {
+    if (userInput) {
+      userInput.value = e.results[0][0].transcript;
+      userInput.focus();
+    }
 
-        userInput.value =
-          e.results[0][0].transcript;
+    micBtn.textContent = "🎤";
 
-        userInput.placeholder =
-          "Ask your question...";
+    if (userInput) {
+      userInput.placeholder = "Ask your question...";
+    }
 
-      }
+  };
 
-    };
+  recognition.onend = () => {
 
+    micBtn.textContent = "🎤";
 
-  recognition.onend =
-    () => {
+    if (userInput) {
+      userInput.placeholder = "Ask your question...";
+    }
 
-      micBtn.textContent =
-        "🎤";
+  };
 
-      if (userInput) {
+  recognition.onerror = (e) => {
 
-        userInput.placeholder =
-          "Ask your question...";
+    console.warn("Voice recognition error:", e.error);
 
-      }
+    micBtn.textContent = "🎤";
 
-    };
+    if (userInput) {
+      userInput.placeholder = "Ask your question...";
+    }
 
-
-  recognition.onerror =
-    (e) => {
-
-      console.warn(
-        "Voice recognition error:",
-        e.error
-      );
-
-      micBtn.textContent =
-        "🎤";
-
-      if (userInput) {
-
-        userInput.placeholder =
-          "Ask your question...";
-
-      }
-
-    };
+  };
 
 } else {
 
   if (micBtn) {
 
-    micBtn.disabled =
-      true;
-
-    micBtn.title =
-      "Voice input is not supported in this browser";
+    micBtn.disabled = true;
+    micBtn.title = "Voice input is not supported in this browser";
 
   }
 
 }
-
 
 /* LOGOUT */
 

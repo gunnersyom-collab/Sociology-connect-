@@ -1844,42 +1844,6 @@ try{
 
 }
 
-const answer =
-await response.text();
-
-if(!answer || !answer.trim()){
-
-throw new Error(
-"Empty AI response"
-);
-
-}
-
-result.textContent =
-answer.trim();
-
-}catch(error){
-
-console.error(
-"Research AI ERROR:",
-error
-);
-
-result.textContent =
-"❌ AI Mari could not connect. Please try again.";
-
-}finally{
-
-button.disabled = false;
-
-button.textContent =
-"🤖 Ask AI Mari";
-
-}
-
-}
-
-
 function clearResearchAI(){
 
 const input =
@@ -2014,6 +1978,7 @@ try{
     result.textContent =
     "❌ AI Mari could not generate research questions. Please try again.";
 
+
 }finally{
 
     button.disabled = false;
@@ -2023,6 +1988,11 @@ try{
 
 }
 
+}   // ← kana dabaluu
+
+/* =====================================================
+   CLEAR RESEARCH QUESTIONS
+===================================================== */
 
 
 /* =====================================================

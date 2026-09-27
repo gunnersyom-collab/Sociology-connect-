@@ -788,119 +788,47 @@ Create basic APA 7 reference formats.
 
 </section>
 
-/* =====================================================
-   TOPIC GENERATOR
-===================================================== */
+<!-- =====================================================
+     TOPIC GENERATOR
+===================================================== -->
 
-async function generateTopic(){
+<section class="ai-research">
 
-const input = document.getElementById("topicInput");
-const result = document.getElementById("generatorResult");
-const button = document.getElementById("topicGenerateBtn");
+  <h2>💡 Research Topic Generator</h2>
 
-if(!input || !result || !button){
-console.error("Topic Generator: required element not found.");
-return;
-}
+  <p>
+    Enter a research field or topic. AI Mari will generate the number of
+    research topics you request. If no number is specified, it will generate 10 topics.
+  </p>
 
-const topic = input.value.trim();
+  <textarea
+    id="topicInput"
+    placeholder="Examples: Youth | Family | Gender | Social Work | Youth 20 topics"
+    aria-label="Research field or topic"
+  ></textarea>
 
-if(!topic){
-result.textContent = "⚠️ Please enter a research field or topic.";
-return;
-}
+  <div class="ai-research-actions">
+    <button
+      type="button"
+      id="topicGenerateBtn"
+      onclick="generateTopic()"
+    >
+      🤖 Generate Topics
+    </button>
 
-button.disabled = true;
-button.textContent = "⏳ Generating...";
-result.textContent = "🤖 AI Mari is generating research topics...";
+    <button
+      type="button"
+      onclick="clearTopic()"
+    >
+      🗑️ Clear
+    </button>
+  </div>
 
-const prompt = `
-You are AI Mari, an academic research assistant for
-Sociology Connect – Arsi University (Sociology & Social Work).
+  <div id="generatorResult">
+    Your research topics will appear here.
+  </div>
 
-Generate research topics related to:
-
-${topic}
-
-LANGUAGE RULES:
-- Answer in the same language used by the student.
-- English → clear academic English.
-- Afaan Oromoo → natural Afaan Oromoo.
-- Amharic → natural Amharic.
-- Do not unnecessarily mix languages.
-
-RESEARCH RULES:
-- Generate the number of research topics requested by the student.
-- If the student specifies a number, generate exactly that number.
-- If no number is specified, generate 10 research topics.
-- Continue numbering until the requested number is reached.
-- Do not impose a fixed maximum limit.
-- Every topic must directly relate to the student's field or topic.
-- Make every topic suitable for a university-level Sociology or Social Work study.
-- Keep every topic clear, specific, and researchable.
-- Output only the topic titles.
-- Do not add explanations or descriptions.
-- Do not invent statistics, locations, participants, authors, citations, references, or research findings.
-
-FORMAT:
-1. Topic title
-2. Topic title
-3. Topic title
-
-Continue numbering until the requested number of topics is reached.
-`;
-
-try{
-
-const response = await fetch(
-"https://text.pollinations.ai/" + encodeURIComponent(prompt),
-{
-method: "GET",
-headers: {
-"Accept": "text/plain"
-}
-}
-);
-
-if(!response.ok){
-throw new Error("HTTP " + response.status);
-}
-
-const answer = await response.text();
-
-if(!answer.trim()){
-throw new Error("Empty response");
-}
-
-result.textContent = answer.trim();
-
-}catch(error){
-
-console.error("Topic Generator ERROR:", error);
-
-result.textContent =
-"❌ AI Mari could not generate research topics. Please try again.";
-
-}finally{
-
-button.disabled = false;
-button.textContent = "🤖 Generate Topics";
-
-}
-
-}
-
-function clearTopic(){
-
-const input = document.getElementById("topicInput");
-const result = document.getElementById("generatorResult");
-
-if(input) input.value = "";
-if(result) result.textContent = "Your research topics will appear here.";
-
-}
-
-
+</section>
 <!-- =====================================================
      AI RESEARCH ASSISTANT
 ===================================================== -->

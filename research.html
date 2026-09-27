@@ -908,7 +908,7 @@ const button = document.getElementById("questionGenerateBtn");
 if(!input || !result || !button){
 
 console.error(
-"Research Questions: questionTopic, questionResult, or questionBtn not found."
+"Research Questions: required element not found."
 );
 
 return;
@@ -927,36 +927,26 @@ return;
 
 button.disabled = true;
 button.textContent = "⏳ Generating...";
-result.textContent = "🤖 AI Mari is generating research questions...";
+result.textContent =
+"🤖 AI Mari is generating research questions...";
 
 const prompt = `
 You are AI Mari, a university research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Generate exactly 5 clear and academically appropriate research
-questions based on this research topic:
+Generate research questions for this research topic:
 
 ${topic}
 
-IMPORTANT LANGUAGE RULES:
-- Answer in the same language used by the student.
-- English → clear academic English.
-- Afaan Oromoo → natural and correct Afaan Oromoo.
-- Amharic → natural and correct Amharic.
-- Do not translate word-for-word.
-- Do not invent words or academic terminology.
-- If an academic term is difficult in Afaan Oromoo, keep the
-  standard English term in parentheses.
-
 RESEARCH RULES:
-- Generate the number of research questions requested by the student.
+- Generate the number of questions requested by the student.
 - If the student specifies a number, generate exactly that number.
-- If no number is specified, generate 10 research questions.
+- If no number is specified, generate 10 questions.
 - Do not impose a fixed maximum limit.
 - Every question must directly relate to the topic.
 - Questions must be specific, clear, and researchable.
-- Questions should be appropriate for a university-level
-  Sociology or Social Work study.
+- Questions must be appropriate for university-level
+  Sociology or Social Work research.
 - Do not invent statistics, studies, authors, citations,
   references, or research findings.
 
@@ -965,10 +955,11 @@ FORMAT:
 2. ...
 3. ...
 
-Continue numbering until the requested number of questions is reached.
+Continue numbering until the requested number is reached.
 
 Research Topic:
 ${topic}
+`;
 
 try{
 
@@ -1034,8 +1025,6 @@ result.textContent =
 }
 
 }
-
-
 /* =====================================================  
    APA  
 ===================================================== */  

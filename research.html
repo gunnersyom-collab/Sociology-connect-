@@ -780,145 +780,71 @@ result.textContent="❌ Unable to generate research topics.";
   
 }  
   
-/* =====================================================  
-   AI RESEARCH ASSISTANT  
-===================================================== */  
-  
-                content: prompt
-            },
-            {
-              role: "user",
-              content: question
-            }
-          ]
-        })
-      }
-    );
+                 
+/* =====================================================
+   AI RESEARCH ASSISTANT
+===================================================== */
 
-    if(!response.ok){
-      throw new Error("HTTP " + response.status);
-    }
+async function askResearchAI(){
 
-    const data = await response.json();
-
-    const answer =
-      data.choices?.[0]?.message?.content ||
-      "No answer was returned.";
-
-    result.textContent = answer;
-
-  } catch(error) {
-
-    console.error("Research AI ERROR:", error);
-
-    result.textContent =
-      "❌ AI Mari could not connect. Please try again.";
-
-  } finally {
-
-    button.disabled = false;
-    button.textContent = "🤖 Ask AI Mari";
-
-  }
-
-}
-
-  
-button.disabled=true;  
-button.textContent="⏳ Thinking...";  
-  
-const prompt=`  
-You are AI Mari, an academic research assistant.  
-  
-Answer clearly in simple academic English.  
-  
-Question:  
-${question}  
-`;  
-  
-try{  
-  
-const response=await fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt));  
-  
-result.textContent=await response.text();  
-  
-}catch{  
-  
-result.textContent="❌ AI Mari could not connect.";  
-  
-}finally{  
-  
-button.disabled=false;  
-button.textContent="🤖 Ask AI Mari";  
-  
-}  
-  
-}  
-  
-function clearResearchAI(){  
-  
-document.getElementById("researchAIInput").value="";  
-document.getElementById("researchAIResult").textContent="AI Mari's answer will appear here.";  
-  
-}  
-  
-/* =====================================================  
-   RESEARCH QUESTIONS  
-===================================================== */  
-
-  async function askResearchAI(){
-
-const input=document.getElementById("researchAIInput");
-const result=document.getElementById("researchAIResult");
-const button=document.getElementById("researchAIBtn");
+const input = document.getElementById("researchAIInput");
+const result = document.getElementById("researchAIResult");
+const button = document.getElementById("researchAIBtn");
 
 if(!input || !result || !button) return;
 
-const question=input.value.trim();
+const question = input.value.trim();
 
 if(!question){
 
-result.textContent="⚠️ Please enter your research question.";
+result.textContent = "⚠️ Please enter your research question.";
 
 return;
 
 }
 
-button.disabled=true;
-button.textContent="⏳ Thinking...";
+button.disabled = true;
+button.textContent = "⏳ Thinking...";
 
-const prompt=`
+const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Answer clearly and accurately.
+Answer the student's question clearly and accurately.
 
 Language rules:
-- If the user writes Afaan Oromoo, answer in natural Afaan Oromoo.
-- If the user writes Amharic, answer in natural Amharic.
-- If the user writes English, answer in English.
+- If the student writes English, answer in English.
+- If the student writes Afaan Oromoo, answer in natural Afaan Oromoo.
+- If the student writes Amharic, answer in natural Amharic.
 - Do not unnecessarily mix languages.
 
 For Afaan Oromoo:
-- Use simple, natural Oromo.
-- Do not translate word-by-word.
+- Use simple and natural Oromo.
+- Do not translate word by word.
 - Do not invent Oromo words.
-- If you are unsure about a technical Oromo term, use the English
-  academic term in parentheses.
-- Never invent academic terminology.
+- If a technical academic term is difficult to express in Oromo,
+  use the English academic term in parentheses.
+- Keep academic terminology accurate.
 
-You are especially knowledgeable about:
-Sociology, Social Work, Psychology, Anthropology, Social Policy,
-Community Development, Gender, Rural Sociology, Urban Sociology,
-Research Methods, Qualitative Research, Quantitative Research,
+You are knowledgeable about:
+Sociology, Social Work, Psychology, Anthropology,
+Social Policy, Community Development, Gender,
+Rural Sociology, Urban Sociology, Research Methods,
+Qualitative Research, Quantitative Research,
 Academic Writing and APA 7.
 
-Never invent research data, statistics, authors, studies,
-quotations, citations or references.
+Never invent:
+- statistics
+- research data
+- authors
+- studies
+- quotations
+- citations
+- references
 
 Answer the student's actual question first.
-Use clear university-level language.
-Use examples when helpful.
+Use simple university-level language.
+Give an example when useful.
 
 Student question:
 ${question}
@@ -926,26 +852,49 @@ ${question}
 
 try{
 
-const response=await fetch(
-"https://text.pollinations.ai/"+encodeURIComponent(prompt)
+const response = await fetch(
+"https://text.pollinations.ai/" + encodeURIComponent(prompt)
 );
 
-result.textContent=await response.text();
+if(!response.ok){
+throw new Error("HTTP " + response.status);
+}
+
+const answer = await response.text();
+
+result.textContent = answer;
 
 }catch(error){
 
-console.error("Research AI ERROR:",error);
+console.error("Research AI ERROR:", error);
 
-result.textContent="❌ AI Mari could not connect.";
+result.textContent =
+"❌ AI Mari could not connect. Please try again.";
 
 }finally{
 
-button.disabled=false;
-button.textContent="🤖 Ask AI Mari";
+button.disabled = false;
+button.textContent = "🤖 Ask AI Mari";
 
 }
 
 }
+
+function clearResearchAI(){
+
+const input = document.getElementById("researchAIInput");
+const result = document.getElementById("researchAIResult");
+
+if(input){
+input.value = "";
+}
+
+if(result){
+result.textContent = "AI Mari's answer will appear here.";
+}
+
+}
+
 /* =====================================================  
    APA  
 ===================================================== */  

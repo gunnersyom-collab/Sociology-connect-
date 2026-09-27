@@ -2399,6 +2399,8 @@ result.textContent =
 
 }
 
+
+
 /* =====================================================
    PROBLEM STATEMENT
 ===================================================== */
@@ -2417,7 +2419,7 @@ document.getElementById("problemGenerateBtn");
 if(!input || !result || !button){
 
 console.error(
-"Problem Statement: required element not found."
+"Problem Statement Generator: required element not found."
 );
 
 return;
@@ -2442,48 +2444,89 @@ button.textContent =
 "⏳ Generating...";
 
 result.textContent =
-"🤖 AI Mari is developing your problem statement...";
+"🤖 AI Mari is writing your problem statement...";
 
 
 const prompt = `
 You are AI Mari, an academic research assistant for
 Sociology Connect – Arsi University (Sociology & Social Work).
 
-Write a clear and academically appropriate research problem
-statement for:
+Write a clear academic problem statement based ONLY on the
+research topic provided below.
 
-${topic}
+RESEARCH TOPIC:
+"${topic}"
 
-RULES:
+IMPORTANT RULES:
 
+- Stay strictly focused on the exact research topic.
+- Do not change, replace, broaden, or reinterpret the topic.
+- Keep the main variables, concepts, and population exactly as
+  stated in the topic.
+- Do not introduce new variables that are not clearly contained
+  in the topic.
+- Do not invent statistics, percentages, dates, locations,
+  participants, samples, organizations, studies, authors,
+  citations, or references.
+- Do not claim that previous research has found something unless
+  the information is explicitly provided in the topic.
+- Do not use phrases such as "existing research shows",
+  "studies have found", "there is a lack of literature",
+  or "research proves" unless evidence is provided.
+- Do not invent a research design, methodology, data collection
+  method, or analysis method.
+- Do not introduce unrelated professional groups, institutions,
+  policies, or stakeholders.
+- Do not make medical, psychological, neurological, or
+  biological claims unless they are directly included in the topic.
+- Do not add a specific location or population subgroup that is
+  not provided in the topic.
+- Explain the problem clearly and academically.
+- Explain why the problem deserves research.
+- Explain the research gap only in a general way without inventing
+  evidence.
+- Explain the possible academic or social importance of studying
+  the topic in general terms.
+- Use simple, clear university-level academic English.
+- Avoid unnecessarily complex vocabulary.
 - Write approximately 250–400 words.
-- Use clear, simple academic English.
-- Focus directly on the topic.
-- Explain the broader social or academic context.
-- Identify the specific problem or gap.
-- Explain why the problem deserves research attention.
-- Do not invent statistics, percentages, studies, authors,
-  citations, references, organizations or dates.
-- Do not present assumptions as established facts.
-- Do not invent Ethiopia or another location unless provided.
-- Use careful language when evidence is not provided.
-- Do not include objectives, research questions, methodology
-  or recommendations as separate sections.
-- Produce connected academic paragraphs.
+- Write 3–5 coherent paragraphs.
+- Do not use headings inside the generated answer.
+- Do not include a conclusion that claims the research has already
+  produced findings.
 
-IMPORTANT:
+STRUCTURE:
 
-Do not create fake literature or citations.
+Paragraph 1:
+Introduce the general issue contained in the research topic.
+
+Paragraph 2:
+Explain the specific problem related directly to the topic.
+
+Paragraph 3:
+Explain what is not sufficiently understood about the topic,
+without inventing literature or evidence.
+
+Paragraph 4:
+Explain why investigating this problem is important.
+
+Paragraph 5:
+State clearly why a focused study of the exact research topic
+is needed.
+
+OUTPUT:
+Write ONLY the problem statement.
+Do not add explanations, bullet points, headings, citations,
+references, or comments before or after it.
 
 Research Topic:
-${topic}
+"${topic}"
 `;
 
 
 try{
 
-const response =
-await fetch(
+const response = await fetch(
 "https://text.pollinations.ai/" +
 encodeURIComponent(prompt),
 {
@@ -2497,34 +2540,34 @@ headers:{
 if(!response.ok){
 
 throw new Error(
-"HTTP " + response.status
+"HTTP error: " + response.status
 );
 
 }
 
-const answer =
+const text =
 await response.text();
 
-if(!answer || !answer.trim()){
+if(!text.trim()){
 
 throw new Error(
-"Empty AI response"
+"Empty response received."
 );
 
 }
 
 result.textContent =
-answer.trim();
+text.trim();
 
 }catch(error){
 
 console.error(
-"Problem Statement ERROR:",
+"Problem Statement Generator Error:",
 error
 );
 
 result.textContent =
-"❌ Problem Statement Generator unavailable. Please try again.";
+"⚠️ Sorry, AI Mari could not generate the problem statement. Please try again.";
 
 }finally{
 
@@ -2538,7 +2581,11 @@ button.textContent =
 }
 
 
-function clearProblem(){
+/* =====================================================
+   CLEAR PROBLEM STATEMENT
+===================================================== */
+
+function clearProblemStatement(){
 
 const input =
 document.getElementById("problemTopic");
@@ -2547,7 +2594,9 @@ const result =
 document.getElementById("problemResult");
 
 if(input){
+
 input.value = "";
+
 }
 
 if(result){

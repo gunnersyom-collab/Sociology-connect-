@@ -1508,11 +1508,39 @@ aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
 });
 
 aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
-  const speech = new SpeechSynthesisUtterance(reply);
-  speech.lang = "en-US";
-  speech.rate = 0.95;
+
+  if (!("speechSynthesis" in window)) {
+    alert("Voice output is not supported.");
+    return;
+  }
+
   window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(reply);
+
+  // Afaan filata
+  if (/[\u1200-\u137F]/.test(reply)) {
+    speech.lang = "am-ET";
+  } else {
+    speech.lang = "en-US";
+  }
+
+  speech.rate = 0.95;
+  speech.pitch = 1;
+
+  const btn = aiBox.querySelector(".speak-btn");
+  btn.textContent = "🔊 Speaking...";
+
+  speech.onend = () => {
+    btn.textContent = "🔊 Listen";
+  };
+
+  speech.onerror = () => {
+    btn.textContent = "🔊 Listen";
+  };
+
   window.speechSynthesis.speak(speech);
+
 });
 
     aiBox

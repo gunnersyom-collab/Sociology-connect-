@@ -1549,33 +1549,60 @@ aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
         "click",
         async () => {
 
-          try {
+try {
 
-            await navigator
-              .clipboard
-              .writeText(reply);
+  const response = await fetch(
+    "https://sociology-connect.onrender.com/api/chat",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: text
+      })
+    }
+  );
 
-          } catch {
+  const data = await response.json();
 
-            alert("Copy failed.");
+  if (!response.ok) {
+    throw new Error(data.error || "AI request failed");
+  }
 
-          }
+  const reply = data.reply || "No response received.";
 
-        }
-      );
+  chatMessages.push({
+    role: "assistant",
+    content: reply
+  });
 
-  } catch (error) {
+  aiBox.innerHTML = `
+    <b>AI Mari:</b><br>
+    <span class="ai-text">${escapeHTML(reply)}</span>
+    <br><br>
+    <button class="copy-btn">📋 Copy</button>
+    <button class="speak-btn">🔊 Listen</button>
+  `;
 
-    console.error(
-      "AI MARI ERROR:",
-      error
-    );
+  aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(reply);
+  });
 
-    aiBox.innerHTML = `
-      <b>AI Mari:</b><br>
-      ❌ AI Mari could not connect.
-      Please try again.
-    `;
+  aiBox.querySelector(".speak-btn")?.addEventListener("click", (e) => {
+    speakText(reply, e.target);
+  });
+
+} catch (error) {
+
+  console.error("AI MARI ERROR:", error);
+
+  aiBox.innerHTML = `
+    <b>AI Mari:</b><br>
+    ❌ AI Mari could not connect. Please try again.
+  `;
+
+}
 
   } finally {
 

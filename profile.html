@@ -266,6 +266,12 @@ button:hover{
     transform:translateY(-1px);
 }
 
+button:disabled{
+    opacity:.7;
+    cursor:not-allowed;
+    transform:none;
+}
+
 /* ================= STATUS ================= */
 
 #profileStatus{
@@ -613,7 +619,11 @@ import {
     doc,
     getDoc,
     setDoc,
-    serverTimestamp
+    serverTimestamp,
+    collection,
+    query,
+    where,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 import {
@@ -654,6 +664,9 @@ const statusBox =
 
 const saveBtn =
     document.getElementById("saveProfileBtn");
+
+const postCount =
+    document.getElementById("postCount");
 
 
 /* =========================================================
@@ -803,6 +816,46 @@ async function loadFirebaseProfile(user){
 
         profileEmail.textContent =
             user.email || "Not available";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD REAL POST COUNT
+   ========================================================= */
+
+async function loadPostCount(user){
+
+    try{
+
+        postCount.textContent = "...";
+
+        const postsQuery = query(
+            collection(db,"posts"),
+            where("userId","==",user.uid)
+        );
+
+        const postsSnapshot =
+            await getDocs(postsQuery);
+
+        postCount.textContent =
+            postsSnapshot.size;
+
+        console.log(
+            "User post count:",
+            postsSnapshot.size
+        );
+
+    }catch(error){
+
+        console.error(
+            "Post count loading error:",
+            error
+        );
+
+        postCount.textContent = "0";
 
     }
 
@@ -1051,12 +1104,19 @@ onAuthStateChanged(
 
             await loadFirebaseProfile(user);
 
+            /* Load real number of posts */
+
+            await loadPostCount(user);
+
         }else{
 
             loadLocalProfile();
 
             profileEmail.textContent =
                 "Please login";
+
+            postCount.textContent =
+                "0";
 
         }
 

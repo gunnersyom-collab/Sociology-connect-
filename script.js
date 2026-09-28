@@ -1648,29 +1648,189 @@ sendBtn?.addEventListener(
   sendToServer
 );
 
+/* =========================================================
+   PART 5
+   AI MARI — GEMINI
+========================================================= */
+
+const chatMessages = [
+  {
+    role: "system",
+    content: `You are AI Mari, the official academic AI assistant of Sociology Connect – Arsi University (Sociology & Social Work).
+
+You help students with Sociology, Social Work, Psychology, Anthropology, Political Science, Economics, Social Policy, Community Development, Human Rights, Gender and Society, Research Methods, Academic Writing, APA 7, Assignments, Presentations and Research Projects.
+
+Always answer in the same language used by the user.
+- Afaan Oromoo → Answer in natural Afaan Oromoo.
+- Amharic → Answer in natural Amharic.
+- English → Answer in clear English.
+
+Be accurate, simple and educational. Never invent citations or research data.`
+  }
+];
+
+/* =========================================================
+   SEND MESSAGE TO RENDER / GEMINI SERVER
+========================================================= */
+
+async function sendToServer() {
+
+  if (!chatHistory || !userInput || !sendBtn) return;
+
+  const text = userInput.value.trim();
+  if (!text) return;
+
+  chatMessages.push({
+    role: "user",
+    content: text
+  });
+
+  const userBox = document.createElement("div");
+  userBox.className = "message user";
+  userBox.innerHTML = `<b>You:</b><br>${escapeHTML(text)}`;
+
+  chatHistory.appendChild(userBox);
+
+  userInput.value = "";
+
+  const aiBox = document.createElement("div");
+  aiBox.className = "message ai";
+  aiBox.innerHTML = `
+    <b>AI Mari:</b><br>
+    <span class="ai-text">Typing... 🤖</span>
+  `;
+
+  chatHistory.appendChild(aiBox);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Thinking...";
+
+  try {
+
+    const response = await fetch(
+      "https://sociology-connect.onrender.com/api/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: text
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "AI request failed");
+    }
+
+    const reply = data.reply || "No response received.";
+
+    chatMessages.push({
+      role: "assistant",
+      content: reply
+    });
+
+    aiBox.innerHTML = `
+      <b>AI Mari:</b><br>
+
+      <span class="ai-text">
+        ${escapeHTML(reply)}
+      </span>
+
+      <br><br>
+
+      <button class="copy-btn">📋 Copy</button>
+
+      <button class="speak-btn">🔊 Listen</button>
+    `;
+
+    aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(reply);
+      } catch {
+        alert("Copy failed.");
+      }
+    });
+
+    aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
+
+      if (!("speechSynthesis" in window)) {
+        alert("Voice output is not supported.");
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const speech = new SpeechSynthesisUtterance(reply);
+
+      if (/[\u1200-\u137F]/.test(reply)) {
+        speech.lang = "am-ET";
+      } else {
+        speech.lang = "en-US";
+      }
+
+      speech.rate = 0.95;
+      speech.pitch = 1;
+
+      const btn = aiBox.querySelector(".speak-btn");
+      btn.textContent = "🔊 Speaking...";
+
+      speech.onend = () => {
+        btn.textContent = "🔊 Listen";
+      };
+
+      speech.onerror = () => {
+        btn.textContent = "🔊 Listen";
+      };
+
+      window.speechSynthesis.speak(speech);
+
+    });
+
+  } catch (error) {
+
+    console.error("AI MARI ERROR:", error);
+
+    aiBox.innerHTML = `
+      <b>AI Mari:</b><br>
+      ❌ AI Mari could not connect. Please try again.
+    `;
+
+  } finally {
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send";
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+
+  }
+
+}
+
+/* =========================================================
+   SEND BUTTON
+========================================================= */
+
+sendBtn?.addEventListener("click", sendToServer);
 
 /* =========================================================
    ENTER KEY
 ========================================================= */
 
-userInput?.addEventListener(
-  "keydown",
-  (e) => {
+userInput?.addEventListener("keydown", (e) => {
 
-    if (
-      e.key === "Enter" &&
-      !e.shiftKey
-    ) {
+  if (e.key === "Enter" && !e.shiftKey) {
 
-      e.preventDefault();
+    e.preventDefault();
 
-      sendToServer();
-
-    }
+    sendToServer();
 
   }
-);
 
+});
 
 /* =========================================================
    PART 6

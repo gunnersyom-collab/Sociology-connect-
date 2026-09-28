@@ -1413,9 +1413,9 @@ async function sendToServer() {
     console.error("AI MARI ERROR:", error);
 
     aiBox.innerHTML = `
-      <b>AI Mari:</b><br>
-      ❌ AI Mari could not connect. Please try again.
-    `;
+  <b>AI Mari:</b><br>
+  ❌ ${escapeHTML(data.error || "AI request failed")}
+`;
 
   } finally {
 

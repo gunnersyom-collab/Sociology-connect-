@@ -246,55 +246,217 @@ color:#777;
 <footer>
 Sociology Connect © 2026
 </footer>
+<script type="module">
 
-<script>
+import { auth, db } from "./firebase.js";
+
+import {
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+
+/* ================= LOAD PROFILE ================= */
+
 function loadProfile(){
-const data=JSON.parse(localStorage.getItem("scProfile"))||{};
 
-document.getElementById("profileName").textContent=data.name||"Student Name";
-document.getElementById("profileYear").textContent=data.year||"Not added";
-document.getElementById("profileBio").textContent=data.bio||"No bio added yet.";
+  const data =
+    JSON.parse(
+      localStorage.getItem("scProfile")
+    ) || {};
 
-if(data.photo){
-document.getElementById("profilePhoto").src=data.photo;
+  document.getElementById("profileName").textContent =
+    data.name || "Student Name";
+
+  document.getElementById("profileYear").textContent =
+    data.year || "Not added";
+
+  document.getElementById("profileBio").textContent =
+    data.bio || "No bio added yet.";
+
+  if(data.photo){
+
+    document.getElementById("profilePhoto").src =
+      data.photo;
+
+  }
+
+  document.getElementById("fullName").value =
+    data.name || "";
+
+  document.getElementById("year").value =
+    data.year || "";
+
+  document.getElementById("bio").value =
+    data.bio || "";
+
 }
 
-document.getElementById("fullName").value=data.name||"";
-document.getElementById("year").value=data.year||"";
-document.getElementById("bio").value=data.bio||"";
-}
 
-function saveProfile(){
-const data=JSON.parse(localStorage.getItem("scProfile"))||{};
+/* ================= SAVE PROFILE ================= */
 
-data.name=document.getElementById("fullName").value;
-data.year=document.getElementById("year").value;
-data.bio=document.getElementById("bio").value;
+window.saveProfile = async()=>{
 
-localStorage.setItem("scProfile",JSON.stringify(data));
-loadProfile();
-alert("Profile updated successfully!");
-}
+  const user = auth.currentUser;
 
-const photoInput=document.getElementById("photoInput");
+  if(!user){
 
-photoInput.addEventListener("change",function(){
-const file=this.files[0];
-if(!file)return;
+    alert("Please login first.");
 
-const reader=new FileReader();
+    return;
 
-reader.onload=function(e){
-const data=JSON.parse(localStorage.getItem("scProfile"))||{};
-data.photo=e.target.result;
-localStorage.setItem("scProfile",JSON.stringify(data));
-loadProfile();
+  }
+
+  const name =
+    document.getElementById("fullName").value.trim();
+
+  const year =
+    document.getElementById("year").value;
+
+  const bio =
+    document.getElementById("bio").value.trim();
+
+
+  if(!name){
+
+    alert("Please enter your full name.");
+
+    return;
+
+  }
+
+
+  const data = {
+    name,
+    year,
+    bio,
+    email: user.email || "",
+    uid: user.uid,
+    updatedAt: serverTimestamp()
+  };
+
+
+  try{
+
+    await setDoc(
+      doc(db,"users",user.uid),
+      data,
+      { merge:true }
+    );
+
+
+    /* Keep existing local profile */
+
+    const oldData =
+      JSON.parse(
+        localStorage.getItem("scProfile")
+      ) || {};
+
+    oldData.name = name;
+    oldData.year = year;
+    oldData.bio = bio;
+
+    localStorage.setItem(
+      "scProfile",
+      JSON.stringify(oldData)
+    );
+
+
+    loadProfile();
+
+    alert(
+      "Profile updated successfully!"
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Profile save error:",
+      error
+    );
+
+    alert(
+      "Could not save profile: " +
+      error.message
+    );
+
+  }
+
 };
 
-reader.readAsDataURL(file);
-});
 
-window.onload=loadProfile;
+/* ================= PROFILE PHOTO ================= */
+
+const photoInput =
+  document.getElementById("photoInput");
+
+
+photoInput.addEventListener(
+  "change",
+  function(){
+
+    const file =
+      this.files[0];
+
+    if(!file) return;
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(e){
+
+        const data =
+          JSON.parse(
+            localStorage.getItem("scProfile")
+          ) || {};
+
+        data.photo =
+          e.target.result;
+
+        localStorage.setItem(
+          "scProfile",
+          JSON.stringify(data)
+        );
+
+        loadProfile();
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+  }
+);
+
+
+/* ================= AUTH ================= */
+
+onAuthStateChanged(
+  auth,
+  (user)=>{
+
+    if(user){
+
+      loadProfile();
+
+    }else{
+
+      loadProfile();
+
+    }
+
+  }
+);
+
 </script>
 
 </body>

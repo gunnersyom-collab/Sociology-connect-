@@ -91,13 +91,12 @@ const data = await response.json();
     return res.json({ reply });
 
   } catch (error) {
-    console.error("Server Error:", error);
+  console.error("Server Error:", error);
 
-    return res.status(500).json({
-      error: error.message || "AI server error"
-    });
-  }
-});
+  return res.status(500).json({
+    error: error.message || "AI server error"
+  });
+}
 
 // =====================================================
 // START SERVER

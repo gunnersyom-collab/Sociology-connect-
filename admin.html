@@ -11,6 +11,10 @@
 
 <style>
 
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
 *{
     margin:0;
     padding:0;
@@ -21,32 +25,39 @@ body{
     font-family:Arial,sans-serif;
     background:#f4f7fb;
     color:#222;
+    min-height:100vh;
 }
 
-/* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 header{
     background:linear-gradient(135deg,#007bff,#0056b3);
     color:white;
-    padding:25px 15px;
+    padding:30px 15px;
     text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,.15);
 }
 
 header h1{
-    font-size:28px;
+    font-size:30px;
 }
 
 header p{
-    margin-top:7px;
+    margin-top:8px;
     opacity:.9;
 }
 
-/* NAV */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 nav{
-    background:#007bff;
-    padding:12px;
+    background:#0069d9;
+    padding:13px 10px;
     text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 nav a{
@@ -54,100 +65,188 @@ nav a{
     text-decoration:none;
     font-weight:bold;
     margin:0 10px;
+    transition:.2s;
 }
 
 nav a:hover{
+    opacity:.8;
     text-decoration:underline;
 }
 
-/* CONTAINER */
+/* =========================================================
+   CONTAINER
+   ========================================================= */
 
 .container{
-    max-width:900px;
+    max-width:1100px;
     margin:25px auto;
     padding:15px;
 }
 
-/* ACCESS DENIED */
+/* =========================================================
+   ACCESS DENIED
+   ========================================================= */
 
 #accessDenied{
     background:white;
-    padding:30px;
-    border-radius:15px;
+    padding:35px 25px;
+    border-radius:18px;
     text-align:center;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
 #accessDenied h2{
     color:#dc3545;
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
-/* DASHBOARD */
+#accessDenied p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
 
 #dashboard{
     display:none;
 }
 
-/* DASHBOARD STATS */
+/* =========================================================
+   STATISTICS
+   ========================================================= */
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:15px;
-    margin-bottom:20px;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:22px;
 }
 
 .stat{
     background:linear-gradient(135deg,#007bff,#0056b3);
     color:white;
-    padding:20px;
-    border-radius:15px;
+    padding:22px 15px;
+    border-radius:17px;
     text-align:center;
-    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(0,0,0,.16);
+}
+
+.stat-icon{
+    font-size:28px;
+    margin-bottom:5px;
 }
 
 .stat h3{
-    font-size:32px;
-    margin-bottom:6px;
+    font-size:30px;
+    margin-bottom:5px;
 }
 
 .stat p{
     opacity:.9;
+    font-size:14px;
 }
 
-/* CARDS */
+/* =========================================================
+   CARDS
+   ========================================================= */
 
 .card{
     background:white;
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    padding:24px;
+    border-radius:17px;
+    margin-bottom:22px;
+    box-shadow:0 5px 18px rgba(0,0,0,.07);
 }
 
 .card h2{
     color:#007bff;
-    margin-bottom:15px;
+    margin-bottom:14px;
 }
 
-/* FORM */
+.card-description{
+    color:#666;
+    line-height:1.7;
+    margin-bottom:18px;
+}
+
+/* =========================================================
+   ADMIN CONTROL CENTER
+   ========================================================= */
+
+.control-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.control-btn{
+    background:#f4f8ff;
+    color:#0056b3;
+    border:1px solid #dbe9ff;
+    padding:16px 12px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:14px;
+    transition:.25s;
+}
+
+.control-btn:hover{
+    background:#007bff;
+    color:white;
+    transform:translateY(-2px);
+}
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.quick-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.quick-actions button{
+    margin-top:0;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
 
 label{
     display:block;
     font-weight:bold;
-    margin-top:12px;
+    margin-top:13px;
 }
 
 input,
 textarea,
 select{
     width:100%;
-    padding:12px;
+    padding:13px;
     margin-top:7px;
     border:1px solid #ccc;
-    border-radius:9px;
+    border-radius:10px;
     font-size:15px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#007bff;
+    box-shadow:0 0 0 3px rgba(0,123,255,.08);
 }
 
 textarea{
@@ -155,7 +254,9 @@ textarea{
     resize:vertical;
 }
 
-/* BUTTONS */
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
 button{
     background:#007bff;
@@ -171,6 +272,7 @@ button{
 
 button:hover{
     background:#0056b3;
+    transform:translateY(-1px);
 }
 
 .delete-btn{
@@ -189,30 +291,47 @@ button:hover{
     background:#545b62;
 }
 
-/* QUICK ACTIONS */
+/* =========================================================
+   ANALYTICS
+   ========================================================= */
 
-.quick-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
+.analytics-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
 }
 
-.quick-actions button{
-    margin-top:0;
+.analytics-box{
+    background:#f8fbff;
+    border:1px solid #e1edff;
+    border-radius:14px;
+    padding:18px;
 }
 
-/* CONTENT LIST */
+.analytics-box h3{
+    color:#007bff;
+    margin-bottom:8px;
+}
+
+.analytics-box p{
+    color:#666;
+    line-height:1.5;
+}
+
+/* =========================================================
+   CONTENT LIST
+   ========================================================= */
 
 .item{
     background:#f8f9fa;
-    padding:15px;
+    padding:17px;
     border-left:4px solid #007bff;
     border-radius:10px;
     margin-top:12px;
 }
 
 .item h3{
-    margin-bottom:7px;
+    margin-bottom:8px;
 }
 
 .item p{
@@ -226,30 +345,117 @@ button:hover{
     color:#777;
 }
 
-/* STATUS */
+/* =========================================================
+   NEWS LIST
+   ========================================================= */
+
+#newsList{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:18px;
+    margin-top:20px;
+}
+
+#newsList .item{
+    background:#fff;
+    padding:20px;
+    border-top:4px solid #007bff;
+    border-left:none;
+    border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.07);
+    transition:.25s;
+}
+
+#newsList .item:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+#newsList .item h3{
+    margin-bottom:10px;
+}
+
+#newsList .item p{
+    color:#555;
+    line-height:1.6;
+}
+
+/* =========================================================
+   REPORTS
+   ========================================================= */
+
+.report-box{
+    background:#fff8f8;
+    border:1px solid #ffd6d6;
+    border-left:5px solid #dc3545;
+    padding:18px;
+    border-radius:12px;
+    margin-top:12px;
+}
+
+.report-box h3{
+    color:#dc3545;
+    margin-bottom:7px;
+}
+
+.report-box p{
+    color:#666;
+    line-height:1.6;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
 
 #status{
     margin-top:12px;
     font-weight:bold;
     padding:10px;
+    border-radius:8px;
 }
 
-/* FOOTER */
+/* =========================================================
+   FOOTER
+   ========================================================= */
 
 footer{
     background:#222;
     color:white;
     text-align:center;
-    padding:20px;
-    margin-top:30px;
+    padding:22px;
+    margin-top:35px;
+    line-height:1.7;
 }
 
-/* MOBILE */
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:850px){
+
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .control-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .analytics-grid{
+        grid-template-columns:1fr;
+    }
+
+}
 
 @media(max-width:600px){
 
+    header h1{
+        font-size:25px;
+    }
+
     .container{
         margin:15px auto;
+        padding:10px;
     }
 
     nav a{
@@ -257,8 +463,21 @@ footer{
         margin:5px;
     }
 
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+
+    .stat{
+        padding:18px 8px;
+    }
+
     .stat h3{
-        font-size:26px;
+        font-size:25px;
+    }
+
+    .control-grid{
+        grid-template-columns:1fr;
     }
 
     .quick-actions{
@@ -270,275 +489,488 @@ footer{
     }
 
 }
-/* =========================================================
-   ADMIN PUBLISHED NEWS DESIGN
-   ========================================================= */
 
-#newsList{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:18px;
-    margin-top:20px;
-}
-
-#newsList .item{
-    background:#ffffff;
-    padding:20px;
-    border-top:4px solid #007bff;
-    border-radius:15px;
-    box-shadow:0 5px 18px rgba(0,0,0,.08);
-    transition:.25s ease;
-}
-
-#newsList .item:hover{
-    transform:translateY(-4px);
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
-}
-
-#newsList .item h3{
-    margin-bottom:10px;
-    color:#222;
-}
-
-#newsList .item p{
-    color:#555;
-    line-height:1.6;
-}
-
-#newsList .item button{
-    margin-top:12px;
-    margin-right:6px;
-}
-    
 </style>
 
 </head>
 
 <body>
 
-<!-- HEADER -->
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
 
 <header>
 
-<h1>🛠️ Admin Dashboard</h1>
+    <h1>🛠️ Admin Dashboard</h1>
 
-<p>Sociology Connect – Arsi University</p>
+    <p>Sociology Connect – Arsi University</p>
 
 </header>
 
-<!-- NAVIGATION -->
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
 
 <nav>
 
-<a href="index.html">🏠 Home</a>
-<a href="profile.html">👤 Profile</a>
-<a href="login.html">🔐 Login</a>
+    <a href="index.html">🏠 Home</a>
+    <a href="profile.html">👤 Profile</a>
+    <a href="login.html">🔐 Login</a>
 
 </nav>
 
 <div class="container">
 
-<!-- ACCESS DENIED -->
+<!-- =========================================================
+     ACCESS DENIED
+     ========================================================= -->
 
 <div id="accessDenied">
 
-<h2>🔒 Admin Access</h2>
+    <h2>🔒 Admin Access</h2>
 
-<p>
-Please login with the administrator account to access this dashboard.
-</p>
+    <p>
+        Please login with the administrator account to access this dashboard.
+    </p>
 
-<button onclick="window.location.href='login.html'">
-🔐 Go to Login
-</button>
+    <button onclick="window.location.href='login.html'">
+        🔐 Go to Login
+    </button>
 
 </div>
 
-<!-- DASHBOARD -->
+<!-- =========================================================
+     DASHBOARD
+     ========================================================= -->
 
 <div id="dashboard">
 
-<!-- DASHBOARD STATS -->
+<!-- =========================================================
+     STATISTICS
+     ========================================================= -->
 
 <div class="grid">
 
-<div class="stat">
-<h3 id="studentsCount">0</h3>
-<p>Students</p>
+    <div class="stat">
+        <div class="stat-icon">👥</div>
+        <h3 id="studentsCount">0</h3>
+        <p>Students</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">📝</div>
+        <h3 id="postsCount">0</h3>
+        <p>Posts</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">💬</div>
+        <h3 id="commentsCount">0</h3>
+        <p>Comments</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">❤️</div>
+        <h3 id="likesCount">0</h3>
+        <p>Likes</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">📰</div>
+        <h3 id="newsCount">0</h3>
+        <p>News</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">📅</div>
+        <h3 id="eventsCount">0</h3>
+        <p>Events</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">🔬</div>
+        <h3 id="researchCount">0</h3>
+        <p>Research</p>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">🚩</div>
+        <h3 id="reportsCount">0</h3>
+        <p>Reports</p>
+    </div>
+
 </div>
 
-<div class="stat">
-<h3 id="postsCount">0</h3>
-<p>Posts</p>
-</div>
-
-<div class="stat">
-<h3 id="commentsCount">0</h3>
-<p>Comments</p>
-</div>
-
-<div class="stat">
-<h3 id="newsCount">0</h3>
-<p>News</p>
-</div>
-
-<div class="stat">
-<h3 id="eventsCount">0</h3>
-<p>Events</p>
-</div>
-
-</div>
-
-<!-- WELCOME -->
+<!-- =========================================================
+     WELCOME
+     ========================================================= -->
 
 <div class="card">
 
-<h2>👋 Welcome, Administrator</h2>
+    <h2>👋 Welcome, Administrator</h2>
 
-<p>
-From this dashboard you can manage Sociology Connect news,
-events and community posts.
-</p>
+    <p class="card-description">
+        From this dashboard you can manage Sociology Connect
+        news, events, community posts and future platform tools.
+    </p>
 
 </div>
 
-<!-- QUICK ACTIONS -->
+<!-- =========================================================
+     ADMIN CONTROL CENTER
+     ========================================================= -->
 
 <div class="card">
 
-<h2>⚡ Quick Actions</h2>
+    <h2>🎛️ Admin Control Center</h2>
 
-<div class="quick-actions">
+    <p class="card-description">
+        Manage important areas of Sociology Connect from one place.
+    </p>
 
-<button onclick="refreshDashboard()">
-🔄 Refresh Dashboard
-</button>
+    <div class="control-grid">
 
-<button class="delete-btn" onclick="clearAllPosts()">
-🧹 Clear All Posts
-</button>
+        <button class="control-btn" onclick="scrollToSection('studentsSection')">
+            👥 Student Management
+        </button>
 
-<button class="logout-btn" onclick="logoutAdmin()">
-🚪 Logout
-</button>
+        <button class="control-btn" onclick="scrollToSection('postsSection')">
+            📝 Post Management
+        </button>
 
-</div>
+        <button class="control-btn" onclick="scrollToSection('reportsSection')">
+            🚩 Reports
+        </button>
 
-</div>
+        <button class="control-btn" onclick="scrollToSection('notificationsSection')">
+            🔔 Notifications
+        </button>
 
-<!-- ADD NEWS -->
+        <button class="control-btn" onclick="scrollToSection('researchSection')">
+            🔬 Research Hub
+        </button>
 
-<div class="card" style="padding:30px;">
+        <button class="control-btn" onclick="scrollToSection('analyticsSection')">
+            📊 Analytics
+        </button>
 
-<h2 style="font-size:30px;margin-bottom:8px;">
-📰 Add Latest News
-</h2>
-
-<p style="color:#666;margin-bottom:20px;line-height:1.6;">
-Publish announcements, department updates, scholarship information,
-and important notices for Sociology Connect students.
-</p>
-
-<label for="newsTitle">
-News Title
-</label>
-
-<input
-id="newsTitle"
-type="text"
-placeholder="Enter news title">
-
-<label for="newsDescription">
-News Description
-</label>
-
-<textarea
-id="newsDescription"
-placeholder="Write the news or announcement..."></textarea>
-
-<button
-style="width:100%;padding:15px;font-size:17px;"
-onclick="addNews()">
-
-📢 Publish News
-
-</button>
+    </div>
 
 </div>
 
-<!-- ADD EVENT -->
-
-<div class="card" style="padding:30px;">
-
-<h2 style="font-size:30px;margin-bottom:8px;">
-📅 Add Event / Deadline
-</h2>
-
-<p style="color:#666;margin-bottom:20px;line-height:1.6;">
-Create upcoming events, deadlines, seminars, workshops,
-and department activities.
-</p>
-
-<label for="eventTitle">
-Event Title
-</label>
-
-<input
-id="eventTitle"
-type="text"
-placeholder="Example: Research Proposal Deadline">
-
-<label for="eventDescription">
-Description
-</label>
-
-<textarea
-id="eventDescription"
-placeholder="Write event information..."></textarea>
-
-<label for="eventDate">
-Date
-</label>
-
-<input
-id="eventDate"
-type="date">
-
-<button
-style="width:100%;padding:15px;font-size:17px;"
-onclick="addEvent()">
-
-📅 Add Event
-
-</button>
-
-</div>
-
-<!-- NEWS LIST -->
+<!-- =========================================================
+     QUICK ACTIONS
+     ========================================================= -->
 
 <div class="card">
 
-<h2>📰 Published News</h2>
+    <h2>⚡ Quick Actions</h2>
 
-<div id="newsList">
+    <div class="quick-actions">
 
-<p>Loading news...</p>
+        <button onclick="refreshDashboard()">
+            🔄 Refresh Dashboard
+        </button>
+
+        <button onclick="scrollToSection('newsSection')">
+            📰 Manage News
+        </button>
+
+        <button onclick="scrollToSection('eventsSection')">
+            📅 Manage Events
+        </button>
+
+        <button class="delete-btn" onclick="clearAllPosts()">
+            🧹 Clear All Posts
+        </button>
+
+        <button class="logout-btn" onclick="logoutAdmin()">
+            🚪 Logout
+        </button>
+
+    </div>
 
 </div>
 
+<!-- =========================================================
+     ANALYTICS
+     ========================================================= -->
+
+<div class="card" id="analyticsSection">
+
+    <h2>📊 Activity Overview</h2>
+
+    <p class="card-description">
+        A quick overview of the Sociology Connect community.
+    </p>
+
+    <div class="analytics-grid">
+
+        <div class="analytics-box">
+            <h3>👥 Community</h3>
+            <p>
+                Students currently registered on Sociology Connect.
+            </p>
+        </div>
+
+        <div class="analytics-box">
+            <h3>📝 Engagement</h3>
+            <p>
+                Posts, comments and likes created by the community.
+            </p>
+        </div>
+
+        <div class="analytics-box">
+            <h3>🔬 Academic Activity</h3>
+            <p>
+                Research resources and academic activities available
+                through the platform.
+            </p>
+        </div>
+
+    </div>
+
 </div>
 
-<!-- EVENTS LIST -->
+<!-- =========================================================
+     STUDENT MANAGEMENT
+     ========================================================= -->
+
+<div class="card" id="studentsSection">
+
+    <h2>👥 Student Management</h2>
+
+    <p class="card-description">
+        Student management tools will be connected to the registered
+        users collection in the next upgrade.
+    </p>
+
+    <button onclick="showComingSoon('Student Management')">
+        👥 Open Student Management
+    </button>
+
+</div>
+
+<!-- =========================================================
+     POST MANAGEMENT
+     ========================================================= -->
+
+<div class="card" id="postsSection">
+
+    <h2>📝 Post Management</h2>
+
+    <p class="card-description">
+        Manage community posts and maintain a safe academic environment.
+    </p>
+
+    <button onclick="showComingSoon('Post Management')">
+        📝 Manage Community Posts
+    </button>
+
+</div>
+
+<!-- =========================================================
+     REPORTS
+     ========================================================= -->
+
+<div class="card" id="reportsSection">
+
+    <h2>🚩 Reports & Moderation</h2>
+
+    <p class="card-description">
+        Report management will allow administrators to review
+        reported posts and comments.
+    </p>
+
+    <div class="report-box">
+
+        <h3>🚩 Report Center</h3>
+
+        <p>
+            No report management records are connected yet.
+            This section is ready for the Firebase moderation system.
+        </p>
+
+    </div>
+
+    <button onclick="showComingSoon('Reports & Moderation')">
+        🚩 Open Reports
+    </button>
+
+</div>
+
+<!-- =========================================================
+     NOTIFICATIONS
+     ========================================================= -->
+
+<div class="card" id="notificationsSection">
+
+    <h2>🔔 Notifications Center</h2>
+
+    <p class="card-description">
+        Create important announcements and notifications for
+        Sociology Connect students.
+    </p>
+
+    <button onclick="showComingSoon('Notifications Center')">
+        🔔 Manage Notifications
+    </button>
+
+</div>
+
+<!-- =========================================================
+     RESEARCH HUB
+     ========================================================= -->
+
+<div class="card" id="researchSection">
+
+    <h2>🔬 Research Hub Management</h2>
+
+    <p class="card-description">
+        Manage research topics, academic resources, research questions,
+        APA 7 materials and other Research Hub content.
+    </p>
+
+    <div class="quick-actions">
+
+        <button onclick="showComingSoon('Research Topics')">
+            🧠 Research Topics
+        </button>
+
+        <button onclick="showComingSoon('Research Questions')">
+            📋 Research Questions
+        </button>
+
+        <button onclick="showComingSoon('Research Resources')">
+            📚 Resources
+        </button>
+
+        <button onclick="showComingSoon('APA 7 Materials')">
+            📖 APA 7
+        </button>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     ADD NEWS
+     ========================================================= -->
+
+<div class="card" id="newsSection">
+
+    <h2>📰 Add Latest News</h2>
+
+    <p class="card-description">
+        Publish announcements, department updates, scholarship
+        information and important notices for Sociology Connect students.
+    </p>
+
+    <label for="newsTitle">
+        News Title
+    </label>
+
+    <input
+        id="newsTitle"
+        type="text"
+        placeholder="Enter news title">
+
+    <label for="newsDescription">
+        News Description
+    </label>
+
+    <textarea
+        id="newsDescription"
+        placeholder="Write the news or announcement..."></textarea>
+
+    <button
+        style="width:100%;padding:15px;font-size:17px;"
+        onclick="addNews()">
+
+        📢 Publish News
+
+    </button>
+
+</div>
+
+<!-- =========================================================
+     ADD EVENT
+     ========================================================= -->
+
+<div class="card" id="eventsSection">
+
+    <h2>📅 Add Event / Deadline</h2>
+
+    <p class="card-description">
+        Create upcoming events, deadlines, seminars, workshops
+        and department activities.
+    </p>
+
+    <label for="eventTitle">
+        Event Title
+    </label>
+
+    <input
+        id="eventTitle"
+        type="text"
+        placeholder="Example: Research Proposal Deadline">
+
+    <label for="eventDescription">
+        Description
+    </label>
+
+    <textarea
+        id="eventDescription"
+        placeholder="Write event information..."></textarea>
+
+    <label for="eventDate">
+        Date
+    </label>
+
+    <input
+        id="eventDate"
+        type="date">
+
+    <button
+        style="width:100%;padding:15px;font-size:17px;"
+        onclick="addEvent()">
+
+        📅 Add Event
+
+    </button>
+
+</div>
+
+<!-- =========================================================
+     PUBLISHED NEWS
+     ========================================================= -->
 
 <div class="card">
 
-<h2>📅 Events & Deadlines</h2>
+    <h2>📰 Published News</h2>
 
-<div id="eventsList">
+    <div id="newsList">
 
-<p>Loading events...</p>
+        <p>Loading news...</p>
+
+    </div>
 
 </div>
+
+<!-- =========================================================
+     EVENTS LIST
+     ========================================================= -->
+
+<div class="card">
+
+    <h2>📅 Events & Deadlines</h2>
+
+    <div id="eventsList">
+
+        <p>Loading events...</p>
+
+    </div>
 
 </div>
 
@@ -548,882 +980,1142 @@ onclick="addEvent()">
 
 </div>
 
-<!-- FOOTER -->
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
 
 <footer>
 
-© 2026 Sociology Connect
+    © 2026 Sociology Connect
 
-<br>
+    <br>
 
-Arsi University – Sociology & Social Work
+    Arsi University – Sociology & Social Work
+
+    <br>
+
+    Created by Horsa Gowe
 
 </footer>
 
-
-<!-- FIREBASE ADMIN SCRIPT -->
+<!-- =========================================================
+     FIREBASE ADMIN SCRIPT
+     ========================================================= -->
 
 <script type="module">
 
 import { auth, db } from "./firebase.js";
+
 import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  setDoc,
-  serverTimestamp,
-  query,
-  orderBy
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    setDoc,
+    serverTimestamp,
+    query,
+    orderBy
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
-/* ================= ADMIN ================= */
+/* =========================================================
+   ADMIN
+   ========================================================= */
 
 const ADMIN_EMAIL = "yom@gmail.com";
 
 
-/* ================= ELEMENTS ================= */
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
 
 const dashboard =
-  document.getElementById("dashboard");
+    document.getElementById("dashboard");
 
 const accessDenied =
-  document.getElementById("accessDenied");
+    document.getElementById("accessDenied");
 
 const status =
-  document.getElementById("status");
+    document.getElementById("status");
 
-
-/* ================= DASHBOARD STATS ================= */
 
 const studentsCount =
-  document.getElementById("studentsCount");
+    document.getElementById("studentsCount");
 
 const postsCount =
-  document.getElementById("postsCount");
+    document.getElementById("postsCount");
 
 const commentsCount =
-  document.getElementById("commentsCount");
+    document.getElementById("commentsCount");
+
+const likesCount =
+    document.getElementById("likesCount");
 
 const newsCount =
-  document.getElementById("newsCount");
+    document.getElementById("newsCount");
 
 const eventsCount =
-  document.getElementById("eventsCount");
+    document.getElementById("eventsCount");
+
+const researchCount =
+    document.getElementById("researchCount");
+
+const reportsCount =
+    document.getElementById("reportsCount");
 
 
-/* ================= SECURITY ================= */
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
 
 function escapeHTML(value){
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
-/* ================= UPDATE STATS ================= */
+/* =========================================================
+   UPDATE STATS
+   ========================================================= */
 
 async function updateStats(){
 
-  try{
+    try{
 
-    const usersSnap =
-      await getDocs(
-        collection(db,"users")
-      );
+        const usersSnap =
+            await getDocs(
+                collection(db,"users")
+            );
 
-    const postsSnap =
-      await getDocs(
-        collection(db,"posts")
-      );
+        const postsSnap =
+            await getDocs(
+                collection(db,"posts")
+            );
 
-    const newsSnap =
-      await getDocs(
-        collection(db,"news")
-      );
+        const newsSnap =
+            await getDocs(
+                collection(db,"news")
+            );
 
-    const eventsSnap =
-      await getDocs(
-        collection(db,"events")
-      );
+        const eventsSnap =
+            await getDocs(
+                collection(db,"events")
+            );
 
-    let comments = 0;
 
-    for(
-      const post of postsSnap.docs
-    ){
+        let comments = 0;
 
-      const commentSnap =
-        await getDocs(
-          collection(
-            db,
-            "posts",
-            post.id,
-            "comments"
-          )
+        let likes = 0;
+
+
+        for(
+            const post of postsSnap.docs
+        ){
+
+            const commentSnap =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        post.id,
+                        "comments"
+                    )
+                );
+
+            comments += commentSnap.size;
+
+
+            const likesSnap =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        post.id,
+                        "likes"
+                    )
+                );
+
+            likes += likesSnap.size;
+
+        }
+
+
+        studentsCount.textContent =
+            usersSnap.size;
+
+        postsCount.textContent =
+            postsSnap.size;
+
+        commentsCount.textContent =
+            comments;
+
+        likesCount.textContent =
+            likes;
+
+        newsCount.textContent =
+            newsSnap.size;
+
+        eventsCount.textContent =
+            eventsSnap.size;
+
+
+        /*
+         * Research and Reports are not connected
+         * to Firebase yet.
+         */
+
+        researchCount.textContent =
+            "0";
+
+        reportsCount.textContent =
+            "0";
+
+
+    }catch(error){
+
+        console.error(
+            "Stats Error:",
+            error
         );
 
-      comments += commentSnap.size;
-
     }
-
-    studentsCount.textContent =
-      usersSnap.size;
-
-    postsCount.textContent =
-      postsSnap.size;
-
-    commentsCount.textContent =
-      comments;
-
-    newsCount.textContent =
-      newsSnap.size;
-
-    eventsCount.textContent =
-      eventsSnap.size;
-
-  }catch(error){
-
-    console.error(
-      "Stats Error:",
-      error
-    );
-
-  }
 
 }
 
 
-/* ================= AUTH CHECK ================= */
+/* =========================================================
+   AUTH CHECK
+   ========================================================= */
 
 onAuthStateChanged(
-  auth,
-  async(user)=>{
+    auth,
+    async(user)=>{
 
-    if(
-      !user ||
-      user.email?.toLowerCase() !==
-      ADMIN_EMAIL.toLowerCase()
-    ){
+        if(
+            !user ||
+            user.email?.toLowerCase() !==
+            ADMIN_EMAIL.toLowerCase()
+        ){
 
-      accessDenied.style.display =
-        "block";
+            accessDenied.style.display =
+                "block";
 
-      dashboard.style.display =
-        "none";
+            dashboard.style.display =
+                "none";
 
-      return;
+            return;
+
+        }
+
+
+        accessDenied.style.display =
+            "none";
+
+        dashboard.style.display =
+            "block";
+
+
+        await loadNews();
+
+        await loadEvents();
+
+        await updateStats();
 
     }
-
-    accessDenied.style.display =
-      "none";
-
-    dashboard.style.display =
-      "block";
-
-    await loadNews();
-
-    await loadEvents();
-
-    await updateStats();
-
-  }
 );
 
 
-/* ================= ADD NEWS ================= */
+/* =========================================================
+   ADD NEWS
+   ========================================================= */
 
 window.addNews = async()=>{
 
-  const title =
-    document
-      .getElementById("newsTitle")
-      .value
-      .trim();
+    const title =
+        document
+            .getElementById("newsTitle")
+            .value
+            .trim();
 
-  const description =
-    document
-      .getElementById("newsDescription")
-      .value
-      .trim();
+    const description =
+        document
+            .getElementById("newsDescription")
+            .value
+            .trim();
 
-  if(
-    !title ||
-    !description
-  ){
 
-    alert(
-      "Please enter the news title and description."
-    );
+    if(
+        !title ||
+        !description
+    ){
 
-    return;
+        alert(
+            "Please enter the news title and description."
+        );
 
-  }
-
-  try{
-
-    await addDoc(
-      collection(db,"news"),
-      {
-        title,
-        description,
-        createdAt:
-          serverTimestamp()
-      }
-    );
-
-    document
-      .getElementById("newsTitle")
-      .value = "";
-
-    document
-      .getElementById("newsDescription")
-      .value = "";
-
-    status.textContent =
-      "✅ News published successfully!";
-
-    await loadNews();
-
-    await updateStats();
-
-  }catch(error){
-
-    console.error(error);
-
-    status.textContent =
-      "❌ Could not publish news: " +
-      error.message;
-
-  }
-
-};
-
-/* ================= LOAD NEWS ================= */
-
-async function loadNews(){
-
-  const list =
-    document.getElementById("newsList");
-
-  list.innerHTML =
-    "<p>Loading news...</p>";
-
-  try{
-
-    const newsQuery =
-      query(
-        collection(db,"news"),
-        orderBy(
-          "createdAt",
-          "desc"
-        )
-      );
-
-    const snapshot =
-      await getDocs(newsQuery);
-
-    list.innerHTML = "";
-
-    if(snapshot.empty){
-
-      list.innerHTML =
-        "<p>No news published yet.</p>";
-
-      return;
+        return;
 
     }
 
-    snapshot.forEach(
-      (item)=>{
 
-        const data =
-          item.data();
+    try{
 
-        const div =
-          document.createElement("div");
+        await addDoc(
+            collection(db,"news"),
+            {
+                title,
+                description,
+                createdAt:
+                    serverTimestamp()
+            }
+        );
 
-        div.className =
-          "item";
 
-        div.innerHTML = `
+        document
+            .getElementById("newsTitle")
+            .value = "";
 
-          <h3>
-            📰 ${escapeHTML(data.title)}
-          </h3>
+        document
+            .getElementById("newsDescription")
+            .value = "";
 
-          <p>
-            ${escapeHTML(data.description)}
-          </p>
 
-          <button
-            onclick="editNews('${item.id}')">
+        status.textContent =
+            "✅ News published successfully!";
 
-            ✏️ Edit
 
-          </button>
+        await loadNews();
 
-          <button
-            class="delete-btn"
-            onclick="deleteNews('${item.id}')">
+        await updateStats();
 
-            🗑️ Delete
 
-          </button>
+    }catch(error){
 
-        `;
+        console.error(error);
 
-        list.appendChild(div);
+        status.textContent =
+            "❌ Could not publish news: " +
+            error.message;
 
-      }
-    );
+    }
 
-  }catch(error){
+};
 
-    console.error(error);
+
+/* =========================================================
+   LOAD NEWS
+   ========================================================= */
+
+async function loadNews(){
+
+    const list =
+        document.getElementById("newsList");
+
 
     list.innerHTML =
-      "<p>❌ Could not load news.</p>";
+        "<p>Loading news...</p>";
 
-  }
+
+    try{
+
+        const newsQuery =
+            query(
+                collection(db,"news"),
+                orderBy(
+                    "createdAt",
+                    "desc"
+                )
+            );
+
+
+        const snapshot =
+            await getDocs(newsQuery);
+
+
+        list.innerHTML = "";
+
+
+        if(snapshot.empty){
+
+            list.innerHTML =
+                "<p>No news published yet.</p>";
+
+            return;
+
+        }
+
+
+        snapshot.forEach(
+            (item)=>{
+
+                const data =
+                    item.data();
+
+
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "item";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        📰 ${escapeHTML(data.title)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(data.description)}
+                    </p>
+
+                    <button
+                        onclick="editNews('${item.id}')">
+
+                        ✏️ Edit
+
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteNews('${item.id}')">
+
+                        🗑️ Delete
+
+                    </button>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        list.innerHTML =
+            "<p>❌ Could not load news.</p>";
+
+    }
 
 }
 
 
-/* ================= DELETE NEWS ================= */
+/* =========================================================
+   DELETE NEWS
+   ========================================================= */
 
 window.deleteNews =
 async(id)=>{
 
-  if(
-    !confirm(
-      "Are you sure you want to delete this news?"
-    )
-  ){
+    if(
+        !confirm(
+            "Are you sure you want to delete this news?"
+        )
+    ){
 
-    return;
+        return;
 
-  }
+    }
 
-  try{
 
-    await deleteDoc(
-      doc(db,"news",id)
-    );
+    try{
 
-    status.textContent =
-      "✅ News deleted.";
+        await deleteDoc(
+            doc(db,"news",id)
+        );
 
-    await loadNews();
 
-    await updateStats();
+        status.textContent =
+            "✅ News deleted.";
 
-  }catch(error){
 
-    console.error(error);
+        await loadNews();
 
-    status.textContent =
-      "❌ Could not delete news.";
+        await updateStats();
 
-  }
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not delete news.";
+
+    }
 
 };
-/* ================= EDIT NEWS ================= */
+
+
+/* =========================================================
+   EDIT NEWS
+   ========================================================= */
 
 window.editNews =
 async(id)=>{
 
-  const title =
-    prompt("Enter new news title:");
+    const title =
+        prompt(
+            "Enter new news title:"
+        );
 
-  if(title === null || !title.trim()){
-    return;
-  }
 
-  const description =
-    prompt("Enter new news description:");
+    if(
+        title === null ||
+        !title.trim()
+    ){
 
-  if(description === null || !description.trim()){
-    return;
-  }
+        return;
 
-  try{
+    }
 
-    await setDoc(
-      doc(db,"news",id),
-      {
-        title: title.trim(),
-        description: description.trim()
-      },
-      { merge:true }
-    );
 
-    status.textContent =
-      "✅ News updated successfully!";
+    const description =
+        prompt(
+            "Enter new news description:"
+        );
 
-    await loadNews();
 
-    await updateStats();
+    if(
+        description === null ||
+        !description.trim()
+    ){
 
-  }catch(error){
+        return;
 
-    console.error(error);
+    }
 
-    status.textContent =
-      "❌ Could not update news.";
 
-  }
+    try{
+
+        await setDoc(
+            doc(db,"news",id),
+            {
+                title:
+                    title.trim(),
+
+                description:
+                    description.trim()
+            },
+            {
+                merge:true
+            }
+        );
+
+
+        status.textContent =
+            "✅ News updated successfully!";
+
+
+        await loadNews();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not update news.";
+
+    }
 
 };
 
-/* ================= ADD EVENT ================= */
+
+/* =========================================================
+   ADD EVENT
+   ========================================================= */
 
 window.addEvent =
 async()=>{
 
-  const title =
-    document
-      .getElementById("eventTitle")
-      .value
-      .trim();
+    const title =
+        document
+            .getElementById("eventTitle")
+            .value
+            .trim();
 
-  const description =
-    document
-      .getElementById("eventDescription")
-      .value
-      .trim();
 
-  const date =
-    document
-      .getElementById("eventDate")
-      .value;
+    const description =
+        document
+            .getElementById("eventDescription")
+            .value
+            .trim();
 
-  if(
-    !title ||
-    !description ||
-    !date
-  ){
 
-    alert(
-      "Please complete all event fields."
-    );
+    const date =
+        document
+            .getElementById("eventDate")
+            .value;
 
-    return;
 
-  }
+    if(
+        !title ||
+        !description ||
+        !date
+    ){
 
-  try{
+        alert(
+            "Please complete all event fields."
+        );
 
-    await addDoc(
-      collection(db,"events"),
-      {
+        return;
 
-        title,
-        description,
-        date,
+    }
 
-        createdAt:
-          serverTimestamp()
 
-      }
-    );
+    try{
 
-    document
-      .getElementById("eventTitle")
-      .value = "";
+        await addDoc(
+            collection(db,"events"),
+            {
 
-    document
-      .getElementById("eventDescription")
-      .value = "";
+                title,
 
-    document
-      .getElementById("eventDate")
-      .value = "";
+                description,
 
-    status.textContent =
-      "✅ Event added successfully!";
+                date,
 
-    await loadEvents();
+                createdAt:
+                    serverTimestamp()
 
-    await updateStats();
+            }
+        );
 
-  }catch(error){
 
-    console.error(error);
+        document
+            .getElementById("eventTitle")
+            .value = "";
 
-    status.textContent =
-      "❌ Could not add event: " +
-      error.message;
 
-  }
+        document
+            .getElementById("eventDescription")
+            .value = "";
+
+
+        document
+            .getElementById("eventDate")
+            .value = "";
+
+
+        status.textContent =
+            "✅ Event added successfully!";
+
+
+        await loadEvents();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not add event: " +
+            error.message;
+
+    }
 
 };
 
 
-/* ================= LOAD EVENTS ================= */
+/* =========================================================
+   LOAD EVENTS
+   ========================================================= */
 
 async function loadEvents(){
 
-  const list =
-    document.getElementById(
-      "eventsList"
-    );
+    const list =
+        document.getElementById(
+            "eventsList"
+        );
 
-  list.innerHTML =
-    "<p>Loading events...</p>";
 
-  try{
+    list.innerHTML =
+        "<p>Loading events...</p>";
 
-    const eventsQuery =
-      query(
-        collection(db,"events"),
-        orderBy(
-          "date",
-          "asc"
-        )
-      );
 
-    const snapshot =
-      await getDocs(eventsQuery);
+    try{
 
-    list.innerHTML = "";
+        const eventsQuery =
+            query(
+                collection(db,"events"),
+                orderBy(
+                    "date",
+                    "asc"
+                )
+            );
 
-    if(snapshot.empty){
 
-      list.innerHTML =
-        "<p>No events added yet.</p>";
+        const snapshot =
+            await getDocs(eventsQuery);
 
-      return;
+
+        list.innerHTML = "";
+
+
+        if(snapshot.empty){
+
+            list.innerHTML =
+                "<p>No events added yet.</p>";
+
+            return;
+
+        }
+
+
+        snapshot.forEach(
+            (item)=>{
+
+                const data =
+                    item.data();
+
+
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "item";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        📅 ${escapeHTML(data.title)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(data.description)}
+                    </p>
+
+                    <small>
+                        📆 Date:
+                        ${escapeHTML(data.date)}
+                    </small>
+
+                    <button
+                        onclick="editEvent('${item.id}')">
+
+                        ✏️ Edit
+
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteEvent('${item.id}')">
+
+                        🗑️ Delete
+
+                    </button>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        list.innerHTML =
+            "<p>❌ Could not load events.</p>";
 
     }
 
-    snapshot.forEach(
-      (item)=>{
-
-        const data =
-          item.data();
-
-        const div =
-          document.createElement("div");
-
-        div.className =
-          "item";
-
-        div.innerHTML = `
-
-          <h3>
-            📅 ${escapeHTML(data.title)}
-          </h3>
-
-          <p>
-            ${escapeHTML(data.description)}
-          </p>
-
-          <small>
-            📆 Date:
-            ${escapeHTML(data.date)}
-          </small>
-
-          <button
-            onclick="editEvent('${item.id}')">
-
-            ✏️ Edit
-
-          </button>
-
-          <button
-            class="delete-btn"
-            onclick="deleteEvent('${item.id}')">
-
-            🗑️ Delete
-
-          </button>
-
-        `;
-
-        list.appendChild(div);
-
-      }
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    list.innerHTML =
-      "<p>❌ Could not load events.</p>";
-
-  }
-
 }
 
-/* ================= DELETE EVENT ================= */
+
+/* =========================================================
+   DELETE EVENT
+   ========================================================= */
 
 window.deleteEvent =
 async(id)=>{
 
-  if(
-    !confirm(
-      "Are you sure you want to delete this event?"
-    )
-  ){
+    if(
+        !confirm(
+            "Are you sure you want to delete this event?"
+        )
+    ){
 
-    return;
+        return;
 
-  }
+    }
 
-  try{
 
-    await deleteDoc(
-      doc(db,"events",id)
-    );
+    try{
 
-    status.textContent =
-      "✅ Event deleted.";
+        await deleteDoc(
+            doc(db,"events",id)
+        );
 
-    await loadEvents();
 
-    await updateStats();
+        status.textContent =
+            "✅ Event deleted.";
 
-  }catch(error){
 
-    console.error(error);
+        await loadEvents();
 
-    status.textContent =
-      "❌ Could not delete event.";
+        await updateStats();
 
-  }
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not delete event.";
+
+    }
 
 };
 
-/* ================= EDIT EVENT ================= */
+
+/* =========================================================
+   EDIT EVENT
+   ========================================================= */
 
 window.editEvent =
 async(id)=>{
 
-  const title =
-    prompt("Enter new event title:");
+    const title =
+        prompt(
+            "Enter new event title:"
+        );
 
-  if(title === null || !title.trim()){
-    return;
-  }
 
-  const description =
-    prompt("Enter new event description:");
+    if(
+        title === null ||
+        !title.trim()
+    ){
 
-  if(description === null || !description.trim()){
-    return;
-  }
+        return;
 
-  const date =
-    prompt("Enter new event date (YYYY-MM-DD):");
+    }
 
-  if(date === null || !date.trim()){
-    return;
-  }
 
-  try{
+    const description =
+        prompt(
+            "Enter new event description:"
+        );
 
-    await setDoc(
-      doc(db,"events",id),
-      {
-        title: title.trim(),
-        description: description.trim(),
-        date: date.trim()
-      },
-      { merge:true }
-    );
+
+    if(
+        description === null ||
+        !description.trim()
+    ){
+
+        return;
+
+    }
+
+
+    const date =
+        prompt(
+            "Enter new event date (YYYY-MM-DD):"
+        );
+
+
+    if(
+        date === null ||
+        !date.trim()
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await setDoc(
+            doc(db,"events",id),
+            {
+
+                title:
+                    title.trim(),
+
+                description:
+                    description.trim(),
+
+                date:
+                    date.trim()
+
+            },
+            {
+                merge:true
+            }
+        );
+
+
+        status.textContent =
+            "✅ Event updated successfully!";
+
+
+        await loadEvents();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not update event.";
+
+    }
+
+};
+
+
+/* =========================================================
+   CLEAR ALL POSTS
+   ========================================================= */
+
+window.clearAllPosts =
+async()=>{
+
+    if(
+        !confirm(
+            "⚠️ Delete ALL community posts?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const postsSnapshot =
+            await getDocs(
+                collection(db,"posts")
+            );
+
+
+        if(postsSnapshot.empty){
+
+            status.textContent =
+                "ℹ️ There are no posts to delete.";
+
+            return;
+
+        }
+
+
+        for(
+            const post of postsSnapshot.docs
+        ){
+
+            const postId =
+                post.id;
+
+
+            /* DELETE COMMENTS */
+
+            const comments =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        postId,
+                        "comments"
+                    )
+                );
+
+
+            for(
+                const comment of comments.docs
+            ){
+
+                await deleteDoc(
+                    comment.ref
+                );
+
+            }
+
+
+            /* DELETE LIKES */
+
+            const likes =
+                await getDocs(
+                    collection(
+                        db,
+                        "posts",
+                        postId,
+                        "likes"
+                    )
+                );
+
+
+            for(
+                const like of likes.docs
+            ){
+
+                await deleteDoc(
+                    like.ref
+                );
+
+            }
+
+
+            /* DELETE POST */
+
+            await deleteDoc(
+                post.ref
+            );
+
+        }
+
+
+        status.textContent =
+            "🧹 All posts deleted successfully.";
+
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not delete all posts.";
+
+    }
+
+};
+
+
+/* =========================================================
+   REFRESH DASHBOARD
+   ========================================================= */
+
+window.refreshDashboard =
+async()=>{
 
     status.textContent =
-      "✅ Event updated successfully!";
+        "🔄 Refreshing...";
+
+
+    await loadNews();
 
     await loadEvents();
 
     await updateStats();
 
-  }catch(error){
-
-    console.error(error);
 
     status.textContent =
-      "❌ Could not update event.";
-
-  }
-
-};
-/* ================= CLEAR ALL POSTS ================= */
-
-window.clearAllPosts =
-async()=>{
-
-  if(
-    !confirm(
-      "⚠️ Delete ALL community posts?"
-    )
-  ){
-
-    return;
-
-  }
-
-  try{
-
-    const postsSnapshot =
-      await getDocs(
-        collection(db,"posts")
-      );
-
-    if(postsSnapshot.empty){
-
-      status.textContent =
-        "ℹ️ There are no posts to delete.";
-
-      return;
-
-    }
-
-    for(
-      const post of postsSnapshot.docs
-    ){
-
-      const postId =
-        post.id;
-
-
-      /* DELETE COMMENTS */
-
-      const comments =
-        await getDocs(
-          collection(
-            db,
-            "posts",
-            postId,
-            "comments"
-          )
-        );
-
-      for(
-        const comment of comments.docs
-      ){
-
-        await deleteDoc(
-          comment.ref
-        );
-
-      }
-
-
-      /* DELETE LIKES */
-
-      const likes =
-        await getDocs(
-          collection(
-            db,
-            "posts",
-            postId,
-            "likes"
-          )
-        );
-
-      for(
-        const like of likes.docs
-      ){
-
-        await deleteDoc(
-          like.ref
-        );
-
-      }
-
-
-      /* DELETE POST */
-
-      await deleteDoc(
-        post.ref
-      );
-
-    }
-
-    status.textContent =
-      "🧹 All posts deleted successfully.";
-
-    await updateStats();
-
-  }catch(error){
-
-    console.error(error);
-
-    status.textContent =
-      "❌ Could not delete all posts.";
-
-  }
+        "✅ Dashboard refreshed.";
 
 };
 
 
-/* ================= REFRESH DASHBOARD ================= */
-
-window.refreshDashboard =
-async()=>{
-
-  status.textContent =
-    "🔄 Refreshing...";
-
-  await loadNews();
-
-  await loadEvents();
-
-  await updateStats();
-
-  status.textContent =
-    "✅ Dashboard refreshed.";
-
-};
-
-
-/* ================= ADMIN LOGOUT ================= */
+/* =========================================================
+   ADMIN LOGOUT
+   ========================================================= */
 
 window.logoutAdmin =
 async()=>{
 
-  if(
-    !confirm(
-      "Logout from Admin Dashboard?"
-    )
-  ){
+    if(
+        !confirm(
+            "Logout from Admin Dashboard?"
+        )
+    ){
 
-    return;
+        return;
 
-  }
+    }
 
-  try{
 
-    await signOut(auth);
+    try{
 
-    window.location.href =
-      "login.html";
+        await signOut(auth);
 
-  }catch(error){
 
-    console.error(error);
+        window.location.href =
+            "login.html";
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Logout failed.";
+
+    }
+
+};
+
+
+/* =========================================================
+   SCROLL TO SECTION
+   ========================================================= */
+
+window.scrollToSection =
+function(id){
+
+    const section =
+        document.getElementById(id);
+
+
+    if(section){
+
+        section.scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
+    }
+
+};
+
+
+/* =========================================================
+   COMING SOON
+   ========================================================= */
+
+window.showComingSoon =
+function(name){
 
     status.textContent =
-      "❌ Logout failed.";
+        "ℹ️ " +
+        name +
+        " will be connected to Firebase in the next upgrade.";
 
-  }
+    status.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
 
 };
 

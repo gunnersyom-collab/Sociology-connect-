@@ -146,7 +146,7 @@ header{
 
 /* =========================================================
    NAVIGATION
-   IMPORTANT: RESEARCH / PROFILE / ADMIN / LOGIN
+   ALL IMPORTANT LINKS ALWAYS VISIBLE
 ========================================================= */
 
 nav{
@@ -170,15 +170,20 @@ body.dark nav{
     max-width:1250px;
     margin:auto;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:flex !important;
+
+    align-items:center !important;
+    justify-content:center !important;
+
+    flex-direction:row !important;
+
+    flex-wrap:wrap !important;
 
     gap:7px;
 
     padding:9px 12px;
 
-    overflow-x:auto;
+    overflow:visible !important;
 
     scrollbar-width:none;
 }
@@ -188,15 +193,20 @@ body.dark nav{
 }
 
 
-/* EVERY NAV LINK IS VISIBLE */
+/* EVERY NAV LINK */
 
 .nav-container a{
     display:inline-flex !important;
 
-    align-items:center;
-    justify-content:center;
+    align-items:center !important;
+    justify-content:center !important;
 
-    padding:9px 14px;
+    flex:0 0 auto !important;
+
+    width:auto !important;
+    min-width:max-content !important;
+
+    padding:9px 13px;
 
     border-radius:999px;
 
@@ -206,7 +216,7 @@ body.dark nav{
 
     font-weight:700;
 
-    white-space:nowrap;
+    white-space:nowrap !important;
 
     opacity:1 !important;
     visibility:visible !important;
@@ -215,12 +225,27 @@ body.dark nav{
 }
 
 
-/* SPECIAL PAGES */
+/* IMPORTANT DIRECT LINKS */
 
 .nav-container a[href="research.html"],
 .nav-container a[href="profile.html"],
 .nav-container a[href="admin.html"],
-.nav-container a[href="login.html"]{
+.nav-container a[href="login.html"],
+.nav-container a[href="#contact"]{
+    display:inline-flex !important;
+
+    flex:0 0 auto !important;
+
+    width:auto !important;
+
+    opacity:1 !important;
+    visibility:visible !important;
+}
+
+
+/* ADMIN */
+
+#adminLink{
     display:inline-flex !important;
 
     opacity:1 !important;
@@ -228,7 +253,24 @@ body.dark nav{
 }
 
 
-/* HOVER */
+/* LOGIN */
+
+#loginLink{
+    display:inline-flex !important;
+
+    opacity:1 !important;
+    visibility:visible !important;
+}
+
+
+/* LOGOUT */
+
+#logoutBtn{
+    flex:0 0 auto !important;
+}
+
+
+/* NAV HOVER */
 
 .nav-container a:hover{
     color:#ffffff;
@@ -254,6 +296,7 @@ body.dark nav{
     padding:0 20px;
 
     display:flex;
+
     justify-content:flex-end;
     align-items:center;
 
@@ -276,6 +319,7 @@ body.dark nav{
 
 .nav-btn:hover{
     background:var(--primary);
+
     color:white;
 }
 
@@ -286,6 +330,7 @@ body.dark nav{
 
 .search-container{
     max-width:1250px;
+
     margin:14px auto;
 
     padding:0 20px;
@@ -446,6 +491,8 @@ main > section{
     box-shadow:var(--shadow);
 
     color:var(--text);
+
+    transition:.25s ease;
 }
 
 .card:hover,
@@ -1120,7 +1167,7 @@ footer strong{
 
 
 /* =========================================================
-   MOBILE
+   TABLET
 ========================================================= */
 
 @media(max-width:1100px){
@@ -1134,8 +1181,21 @@ footer strong{
         grid-template-columns:
             repeat(4,1fr);
     }
+
+    .nav-container{
+        justify-content:center !important;
+
+        flex-wrap:wrap !important;
+
+        overflow:visible !important;
+    }
 }
 
+
+/* =========================================================
+   MOBILE
+   IMPORTANT LINKS STILL VISIBLE
+========================================================= */
 
 @media(max-width:768px){
 
@@ -1158,17 +1218,33 @@ footer strong{
     }
 
     .nav-container{
-        justify-content:flex-start;
+        max-width:100%;
 
-        overflow-x:auto;
+        justify-content:center !important;
+
+        flex-direction:row !important;
+
+        flex-wrap:wrap !important;
+
+        overflow:visible !important;
+
+        padding:8px 8px;
     }
 
     .nav-container a{
         display:inline-flex !important;
 
-        flex-shrink:0;
+        flex:0 0 auto !important;
+
+        width:auto !important;
+
+        min-width:max-content !important;
 
         font-size:.81rem;
+
+        padding:8px 10px;
+
+        white-space:nowrap !important;
     }
 
     .nav-actions{
@@ -1221,9 +1297,12 @@ footer strong{
     .message{
         max-width:100%;
     }
-
 }
 
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
 
 @media(max-width:480px){
 
@@ -1253,4 +1332,30 @@ footer strong{
         justify-content:flex-start;
     }
 
+    /*
+       Navigation remains visible.
+       It wraps to multiple rows instead of disappearing.
+    */
+
+    .nav-container{
+        justify-content:center !important;
+
+        flex-wrap:wrap !important;
+
+        overflow:visible !important;
+    }
+
+    .nav-container a{
+        display:inline-flex !important;
+
+        flex:0 0 auto !important;
+
+        width:auto !important;
+
+        min-width:max-content !important;
+
+        font-size:.78rem;
+
+        padding:7px 9px;
+    }
 }

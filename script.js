@@ -1343,6 +1343,73 @@ async function sendToServer() {
         headers: {
           "Content-Type": "application/json"
         },
+
+  /* =========================================================
+   PART 5
+   AI MARI — GEMINI
+========================================================= */
+
+const chatMessages = [
+  {
+    role: "system",
+    content: `You are AI Mari, the official academic AI assistant of Sociology Connect – Arsi University (Sociology & Social Work).
+
+Help students with Sociology, Social Work, Psychology, Anthropology, Political Science, Economics, Social Policy, Community Development, Human Rights, Gender and Society, Research Methods, Academic Writing, APA 7, Assignments, Presentations and Research Projects.
+
+Always answer in the same language used by the user.
+- Afaan Oromoo → Answer in natural Afaan Oromoo.
+- Amharic → Answer in natural Amharic.
+- English → Answer in clear English.
+
+Never invent research data or citations.`
+  }
+];
+
+/* =========================================================
+   SEND MESSAGE TO RENDER / GEMINI SERVER
+========================================================= */
+
+async function sendToServer() {
+
+  if (!chatHistory || !userInput || !sendBtn) return;
+
+  const text = userInput.value.trim();
+  if (!text) return;
+
+  chatMessages.push({
+    role: "user",
+    content: text
+  });
+
+  const userBox = document.createElement("div");
+  userBox.className = "message user";
+  userBox.innerHTML = `<b>You:</b><br>${escapeHTML(text)}`;
+  chatHistory.appendChild(userBox);
+
+  userInput.value = "";
+
+  const aiBox = document.createElement("div");
+  aiBox.className = "message ai";
+  aiBox.innerHTML = `
+    <b>AI Mari:</b><br>
+    <span class="ai-text">Typing... 🤖</span>
+  `;
+
+  chatHistory.appendChild(aiBox);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Thinking...";
+
+  try {
+
+    const response = await fetch(
+      "https://sociology-connect.onrender.com/api/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           message: text
         })
@@ -1396,8 +1463,13 @@ async function sendToServer() {
       const btn = aiBox.querySelector(".speak-btn");
       btn.textContent = "🔊 Speaking...";
 
-      speech.onend = () => btn.textContent = "🔊 Listen";
-      speech.onerror = () => btn.textContent = "🔊 Listen";
+      speech.onend = () => {
+        btn.textContent = "🔊 Listen";
+      };
+
+      speech.onerror = () => {
+        btn.textContent = "🔊 Listen";
+      };
 
       window.speechSynthesis.speak(speech);
 
@@ -1427,9 +1499,24 @@ async function sendToServer() {
 ========================================================= */
 
 sendBtn?.addEventListener("click", sendToServer);
-        
-      
+
 /* =========================================================
+   ENTER KEY
+========================================================= */
+
+userInput?.addEventListener("keydown", (e) => {
+
+  if (e.key === "Enter" && !e.shiftKey) {
+
+    e.preventDefault();
+
+    sendToServer();
+
+  }
+
+});    
+
+     /* =========================================================
    PART 6
    DARK MODE
    SEARCH
@@ -1504,60 +1591,80 @@ themeBtn?.addEventListener(
 );
 
 
+/* =========================================================
+   PART 6
+   DARK MODE
+   SEARCH
+========================================================= */
+
+/* UPDATE THEME BUTTON */
+
+function updateThemeButton() {
+  if (!themeBtn) return;
+
+  themeBtn.textContent = document.body.classList.contains("dark")
+    ? "☀️"
+    : "🌙";
+}
+
+/* APPLY SAVED THEME */
+
+function applySavedTheme() {
+  const saved = localStorage.getItem("sociologyTheme");
+
+  if (saved === "dark") {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+
+  updateThemeButton();
+}
+
+/* TOGGLE THEME */
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+
+  localStorage.setItem(
+    "sociologyTheme",
+    document.body.classList.contains("dark") ? "dark" : "light"
+  );
+
+  updateThemeButton();
+}
+
+themeBtn?.addEventListener("click", toggleTheme);
+
 /* SEARCH */
 
 function searchWebsite() {
-
   if (!searchBar) return;
 
-  const q =
-    searchBar.value
-      .toLowerCase()
-      .trim();
-
+  const q = searchBar.value.toLowerCase().trim();
   let count = 0;
 
-  const items =
-    document.querySelectorAll(
-      "#postsContainer > div, #news .card, #events .event-card, #trendingContainer .post-card"
-    );
+  const items = document.querySelectorAll(
+    "#postsContainer .post-card, #newsContainer .card, #eventsContainer .event-card, #trendingContainer .post-card"
+  );
 
   items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const show = !q || text.includes(q);
 
-    const text =
-      item.textContent.toLowerCase();
-
-    const show =
-      !q ||
-      text.includes(q);
-
-    item.style.display =
-      show ? "" : "none";
+    item.style.display = show ? "" : "none";
 
     if (show) count++;
-
   });
 
-  const counter =
-    document.getElementById(
-      "searchCount"
-    );
+  const counter = document.getElementById("searchCount");
 
   if (counter) {
-
-    counter.textContent =
-      q
-        ? `${count} results found`
-        : "";
-
+    counter.textContent = q ? `${count} results found` : "";
   }
-
 }
 
-searchBar?.addEventListener(
-  "input",
-  searchWebsite
-);
+searchBar?.addEventListener("input", searchWebsite);
 
 
 /* =========================================================

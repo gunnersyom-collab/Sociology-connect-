@@ -69,6 +69,36 @@ nav a:hover{
     background:#eaf3ff;
 }
 
+/* ================= DARK MODE BUTTON ================= */
+
+#themeBtn{
+    width:auto;
+    margin:0;
+    padding:8px 13px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:#fff;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+#themeBtn:hover{
+    background:#0056b3;
+    transform:none;
+}
+
+body.dark #themeBtn{
+    background:#1e293b;
+    color:#f8fafc;
+}
+
+body.dark #themeBtn:hover{
+    background:#334155;
+}
+
 /* ================= CONTAINER ================= */
 
 .container{
@@ -397,6 +427,11 @@ body.dark footer strong{
         padding:7px 8px;
     }
 
+    #themeBtn{
+        font-size:14px;
+        padding:7px 9px;
+    }
+
     .container{
         margin:15px auto;
         padding:10px;
@@ -438,6 +473,10 @@ body.dark footer strong{
     <a href="profile.html">👤 Profile</a>
     <a href="research.html">🔬 Research Hub</a>
     <a href="login.html">🔐 Login</a>
+
+    <button id="themeBtn" type="button">
+        🌙 Dark
+    </button>
 </nav>
 
 <div class="container">
@@ -667,6 +706,9 @@ const saveBtn =
 
 const postCount =
     document.getElementById("postCount");
+
+const themeBtn =
+    document.getElementById("themeBtn");
 
 
 /* =========================================================
@@ -1133,10 +1175,13 @@ function applySavedTheme(){
     const theme =
         localStorage.getItem("theme");
 
+    const darkMode =
+        localStorage.getItem("darkMode");
+
 
     if(
         theme === "dark" ||
-        localStorage.getItem("darkMode") === "true"
+        darkMode === "true"
     ){
 
         document.body.classList.add("dark");
@@ -1147,13 +1192,73 @@ function applySavedTheme(){
 
     }
 
+    updateThemeButton();
+
 }
 
+
+/* =========================================================
+   UPDATE THEME BUTTON
+   ========================================================= */
+
+function updateThemeButton(){
+
+    if(
+        document.body.classList.contains("dark")
+    ){
+
+        themeBtn.textContent =
+            "☀️ Light";
+
+    }else{
+
+        themeBtn.textContent =
+            "🌙 Dark";
+
+    }
+
+}
+
+
+/* =========================================================
+   DARK / LIGHT MODE BUTTON
+   ========================================================= */
+
+themeBtn.addEventListener(
+    "click",
+    function(){
+
+        document.body.classList.toggle("dark");
+
+        const isDark =
+            document.body.classList.contains("dark");
+
+
+        localStorage.setItem(
+            "theme",
+            isDark ? "dark" : "light"
+        );
+
+        localStorage.setItem(
+            "darkMode",
+            isDark ? "true" : "false"
+        );
+
+
+        updateThemeButton();
+
+    }
+);
+
+
+/* Apply saved theme when page opens */
 
 applySavedTheme();
 
 
-/* Listen for theme changes from another tab */
+/* =========================================================
+   LISTEN FOR THEME CHANGES FROM ANOTHER TAB
+   ========================================================= */
 
 window.addEventListener(
     "storage",

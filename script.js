@@ -3,11 +3,13 @@
    SCRIPT.JS
    FULL UPDATED VERSION
 
-   FEATURES:
+   FEATURES
    POSTS + LIKES + COMMENTS + SHARE + REPORT
    DELETE + ADMIN CONTROLS
    NEWS + EVENTS
    FIRESTORE NOTIFICATIONS
+   UNREAD NOTIFICATION BADGE
+   REAL-TIME NOTIFICATIONS
    AI MARI
    DARK MODE
    SEARCH
@@ -96,6 +98,80 @@ let eventsUnsubscribe = null;
 let notificationsUnsubscribe = null;
 
 let latestNotifications = [];
+
+
+/* =========================================================
+   NOTIFICATION STATE
+========================================================= */
+
+const NOTIFICATION_SEEN_KEY =
+  "sociology_connect_seen_notifications";
+
+
+function getSeenNotificationIds() {
+
+  try {
+
+    const saved =
+      localStorage.getItem(
+        NOTIFICATION_SEEN_KEY
+      );
+
+    if (!saved) {
+      return [];
+    }
+
+    const parsed =
+      JSON.parse(saved);
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  } catch (error) {
+
+    console.warn(
+      "SEEN NOTIFICATIONS ERROR:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+function saveSeenNotificationIds(ids) {
+
+  try {
+
+    const unique =
+      [...new Set(ids)];
+
+    /*
+       Keep only the latest 100 IDs
+       so localStorage does not grow forever.
+    */
+
+    const limited =
+      unique.slice(-100);
+
+    localStorage.setItem(
+      NOTIFICATION_SEEN_KEY,
+      JSON.stringify(limited)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "SAVE SEEN NOTIFICATIONS ERROR:",
+      error
+    );
+
+  }
+
+}
 
 
 /* =========================================================
@@ -192,7 +268,13 @@ function formatNotificationTime(timestamp) {
 
       return timestamp
         .toDate()
-        .toLocaleString();
+        .toLocaleString(
+          "en-US",
+          {
+            dateStyle: "medium",
+            timeStyle: "short"
+          }
+        );
 
     }
 
@@ -239,6 +321,7 @@ async function getUserName(user) {
       return (
         data.fullName ||
         data.name ||
+        data.displayName ||
         user.displayName ||
         user.email?.split("@")[0] ||
         "Student"
@@ -301,19 +384,35 @@ onAuthStateChanged(
 
       }
 
-      createAdminControls();
+      /*
+         DOM may already be loaded or
+         may still be loading.
+      */
+
+      if (
+        document.readyState !==
+        "loading"
+      ) {
+
+        createAdminControls();
+
+      }
 
       /*
-         Start Firestore notifications
+         Start Firestore notifications.
       */
+
       startNotificationListener();
 
       /*
          Refresh posts so admin buttons
          appear immediately after login.
       */
+
       if (postsContainer) {
+
         loadPosts();
+
       }
 
     } else {
@@ -351,25 +450,17 @@ onAuthStateChanged(
          Refresh posts after logout so
          delete buttons disappear.
       */
+
       if (postsContainer) {
+
         loadPosts();
+
       }
 
     }
 
   }
 );
-
-
-/* =========================================================
-   PART 2
-   CREATE POST
-   LIKE
-   COMMENT
-   SHARE
-   REPORT
-   DELETE
-========================================================= */
 
 
 /* =========================================================
@@ -384,7 +475,9 @@ async function createPost() {
 
   if (!authReady) {
 
-    alert("Please wait...");
+    alert(
+      "Please wait..."
+    );
 
     return;
 
@@ -437,11 +530,15 @@ async function createPost() {
       ),
       {
         text,
+
         userId:
           currentUser.uid,
+
         name,
+
         email:
           currentUser.email || "",
+
         createdAt:
           serverTimestamp()
       }
@@ -963,6 +1060,7 @@ async function reportPost(
       ),
       {
         postId,
+
         postText:
           postText || "",
 
@@ -1011,6 +1109,66 @@ async function reportPost(
 
 
 /* =========================================================
+   DELETE POST DATA
+   Used by single delete and clear-all.
+========================================================= */
+
+async function deletePostData(
+  postId
+) {
+
+  const likes =
+    await getDocs(
+      collection(
+        db,
+        "posts",
+        postId,
+        "likes"
+      )
+    );
+
+  for (
+    const item of likes.docs
+  ) {
+
+    await deleteDoc(
+      item.ref
+    );
+
+  }
+
+  const comments =
+    await getDocs(
+      collection(
+        db,
+        "posts",
+        postId,
+        "comments"
+      )
+    );
+
+  for (
+    const item of comments.docs
+  ) {
+
+    await deleteDoc(
+      item.ref
+    );
+
+  }
+
+  await deleteDoc(
+    doc(
+      db,
+      "posts",
+      postId
+    )
+  );
+
+}
+
+
+/* =========================================================
    DELETE ONE POST
 ========================================================= */
 
@@ -1052,55 +1210,11 @@ async function deletePost(
 
   try {
 
-    const likes =
-      await getDocs(
-        collection(
-          db,
-          "posts",
-          postId,
-          "likes"
-        )
-      );
-
-    for (
-      const item of
-      likes.docs
-    ) {
-
-      await deleteDoc(
-        item.ref
-      );
-
-    }
-
-    const comments =
-      await getDocs(
-        collection(
-          db,
-          "posts",
-          postId,
-          "comments"
-        )
-      );
-
-    for (
-      const item of
-      comments.docs
-    ) {
-
-      await deleteDoc(
-        item.ref
-      );
-
-    }
-
-    await deleteDoc(
-      doc(
-        db,
-        "posts",
-        postId
-      )
+    await deletePostData(
+      postId
     );
+
+    loadTrendingPosts();
 
     return true;
 
@@ -1112,9 +1226,11 @@ async function deletePost(
     );
 
     if (askConfirmation) {
+
       alert(
         error.message
       );
+
     }
 
     return false;
@@ -1162,14 +1278,11 @@ async function clearAllPosts() {
       );
 
     for (
-      const post of
-      posts.docs
+      const post of posts.docs
     ) {
 
-      await deletePost(
-        post.id,
-        post.data().userId,
-        false
+      await deletePostData(
+        post.id
       );
 
     }
@@ -1286,7 +1399,6 @@ function removeAdminControls() {
 
 
 /* =========================================================
-   PART 3
    LOAD POSTS
 ========================================================= */
 
@@ -1296,9 +1408,6 @@ function loadPosts() {
     return;
   }
 
-  /*
-     Prevent duplicate Firebase listeners.
-  */
   if (postsUnsubscribe) {
 
     postsUnsubscribe();
@@ -1466,7 +1575,6 @@ function loadPosts() {
             card
           );
 
-
           const likeBtn =
             card.querySelector(
               ".like-btn"
@@ -1567,7 +1675,9 @@ function loadPosts() {
                 );
 
               if (deleted) {
+
                 loadTrendingPosts();
+
               }
 
             }
@@ -1812,7 +1922,6 @@ async function loadTrendingPosts() {
 
 
 /* =========================================================
-   PART 4
    NEWS
 ========================================================= */
 
@@ -1949,7 +2058,7 @@ function loadNews() {
 
 
 /* =========================================================
-   LOAD EVENTS
+   EVENTS
 ========================================================= */
 
 function loadEvents() {
@@ -2088,7 +2197,6 @@ function loadEvents() {
 
 
 /* =========================================================
-   PART 5
    FIRESTORE NOTIFICATIONS
 ========================================================= */
 
@@ -2103,7 +2211,9 @@ function startNotificationListener() {
     return;
   }
 
-  if (notificationsUnsubscribe) {
+  if (
+    notificationsUnsubscribe
+  ) {
 
     notificationsUnsubscribe();
 
@@ -2135,6 +2245,7 @@ function startNotificationListener() {
             item => ({
               id:
                 item.id,
+
               ...item.data()
             })
           );
@@ -2178,6 +2289,9 @@ function stopNotificationListener() {
 
   }
 
+  latestNotifications =
+    [];
+
 }
 
 
@@ -2191,20 +2305,29 @@ function updateNotificationBadge() {
     return;
   }
 
-  const count =
-    latestNotifications.length;
+  const seen =
+    getSeenNotificationIds();
 
-  if (count > 0) {
+  const unread =
+    latestNotifications.filter(
+      notification =>
+        !seen.includes(
+          notification.id
+        )
+    ).length;
+
+  if (unread > 0) {
 
     notifyBtn.innerHTML =
       `🔔 <span style="
         color:red;
         font-weight:bold;
-      ">${count}</span>`;
+        margin-left:3px;
+      ">${unread}</span>`;
 
     notifyBtn.title =
-      `${count} notification${
-        count === 1
+      `${unread} unread notification${
+        unread === 1
           ? ""
           : "s"
       }`;
@@ -2289,6 +2412,31 @@ function showNotifications() {
     message
   );
 
+  /*
+     Mark displayed notifications
+     as seen on this device.
+  */
+
+  const oldSeen =
+    getSeenNotificationIds();
+
+  const displayedIds =
+    latestNotifications
+      .slice(0, 10)
+      .map(
+        notification =>
+          notification.id
+      );
+
+  saveSeenNotificationIds(
+    [
+      ...oldSeen,
+      ...displayedIds
+    ]
+  );
+
+  updateNotificationBadge();
+
 }
 
 
@@ -2299,7 +2447,6 @@ notifyBtn?.addEventListener(
 
 
 /* =========================================================
-   PART 6
    AI MARI
 ========================================================= */
 
@@ -2352,6 +2499,7 @@ async function sendToServer() {
   chatMessages.push({
     role:
       "user",
+
     content:
       text
   });
@@ -2446,6 +2594,7 @@ async function sendToServer() {
     chatMessages.push({
       role:
         "assistant",
+
       content:
         reply
     });
@@ -2610,7 +2759,7 @@ async function sendToServer() {
 
 
 /* =========================================================
-   SEND BUTTON
+   AI SEND BUTTON
 ========================================================= */
 
 sendBtn?.addEventListener(
@@ -2620,7 +2769,7 @@ sendBtn?.addEventListener(
 
 
 /* =========================================================
-   ENTER KEY
+   AI ENTER KEY
 ========================================================= */
 
 userInput?.addEventListener(
@@ -2643,7 +2792,6 @@ userInput?.addEventListener(
 
 
 /* =========================================================
-   PART 7
    DARK MODE
 ========================================================= */
 
@@ -2718,7 +2866,6 @@ themeBtn?.addEventListener(
 
 
 /* =========================================================
-   PART 8
    SEARCH
 ========================================================= */
 
@@ -2791,7 +2938,6 @@ searchBar?.addEventListener(
 
 
 /* =========================================================
-   PART 9
    VOICE RECOGNITION
 ========================================================= */
 
@@ -2930,7 +3076,6 @@ if (SpeechRecognition) {
 
 
 /* =========================================================
-   PART 10
    LOGOUT
 ========================================================= */
 
@@ -2965,7 +3110,6 @@ logoutBtn?.addEventListener(
 
 
 /* =========================================================
-   PART 11
    KEYBOARD SHORTCUT
 ========================================================= */
 
@@ -2990,7 +3134,6 @@ document.addEventListener(
 
 
 /* =========================================================
-   PART 12
    START APPLICATION
 ========================================================= */
 
@@ -3011,9 +3154,20 @@ document.addEventListener(
     loadEvents();
 
     /*
-       Notification listener is started
-       by Firebase Auth when user logs in.
+       If authentication already finished
+       before DOMContentLoaded, make sure
+       admin controls are created.
     */
+
+    if (currentUser) {
+
+      createAdminControls();
+
+      startNotificationListener();
+
+    }
+
+    updateNotificationBadge();
 
     console.log(
       "✅ Sociology Connect Ready"
@@ -3032,19 +3186,29 @@ window.addEventListener(
   () => {
 
     if (postsUnsubscribe) {
+
       postsUnsubscribe();
+
     }
 
     if (newsUnsubscribe) {
+
       newsUnsubscribe();
+
     }
 
     if (eventsUnsubscribe) {
+
       eventsUnsubscribe();
+
     }
 
-    if (notificationsUnsubscribe) {
+    if (
+      notificationsUnsubscribe
+    ) {
+
       notificationsUnsubscribe();
+
     }
 
   }

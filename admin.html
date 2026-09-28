@@ -7,7 +7,10 @@
 
 <title>Admin Dashboard | Sociology Connect</title>
 
-<meta name="description" content="Sociology Connect Admin Dashboard"/>
+<meta
+    name="description"
+    content="Sociology Connect Admin Dashboard"
+/>
 
 <style>
 
@@ -381,6 +384,81 @@ button:hover{
 }
 
 /* =========================================================
+   STUDENT MANAGEMENT
+   ========================================================= */
+
+.student-tools{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.student-search{
+    flex:1;
+    min-width:220px;
+    margin-top:0;
+}
+
+.students-summary{
+    background:#f4f8ff;
+    border:1px solid #dbe9ff;
+    padding:15px;
+    border-radius:12px;
+    margin-top:15px;
+    color:#0056b3;
+    font-weight:bold;
+}
+
+#studentsList{
+    margin-top:18px;
+}
+
+.student-card{
+    background:#f8fbff;
+    border:1px solid #dceaff;
+    border-left:5px solid #007bff;
+    padding:18px;
+    border-radius:13px;
+    margin-top:12px;
+    transition:.25s;
+}
+
+.student-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,123,255,.08);
+}
+
+.student-card h3{
+    color:#0056b3;
+    margin-bottom:8px;
+}
+
+.student-card p{
+    color:#555;
+    margin:6px 0;
+    line-height:1.5;
+}
+
+.student-card small{
+    color:#777;
+    display:block;
+    margin-top:8px;
+    word-break:break-all;
+}
+
+.student-badge{
+    display:inline-block;
+    background:#e7f1ff;
+    color:#0056b3;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+/* =========================================================
    REPORTS
    ========================================================= */
 
@@ -556,6 +634,14 @@ footer{
         width:100%;
     }
 
+    .student-tools{
+        flex-direction:column;
+    }
+
+    .student-search{
+        width:100%;
+    }
+
     .report-actions{
         flex-direction:column;
     }
@@ -590,6 +676,10 @@ footer{
 
 <div class="container">
 
+<!-- =========================================================
+     ACCESS DENIED
+     ========================================================= -->
+
 <div id="accessDenied">
 
     <h2>🔒 Admin Access</h2>
@@ -604,7 +694,15 @@ footer{
 
 </div>
 
+<!-- =========================================================
+     DASHBOARD
+     ========================================================= -->
+
 <div id="dashboard">
+
+<!-- =========================================================
+     STATISTICS
+     ========================================================= -->
 
 <div class="grid">
 
@@ -658,16 +756,24 @@ footer{
 
 </div>
 
+<!-- =========================================================
+     WELCOME
+     ========================================================= -->
+
 <div class="card">
 
     <h2>👋 Welcome, Administrator</h2>
 
     <p class="card-description">
         From this dashboard you can manage Sociology Connect
-        news, events, community posts and future platform tools.
+        news, events, community posts and platform tools.
     </p>
 
 </div>
+
+<!-- =========================================================
+     ADMIN CONTROL CENTER
+     ========================================================= -->
 
 <div class="card">
 
@@ -679,33 +785,61 @@ footer{
 
     <div class="control-grid">
 
-        <button class="control-btn" onclick="scrollToSection('studentsSection')">
+        <button
+            class="control-btn"
+            onclick="scrollToSection('studentsSection')">
+
             👥 Student Management
+
         </button>
 
-        <button class="control-btn" onclick="scrollToSection('postsSection')">
+        <button
+            class="control-btn"
+            onclick="scrollToSection('postsSection')">
+
             📝 Post Management
+
         </button>
 
-        <button class="control-btn" onclick="scrollToSection('reportsSection')">
+        <button
+            class="control-btn"
+            onclick="scrollToSection('reportsSection')">
+
             🚩 Reports
+
         </button>
 
-        <button class="control-btn" onclick="scrollToSection('notificationsSection')">
+        <button
+            class="control-btn"
+            onclick="scrollToSection('notificationsSection')">
+
             🔔 Notifications
+
         </button>
 
-        <button class="control-btn" onclick="scrollToSection('researchSection')">
+        <button
+            class="control-btn"
+            onclick="scrollToSection('researchSection')">
+
             🔬 Research Hub
+
         </button>
 
-        <button class="control-btn" onclick="scrollToSection('analyticsSection')">
+        <button
+            class="control-btn"
+            onclick="scrollToSection('analyticsSection')">
+
             📊 Analytics
+
         </button>
 
     </div>
 
 </div>
+
+<!-- =========================================================
+     QUICK ACTIONS
+     ========================================================= -->
 
 <div class="card">
 
@@ -725,17 +859,29 @@ footer{
             📅 Manage Events
         </button>
 
-        <button class="delete-btn" onclick="clearAllPosts()">
+        <button
+            class="delete-btn"
+            onclick="clearAllPosts()">
+
             🧹 Clear All Posts
+
         </button>
 
-        <button class="logout-btn" onclick="logoutAdmin()">
+        <button
+            class="logout-btn"
+            onclick="logoutAdmin()">
+
             🚪 Logout
+
         </button>
 
     </div>
 
 </div>
+
+<!-- =========================================================
+     ANALYTICS
+     ========================================================= -->
 
 <div class="card" id="analyticsSection">
 
@@ -748,45 +894,86 @@ footer{
     <div class="analytics-grid">
 
         <div class="analytics-box">
+
             <h3>👥 Community</h3>
+
             <p>
                 Students currently registered on Sociology Connect.
             </p>
+
         </div>
 
         <div class="analytics-box">
+
             <h3>📝 Engagement</h3>
+
             <p>
                 Posts, comments and likes created by the community.
             </p>
+
         </div>
 
         <div class="analytics-box">
+
             <h3>🔬 Academic Activity</h3>
+
             <p>
                 Research resources and academic activities available
                 through the platform.
             </p>
+
         </div>
 
     </div>
 
 </div>
 
+<!-- =========================================================
+     STUDENT MANAGEMENT
+     ========================================================= -->
+
 <div class="card" id="studentsSection">
 
     <h2>👥 Student Management</h2>
 
     <p class="card-description">
-        Student management tools will be connected to the registered
-        users collection in the next upgrade.
+        View and search students registered on Sociology Connect.
     </p>
 
-    <button onclick="showComingSoon('Student Management')">
-        👥 Open Student Management
-    </button>
+    <div
+        class="students-summary"
+        id="studentsSummary">
+
+        Loading registered students...
+
+    </div>
+
+    <div class="student-tools">
+
+        <input
+            id="studentSearch"
+            class="student-search"
+            type="text"
+            placeholder="🔍 Search by name, email or User ID..."
+        >
+
+        <button onclick="loadStudents()">
+            🔄 Refresh Students
+        </button>
+
+    </div>
+
+    <div id="studentsList">
+
+        <p>Loading students...</p>
+
+    </div>
 
 </div>
+
+<!-- =========================================================
+     POST MANAGEMENT
+     ========================================================= -->
 
 <div class="card" id="postsSection">
 
@@ -797,7 +984,9 @@ footer{
     </p>
 
     <button onclick="showComingSoon('Post Management')">
+
         📝 Manage Community Posts
+
     </button>
 
 </div>
@@ -833,6 +1022,10 @@ footer{
 
 </div>
 
+<!-- =========================================================
+     NOTIFICATIONS
+     ========================================================= -->
+
 <div class="card" id="notificationsSection">
 
     <h2>🔔 Notifications Center</h2>
@@ -843,10 +1036,16 @@ footer{
     </p>
 
     <button onclick="showComingSoon('Notifications Center')">
+
         🔔 Manage Notifications
+
     </button>
 
 </div>
+
+<!-- =========================================================
+     RESEARCH HUB
+     ========================================================= -->
 
 <div class="card" id="researchSection">
 
@@ -860,24 +1059,36 @@ footer{
     <div class="quick-actions">
 
         <button onclick="showComingSoon('Research Topics')">
+
             🧠 Research Topics
+
         </button>
 
         <button onclick="showComingSoon('Research Questions')">
+
             📋 Research Questions
+
         </button>
 
         <button onclick="showComingSoon('Research Resources')">
+
             📚 Resources
+
         </button>
 
         <button onclick="showComingSoon('APA 7 Materials')">
+
             📖 APA 7
+
         </button>
 
     </div>
 
 </div>
+
+<!-- =========================================================
+     NEWS
+     ========================================================= -->
 
 <div class="card" id="newsSection">
 
@@ -895,7 +1106,8 @@ footer{
     <input
         id="newsTitle"
         type="text"
-        placeholder="Enter news title">
+        placeholder="Enter news title"
+    >
 
     <label for="newsDescription">
         News Description
@@ -903,7 +1115,8 @@ footer{
 
     <textarea
         id="newsDescription"
-        placeholder="Write the news or announcement..."></textarea>
+        placeholder="Write the news or announcement..."
+    ></textarea>
 
     <button
         style="width:100%;padding:15px;font-size:17px;"
@@ -914,6 +1127,10 @@ footer{
     </button>
 
 </div>
+
+<!-- =========================================================
+     EVENTS
+     ========================================================= -->
 
 <div class="card" id="eventsSection">
 
@@ -931,7 +1148,8 @@ footer{
     <input
         id="eventTitle"
         type="text"
-        placeholder="Example: Research Proposal Deadline">
+        placeholder="Example: Research Proposal Deadline"
+    >
 
     <label for="eventDescription">
         Description
@@ -939,7 +1157,8 @@ footer{
 
     <textarea
         id="eventDescription"
-        placeholder="Write event information..."></textarea>
+        placeholder="Write event information..."
+    ></textarea>
 
     <label for="eventDate">
         Date
@@ -947,7 +1166,8 @@ footer{
 
     <input
         id="eventDate"
-        type="date">
+        type="date"
+    >
 
     <button
         style="width:100%;padding:15px;font-size:17px;"
@@ -958,6 +1178,10 @@ footer{
     </button>
 
 </div>
+
+<!-- =========================================================
+     PUBLISHED NEWS
+     ========================================================= -->
 
 <div class="card">
 
@@ -970,6 +1194,10 @@ footer{
     </div>
 
 </div>
+
+<!-- =========================================================
+     EVENTS LIST
+     ========================================================= -->
 
 <div class="card">
 
@@ -989,6 +1217,10 @@ footer{
 
 </div>
 
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
 <footer>
 
     © 2026 Sociology Connect
@@ -1002,6 +1234,7 @@ footer{
     Created by Horsa Gowe
 
 </footer>
+
 
 <script type="module">
 
@@ -1232,10 +1465,236 @@ onAuthStateChanged(
 
         await loadReports();
 
+        await loadStudents();
+
         await updateStats();
 
     }
 );
+
+
+/* =========================================================
+   STUDENT MANAGEMENT
+   ========================================================= */
+
+let allStudents = [];
+
+
+/* =========================================================
+   LOAD STUDENTS
+   ========================================================= */
+
+async function loadStudents(){
+
+    const list =
+        document.getElementById("studentsList");
+
+    const summary =
+        document.getElementById("studentsSummary");
+
+
+    list.innerHTML =
+        "<p>Loading students...</p>";
+
+    summary.textContent =
+        "Loading registered students...";
+
+
+    try{
+
+        const usersSnapshot =
+            await getDocs(
+                collection(db,"users")
+            );
+
+
+        allStudents =
+            usersSnapshot.docs.map(
+                (item)=>({
+
+                    id:item.id,
+                    ...item.data()
+
+                })
+            );
+
+
+        renderStudents(allStudents);
+
+
+    }catch(error){
+
+        console.error(
+            "Students Error:",
+            error
+        );
+
+        summary.textContent =
+            "❌ Could not load students.";
+
+        list.innerHTML =
+            "<p>❌ Could not load students. Check Firestore permissions.</p>";
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER STUDENTS
+   ========================================================= */
+
+function renderStudents(students){
+
+    const list =
+        document.getElementById("studentsList");
+
+    const summary =
+        document.getElementById("studentsSummary");
+
+
+    summary.textContent =
+        `👥 ${students.length} registered student${students.length === 1 ? "" : "s"}`;
+
+
+    list.innerHTML = "";
+
+
+    if(students.length === 0){
+
+        list.innerHTML =
+            "<p>👤 No students found.</p>";
+
+        return;
+
+    }
+
+
+    students.forEach(
+        (student)=>{
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "student-card";
+
+
+            const name =
+                student.name ||
+                student.displayName ||
+                "Unnamed Student";
+
+
+            const email =
+                student.email ||
+                "Email not available";
+
+
+            div.innerHTML = `
+
+                <h3>
+                    👤 ${escapeHTML(name)}
+                </h3>
+
+                <p>
+                    <strong>📧 Email:</strong>
+                    ${escapeHTML(email)}
+                </p>
+
+                <p>
+                    <strong>🆔 User ID:</strong>
+                    ${escapeHTML(student.id)}
+                </p>
+
+                <span class="student-badge">
+                    🎓 Registered Student
+                </span>
+
+                <small>
+                    Account ID:
+                    ${escapeHTML(student.id)}
+                </small>
+
+            `;
+
+
+            list.appendChild(div);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   STUDENT SEARCH
+   ========================================================= */
+
+document
+    .getElementById("studentSearch")
+    .addEventListener(
+        "input",
+        function(){
+
+            const search =
+                this.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if(!search){
+
+                renderStudents(
+                    allStudents
+                );
+
+                return;
+
+            }
+
+
+            const filtered =
+                allStudents.filter(
+                    (student)=>{
+
+                        const name =
+                            String(
+                                student.name ||
+                                student.displayName ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const email =
+                            String(
+                                student.email ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const id =
+                            String(
+                                student.id ||
+                                ""
+                            ).toLowerCase();
+
+
+                        return (
+                            name.includes(search) ||
+                            email.includes(search) ||
+                            id.includes(search)
+                        );
+
+                    }
+                );
+
+
+            renderStudents(filtered);
+
+        }
+    );
 
 
 /* =========================================================
@@ -1953,9 +2412,13 @@ async function loadReports(){
 
 
                 if(statusValue === "pending"){
+
                     pendingCount++;
+
                 }else{
+
                     reviewedCount++;
+
                 }
 
 
@@ -1993,27 +2456,42 @@ async function loadReports(){
 
                     <p>
                         <strong>Reason:</strong>
-                        ${escapeHTML(data.reason || "No reason provided")}
+                        ${escapeHTML(
+                            data.reason ||
+                            "No reason provided"
+                        )}
                     </p>
 
                     <p>
                         <strong>Reported User ID:</strong>
-                        ${escapeHTML(data.reportedUserId || "Unknown")}
+                        ${escapeHTML(
+                            data.reportedUserId ||
+                            "Unknown"
+                        )}
                     </p>
 
                     <p>
                         <strong>Reporter:</strong>
-                        ${escapeHTML(data.reporterName || "Unknown")}
+                        ${escapeHTML(
+                            data.reporterName ||
+                            "Unknown"
+                        )}
                     </p>
 
                     <p>
                         <strong>Reporter Email:</strong>
-                        ${escapeHTML(data.reporterEmail || "Not available")}
+                        ${escapeHTML(
+                            data.reporterEmail ||
+                            "Not available"
+                        )}
                     </p>
 
                     <p>
                         <strong>Post:</strong>
-                        ${escapeHTML(data.postText || "Post text unavailable")}
+                        ${escapeHTML(
+                            data.postText ||
+                            "Post text unavailable"
+                        )}
                     </p>
 
                     <small>
@@ -2021,8 +2499,11 @@ async function loadReports(){
                         ${escapeHTML(item.id)}
                     </small>
 
-                    <span class="report-status ${statusClass}">
+                    <span
+                        class="report-status ${statusClass}">
+
                         ${statusText}
+
                     </span>
 
                     <div class="report-actions">
@@ -2098,10 +2579,14 @@ async(id)=>{
             doc(db,"reports",id),
             {
                 status:"reviewed",
+
                 reviewedAt:
                     serverTimestamp(),
+
                 reviewedBy:
-                    auth.currentUser?.email || ADMIN_EMAIL
+                    auth.currentUser?.email ||
+                    ADMIN_EMAIL
+
             },
             {
                 merge:true
@@ -2306,6 +2791,8 @@ async()=>{
     await loadEvents();
 
     await loadReports();
+
+    await loadStudents();
 
     await updateStats();
 

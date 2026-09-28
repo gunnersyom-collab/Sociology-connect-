@@ -1,7 +1,7 @@
 // =====================================================
 // SOCIOLOGY CONNECT
 // SERVER.JS
-// AI MARI — GEMINI
+// AI MARI — GROQ
 // =====================================================
 
 const express = require("express");
@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 
 
 // =====================================================
-// AI MARI — GEMINI API
+// AI MARI — GROQ API
 // =====================================================
 
 app.post("/api/chat", async (req, res) => {
@@ -52,17 +52,17 @@ app.post("/api/chat", async (req, res) => {
 
 
     // =================================================
-    // CHECK GEMINI API KEY
+    // CHECK GROQ API KEY
     // =================================================
 
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
 
       console.error(
-        "GEMINI_API_KEY is missing"
+        "GROQ_API_KEY is missing"
       );
 
       return res.status(500).json({
-        error: "Gemini API key is not configured"
+        error: "Groq API key is not configured"
       });
 
     }
@@ -76,54 +76,51 @@ app.post("/api/chat", async (req, res) => {
 
     const timeout = setTimeout(() => {
       controller.abort();
-    }, 15000);
+    }, 30000);
 
 
     // =================================================
-    // SEND REQUEST TO GEMINI
+    // SEND REQUEST TO GROQ
     // =================================================
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+      "https://api.groq.com/openai/v1/chat/completions",
       {
 
         method: "POST",
 
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY
+          "Authorization":
+            `Bearer ${process.env.GROQ_API_KEY}`
         },
 
         signal: controller.signal,
 
         body: JSON.stringify({
 
-          contents: [
+          model: "openai/gpt-oss-20b",
+
+          messages: [
+
+            {
+              role: "system",
+
+              content:
+                "You are AI Mari, an academic assistant for Sociology and Social Work students at Arsi University. Answer clearly in Afaan Oromoo, Amharic, or English depending on the user's language. Help with research, sociology, social work, assignments, and academic questions."
+            },
 
             {
               role: "user",
 
-              parts: [
-
-                {
-                  text: message
-                }
-
-              ]
-
+              content: message
             }
 
           ],
 
-          generationConfig: {
+          temperature: 0.7,
 
-            thinkingConfig: {
-              thinkingLevel: "low"
-            },
-
-            maxOutputTokens: 800
-
-          }
+          max_tokens: 800
 
         })
 
@@ -139,20 +136,20 @@ app.post("/api/chat", async (req, res) => {
 
 
     // =================================================
-    // READ GEMINI RESPONSE
+    // READ GROQ RESPONSE
     // =================================================
 
     const data = await response.json();
 
 
     // =================================================
-    // GEMINI ERROR
+    // GROQ ERROR
     // =================================================
 
     if (!response.ok) {
 
       console.error(
-        "Gemini API Error:",
+        "Groq API Error:",
         data
       );
 
@@ -160,7 +157,7 @@ app.post("/api/chat", async (req, res) => {
 
         error:
           data?.error?.message ||
-          "Gemini API request failed"
+          "Groq API request failed"
 
       });
 
@@ -172,13 +169,13 @@ app.post("/api/chat", async (req, res) => {
     // =================================================
 
     const reply =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      data?.choices?.[0]?.message?.content;
 
 
     if (!reply) {
 
       console.error(
-        "Gemini returned no text:",
+        "Groq returned no text:",
         JSON.stringify(data)
       );
 
@@ -212,7 +209,7 @@ app.post("/api/chat", async (req, res) => {
     if (error.name === "AbortError") {
 
       console.error(
-        "Gemini request timed out."
+        "Groq request timed out."
       );
 
       return res.status(504).json({
@@ -265,3 +262,10 @@ app.listen(
 
   }
 );
+
+Amma code kana qofa paste godhi → Commit changes godhi.
+Ergasii Render ofumaan deploy jalqaba.
+
+⚠️ "GROQ_API_KEY" Render Environment keessatti galchite sun akkuma jirutti haa turu; API key mataa isaa GitHub keessa hin galchin.
+
+Erga Commit changes gootee naaf “godheera” jedhii himi.

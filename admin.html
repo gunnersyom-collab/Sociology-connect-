@@ -403,6 +403,74 @@ button:hover{
     line-height:1.6;
 }
 
+#reportsList{
+    margin-top:18px;
+}
+
+.report-card{
+    background:#fff8f8;
+    border:1px solid #ffd6d6;
+    border-left:5px solid #dc3545;
+    padding:18px;
+    border-radius:13px;
+    margin-top:14px;
+}
+
+.report-card h3{
+    color:#dc3545;
+    margin-bottom:10px;
+}
+
+.report-card p{
+    color:#555;
+    line-height:1.6;
+    margin:6px 0;
+}
+
+.report-card small{
+    color:#777;
+    display:block;
+    margin-top:8px;
+}
+
+.report-status{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.status-pending{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.status-reviewed{
+    background:#d1e7dd;
+    color:#0f5132;
+}
+
+.report-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.report-actions button{
+    margin-top:0;
+}
+
+.review-btn{
+    background:#198754;
+}
+
+.review-btn:hover{
+    background:#146c43;
+}
+
 /* =========================================================
    STATUS
    ========================================================= */
@@ -488,6 +556,14 @@ footer{
         width:100%;
     }
 
+    .report-actions{
+        flex-direction:column;
+    }
+
+    .report-actions button{
+        width:100%;
+    }
+
 }
 
 </style>
@@ -496,10 +572,6 @@ footer{
 
 <body>
 
-<!-- =========================================================
-     HEADER
-     ========================================================= -->
-
 <header>
 
     <h1>🛠️ Admin Dashboard</h1>
@@ -507,10 +579,6 @@ footer{
     <p>Sociology Connect – Arsi University</p>
 
 </header>
-
-<!-- =========================================================
-     NAVIGATION
-     ========================================================= -->
 
 <nav>
 
@@ -521,10 +589,6 @@ footer{
 </nav>
 
 <div class="container">
-
-<!-- =========================================================
-     ACCESS DENIED
-     ========================================================= -->
 
 <div id="accessDenied">
 
@@ -540,15 +604,7 @@ footer{
 
 </div>
 
-<!-- =========================================================
-     DASHBOARD
-     ========================================================= -->
-
 <div id="dashboard">
-
-<!-- =========================================================
-     STATISTICS
-     ========================================================= -->
 
 <div class="grid">
 
@@ -602,10 +658,6 @@ footer{
 
 </div>
 
-<!-- =========================================================
-     WELCOME
-     ========================================================= -->
-
 <div class="card">
 
     <h2>👋 Welcome, Administrator</h2>
@@ -616,10 +668,6 @@ footer{
     </p>
 
 </div>
-
-<!-- =========================================================
-     ADMIN CONTROL CENTER
-     ========================================================= -->
 
 <div class="card">
 
@@ -659,10 +707,6 @@ footer{
 
 </div>
 
-<!-- =========================================================
-     QUICK ACTIONS
-     ========================================================= -->
-
 <div class="card">
 
     <h2>⚡ Quick Actions</h2>
@@ -692,10 +736,6 @@ footer{
     </div>
 
 </div>
-
-<!-- =========================================================
-     ANALYTICS
-     ========================================================= -->
 
 <div class="card" id="analyticsSection">
 
@@ -733,10 +773,6 @@ footer{
 
 </div>
 
-<!-- =========================================================
-     STUDENT MANAGEMENT
-     ========================================================= -->
-
 <div class="card" id="studentsSection">
 
     <h2>👥 Student Management</h2>
@@ -751,10 +787,6 @@ footer{
     </button>
 
 </div>
-
-<!-- =========================================================
-     POST MANAGEMENT
-     ========================================================= -->
 
 <div class="card" id="postsSection">
 
@@ -779,30 +811,27 @@ footer{
     <h2>🚩 Reports & Moderation</h2>
 
     <p class="card-description">
-        Report management will allow administrators to review
-        reported posts and comments.
+        Review reports submitted by Sociology Connect students
+        and manage reported community content.
     </p>
 
     <div class="report-box">
 
         <h3>🚩 Report Center</h3>
 
-        <p>
-            No report management records are connected yet.
-            This section is ready for the Firebase moderation system.
+        <p id="reportSummary">
+            Loading reports...
         </p>
 
     </div>
 
-    <button onclick="showComingSoon('Reports & Moderation')">
-        🚩 Open Reports
-    </button>
+    <div id="reportsList">
+
+        <p>Loading reports...</p>
+
+    </div>
 
 </div>
-
-<!-- =========================================================
-     NOTIFICATIONS
-     ========================================================= -->
 
 <div class="card" id="notificationsSection">
 
@@ -818,10 +847,6 @@ footer{
     </button>
 
 </div>
-
-<!-- =========================================================
-     RESEARCH HUB
-     ========================================================= -->
 
 <div class="card" id="researchSection">
 
@@ -853,10 +878,6 @@ footer{
     </div>
 
 </div>
-
-<!-- =========================================================
-     ADD NEWS
-     ========================================================= -->
 
 <div class="card" id="newsSection">
 
@@ -893,10 +914,6 @@ footer{
     </button>
 
 </div>
-
-<!-- =========================================================
-     ADD EVENT
-     ========================================================= -->
 
 <div class="card" id="eventsSection">
 
@@ -942,10 +959,6 @@ footer{
 
 </div>
 
-<!-- =========================================================
-     PUBLISHED NEWS
-     ========================================================= -->
-
 <div class="card">
 
     <h2>📰 Published News</h2>
@@ -957,10 +970,6 @@ footer{
     </div>
 
 </div>
-
-<!-- =========================================================
-     EVENTS LIST
-     ========================================================= -->
 
 <div class="card">
 
@@ -980,10 +989,6 @@ footer{
 
 </div>
 
-<!-- =========================================================
-     FOOTER
-     ========================================================= -->
-
 <footer>
 
     © 2026 Sociology Connect
@@ -997,10 +1002,6 @@ footer{
     Created by Horsa Gowe
 
 </footer>
-
-<!-- =========================================================
-     FIREBASE ADMIN SCRIPT
-     ========================================================= -->
 
 <script type="module">
 
@@ -1043,7 +1044,6 @@ const accessDenied =
 
 const status =
     document.getElementById("status");
-
 
 const studentsCount =
     document.getElementById("studentsCount");
@@ -1114,6 +1114,11 @@ async function updateStats(){
                 collection(db,"events")
             );
 
+        const reportsSnap =
+            await getDocs(
+                collection(db,"reports")
+            );
+
 
         let comments = 0;
 
@@ -1170,17 +1175,11 @@ async function updateStats(){
         eventsCount.textContent =
             eventsSnap.size;
 
-
-        /*
-         * Research and Reports are not connected
-         * to Firebase yet.
-         */
-
         researchCount.textContent =
             "0";
 
         reportsCount.textContent =
-            "0";
+            reportsSnap.size;
 
 
     }catch(error){
@@ -1230,6 +1229,8 @@ onAuthStateChanged(
         await loadNews();
 
         await loadEvents();
+
+        await loadReports();
 
         await updateStats();
 
@@ -1554,13 +1555,11 @@ async()=>{
             .value
             .trim();
 
-
     const description =
         document
             .getElementById("eventDescription")
             .value
             .trim();
-
 
     const date =
         document
@@ -1588,16 +1587,11 @@ async()=>{
         await addDoc(
             collection(db,"events"),
             {
-
                 title,
-
                 description,
-
                 date,
-
                 createdAt:
                     serverTimestamp()
-
             }
         );
 
@@ -1606,11 +1600,9 @@ async()=>{
             .getElementById("eventTitle")
             .value = "";
 
-
         document
             .getElementById("eventDescription")
             .value = "";
-
 
         document
             .getElementById("eventDate")
@@ -1856,7 +1848,6 @@ async(id)=>{
         await setDoc(
             doc(db,"events",id),
             {
-
                 title:
                     title.trim(),
 
@@ -1888,6 +1879,297 @@ async(id)=>{
 
         status.textContent =
             "❌ Could not update event.";
+
+    }
+
+};
+
+
+/* =========================================================
+   LOAD REPORTS
+   ========================================================= */
+
+async function loadReports(){
+
+    const list =
+        document.getElementById("reportsList");
+
+    const summary =
+        document.getElementById("reportSummary");
+
+
+    list.innerHTML =
+        "<p>Loading reports...</p>";
+
+    summary.textContent =
+        "Loading reports...";
+
+
+    try{
+
+        const reportsQuery =
+            query(
+                collection(db,"reports"),
+                orderBy(
+                    "createdAt",
+                    "desc"
+                )
+            );
+
+
+        const snapshot =
+            await getDocs(reportsQuery);
+
+
+        list.innerHTML = "";
+
+
+        if(snapshot.empty){
+
+            summary.textContent =
+                "No reports have been submitted.";
+
+            list.innerHTML =
+                "<p>✅ No reports found.</p>";
+
+            return;
+
+        }
+
+
+        let pendingCount = 0;
+
+        let reviewedCount = 0;
+
+
+        snapshot.forEach(
+            (item)=>{
+
+                const data =
+                    item.data();
+
+                const statusValue =
+                    data.status || "pending";
+
+
+                if(statusValue === "pending"){
+                    pendingCount++;
+                }else{
+                    reviewedCount++;
+                }
+
+
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "report-card";
+
+
+                const safeStatus =
+                    statusValue === "reviewed"
+                        ? "reviewed"
+                        : "pending";
+
+
+                const statusClass =
+                    safeStatus === "reviewed"
+                        ? "status-reviewed"
+                        : "status-pending";
+
+
+                const statusText =
+                    safeStatus === "reviewed"
+                        ? "✅ Reviewed"
+                        : "⏳ Pending";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        🚩 Reported Post
+                    </h3>
+
+                    <p>
+                        <strong>Reason:</strong>
+                        ${escapeHTML(data.reason || "No reason provided")}
+                    </p>
+
+                    <p>
+                        <strong>Reported User ID:</strong>
+                        ${escapeHTML(data.reportedUserId || "Unknown")}
+                    </p>
+
+                    <p>
+                        <strong>Reporter:</strong>
+                        ${escapeHTML(data.reporterName || "Unknown")}
+                    </p>
+
+                    <p>
+                        <strong>Reporter Email:</strong>
+                        ${escapeHTML(data.reporterEmail || "Not available")}
+                    </p>
+
+                    <p>
+                        <strong>Post:</strong>
+                        ${escapeHTML(data.postText || "Post text unavailable")}
+                    </p>
+
+                    <small>
+                        Report ID:
+                        ${escapeHTML(item.id)}
+                    </small>
+
+                    <span class="report-status ${statusClass}">
+                        ${statusText}
+                    </span>
+
+                    <div class="report-actions">
+
+                        ${
+                            safeStatus === "pending"
+                            ? `
+                                <button
+                                    class="review-btn"
+                                    onclick="markReportReviewed('${item.id}')">
+
+                                    ✅ Mark Reviewed
+
+                                </button>
+                              `
+                            : ""
+                        }
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteReport('${item.id}')">
+
+                            🗑️ Delete Report
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+        summary.textContent =
+            `🚩 ${snapshot.size} total reports • ` +
+            `⏳ ${pendingCount} pending • ` +
+            `✅ ${reviewedCount} reviewed`;
+
+
+    }catch(error){
+
+        console.error(
+            "Reports Error:",
+            error
+        );
+
+
+        summary.textContent =
+            "❌ Could not load reports.";
+
+        list.innerHTML =
+            "<p>❌ Could not load reports. Check Firestore Rules.</p>";
+
+    }
+
+}
+
+
+/* =========================================================
+   MARK REPORT REVIEWED
+   ========================================================= */
+
+window.markReportReviewed =
+async(id)=>{
+
+    try{
+
+        await setDoc(
+            doc(db,"reports",id),
+            {
+                status:"reviewed",
+                reviewedAt:
+                    serverTimestamp(),
+                reviewedBy:
+                    auth.currentUser?.email || ADMIN_EMAIL
+            },
+            {
+                merge:true
+            }
+        );
+
+
+        status.textContent =
+            "✅ Report marked as reviewed.";
+
+
+        await loadReports();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not update report.";
+
+    }
+
+};
+
+
+/* =========================================================
+   DELETE REPORT
+   ========================================================= */
+
+window.deleteReport =
+async(id)=>{
+
+    if(
+        !confirm(
+            "Are you sure you want to delete this report?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+            doc(db,"reports",id)
+        );
+
+
+        status.textContent =
+            "✅ Report deleted.";
+
+
+        await loadReports();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Could not delete report.";
 
     }
 
@@ -1938,8 +2220,6 @@ async()=>{
                 post.id;
 
 
-            /* DELETE COMMENTS */
-
             const comments =
                 await getDocs(
                     collection(
@@ -1962,8 +2242,6 @@ async()=>{
             }
 
 
-            /* DELETE LIKES */
-
             const likes =
                 await getDocs(
                     collection(
@@ -1985,8 +2263,6 @@ async()=>{
 
             }
 
-
-            /* DELETE POST */
 
             await deleteDoc(
                 post.ref
@@ -2029,6 +2305,8 @@ async()=>{
 
     await loadEvents();
 
+    await loadReports();
+
     await updateStats();
 
 
@@ -2059,7 +2337,6 @@ async()=>{
     try{
 
         await signOut(auth);
-
 
         window.location.href =
             "login.html";

@@ -1,12 +1,9 @@
 /* =========================================================
    SOCIOLOGY CONNECT 2.0
    SCRIPT.JS
-   PART 1
-   IMPORTS
-   ELEMENTS
-   GLOBAL STATE
-   HELPERS
-   AUTH
+   FULL VERSION
+   POSTS + LIKES + COMMENTS + SHARE + REPORT
+   NEWS + EVENTS + AI MARI + DARK MODE + SEARCH
 ========================================================= */
 
 import { auth, db } from "./firebase.js";
@@ -30,7 +27,10 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-/* ELEMENTS */
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const chatHistory = document.getElementById("chat-history");
 const userInput = document.getElementById("userInput");
@@ -46,60 +46,101 @@ const logoutBtn = document.getElementById("logoutBtn");
 const loginLink = document.getElementById("loginLink");
 const userInfo = document.getElementById("userInfo");
 
-/* GLOBAL STATE */
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
 
 let currentUser = null;
 let authReady = false;
 
 const ADMIN_EMAIL = "yom@gmail.com";
 
-/* ADMIN CHECK */
+
+/* =========================================================
+   ADMIN CHECK
+========================================================= */
 
 function isAdmin() {
+
   return currentUser &&
     currentUser.email &&
-    currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    currentUser.email.toLowerCase() ===
+    ADMIN_EMAIL.toLowerCase();
+
 }
 
-/* ESCAPE HTML */
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHTML(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
-/* FORMAT TIME */
+
+/* =========================================================
+   FORMAT TIME
+========================================================= */
 
 function formatPostTime(timestamp) {
-  if (!timestamp) return "Just now";
+
+  if (!timestamp) {
+    return "Just now";
+  }
 
   try {
+
     if (typeof timestamp.toDate === "function") {
-      return timestamp.toDate().toLocaleString("en-US", {
-        dateStyle: "medium",
-        timeStyle: "short"
-      });
+
+      return timestamp.toDate().toLocaleString(
+        "en-US",
+        {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }
+      );
+
     }
+
   } catch (e) {
+
     console.warn(e);
+
   }
 
   return "Just now";
+
 }
 
-/* GET USER NAME */
+
+/* =========================================================
+   GET USER NAME
+========================================================= */
 
 async function getUserName(user) {
-  if (!user) return "Student";
+
+  if (!user) {
+    return "Student";
+  }
 
   try {
-    const snap = await getDoc(doc(db, "users", user.uid));
+
+    const snap =
+      await getDoc(
+        doc(db, "users", user.uid)
+      );
 
     if (snap.exists()) {
+
       const data = snap.data();
 
       return data.fullName ||
@@ -107,65 +148,97 @@ async function getUserName(user) {
         user.displayName ||
         user.email?.split("@")[0] ||
         "Student";
+
     }
 
   } catch (e) {
+
     console.warn(e);
+
   }
 
   return user.displayName ||
     user.email?.split("@")[0] ||
     "Student";
+
 }
 
-/* AUTH STATE */
 
-onAuthStateChanged(auth, async (user) => {
+/* =========================================================
+   AUTH STATE
+========================================================= */
 
-  currentUser = user;
-  authReady = true;
+onAuthStateChanged(
+  auth,
+  async (user) => {
 
-  if (user) {
+    currentUser = user;
+    authReady = true;
 
-    const name = await getUserName(user);
+    if (user) {
 
-    if (userInfo) {
-      userInfo.textContent = "👤 " + name;
-    }
+      const name =
+        await getUserName(user);
 
-    if (loginLink) {
-      loginLink.style.display = "none";
-    }
+      if (userInfo) {
 
-    if (logoutBtn) {
-      logoutBtn.style.display = "inline-block";
-    }
+        userInfo.textContent =
+          "👤 " + name;
 
-    if (document.readyState !== "loading") {
-      createAdminControls();
-    }
+      }
 
-  } else {
+      if (loginLink) {
 
-    if (userInfo) {
-      userInfo.textContent = "";
-    }
+        loginLink.style.display =
+          "none";
 
-    if (loginLink) {
-      loginLink.style.display = "inline-block";
-    }
+      }
 
-    if (logoutBtn) {
-      logoutBtn.style.display = "none";
-    }
+      if (logoutBtn) {
 
-    if (typeof removeAdminControls === "function") {
+        logoutBtn.style.display =
+          "inline-block";
+
+      }
+
+      if (
+        document.readyState !==
+        "loading"
+      ) {
+
+        createAdminControls();
+
+      }
+
+    } else {
+
+      if (userInfo) {
+
+        userInfo.textContent =
+          "";
+
+      }
+
+      if (loginLink) {
+
+        loginLink.style.display =
+          "inline-block";
+
+      }
+
+      if (logoutBtn) {
+
+        logoutBtn.style.display =
+          "none";
+
+      }
+
       removeAdminControls();
+
     }
 
   }
-
-});
+);
 
 
 /* =========================================================
@@ -174,106 +247,177 @@ onAuthStateChanged(auth, async (user) => {
    LIKE
    COMMENT
    SHARE
+   REPORT
    DELETE
    ADMIN
 ========================================================= */
 
-/* CREATE POST */
+
+/* =========================================================
+   CREATE POST
+========================================================= */
 
 async function createPost() {
 
-  if (!postInput) return;
+  if (!postInput) {
+    return;
+  }
 
   if (!authReady) {
-    return alert("Please wait...");
+
+    return alert(
+      "Please wait..."
+    );
+
   }
 
   if (!currentUser) {
-    return alert("Please login first.");
+
+    return alert(
+      "Please login first."
+    );
+
   }
 
-  const text = postInput.value.trim();
+  const text =
+    postInput.value.trim();
 
   if (!text) {
-    return alert("Write something first.");
+
+    return alert(
+      "Write something first."
+    );
+
   }
 
   postBtn.disabled = true;
-  postBtn.textContent = "Posting...";
+  postBtn.textContent =
+    "Posting...";
 
   try {
 
-    const name = await getUserName(currentUser);
+    const name =
+      await getUserName(
+        currentUser
+      );
 
-    await addDoc(collection(db, "posts"), {
-      text,
-      userId: currentUser.uid,
-      name,
-      email: currentUser.email || "",
-      createdAt: serverTimestamp()
-    });
+    await addDoc(
+      collection(db, "posts"),
+      {
+        text,
+        userId:
+          currentUser.uid,
+        name,
+        email:
+          currentUser.email || "",
+        createdAt:
+          serverTimestamp()
+      }
+    );
 
     postInput.value = "";
 
   } catch (e) {
 
     alert(e.message);
+
     console.error(e);
 
   } finally {
 
     postBtn.disabled = false;
-    postBtn.textContent = "📤 Post";
+
+    postBtn.textContent =
+      "📤 Post";
 
   }
 
 }
 
-postBtn?.addEventListener("click", createPost);
 
-postInput?.addEventListener("keydown", (e) => {
-
-  if (e.key === "Enter" && !e.shiftKey) {
-
-    e.preventDefault();
-
-    createPost();
-
-  }
-
-});
+postBtn?.addEventListener(
+  "click",
+  createPost
+);
 
 
-/* LIKE */
+postInput?.addEventListener(
+  "keydown",
+  (e) => {
 
-async function toggleLike(postId, likeBtn) {
+    if (
+      e.key === "Enter" &&
+      !e.shiftKey
+    ) {
 
-  if (!currentUser) {
-    alert("Please login first.");
-    return;
-  }
+      e.preventDefault();
 
-  const likeRef =
-    doc(db, "posts", postId, "likes", currentUser.uid);
-
-  try {
-
-    const snap = await getDoc(likeRef);
-
-    if (snap.exists()) {
-
-      await deleteDoc(likeRef);
-
-    } else {
-
-      await setDoc(likeRef, {
-        userId: currentUser.uid,
-        createdAt: serverTimestamp()
-      });
+      createPost();
 
     }
 
-    await updateLikeButton(postId, likeBtn);
+  }
+);
+
+
+/* =========================================================
+   LIKE
+========================================================= */
+
+async function toggleLike(
+  postId,
+  likeBtn
+) {
+
+  if (!currentUser) {
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+  const likeRef =
+    doc(
+      db,
+      "posts",
+      postId,
+      "likes",
+      currentUser.uid
+    );
+
+  try {
+
+    const snap =
+      await getDoc(likeRef);
+
+    if (snap.exists()) {
+
+      await deleteDoc(
+        likeRef
+      );
+
+    } else {
+
+      await setDoc(
+        likeRef,
+        {
+          userId:
+            currentUser.uid,
+
+          createdAt:
+            serverTimestamp()
+        }
+      );
+
+    }
+
+    await updateLikeButton(
+      postId,
+      likeBtn
+    );
 
   } catch (e) {
 
@@ -283,23 +427,37 @@ async function toggleLike(postId, likeBtn) {
 
 }
 
-async function updateLikeButton(postId, likeBtn) {
 
-  if (!likeBtn) return;
+async function updateLikeButton(
+  postId,
+  likeBtn
+) {
+
+  if (!likeBtn) {
+    return;
+  }
 
   try {
 
     const likes =
       await getDocs(
-        collection(db, "posts", postId, "likes")
+        collection(
+          db,
+          "posts",
+          postId,
+          "likes"
+        )
       );
 
-    const count = likes.size;
+    const count =
+      likes.size;
 
     const liked =
       currentUser &&
       likes.docs.some(
-        item => item.id === currentUser.uid
+        item =>
+          item.id ===
+          currentUser.uid
       );
 
     likeBtn.textContent =
@@ -316,27 +474,44 @@ async function updateLikeButton(postId, likeBtn) {
 }
 
 
-/* COMMENT */
+/* =========================================================
+   COMMENT
+========================================================= */
 
-async function commentPost(postId) {
+async function commentPost(
+  postId
+) {
 
   if (!currentUser) {
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
 
     return false;
+
   }
 
-  const text = prompt("Write your comment:");
+  const text =
+    prompt(
+      "Write your comment:"
+    );
 
-  if (!text || !text.trim()) {
+  if (
+    !text ||
+    !text.trim()
+  ) {
+
     return false;
+
   }
 
   try {
 
     const name =
-      await getUserName(currentUser);
+      await getUserName(
+        currentUser
+      );
 
     await addDoc(
       collection(
@@ -346,10 +521,16 @@ async function commentPost(postId) {
         "comments"
       ),
       {
-        text: text.trim(),
-        userId: currentUser.uid,
+        text:
+          text.trim(),
+
+        userId:
+          currentUser.uid,
+
         name,
-        createdAt: serverTimestamp()
+
+        createdAt:
+          serverTimestamp()
       }
     );
 
@@ -358,6 +539,7 @@ async function commentPost(postId) {
   } catch (e) {
 
     alert(e.message);
+
     console.error(e);
 
     return false;
@@ -366,6 +548,11 @@ async function commentPost(postId) {
 
 }
 
+
+/* =========================================================
+   LOAD COMMENTS
+========================================================= */
+
 async function loadComments(
   postId,
   commentBtn,
@@ -373,7 +560,9 @@ async function loadComments(
   show = false
 ) {
 
-  if (!card) return;
+  if (!card) {
+    return;
+  }
 
   try {
 
@@ -395,56 +584,97 @@ async function loadComments(
     }
 
     card
-      .querySelector(".comments-box")
+      .querySelector(
+        ".comments-box"
+      )
       ?.remove();
 
-    if (!show || snap.empty) return;
+    if (
+      !show ||
+      snap.empty
+    ) {
+
+      return;
+
+    }
 
     const box =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    box.className = "comments-box";
+    box.className =
+      "comments-box";
 
-    box.style.marginTop = "12px";
-    box.style.padding = "10px";
-    box.style.borderTop = "1px solid #ddd";
+    box.style.marginTop =
+      "12px";
+
+    box.style.padding =
+      "10px";
+
+    box.style.borderTop =
+      "1px solid #ddd";
 
     [...snap.docs]
-      .sort((a, b) => {
+      .sort(
+        (a, b) => {
 
-        const x =
-          a.data().createdAt?.toMillis?.() || 0;
+          const x =
+            a.data()
+              .createdAt
+              ?.toMillis?.() || 0;
 
-        const y =
-          b.data().createdAt?.toMillis?.() || 0;
+          const y =
+            b.data()
+              .createdAt
+              ?.toMillis?.() || 0;
 
-        return x - y;
+          return x - y;
 
-      })
-      .forEach(item => {
+        }
+      )
+      .forEach(
+        item => {
 
-        const c = item.data();
+          const c =
+            item.data();
 
-        const div =
-          document.createElement("div");
+          const div =
+            document.createElement(
+              "div"
+            );
 
-        div.style.padding = "8px 0";
-        div.style.borderBottom =
-          "1px solid #eee";
+          div.style.padding =
+            "8px 0";
 
-        div.innerHTML = `
-          <strong>
-            ${escapeHTML(c.name || "Student")}
-          </strong>
-          <br>
-          ${escapeHTML(c.text || "")}
-        `;
+          div.style.borderBottom =
+            "1px solid #eee";
 
-        box.appendChild(div);
+          div.innerHTML = `
+            <strong>
+              ${escapeHTML(
+                c.name ||
+                "Student"
+              )}
+            </strong>
 
-      });
+            <br>
 
-    card.appendChild(box);
+            ${escapeHTML(
+              c.text || ""
+            )}
+          `;
+
+          box.appendChild(
+            div
+          );
+
+        }
+      );
+
+    card.appendChild(
+      box
+    );
 
   } catch (e) {
 
@@ -455,29 +685,48 @@ async function loadComments(
 }
 
 
-/* SHARE */
+/* =========================================================
+   SHARE
+========================================================= */
 
-async function sharePost(postId, text) {
+async function sharePost(
+  postId,
+  text
+) {
 
   const url =
-    window.location.href.split("#")[0] +
-    "#post-" + postId;
+    window.location.href
+      .split("#")[0] +
+    "#post-" +
+    postId;
 
   try {
 
-    if (navigator.share) {
+    if (
+      navigator.share
+    ) {
 
-      await navigator.share({
-        title: "Sociology Connect",
-        text,
-        url
-      });
+      await navigator.share(
+        {
+          title:
+            "Sociology Connect",
 
-    } else if (navigator.clipboard) {
+          text,
 
-      await navigator.clipboard.writeText(url);
+          url
+        }
+      );
 
-      alert("Post link copied.");
+    } else if (
+      navigator.clipboard
+    ) {
+
+      await navigator.clipboard
+        .writeText(url);
+
+      alert(
+        "Post link copied."
+      );
 
     }
 
@@ -490,17 +739,133 @@ async function sharePost(postId, text) {
 }
 
 
-/* DELETE */
+/* =========================================================
+   🚩 REPORT POST
+========================================================= */
 
-async function deletePost(postId, ownerId) {
+async function reportPost(
+  postId,
+  postText,
+  ownerId
+) {
 
   if (!currentUser) {
-    return alert("Login first.");
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+  const reason =
+    prompt(
+      "🚩 Why are you reporting this post?\n\n" +
+      "Examples:\n" +
+      "• Spam\n" +
+      "• Inappropriate content\n" +
+      "• Harassment\n" +
+      "• Academic misconduct\n" +
+      "• Other"
+    );
+
+  if (
+    !reason ||
+    !reason.trim()
+  ) {
+
+    return;
+
+  }
+
+  try {
+
+    const reporterName =
+      await getUserName(
+        currentUser
+      );
+
+    await addDoc(
+      collection(
+        db,
+        "reports"
+      ),
+      {
+        postId:
+          postId,
+
+        postText:
+          postText || "",
+
+        reportedUserId:
+          ownerId || "",
+
+        reporterId:
+          currentUser.uid,
+
+        reporterName:
+          reporterName,
+
+        reporterEmail:
+          currentUser.email || "",
+
+        reason:
+          reason.trim(),
+
+        status:
+          "pending",
+
+        createdAt:
+          serverTimestamp()
+      }
+    );
+
+    alert(
+      "✅ Report submitted successfully.\n\n" +
+      "Thank you for helping keep Sociology Connect safe."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "REPORT ERROR:",
+      error
+    );
+
+    alert(
+      "❌ Unable to submit report.\n\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DELETE POST
+========================================================= */
+
+async function deletePost(
+  postId,
+  ownerId
+) {
+
+  if (!currentUser) {
+
+    return alert(
+      "Login first."
+    );
+
   }
 
   if (
-    !(isAdmin() ||
-      currentUser.uid === ownerId)
+    !(
+      isAdmin() ||
+      currentUser.uid ===
+      ownerId
+    )
   ) {
 
     return alert(
@@ -509,7 +874,15 @@ async function deletePost(postId, ownerId) {
 
   }
 
-  if (!confirm("Delete this post?")) return;
+  if (
+    !confirm(
+      "Delete this post?"
+    )
+  ) {
+
+    return;
+
+  }
 
   try {
 
@@ -523,8 +896,15 @@ async function deletePost(postId, ownerId) {
         )
       );
 
-    for (const item of likes.docs) {
-      await deleteDoc(item.ref);
+    for (
+      const item of
+      likes.docs
+    ) {
+
+      await deleteDoc(
+        item.ref
+      );
+
     }
 
     const comments =
@@ -537,39 +917,72 @@ async function deletePost(postId, ownerId) {
         )
       );
 
-    for (const item of comments.docs) {
-      await deleteDoc(item.ref);
+    for (
+      const item of
+      comments.docs
+    ) {
+
+      await deleteDoc(
+        item.ref
+      );
+
     }
 
     await deleteDoc(
-      doc(db, "posts", postId)
+      doc(
+        db,
+        "posts",
+        postId
+      )
     );
 
   } catch (e) {
 
-    alert(e.message);
+    alert(
+      e.message
+    );
 
   }
 
 }
 
 
-/* CLEAR ALL POSTS */
+/* =========================================================
+   CLEAR ALL POSTS
+========================================================= */
 
 async function clearAllPosts() {
 
   if (!isAdmin()) {
-    return alert("Admin only.");
+
+    return alert(
+      "Admin only."
+    );
+
   }
 
-  if (!confirm("Delete ALL posts?")) return;
+  if (
+    !confirm(
+      "Delete ALL posts?"
+    )
+  ) {
+
+    return;
+
+  }
 
   const posts =
     await getDocs(
-      collection(db, "posts")
+      collection(
+        db,
+        "posts"
+      )
     );
 
-  for (const post of posts.docs) {
+  for (
+    const post of
+    posts.docs
+  ) {
 
     await deletePost(
       post.id,
@@ -578,38 +991,57 @@ async function clearAllPosts() {
 
   }
 
-  alert("All posts deleted.");
+  alert(
+    "All posts deleted."
+  );
 
 }
 
 
-/* ADMIN */
+/* =========================================================
+   ADMIN CONTROLS
+========================================================= */
 
 function createAdminControls() {
 
-  if (!isAdmin()) return;
+  if (!isAdmin()) {
+    return;
+  }
 
   if (
     document.getElementById(
       "adminControls"
     )
-  ) return;
+  ) {
+
+    return;
+
+  }
 
   const composer =
     document.querySelector(
       ".post-composer"
     );
 
-  if (!composer) return;
+  if (!composer) {
+    return;
+  }
 
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  div.id = "adminControls";
+  div.id =
+    "adminControls";
 
   div.innerHTML = `
     <hr>
-    <strong>👑 Admin Controls</strong>
+
+    <strong>
+      👑 Admin Controls
+    </strong>
+
     <br><br>
 
     <button
@@ -627,7 +1059,9 @@ function createAdminControls() {
     </button>
   `;
 
-  composer.appendChild(div);
+  composer.appendChild(
+    div
+  );
 
   document
     .getElementById(
@@ -639,6 +1073,7 @@ function createAdminControls() {
     );
 
 }
+
 
 function removeAdminControls() {
 
@@ -657,29 +1092,45 @@ function removeAdminControls() {
    TRENDING POSTS
 ========================================================= */
 
-/* LOAD POSTS */
+
+/* =========================================================
+   LOAD POSTS
+========================================================= */
 
 function loadPosts() {
 
-  if (!postsContainer) return;
+  if (!postsContainer) {
+    return;
+  }
 
   const postsQuery =
     query(
-      collection(db, "posts"),
-      orderBy("createdAt", "desc")
+      collection(
+        db,
+        "posts"
+      ),
+      orderBy(
+        "createdAt",
+        "desc"
+      )
     );
 
   onSnapshot(
     postsQuery,
+
     async (snapshot) => {
 
-      postsContainer.innerHTML = "";
+      postsContainer.innerHTML =
+        "";
 
-      if (snapshot.empty) {
+      if (
+        snapshot.empty
+      ) {
 
         postsContainer.innerHTML = `
           <div class="post-card">
-            No posts yet. Be the first student
+            No posts yet.
+            Be the first student
             to post! 📚
           </div>
         `;
@@ -687,50 +1138,67 @@ function loadPosts() {
         loadTrendingPosts();
 
         return;
+
       }
 
-      for (const postDoc of snapshot.docs) {
+      for (
+        const postDoc of
+        snapshot.docs
+      ) {
 
-        const post = postDoc.data();
+        const post =
+          postDoc.data();
 
         const postId =
           postDoc.id;
 
         const name =
-          post.name || "Student";
+          post.name ||
+          "Student";
 
         const card =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
-        card.className = "post-card";
+        card.className =
+          "post-card";
 
         card.id =
-          "post-" + postId;
+          "post-" +
+          postId;
 
         const canDelete =
           currentUser &&
           (
             isAdmin() ||
-            currentUser.uid === post.userId
+            currentUser.uid ===
+            post.userId
           );
 
         card.innerHTML = `
+
           <div class="post-header">
 
             <div class="post-avatar">
               ${escapeHTML(
-                name.charAt(0).toUpperCase()
+                name
+                  .charAt(0)
+                  .toUpperCase()
               )}
             </div>
 
             <div>
 
               <div class="post-name">
-                ${escapeHTML(name)}
+                ${escapeHTML(
+                  name
+                )}
               </div>
 
               <div class="post-time">
-                🕐 ${formatPostTime(
+                🕐
+                ${formatPostTime(
                   post.createdAt
                 )}
               </div>
@@ -739,32 +1207,55 @@ function loadPosts() {
 
           </div>
 
+
           <div class="post-text">
             ${escapeHTML(
               post.text || ""
             )}
           </div>
 
+
           <div class="post-actions">
 
-            <button class="like-btn">
+            <button
+              class="like-btn"
+            >
               🤍 Like (0)
             </button>
 
-            <button class="comment-btn">
+
+            <button
+              class="comment-btn"
+            >
               💬 Comment (0)
             </button>
 
-            <button class="share-btn">
+
+            <button
+              class="share-btn"
+            >
               📤 Share
             </button>
+
+
+            <button
+              class="report-btn"
+              style="
+                color:#dc3545;
+              "
+            >
+              🚩 Report
+            </button>
+
 
             ${
               canDelete
                 ? `
                   <button
                     class="delete-btn"
-                    style="color:#dc3545"
+                    style="
+                      color:#dc3545
+                    "
                   >
                     🗑️ Delete
                   </button>
@@ -773,9 +1264,16 @@ function loadPosts() {
             }
 
           </div>
+
         `;
 
-        postsContainer.appendChild(card);
+
+        postsContainer.appendChild(
+          card
+        );
+
+
+        /* BUTTONS */
 
         const likeBtn =
           card.querySelector(
@@ -792,10 +1290,18 @@ function loadPosts() {
             ".share-btn"
           );
 
+        const reportBtn =
+          card.querySelector(
+            ".report-btn"
+          );
+
         const deleteBtn =
           card.querySelector(
             ".delete-btn"
           );
+
+
+        /* LIKE */
 
         likeBtn?.addEventListener(
           "click",
@@ -808,6 +1314,9 @@ function loadPosts() {
 
           }
         );
+
+
+        /* COMMENT */
 
         commentBtn?.addEventListener(
           "click",
@@ -830,6 +1339,9 @@ function loadPosts() {
           }
         );
 
+
+        /* SHARE */
+
         shareBtn?.addEventListener(
           "click",
           () => {
@@ -841,6 +1353,25 @@ function loadPosts() {
 
           }
         );
+
+
+        /* 🚩 REPORT */
+
+        reportBtn?.addEventListener(
+          "click",
+          () => {
+
+            reportPost(
+              postId,
+              post.text || "",
+              post.userId || ""
+            );
+
+          }
+        );
+
+
+        /* DELETE */
 
         deleteBtn?.addEventListener(
           "click",
@@ -856,10 +1387,16 @@ function loadPosts() {
           }
         );
 
+
+        /* INITIAL LIKE COUNT */
+
         await updateLikeButton(
           postId,
           likeBtn
         );
+
+
+        /* INITIAL COMMENT COUNT */
 
         await loadComments(
           postId,
@@ -870,9 +1407,12 @@ function loadPosts() {
 
       }
 
+
       loadTrendingPosts();
 
     },
+
+
     (error) => {
 
       console.error(
@@ -887,12 +1427,15 @@ function loadPosts() {
       `;
 
     }
+
   );
 
 }
 
 
-/* TRENDING POSTS */
+/* =========================================================
+   TRENDING POSTS
+========================================================= */
 
 async function loadTrendingPosts() {
 
@@ -901,16 +1444,23 @@ async function loadTrendingPosts() {
       "trendingContainer"
     );
 
-  if (!trendingContainer) return;
+  if (!trendingContainer) {
+    return;
+  }
 
   try {
 
     const postsSnapshot =
       await getDocs(
-        collection(db, "posts")
+        collection(
+          db,
+          "posts"
+        )
       );
 
-    if (postsSnapshot.empty) {
+    if (
+      postsSnapshot.empty
+    ) {
 
       trendingContainer.innerHTML = `
         <div class="post-card">
@@ -919,16 +1469,20 @@ async function loadTrendingPosts() {
       `;
 
       return;
+
     }
 
     const posts = [];
 
+
     for (
-      const postDoc of postsSnapshot.docs
+      const postDoc of
+      postsSnapshot.docs
     ) {
 
       const post =
         postDoc.data();
+
 
       const likes =
         (
@@ -942,6 +1496,7 @@ async function loadTrendingPosts() {
           )
         ).size;
 
+
       const comments =
         (
           await getDocs(
@@ -954,99 +1509,119 @@ async function loadTrendingPosts() {
           )
         ).size;
 
+
       posts.push({
 
-        id: postDoc.id,
+        id:
+          postDoc.id,
 
         name:
-          post.name || "Student",
+          post.name ||
+          "Student",
 
         text:
-          post.text || "",
+          post.text ||
+          "",
 
         likes,
 
         comments,
 
         score:
-          likes + comments
+          likes +
+          comments
 
       });
 
     }
 
+
     posts.sort(
       (a, b) =>
-        b.score - a.score
+        b.score -
+        a.score
     );
 
-    trendingContainer.innerHTML = "";
+
+    trendingContainer.innerHTML =
+      "";
+
 
     posts
       .slice(0, 5)
-      .forEach(post => {
+      .forEach(
+        post => {
 
-        const card =
-          document.createElement("div");
+          const card =
+            document.createElement(
+              "div"
+            );
 
-        card.className =
-          "post-card";
+          card.className =
+            "post-card";
 
-        card.innerHTML = `
-          <div class="post-header">
 
-            <div class="post-avatar">
-              ${escapeHTML(
-                post.name
-                  .charAt(0)
-                  .toUpperCase()
-              )}
-            </div>
+          card.innerHTML = `
 
-            <div>
+            <div class="post-header">
 
-              <div class="post-name">
+              <div class="post-avatar">
                 ${escapeHTML(
                   post.name
+                    .charAt(0)
+                    .toUpperCase()
                 )}
               </div>
 
-              <div class="post-time">
-                🔥 Trending
+              <div>
+
+                <div class="post-name">
+                  ${escapeHTML(
+                    post.name
+                  )}
+                </div>
+
+                <div class="post-time">
+                  🔥 Trending
+                </div>
+
               </div>
 
             </div>
 
-          </div>
 
-          <div class="post-text">
-            ${escapeHTML(
-              post.text
-            )}
-          </div>
+            <div class="post-text">
+              ${escapeHTML(
+                post.text
+              )}
+            </div>
 
-          <div class="post-actions">
 
-            <button disabled>
-              ❤️ ${post.likes}
-            </button>
+            <div class="post-actions">
 
-            <button disabled>
-              💬 ${post.comments}
-            </button>
+              <button disabled>
+                ❤️ ${post.likes}
+              </button>
 
-            <button disabled>
-              🔥 Popular
-            </button>
+              <button disabled>
+                💬 ${post.comments}
+              </button>
 
-          </div>
-        `;
+              <button disabled>
+                🔥 Popular
+              </button>
 
-        trendingContainer.appendChild(
-          card
-        );
+            </div>
 
-      });
+          `;
+
+
+          trendingContainer.appendChild(
+            card
+          );
+
+        }
+      );
 
   } catch (error) {
 
@@ -1057,7 +1632,8 @@ async function loadTrendingPosts() {
 
     trendingContainer.innerHTML = `
       <div class="post-card">
-        ❌ Unable to load trending posts.
+        ❌ Unable to load
+        trending posts.
       </div>
     `;
 
@@ -1072,7 +1648,10 @@ async function loadTrendingPosts() {
    EVENTS
 ========================================================= */
 
-/* LOAD NEWS */
+
+/* =========================================================
+   LOAD NEWS
+========================================================= */
 
 function loadNews() {
 
@@ -1081,36 +1660,54 @@ function loadNews() {
       "newsContainer"
     );
 
-  if (!newsContainer) return;
+  if (!newsContainer) {
+    return;
+  }
 
   const newsQuery =
     query(
-      collection(db, "news"),
-      orderBy("createdAt", "desc")
+      collection(
+        db,
+        "news"
+      ),
+      orderBy(
+        "createdAt",
+        "desc"
+      )
     );
+
 
   onSnapshot(
     newsQuery,
+
     (snapshot) => {
 
-      newsContainer.innerHTML = "";
+      newsContainer.innerHTML =
+        "";
 
-      if (snapshot.empty) {
+
+      if (
+        snapshot.empty
+      ) {
 
         newsContainer.innerHTML = `
           <div class="card">
-            📰 No latest news available yet.
+            📰 No latest news
+            available yet.
           </div>
         `;
 
         return;
+
       }
+
 
       snapshot.forEach(
         (docSnap) => {
 
           const news =
             docSnap.data();
+
 
           const card =
             document.createElement(
@@ -1120,32 +1717,41 @@ function loadNews() {
           card.className =
             "card";
 
+
           card.innerHTML = `
+
             <h3>
-              📢 ${escapeHTML(
+              📢
+              ${escapeHTML(
                 news.title ||
                 "Latest News"
               )}
             </h3>
 
+
             <p>
               ${escapeHTML(
-                news.description || ""
+                news.description ||
+                ""
               )}
             </p>
+
 
             ${
               news.createdAt
                 ? `
                   <small>
-                    🕐 ${formatPostTime(
+                    🕐
+                    ${formatPostTime(
                       news.createdAt
                     )}
                   </small>
                 `
                 : ""
             }
+
           `;
+
 
           newsContainer.appendChild(
             card
@@ -1155,6 +1761,8 @@ function loadNews() {
       );
 
     },
+
+
     (error) => {
 
       console.error(
@@ -1169,12 +1777,15 @@ function loadNews() {
       `;
 
     }
+
   );
 
 }
 
 
-/* LOAD EVENTS */
+/* =========================================================
+   LOAD EVENTS
+========================================================= */
 
 function loadEvents() {
 
@@ -1183,36 +1794,54 @@ function loadEvents() {
       "eventsContainer"
     );
 
-  if (!eventsContainer) return;
+  if (!eventsContainer) {
+    return;
+  }
 
   const eventsQuery =
     query(
-      collection(db, "events"),
-      orderBy("date", "asc")
+      collection(
+        db,
+        "events"
+      ),
+      orderBy(
+        "date",
+        "asc"
+      )
     );
+
 
   onSnapshot(
     eventsQuery,
+
     (snapshot) => {
 
-      eventsContainer.innerHTML = "";
+      eventsContainer.innerHTML =
+        "";
 
-      if (snapshot.empty) {
+
+      if (
+        snapshot.empty
+      ) {
 
         eventsContainer.innerHTML = `
           <div class="event-card">
-            📅 No events available.
+            📅 No events
+            available.
           </div>
         `;
 
         return;
+
       }
+
 
       snapshot.forEach(
         (docSnap) => {
 
           const event =
             docSnap.data();
+
 
           const card =
             document.createElement(
@@ -1222,9 +1851,12 @@ function loadEvents() {
           card.className =
             "event-card";
 
+
           card.innerHTML = `
+
             <strong>
-              📅 ${escapeHTML(
+              📅
+              ${escapeHTML(
                 event.title ||
                 "Event"
               )}
@@ -1233,22 +1865,27 @@ function loadEvents() {
             <br><br>
 
             ${escapeHTML(
-              event.description || ""
+              event.description ||
+              ""
             )}
 
             ${
               event.date
                 ? `
                   <br><br>
+
                   <small>
-                    📅 ${escapeHTML(
+                    📅
+                    ${escapeHTML(
                       event.date
                     )}
                   </small>
                 `
                 : ""
             }
+
           `;
+
 
           eventsContainer.appendChild(
             card
@@ -1258,6 +1895,8 @@ function loadEvents() {
       );
 
     },
+
+
     (error) => {
 
       console.error(
@@ -1267,25 +1906,31 @@ function loadEvents() {
 
       eventsContainer.innerHTML = `
         <div class="event-card">
-          ❌ Unable to load events.
+          ❌ Unable to load
+          events.
         </div>
       `;
 
     }
+
   );
 
 }
 
 
-  /* =========================================================
+/* =========================================================
    PART 5
-   AI MARI — GEMINI
+   AI MARI
 ========================================================= */
 
 const chatMessages = [
+
   {
-    role: "system",
-    content: `You are AI Mari, the official academic AI assistant of Sociology Connect – Arsi University (Sociology & Social Work).
+    role:
+      "system",
+
+    content:
+      `You are AI Mari, the official academic AI assistant of Sociology Connect – Arsi University (Sociology & Social Work).
 
 Help students with Sociology, Social Work, Psychology, Anthropology, Political Science, Economics, Social Policy, Community Development, Human Rights, Gender and Society, Research Methods, Academic Writing, APA 7, Assignments, Presentations and Research Projects.
 
@@ -1295,159 +1940,367 @@ Always answer in the same language used by the user.
 - English → Answer in clear English.
 
 Never invent research data or citations.`
+
   }
+
 ];
 
+
 /* =========================================================
-   SEND MESSAGE TO RENDER / GEMINI SERVER
+   SEND MESSAGE TO SERVER
 ========================================================= */
 
 async function sendToServer() {
 
-  if (!chatHistory || !userInput || !sendBtn) return;
+  if (
+    !chatHistory ||
+    !userInput ||
+    !sendBtn
+  ) {
 
-  const text = userInput.value.trim();
-  if (!text) return;
+    return;
+
+  }
+
+
+  const text =
+    userInput.value.trim();
+
+
+  if (!text) {
+    return;
+  }
+
 
   chatMessages.push({
-    role: "user",
-    content: text
+
+    role:
+      "user",
+
+    content:
+      text
+
   });
 
-  const userBox = document.createElement("div");
-  userBox.className = "message user";
-  userBox.innerHTML = `<b>You:</b><br>${escapeHTML(text)}`;
-  chatHistory.appendChild(userBox);
 
-  userInput.value = "";
+  const userBox =
+    document.createElement(
+      "div"
+    );
 
-  const aiBox = document.createElement("div");
-  aiBox.className = "message ai";
+  userBox.className =
+    "message user";
+
+
+  userBox.innerHTML =
+    `<b>You:</b><br>${escapeHTML(
+      text
+    )}`;
+
+
+  chatHistory.appendChild(
+    userBox
+  );
+
+
+  userInput.value =
+    "";
+
+
+  const aiBox =
+    document.createElement(
+      "div"
+    );
+
+  aiBox.className =
+    "message ai";
+
+
   aiBox.innerHTML = `
     <b>AI Mari:</b><br>
-    <span class="ai-text">Typing... 🤖</span>
+    <span class="ai-text">
+      Typing... 🤖
+    </span>
   `;
 
-  chatHistory.appendChild(aiBox);
-  chatHistory.scrollTop = chatHistory.scrollHeight;
 
-  sendBtn.disabled = true;
-  sendBtn.textContent = "Thinking...";
+  chatHistory.appendChild(
+    aiBox
+  );
+
+
+  chatHistory.scrollTop =
+    chatHistory.scrollHeight;
+
+
+  sendBtn.disabled =
+    true;
+
+  sendBtn.textContent =
+    "Thinking...";
+
 
   try {
 
-    const response = await fetch(
-      "https://sociology-connect.onrender.com/api/chat",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: text
-        })
-      }
-    );
+    const response =
+      await fetch(
+        "https://sociology-connect.onrender.com/api/chat",
+        {
+          method:
+            "POST",
 
-    const data = await response.json();
+          headers:
+            {
+              "Content-Type":
+                "application/json"
+            },
+
+          body:
+            JSON.stringify(
+              {
+                message:
+                  text
+              }
+            )
+        }
+      );
+
+
+    const data =
+      await response.json();
+
 
     if (!response.ok) {
-      throw new Error(data.error || "AI request failed");
+
+      throw new Error(
+        data.error ||
+        "AI request failed"
+      );
+
     }
 
-    const reply = data.reply || "No response received.";
+
+    const reply =
+      data.reply ||
+      "No response received.";
+
 
     chatMessages.push({
-      role: "assistant",
-      content: reply
+
+      role:
+        "assistant",
+
+      content:
+        reply
+
     });
+
 
     aiBox.innerHTML = `
+
       <b>AI Mari:</b><br>
-      <span class="ai-text">${escapeHTML(reply)}</span>
+
+      <span class="ai-text">
+        ${escapeHTML(
+          reply
+        )}
+      </span>
+
       <br><br>
-      <button class="copy-btn">📋 Copy</button>
-      <button class="speak-btn">🔊 Listen</button>
+
+      <button class="copy-btn">
+        📋 Copy
+      </button>
+
+      <button class="speak-btn">
+        🔊 Listen
+      </button>
+
     `;
 
-    aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(reply);
-      } catch {
-        alert("Copy failed.");
-      }
-    });
 
-    aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
+    /* COPY */
 
-      if (!("speechSynthesis" in window)) {
-        alert("Voice output is not supported.");
-        return;
-      }
+    aiBox
+      .querySelector(
+        ".copy-btn"
+      )
+      ?.addEventListener(
+        "click",
+        async () => {
 
-      window.speechSynthesis.cancel();
+          try {
 
-      const speech = new SpeechSynthesisUtterance(reply);
+            await navigator
+              .clipboard
+              .writeText(
+                reply
+              );
 
-      speech.lang = /[\u1200-\u137F]/.test(reply) ? "am-ET" : "en-US";
-      speech.rate = 0.95;
-      speech.pitch = 1;
+          } catch {
 
-      const btn = aiBox.querySelector(".speak-btn");
-      btn.textContent = "🔊 Speaking...";
+            alert(
+              "Copy failed."
+            );
 
-      speech.onend = () => {
-        btn.textContent = "🔊 Listen";
-      };
+          }
 
-      speech.onerror = () => {
-        btn.textContent = "🔊 Listen";
-      };
+        }
+      );
 
-      window.speechSynthesis.speak(speech);
 
-    });
+    /* SPEAK */
+
+    aiBox
+      .querySelector(
+        ".speak-btn"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+
+          if (
+            !(
+              "speechSynthesis"
+              in window
+            )
+          ) {
+
+            alert(
+              "Voice output is not supported."
+            );
+
+            return;
+
+          }
+
+
+          window
+            .speechSynthesis
+            .cancel();
+
+
+          const speech =
+            new SpeechSynthesisUtterance(
+              reply
+            );
+
+
+          speech.lang =
+            /[\u1200-\u137F]/
+              .test(reply)
+              ? "am-ET"
+              : "en-US";
+
+
+          speech.rate =
+            0.95;
+
+          speech.pitch =
+            1;
+
+
+          const btn =
+            aiBox.querySelector(
+              ".speak-btn"
+            );
+
+
+          btn.textContent =
+            "🔊 Speaking...";
+
+
+          speech.onend =
+            () => {
+
+              btn.textContent =
+                "🔊 Listen";
+
+            };
+
+
+          speech.onerror =
+            () => {
+
+              btn.textContent =
+                "🔊 Listen";
+
+            };
+
+
+          window
+            .speechSynthesis
+            .speak(
+              speech
+            );
+
+        }
+      );
+
 
   } catch (error) {
 
-    console.error("AI MARI ERROR:", error);
+    console.error(
+      "AI MARI ERROR:",
+      error
+    );
+
 
     aiBox.innerHTML = `
-  <b>AI Mari:</b><br>
-  ❌ ${escapeHTML(data.error || "AI request failed")}
-`;
+      <b>AI Mari:</b><br>
+      ❌ ${escapeHTML(
+        error.message ||
+        "AI request failed"
+      )}
+    `;
 
   } finally {
 
-    sendBtn.disabled = false;
-    sendBtn.textContent = "Send";
-    chatHistory.scrollTop = chatHistory.scrollHeight;
+    sendBtn.disabled =
+      false;
+
+    sendBtn.textContent =
+      "Send";
+
+    chatHistory.scrollTop =
+      chatHistory.scrollHeight;
 
   }
 
 }
 
+
 /* =========================================================
    SEND BUTTON
 ========================================================= */
 
-sendBtn?.addEventListener("click", sendToServer);
+sendBtn?.addEventListener(
+  "click",
+  sendToServer
+);
+
 
 /* =========================================================
    ENTER KEY
 ========================================================= */
 
-userInput?.addEventListener("keydown", (e) => {
+userInput?.addEventListener(
+  "keydown",
+  (e) => {
 
-  if (e.key === "Enter" && !e.shiftKey) {
+    if (
+      e.key === "Enter" &&
+      !e.shiftKey
+    ) {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    sendToServer();
+      sendToServer();
+
+    }
 
   }
-
-});    
+);
 
 
 /* =========================================================
@@ -1456,74 +2309,165 @@ userInput?.addEventListener("keydown", (e) => {
    SEARCH
 ========================================================= */
 
-/* UPDATE THEME BUTTON */
+
+/* =========================================================
+   UPDATE THEME BUTTON
+========================================================= */
 
 function updateThemeButton() {
-  if (!themeBtn) return;
 
-  themeBtn.textContent = document.body.classList.contains("dark")
-    ? "☀️"
-    : "🌙";
-}
-
-/* APPLY SAVED THEME */
-
-function applySavedTheme() {
-  const saved = localStorage.getItem("sociologyTheme");
-
-  if (saved === "dark") {
-    document.body.classList.add("dark");
-  } else {
-    document.body.classList.remove("dark");
+  if (!themeBtn) {
+    return;
   }
 
-  updateThemeButton();
+  themeBtn.textContent =
+    document.body.classList
+      .contains("dark")
+      ? "☀️"
+      : "🌙";
+
 }
 
-/* TOGGLE THEME */
+
+/* =========================================================
+   APPLY SAVED THEME
+========================================================= */
+
+function applySavedTheme() {
+
+  const saved =
+    localStorage.getItem(
+      "sociologyTheme"
+    );
+
+
+  if (
+    saved === "dark"
+  ) {
+
+    document.body.classList
+      .add("dark");
+
+  } else {
+
+    document.body.classList
+      .remove("dark");
+
+  }
+
+
+  updateThemeButton();
+
+}
+
+
+/* =========================================================
+   TOGGLE THEME
+========================================================= */
 
 function toggleTheme() {
-  document.body.classList.toggle("dark");
+
+  document.body.classList
+    .toggle("dark");
+
 
   localStorage.setItem(
     "sociologyTheme",
-    document.body.classList.contains("dark") ? "dark" : "light"
+
+    document.body.classList
+      .contains("dark")
+      ? "dark"
+      : "light"
   );
+
 
   updateThemeButton();
+
 }
 
-themeBtn?.addEventListener("click", toggleTheme);
 
-/* SEARCH */
+themeBtn?.addEventListener(
+  "click",
+  toggleTheme
+);
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
 
 function searchWebsite() {
-  if (!searchBar) return;
 
-  const q = searchBar.value.toLowerCase().trim();
-  let count = 0;
+  if (!searchBar) {
+    return;
+  }
 
-  const items = document.querySelectorAll(
-    "#postsContainer .post-card, #newsContainer .card, #eventsContainer .event-card, #trendingContainer .post-card"
+
+  const q =
+    searchBar.value
+      .toLowerCase()
+      .trim();
+
+
+  let count =
+    0;
+
+
+  const items =
+    document.querySelectorAll(
+      "#postsContainer .post-card, #newsContainer .card, #eventsContainer .event-card, #trendingContainer .post-card"
+    );
+
+
+  items.forEach(
+    item => {
+
+      const text =
+        item.textContent
+          .toLowerCase();
+
+
+      const show =
+        !q ||
+        text.includes(q);
+
+
+      item.style.display =
+        show
+          ? ""
+          : "none";
+
+
+      if (show) {
+        count++;
+      }
+
+    }
   );
 
-  items.forEach(item => {
-    const text = item.textContent.toLowerCase();
-    const show = !q || text.includes(q);
 
-    item.style.display = show ? "" : "none";
+  const counter =
+    document.getElementById(
+      "searchCount"
+    );
 
-    if (show) count++;
-  });
-
-  const counter = document.getElementById("searchCount");
 
   if (counter) {
-    counter.textContent = q ? `${count} results found` : "";
+
+    counter.textContent =
+      q
+        ? `${count} results found`
+        : "";
+
   }
+
 }
 
-searchBar?.addEventListener("input", searchWebsite);
+
+searchBar?.addEventListener(
+  "input",
+  searchWebsite
+);
 
 
 /* =========================================================
@@ -1532,16 +2476,22 @@ searchBar?.addEventListener("input", searchWebsite);
    VOICE
    LOGOUT
    SHORTCUTS
-   START
 ========================================================= */
 
-/* NOTIFICATIONS */
+
+/* =========================================================
+   NOTIFICATION BADGE
+========================================================= */
 
 function updateNotificationBadge() {
 
-  if (!notifyBtn) return;
+  if (!notifyBtn) {
+    return;
+  }
+
 
   let list = [];
+
 
   try {
 
@@ -1557,6 +2507,7 @@ function updateNotificationBadge() {
     list = [];
 
   }
+
 
   notifyBtn.innerHTML =
     list.length
@@ -1566,9 +2517,14 @@ function updateNotificationBadge() {
 }
 
 
+/* =========================================================
+   SHOW NOTIFICATIONS
+========================================================= */
+
 function showNotifications() {
 
   let list = [];
+
 
   try {
 
@@ -1585,18 +2541,25 @@ function showNotifications() {
 
   }
 
+
   alert(
+
     list.length
-      ? list.join("\n\n")
+      ? list.join(
+          "\n\n"
+        )
       : "🔔 No new notifications."
+
   );
 
 }
+
 
 notifyBtn?.addEventListener(
   "click",
   showNotifications
 );
+
 
 /* =========================================================
    VOICE RECOGNITION
@@ -1606,83 +2569,141 @@ const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
+
 if (SpeechRecognition) {
 
-  const recognition = new SpeechRecognition();
+  const recognition =
+    new SpeechRecognition();
 
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
-  recognition.continuous = false;
 
-  micBtn?.addEventListener("click", () => {
+  recognition.lang =
+    "en-US";
 
-    try {
 
-      recognition.start();
+  recognition.interimResults =
+    false;
 
-      micBtn.textContent = "🔴 Listening...";
 
-      if (userInput) {
-        userInput.placeholder = "Listening...";
+  recognition.continuous =
+    false;
+
+
+  micBtn?.addEventListener(
+    "click",
+    () => {
+
+      try {
+
+        recognition.start();
+
+
+        micBtn.textContent =
+          "🔴 Listening...";
+
+
+        if (userInput) {
+
+          userInput.placeholder =
+            "Listening...";
+
+        }
+
+      } catch (e) {
+
+        console.warn(e);
+
       }
 
-    } catch (e) {
-
-      console.warn(e);
-
     }
+  );
 
-  });
 
-  recognition.onresult = (e) => {
+  recognition.onresult =
+    (e) => {
 
-    if (userInput) {
-      userInput.value = e.results[0][0].transcript;
-      userInput.focus();
-    }
+      if (userInput) {
 
-    micBtn.textContent = "🎤";
+        userInput.value =
+          e.results[0][0]
+            .transcript;
 
-    if (userInput) {
-      userInput.placeholder = "Ask your question...";
-    }
+        userInput.focus();
 
-  };
+      }
 
-  recognition.onend = () => {
 
-    micBtn.textContent = "🎤";
+      micBtn.textContent =
+        "🎤";
 
-    if (userInput) {
-      userInput.placeholder = "Ask your question...";
-    }
 
-  };
+      if (userInput) {
 
-  recognition.onerror = (e) => {
+        userInput.placeholder =
+          "Ask your question...";
 
-    console.warn("Voice recognition error:", e.error);
+      }
 
-    micBtn.textContent = "🎤";
+    };
 
-    if (userInput) {
-      userInput.placeholder = "Ask your question...";
-    }
 
-  };
+  recognition.onend =
+    () => {
+
+      micBtn.textContent =
+        "🎤";
+
+
+      if (userInput) {
+
+        userInput.placeholder =
+          "Ask your question...";
+
+      }
+
+    };
+
+
+  recognition.onerror =
+    (e) => {
+
+      console.warn(
+        "Voice recognition error:",
+        e.error
+      );
+
+
+      micBtn.textContent =
+        "🎤";
+
+
+      if (userInput) {
+
+        userInput.placeholder =
+          "Ask your question...";
+
+      }
+
+    };
+
 
 } else {
 
   if (micBtn) {
 
-    micBtn.disabled = true;
-    micBtn.title = "Voice input is not supported in this browser";
+    micBtn.disabled =
+      true;
+
+    micBtn.title =
+      "Voice input is not supported in this browser";
 
   }
 
 }
 
-/* LOGOUT */
+
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 logoutBtn?.addEventListener(
   "click",
@@ -1690,16 +2711,25 @@ logoutBtn?.addEventListener(
 
     try {
 
-      await signOut(auth);
+      await signOut(
+        auth
+      );
+
 
       window.location.href =
         "index.html";
 
+
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        error
+      );
 
-      alert(error.message);
+
+      alert(
+        error.message
+      );
 
     }
 
@@ -1707,7 +2737,9 @@ logoutBtn?.addEventListener(
 );
 
 
-/* SHORTCUT */
+/* =========================================================
+   KEYBOARD SHORTCUT
+========================================================= */
 
 document.addEventListener(
   "keydown",
@@ -1715,7 +2747,8 @@ document.addEventListener(
 
     if (
       e.ctrlKey &&
-      e.key.toLowerCase() === "k"
+      e.key.toLowerCase() ===
+      "k"
     ) {
 
       e.preventDefault();
@@ -1740,15 +2773,21 @@ document.addEventListener(
       "🚀 Sociology Connect starting..."
     );
 
+
     applySavedTheme();
+
 
     updateNotificationBadge();
 
+
     loadPosts();
+
 
     loadNews();
 
+
     loadEvents();
+
 
     console.log(
       "✅ Sociology Connect Ready"

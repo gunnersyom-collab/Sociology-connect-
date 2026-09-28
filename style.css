@@ -149,7 +149,6 @@ header{
 
 /* =========================================================
    NAVIGATION
-   ALL IMPORTANT LINKS ALWAYS VISIBLE
 ========================================================= */
 
 nav{
@@ -179,7 +178,6 @@ body.dark nav{
     justify-content:center !important;
 
     flex-direction:row !important;
-
     flex-wrap:wrap !important;
 
     gap:7px;
@@ -194,9 +192,6 @@ body.dark nav{
 .nav-container::-webkit-scrollbar{
     display:none;
 }
-
-
-/* EVERY NAV LINK */
 
 .nav-container a{
     display:inline-flex !important;
@@ -231,9 +226,6 @@ body.dark .nav-container a{
     color:#e5edf8;
 }
 
-
-/* IMPORTANT DIRECT LINKS */
-
 .nav-container a[href="research.html"],
 .nav-container a[href="profile.html"],
 .nav-container a[href="admin.html"],
@@ -249,18 +241,12 @@ body.dark .nav-container a{
     visibility:visible !important;
 }
 
-
-/* ADMIN */
-
 #adminLink{
     display:inline-flex !important;
 
     opacity:1 !important;
     visibility:visible !important;
 }
-
-
-/* LOGIN */
 
 #loginLink{
     display:inline-flex !important;
@@ -269,15 +255,9 @@ body.dark .nav-container a{
     visibility:visible !important;
 }
 
-
-/* LOGOUT */
-
 #logoutBtn{
     flex:0 0 auto !important;
 }
-
-
-/* NAV HOVER */
 
 .nav-container a:hover{
     color:#ffffff !important;
@@ -326,7 +306,6 @@ body.dark .nav-container a{
 
 .nav-btn:hover{
     background:var(--primary);
-
     color:white;
 }
 
@@ -1327,8 +1306,7 @@ footer strong{
 
 
 /* =========================================================
-   DARK MODE — FINAL TEXT VISIBILITY FIX
-   THIS IS THE IMPORTANT PART
+   DARK MODE — STRONG TEXT VISIBILITY
 ========================================================= */
 
 body.dark main,
@@ -1343,9 +1321,6 @@ body.dark #chat-container{
     color:#f8fafc;
 }
 
-
-/* Latest News text must always be visible */
-
 body.dark #newsContainer .card,
 body.dark #newsContainer .card *{
     color:#f8fafc !important;
@@ -1356,12 +1331,11 @@ body.dark #newsContainer .card p{
 }
 
 body.dark #newsContainer .card small,
-body.dark #newsContainer .card time{
+body.dark #newsContainer .card time,
+body.dark #newsContainer .card .date,
+body.dark #newsContainer .card .news-date{
     color:#aebbd0 !important;
 }
-
-
-/* Trending */
 
 body.dark #trendingContainer .card,
 body.dark #trendingContainer .card *,
@@ -1369,9 +1343,6 @@ body.dark #trendingContainer .post-card,
 body.dark #trendingContainer .post-card *{
     color:#f8fafc !important;
 }
-
-
-/* Events */
 
 body.dark #eventsContainer .event-card,
 body.dark #eventsContainer .event-card *{
@@ -1382,20 +1353,14 @@ body.dark #eventsContainer .event-card p{
     color:#dbe4f0 !important;
 }
 
-
-/* Posts */
-
 body.dark .post-card,
 body.dark .post-card *{
-    color:#f8fafc;
+    color:#f8fafc !important;
 }
 
 body.dark .post-time{
     color:#aebbd0 !important;
 }
-
-
-/* Pillars */
 
 body.dark .pillar-card h3{
     color:#f8fafc !important;
@@ -1405,15 +1370,9 @@ body.dark .pillar-card p{
     color:#dbe4f0 !important;
 }
 
-
-/* Research Guide */
-
 body.dark .research-steps li{
     color:#f8fafc !important;
 }
-
-
-/* Resources */
 
 body.dark .resource-box h1,
 body.dark .resource-box h2,
@@ -1426,32 +1385,27 @@ body.dark .resource-box p{
     color:#dbe4f0 !important;
 }
 
-
-/* Contact */
-
 body.dark .contact-section,
 body.dark .contact-section *{
-    color:#f8fafc;
+    color:#f8fafc !important;
 }
 
 body.dark .contact-info p{
     color:#f8fafc !important;
 }
 
-
-/* AI Mari */
-
 body.dark #chat-container,
 body.dark #chat-container *{
-    color:#f8fafc;
+    color:#f8fafc !important;
 }
 
 body.dark .message.ai{
     color:#f8fafc !important;
 }
 
-
-/* Section headings */
+body.dark .ai-text{
+    color:#f8fafc !important;
+}
 
 body.dark .section-header h2{
     color:#f8fafc !important;
@@ -1461,15 +1415,366 @@ body.dark .section-header p{
     color:#aebbd0 !important;
 }
 
-
-/* Footer */
-
 body.dark footer{
     color:#aebbd0;
 }
 
 body.dark footer strong{
     color:#f8fafc !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — FINAL TEXT VISIBILITY FIX
+   THIS FIX PREVENTS BLUR / FADE / INVISIBLE TEXT
+========================================================= */
+
+body:not(.dark){
+    background:#f3f6f8;
+    color:#172033;
+}
+
+
+/* Remove unwanted transparency / blur */
+body:not(.dark) main,
+body:not(.dark) main section,
+body:not(.dark) .card,
+body:not(.dark) .post-card,
+body:not(.dark) .event-card,
+body:not(.dark) .pillar-card,
+body:not(.dark) .resource-box,
+body:not(.dark) .contact-section,
+body:not(.dark) #chat-container{
+    opacity:1 !important;
+    filter:none !important;
+    color:#172033;
+}
+
+
+/* =========================================================
+   LIGHT MODE — SECTION HEADINGS
+========================================================= */
+
+body:not(.dark) .section-header h2{
+    color:#172033 !important;
+}
+
+body:not(.dark) .section-header p{
+    color:#6b7280 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — ALL CARD TEXT
+========================================================= */
+
+body:not(.dark) .card,
+body:not(.dark) .post-card,
+body:not(.dark) .event-card{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) .card *,
+body:not(.dark) .post-card *,
+body:not(.dark) .event-card *{
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) .card h1,
+body:not(.dark) .card h2,
+body:not(.dark) .card h3,
+body:not(.dark) .card h4,
+body:not(.dark) .card h5,
+body:not(.dark) .card h6,
+body:not(.dark) .post-card h1,
+body:not(.dark) .post-card h2,
+body:not(.dark) .post-card h3,
+body:not(.dark) .post-card h4,
+body:not(.dark) .post-card h5,
+body:not(.dark) .post-card h6,
+body:not(.dark) .event-card h1,
+body:not(.dark) .event-card h2,
+body:not(.dark) .event-card h3,
+body:not(.dark) .event-card h4,
+body:not(.dark) .event-card h5,
+body:not(.dark) .event-card h6{
+    color:#172033 !important;
+}
+
+body:not(.dark) .card p,
+body:not(.dark) .post-card p,
+body:not(.dark) .event-card p{
+    color:#172033 !important;
+}
+
+body:not(.dark) .card small,
+body:not(.dark) .post-card small,
+body:not(.dark) .event-card small{
+    color:#6b7280 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — LATEST NEWS
+========================================================= */
+
+body:not(.dark) #newsContainer .card{
+    background:#ffffff !important;
+    color:#172033 !important;
+    border-left:5px solid #16a34a;
+
+    opacity:1 !important;
+    visibility:visible !important;
+    filter:none !important;
+
+    text-shadow:none !important;
+}
+
+body:not(.dark) #newsContainer .card *{
+    opacity:1 !important;
+    visibility:visible !important;
+    filter:none !important;
+    text-shadow:none !important;
+}
+
+body:not(.dark) #newsContainer .card h1,
+body:not(.dark) #newsContainer .card h2,
+body:not(.dark) #newsContainer .card h3,
+body:not(.dark) #newsContainer .card h4,
+body:not(.dark) #newsContainer .card h5,
+body:not(.dark) #newsContainer .card h6{
+    color:#172033 !important;
+}
+
+body:not(.dark) #newsContainer .card p{
+    color:#374151 !important;
+}
+
+body:not(.dark) #newsContainer .card small,
+body:not(.dark) #newsContainer .card time,
+body:not(.dark) #newsContainer .card .date,
+body:not(.dark) #newsContainer .card .news-date{
+    color:#6b7280 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — POSTS
+========================================================= */
+
+body:not(.dark) .post-name{
+    color:#172033 !important;
+}
+
+body:not(.dark) .post-text{
+    color:#172033 !important;
+}
+
+body:not(.dark) .post-time{
+    color:#6b7280 !important;
+}
+
+body:not(.dark) .post-actions button{
+    color:#172033 !important;
+    background:#f3f6f8 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — TRENDING
+========================================================= */
+
+body:not(.dark) #trendingContainer .card,
+body:not(.dark) #trendingContainer .post-card{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) #trendingContainer .card *,
+body:not(.dark) #trendingContainer .post-card *{
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) #trendingContainer h1,
+body:not(.dark) #trendingContainer h2,
+body:not(.dark) #trendingContainer h3,
+body:not(.dark) #trendingContainer h4,
+body:not(.dark) #trendingContainer h5,
+body:not(.dark) #trendingContainer h6{
+    color:#172033 !important;
+}
+
+body:not(.dark) #trendingContainer p{
+    color:#172033 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — EVENTS
+========================================================= */
+
+body:not(.dark) #eventsContainer .event-card{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) #eventsContainer .event-card *{
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) #eventsContainer .event-card h1,
+body:not(.dark) #eventsContainer .event-card h2,
+body:not(.dark) #eventsContainer .event-card h3,
+body:not(.dark) #eventsContainer .event-card h4,
+body:not(.dark) #eventsContainer .event-card h5,
+body:not(.dark) #eventsContainer .event-card h6{
+    color:#172033 !important;
+}
+
+body:not(.dark) #eventsContainer .event-card p{
+    color:#374151 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — PILLARS
+========================================================= */
+
+body:not(.dark) .pillar-card{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) .pillar-card h3{
+    color:#172033 !important;
+}
+
+body:not(.dark) .pillar-card p{
+    color:#4b5563 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — RESEARCH GUIDE
+========================================================= */
+
+body:not(.dark) .research-steps li{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — RESOURCES
+========================================================= */
+
+body:not(.dark) .resource-box{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) .resource-box h1,
+body:not(.dark) .resource-box h2,
+body:not(.dark) .resource-box h3,
+body:not(.dark) .resource-box h4{
+    color:#172033 !important;
+}
+
+body:not(.dark) .resource-box p{
+    color:#4b5563 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — CONTACT
+========================================================= */
+
+body:not(.dark) .contact-section{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) .contact-section *{
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) .contact-section h1,
+body:not(.dark) .contact-section h2,
+body:not(.dark) .contact-section h3,
+body:not(.dark) .contact-section h4{
+    color:#172033 !important;
+}
+
+body:not(.dark) .contact-info p{
+    color:#172033 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — AI MARI
+========================================================= */
+
+body:not(.dark) #chat-container{
+    background:#ffffff !important;
+    color:#172033 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) #chat-container *{
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) #chat-container h1,
+body:not(.dark) #chat-container h2,
+body:not(.dark) #chat-container h3,
+body:not(.dark) #chat-container h4{
+    color:#172033 !important;
+}
+
+body:not(.dark) .message.ai{
+    background:#ffffff !important;
+    color:#172033 !important;
+}
+
+body:not(.dark) .ai-text{
+    color:#172033 !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — FOOTER
+========================================================= */
+
+body:not(.dark) footer{
+    background:#ffffff !important;
+    color:#6b7280 !important;
+    opacity:1 !important;
+    filter:none !important;
+}
+
+body:not(.dark) footer strong{
+    color:#172033 !important;
 }
 
 
@@ -1501,7 +1806,6 @@ body.dark footer strong{
 
 /* =========================================================
    MOBILE
-   IMPORTANT LINKS STILL VISIBLE
 ========================================================= */
 
 @media(max-width:768px){

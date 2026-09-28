@@ -263,9 +263,3 @@ app.listen(
   }
 );
 
-Amma code kana qofa paste godhi → Commit changes godhi.
-Ergasii Render ofumaan deploy jalqaba.
-
-⚠️ "GROQ_API_KEY" Render Environment keessatti galchite sun akkuma jirutti haa turu; API key mataa isaa GitHub keessa hin galchin.
-
-Erga Commit changes gootee naaf “godheera” jedhii himi.

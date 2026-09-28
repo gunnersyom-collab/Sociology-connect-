@@ -1502,122 +1502,142 @@ aiBox.innerHTML = `
 aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(reply);
-  } catch {
-    alert("Copy failed.");
-  }
-});
 
-aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
+async function sendToServer() {
 
-  if (!("speechSynthesis" in window)) {
-    alert("Voice output is not supported.");
-    return;
-  }
+  if (!chatHistory || !userInput || !sendBtn) return;
 
-  window.speechSynthesis.cancel();
-
-  const speech = new SpeechSynthesisUtterance(reply);
-
-  // Afaan filata
-  if (/[\u1200-\u137F]/.test(reply)) {
-    speech.lang = "am-ET";
-  } else {
-    speech.lang = "en-US";
-  }
-
-  speech.rate = 0.95;
-  speech.pitch = 1;
-
-  const btn = aiBox.querySelector(".speak-btn");
-  btn.textContent = "🔊 Speaking...";
-
-  speech.onend = () => {
-    btn.textContent = "🔊 Listen";
-  };
-
-  speech.onerror = () => {
-    btn.textContent = "🔊 Listen";
-  };
-
-  window.speechSynthesis.speak(speech);
-
-});
-
-    aiBox
-      .querySelector(".copy-btn")
-      ?.addEventListener(
-        "click",
-        async () => {
-
-try {
-
-  const response = await fetch(
-    "https://sociology-connect.onrender.com/api/chat",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: text
-      })
-    }
-  );
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || "AI request failed");
-  }
-
-  const reply = data.reply || "No response received.";
+  const text = userInput.value.trim();
+  if (!text) return;
 
   chatMessages.push({
-    role: "assistant",
-    content: reply
+    role: "user",
+    content: text
   });
 
+  const userBox = document.createElement("div");
+  userBox.className = "message user";
+  userBox.innerHTML = `<b>You:</b><br>${escapeHTML(text)}`;
+  chatHistory.appendChild(userBox);
+
+  userInput.value = "";
+
+  const aiBox = document.createElement("div");
+  aiBox.className = "message ai";
   aiBox.innerHTML = `
     <b>AI Mari:</b><br>
-    <span class="ai-text">${escapeHTML(reply)}</span>
-    <br><br>
-    <button class="copy-btn">📋 Copy</button>
-    <button class="speak-btn">🔊 Listen</button>
+    <span class="ai-text">Typing... 🤖</span>
   `;
 
-  aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(reply);
-  });
+  chatHistory.appendChild(aiBox);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
 
-  aiBox.querySelector(".speak-btn")?.addEventListener("click", (e) => {
-    speakText(reply, e.target);
-  });
+  sendBtn.disabled = true;
+  sendBtn.textContent = "Thinking...";
 
-} catch (error) {
+  try {
 
-  console.error("AI MARI ERROR:", error);
+    const response = await fetch(
+      "https://sociology-connect.onrender.com/api/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: text
+        })
+      }
+    );
 
-  aiBox.innerHTML = `
-    <b>AI Mari:</b><br>
-    ❌ AI Mari could not connect. Please try again.
-  `;
+    const data = await response.json();
 
-}
+    if (!response.ok) {
+      throw new Error(data.error || "AI request failed");
+    }
+
+    const reply = data.reply || "No response received.";
+
+    chatMessages.push({
+      role: "assistant",
+      content: reply
+    });
+
+    aiBox.innerHTML = `
+      <b>AI Mari:</b><br>
+      <span class="ai-text">${escapeHTML(reply)}</span>
+      <br><br>
+      <button class="copy-btn">📋 Copy</button>
+      <button class="speak-btn">🔊 Listen</button>
+    `;
+
+    aiBox.querySelector(".copy-btn")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(reply);
+      } catch {
+        alert("Copy failed.");
+      }
+    });
+
+    aiBox.querySelector(".speak-btn")?.addEventListener("click", () => {
+
+      if (!("speechSynthesis" in window)) {
+        alert("Voice output is not supported.");
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const speech = new SpeechSynthesisUtterance(reply);
+
+      if (/[\u1200-\u137F]/.test(reply)) {
+        speech.lang = "am-ET";
+      } else {
+        speech.lang = "en-US";
+      }
+
+      speech.rate = 0.95;
+      speech.pitch = 1;
+
+      const btn = aiBox.querySelector(".speak-btn");
+      btn.textContent = "🔊 Speaking...";
+
+      speech.onend = () => {
+        btn.textContent = "🔊 Listen";
+      };
+
+      speech.onerror = () => {
+        btn.textContent = "🔊 Listen";
+      };
+
+      window.speechSynthesis.speak(speech);
+
+    });
+
+  } catch (error) {
+
+    console.error("AI MARI ERROR:", error);
+
+    aiBox.innerHTML = `
+      <b>AI Mari:</b><br>
+      ❌ AI Mari could not connect. Please try again.
+    `;
 
   } finally {
 
     sendBtn.disabled = false;
-
-    sendBtn.textContent =
-      "Send";
-
-    chatHistory.scrollTop =
-      chatHistory.scrollHeight;
+    sendBtn.textContent = "Send";
+    chatHistory.scrollTop = chatHistory.scrollHeight;
 
   }
 
 }
 
+/* =========================================================
+   SEND BUTTON
+========================================================= */
+
+sendBtn?.addEventListener("click", sendToServer);
 
 /* =========================================================
    SEND BUTTON

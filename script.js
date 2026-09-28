@@ -2,8 +2,11 @@
    SOCIOLOGY CONNECT 2.0
    SCRIPT.JS
    FULL VERSION
+
    POSTS + LIKES + COMMENTS + SHARE + REPORT
    NEWS + EVENTS + AI MARI + DARK MODE + SEARCH
+   FIREBASE NOTIFICATIONS + UNREAD BADGE
+   VOICE + LOGOUT + ADMIN CONTROLS
 ========================================================= */
 
 import { auth, db } from "./firebase.js";
@@ -55,6 +58,9 @@ let currentUser = null;
 let authReady = false;
 
 const ADMIN_EMAIL = "yom@gmail.com";
+
+let notificationUnsubscribe = null;
+let allNotifications = [];
 
 
 /* =========================================================
@@ -210,6 +216,12 @@ onAuthStateChanged(
 
       }
 
+      /* =========================
+         FIREBASE NOTIFICATIONS
+      ========================= */
+
+      startNotificationListener();
+
     } else {
 
       if (userInfo) {
@@ -234,6 +246,10 @@ onAuthStateChanged(
       }
 
       removeAdminControls();
+
+      stopNotificationListener();
+
+      closeNotificationPanel();
 
     }
 
@@ -290,9 +306,14 @@ async function createPost() {
 
   }
 
-  postBtn.disabled = true;
-  postBtn.textContent =
-    "Posting...";
+  if (postBtn) {
+
+    postBtn.disabled = true;
+
+    postBtn.textContent =
+      "Posting...";
+
+  }
 
   try {
 
@@ -325,10 +346,14 @@ async function createPost() {
 
   } finally {
 
-    postBtn.disabled = false;
+    if (postBtn) {
 
-    postBtn.textContent =
-      "📤 Post";
+      postBtn.disabled = false;
+
+      postBtn.textContent =
+        "📤 Post";
+
+    }
 
   }
 
@@ -740,7 +765,7 @@ async function sharePost(
 
 
 /* =========================================================
-   🚩 REPORT POST
+   REPORT POST
 ========================================================= */
 
 async function reportPost(
@@ -971,29 +996,41 @@ async function clearAllPosts() {
 
   }
 
-  const posts =
-    await getDocs(
-      collection(
-        db,
-        "posts"
-      )
+  try {
+
+    const posts =
+      await getDocs(
+        collection(
+          db,
+          "posts"
+        )
+      );
+
+    for (
+      const post of
+      posts.docs
+    ) {
+
+      await deletePost(
+        post.id,
+        post.data().userId
+      );
+
+    }
+
+    alert(
+      "All posts deleted."
     );
 
-  for (
-    const post of
-    posts.docs
-  ) {
+  } catch (error) {
 
-    await deletePost(
-      post.id,
-      post.data().userId
+    console.error(error);
+
+    alert(
+      "Unable to clear all posts."
     );
 
   }
-
-  alert(
-    "All posts deleted."
-  );
 
 }
 
@@ -1273,8 +1310,6 @@ function loadPosts() {
         );
 
 
-        /* BUTTONS */
-
         const likeBtn =
           card.querySelector(
             ".like-btn"
@@ -1301,8 +1336,6 @@ function loadPosts() {
           );
 
 
-        /* LIKE */
-
         likeBtn?.addEventListener(
           "click",
           () => {
@@ -1315,8 +1348,6 @@ function loadPosts() {
           }
         );
 
-
-        /* COMMENT */
 
         commentBtn?.addEventListener(
           "click",
@@ -1340,8 +1371,6 @@ function loadPosts() {
         );
 
 
-        /* SHARE */
-
         shareBtn?.addEventListener(
           "click",
           () => {
@@ -1354,8 +1383,6 @@ function loadPosts() {
           }
         );
 
-
-        /* 🚩 REPORT */
 
         reportBtn?.addEventListener(
           "click",
@@ -1370,8 +1397,6 @@ function loadPosts() {
           }
         );
 
-
-        /* DELETE */
 
         deleteBtn?.addEventListener(
           "click",
@@ -1388,15 +1413,11 @@ function loadPosts() {
         );
 
 
-        /* INITIAL LIKE COUNT */
-
         await updateLikeButton(
           postId,
           likeBtn
         );
 
-
-        /* INITIAL COMMENT COUNT */
 
         await loadComments(
           postId,
@@ -2119,8 +2140,6 @@ async function sendToServer() {
     `;
 
 
-    /* COPY */
-
     aiBox
       .querySelector(
         ".copy-btn"
@@ -2148,8 +2167,6 @@ async function sendToServer() {
         }
       );
 
-
-    /* SPEAK */
 
     aiBox
       .querySelector(
@@ -2472,15 +2489,87 @@ searchBar?.addEventListener(
 
 /* =========================================================
    PART 7
-   NOTIFICATIONS
-   VOICE
-   LOGOUT
-   SHORTCUTS
+   🔔 FIREBASE NOTIFICATIONS
 ========================================================= */
 
 
 /* =========================================================
-   NOTIFICATION BADGE
+   GET READ NOTIFICATION IDS
+========================================================= */
+
+function getReadNotificationIds() {
+
+  if (!currentUser) {
+    return [];
+  }
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(
+        `sc_read_notifications_${currentUser.uid}`
+      )
+    ) || [];
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE READ NOTIFICATION IDS
+========================================================= */
+
+function saveReadNotificationIds(ids) {
+
+  if (!currentUser) {
+    return;
+  }
+
+  try {
+
+    localStorage.setItem(
+      `sc_read_notifications_${currentUser.uid}`,
+      JSON.stringify(ids)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Unable to save notification state:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   GET UNREAD COUNT
+========================================================= */
+
+function getUnreadNotificationCount() {
+
+  const readIds =
+    getReadNotificationIds();
+
+  return allNotifications.filter(
+    notification =>
+      !readIds.includes(
+        notification.id
+      )
+  ).length;
+
+}
+
+
+/* =========================================================
+   UPDATE NOTIFICATION BADGE
 ========================================================= */
 
 function updateNotificationBadge() {
@@ -2489,71 +2578,928 @@ function updateNotificationBadge() {
     return;
   }
 
+  const unread =
+    getUnreadNotificationCount();
 
-  let list = [];
+  if (unread > 0) {
 
+    notifyBtn.innerHTML = `
+      🔔
+      <span
+        class="notification-badge"
+        style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          min-width:20px;
+          height:20px;
+          padding:0 6px;
+          margin-left:3px;
+          background:#dc3545;
+          color:#fff;
+          border-radius:20px;
+          font-size:11px;
+          font-weight:bold;
+          vertical-align:middle;
+        "
+      >
+        ${unread}
+      </span>
+    `;
 
-  try {
+    notifyBtn.title =
+      `${unread} unread notification${unread === 1 ? "" : "s"}`;
 
-    list =
-      JSON.parse(
-        localStorage.getItem(
-          "sc_notify"
-        )
-      ) || [];
+  } else {
 
-  } catch {
+    notifyBtn.innerHTML =
+      "🔔";
 
-    list = [];
+    notifyBtn.title =
+      "Notifications";
 
   }
-
-
-  notifyBtn.innerHTML =
-    list.length
-      ? `🔔 <span style="color:red">${list.length}</span>`
-      : "🔔";
 
 }
 
 
 /* =========================================================
-   SHOW NOTIFICATIONS
+   FORMAT NOTIFICATION TIME
 ========================================================= */
 
-function showNotifications() {
+function formatNotificationTime(timestamp) {
 
-  let list = [];
-
+  if (!timestamp) {
+    return "Just now";
+  }
 
   try {
 
-    list =
-      JSON.parse(
-        localStorage.getItem(
-          "sc_notify"
-        )
-      ) || [];
+    if (
+      typeof timestamp.toDate ===
+      "function"
+    ) {
 
-  } catch {
+      return timestamp
+        .toDate()
+        .toLocaleString(
+          "en-US",
+          {
+            dateStyle: "medium",
+            timeStyle: "short"
+          }
+        );
 
-    list = [];
+    }
+
+  } catch (error) {
+
+    console.warn(error);
 
   }
 
+  return "Recently";
 
-  alert(
+}
 
-    list.length
-      ? list.join(
-          "\n\n"
-        )
-      : "🔔 No new notifications."
 
+/* =========================================================
+   START NOTIFICATION LISTENER
+========================================================= */
+
+function startNotificationListener() {
+
+  stopNotificationListener();
+
+  if (!currentUser) {
+    return;
+  }
+
+  const notificationsQuery =
+    query(
+      collection(
+        db,
+        "notifications"
+      ),
+      orderBy(
+        "createdAt",
+        "desc"
+      )
+    );
+
+  notificationUnsubscribe =
+    onSnapshot(
+
+      notificationsQuery,
+
+      (snapshot) => {
+
+        allNotifications =
+          snapshot.docs.map(
+            item => ({
+              id:
+                item.id,
+              ...item.data()
+            })
+          );
+
+        updateNotificationBadge();
+
+        updateNotificationPanel();
+
+      },
+
+      (error) => {
+
+        console.error(
+          "NOTIFICATIONS ERROR:",
+          error
+        );
+
+        allNotifications = [];
+
+        updateNotificationBadge();
+
+      }
+
+    );
+
+}
+
+
+/* =========================================================
+   STOP NOTIFICATION LISTENER
+========================================================= */
+
+function stopNotificationListener() {
+
+  if (
+    typeof notificationUnsubscribe ===
+    "function"
+  ) {
+
+    notificationUnsubscribe();
+
+    notificationUnsubscribe =
+      null;
+
+  }
+
+  allNotifications = [];
+
+  updateNotificationBadge();
+
+}
+
+
+/* =========================================================
+   CREATE NOTIFICATION PANEL
+========================================================= */
+
+function createNotificationPanel() {
+
+  if (
+    document.getElementById(
+      "scNotificationPanel"
+    )
+  ) {
+
+    return;
+
+  }
+
+  const panel =
+    document.createElement(
+      "div"
+    );
+
+  panel.id =
+    "scNotificationPanel";
+
+  panel.innerHTML = `
+
+    <div
+      class="sc-notification-overlay"
+      id="scNotificationOverlay"
+    ></div>
+
+    <div
+      class="sc-notification-box"
+      id="scNotificationBox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Notifications"
+    >
+
+      <div
+        class="sc-notification-header"
+      >
+
+        <div>
+
+          <h2>
+            🔔 Notifications
+          </h2>
+
+          <p
+            id="scNotificationSummary"
+          >
+            Loading notifications...
+          </p>
+
+        </div>
+
+        <button
+          id="scNotificationClose"
+          class="sc-notification-close"
+          type="button"
+          aria-label="Close notifications"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <div
+        class="sc-notification-actions"
+      >
+
+        <button
+          id="scMarkAllRead"
+          type="button"
+        >
+          ✅ Mark All Read
+        </button>
+
+        <button
+          id="scClearRead"
+          type="button"
+        >
+          🗑️ Clear Read
+        </button>
+
+      </div>
+
+
+      <div
+        id="scNotificationList"
+        class="sc-notification-list"
+      >
+        <div
+          class="sc-notification-empty"
+        >
+          Loading...
+        </div>
+      </div>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(
+    panel
+  );
+
+
+  addNotificationPanelStyles();
+
+
+  document
+    .getElementById(
+      "scNotificationClose"
+    )
+    ?.addEventListener(
+      "click",
+      closeNotificationPanel
+    );
+
+
+  document
+    .getElementById(
+      "scNotificationOverlay"
+    )
+    ?.addEventListener(
+      "click",
+      closeNotificationPanel
+    );
+
+
+  document
+    .getElementById(
+      "scMarkAllRead"
+    )
+    ?.addEventListener(
+      "click",
+      markAllNotificationsRead
+    );
+
+
+  document
+    .getElementById(
+      "scClearRead"
+    )
+    ?.addEventListener(
+      "click",
+      clearReadNotifications
+    );
+
+}
+
+
+/* =========================================================
+   NOTIFICATION PANEL STYLES
+========================================================= */
+
+function addNotificationPanelStyles() {
+
+  if (
+    document.getElementById(
+      "scNotificationStyles"
+    )
+  ) {
+
+    return;
+
+  }
+
+  const style =
+    document.createElement(
+      "style"
+    );
+
+  style.id =
+    "scNotificationStyles";
+
+  style.textContent = `
+
+    #scNotificationPanel{
+      position:fixed;
+      inset:0;
+      z-index:99999;
+      display:none;
+    }
+
+    #scNotificationPanel.sc-open{
+      display:block;
+    }
+
+    .sc-notification-overlay{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      backdrop-filter:blur(3px);
+    }
+
+    .sc-notification-box{
+      position:absolute;
+      top:70px;
+      right:18px;
+      width:min(430px, calc(100% - 28px));
+      max-height:calc(100vh - 90px);
+      background:#fff;
+      border-radius:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .sc-notification-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:15px;
+      padding:20px;
+      background:linear-gradient(135deg,#007bff,#0056b3);
+      color:#fff;
+    }
+
+    .sc-notification-header h2{
+      margin:0;
+      font-size:20px;
+    }
+
+    .sc-notification-header p{
+      margin:6px 0 0;
+      font-size:13px;
+      opacity:.9;
+    }
+
+    .sc-notification-close{
+      border:none;
+      background:rgba(255,255,255,.15);
+      color:#fff;
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:18px;
+      margin:0;
+    }
+
+    .sc-notification-actions{
+      display:flex;
+      gap:8px;
+      padding:12px 15px;
+      border-bottom:1px solid #e5e7eb;
+      background:#f8fbff;
+    }
+
+    .sc-notification-actions button{
+      flex:1;
+      border:1px solid #d5e5f8;
+      background:#fff;
+      color:#0056b3;
+      padding:9px 10px;
+      border-radius:9px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:bold;
+      margin:0;
+    }
+
+    .sc-notification-list{
+      overflow-y:auto;
+      padding:12px;
+    }
+
+    .sc-notification-card{
+      position:relative;
+      padding:15px;
+      margin-bottom:10px;
+      border:1px solid #dbe9ff;
+      border-left:5px solid #007bff;
+      border-radius:13px;
+      background:#f8fbff;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .sc-notification-card:hover{
+      transform:translateY(-1px);
+      box-shadow:0 5px 15px rgba(0,123,255,.1);
+    }
+
+    .sc-notification-card.unread{
+      background:#eaf4ff;
+      border-left-color:#dc3545;
+    }
+
+    .sc-notification-card.read{
+      opacity:.82;
+    }
+
+    .sc-notification-card h3{
+      margin:0 0 7px;
+      color:#0056b3;
+      font-size:16px;
+    }
+
+    .sc-notification-card p{
+      margin:0;
+      color:#444;
+      line-height:1.5;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-size:14px;
+    }
+
+    .sc-notification-time{
+      display:block;
+      margin-top:9px;
+      color:#777;
+      font-size:11px;
+    }
+
+    .sc-notification-status{
+      display:inline-block;
+      margin-top:9px;
+      padding:4px 8px;
+      border-radius:20px;
+      background:#dc3545;
+      color:#fff;
+      font-size:10px;
+      font-weight:bold;
+    }
+
+    .sc-notification-card.read
+    .sc-notification-status{
+      background:#198754;
+    }
+
+    .sc-notification-empty{
+      text-align:center;
+      padding:35px 15px;
+      color:#777;
+    }
+
+    body.dark
+    .sc-notification-box{
+      background:#17202a;
+      color:#fff;
+    }
+
+    body.dark
+    .sc-notification-actions{
+      background:#111827;
+      border-color:#263445;
+    }
+
+    body.dark
+    .sc-notification-actions button{
+      background:#1f2937;
+      color:#8ec5ff;
+      border-color:#374151;
+    }
+
+    body.dark
+    .sc-notification-card{
+      background:#1d2936;
+      border-color:#334155;
+    }
+
+    body.dark
+    .sc-notification-card.unread{
+      background:#20364d;
+    }
+
+    body.dark
+    .sc-notification-card h3{
+      color:#8ec5ff;
+    }
+
+    body.dark
+    .sc-notification-card p{
+      color:#e5e7eb;
+    }
+
+    body.dark
+    .sc-notification-time{
+      color:#aab4c0;
+    }
+
+    @media(max-width:600px){
+
+      .sc-notification-box{
+        top:12px;
+        right:10px;
+        width:calc(100% - 20px);
+        max-height:calc(100vh - 24px);
+        border-radius:15px;
+      }
+
+      .sc-notification-actions{
+        flex-direction:column;
+      }
+
+      .sc-notification-actions button{
+        width:100%;
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(
+    style
   );
 
 }
 
+
+/* =========================================================
+   UPDATE NOTIFICATION PANEL
+========================================================= */
+
+function updateNotificationPanel() {
+
+  const panel =
+    document.getElementById(
+      "scNotificationPanel"
+    );
+
+  if (!panel) {
+    return;
+  }
+
+  const list =
+    document.getElementById(
+      "scNotificationList"
+    );
+
+  const summary =
+    document.getElementById(
+      "scNotificationSummary"
+    );
+
+  if (!list || !summary) {
+    return;
+  }
+
+  const unread =
+    getUnreadNotificationCount();
+
+  summary.textContent =
+    `${allNotifications.length} notification${allNotifications.length === 1 ? "" : "s"} • ${unread} unread`;
+
+  list.innerHTML =
+    "";
+
+  if (
+    allNotifications.length ===
+    0
+  ) {
+
+    list.innerHTML = `
+      <div
+        class="sc-notification-empty"
+      >
+        🔔 No notifications yet.
+        <br><br>
+        Important announcements
+        will appear here.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  const readIds =
+    getReadNotificationIds();
+
+
+  allNotifications.forEach(
+    notification => {
+
+      const isRead =
+        readIds.includes(
+          notification.id
+        );
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className =
+        `sc-notification-card ${
+          isRead
+            ? "read"
+            : "unread"
+        }`;
+
+      card.dataset.id =
+        notification.id;
+
+
+      card.innerHTML = `
+
+        <h3>
+          🔔
+          ${escapeHTML(
+            notification.title ||
+            "Notification"
+          )}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            notification.message ||
+            ""
+          )}
+        </p>
+
+        <span
+          class="sc-notification-time"
+        >
+          🕒
+          ${escapeHTML(
+            formatNotificationTime(
+              notification.createdAt
+            )
+          )}
+        </span>
+
+        ${
+          isRead
+            ? `
+              <span
+                class="sc-notification-status"
+              >
+                ✅ Read
+              </span>
+            `
+            : `
+              <span
+                class="sc-notification-status"
+              >
+                🔴 New
+              </span>
+            `
+        }
+
+      `;
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          markNotificationRead(
+            notification.id
+          );
+
+        }
+      );
+
+
+      list.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   OPEN NOTIFICATIONS
+========================================================= */
+
+function showNotifications() {
+
+  if (!currentUser) {
+
+    alert(
+      "Please login first to view notifications."
+    );
+
+    return;
+
+  }
+
+  createNotificationPanel();
+
+  updateNotificationPanel();
+
+  const panel =
+    document.getElementById(
+      "scNotificationPanel"
+    );
+
+  panel?.classList.add(
+    "sc-open"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+
+/* =========================================================
+   CLOSE NOTIFICATIONS
+========================================================= */
+
+function closeNotificationPanel() {
+
+  const panel =
+    document.getElementById(
+      "scNotificationPanel"
+    );
+
+  panel?.classList.remove(
+    "sc-open"
+  );
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+/* =========================================================
+   MARK ONE NOTIFICATION READ
+========================================================= */
+
+function markNotificationRead(
+  notificationId
+) {
+
+  const readIds =
+    getReadNotificationIds();
+
+  if (
+    !readIds.includes(
+      notificationId
+    )
+  ) {
+
+    readIds.push(
+      notificationId
+    );
+
+    saveReadNotificationIds(
+      readIds
+    );
+
+  }
+
+  updateNotificationBadge();
+
+  updateNotificationPanel();
+
+}
+
+
+/* =========================================================
+   MARK ALL NOTIFICATIONS READ
+========================================================= */
+
+function markAllNotificationsRead() {
+
+  if (
+    allNotifications.length ===
+    0
+  ) {
+
+    return;
+
+  }
+
+  const ids =
+    allNotifications.map(
+      notification =>
+        notification.id
+    );
+
+  saveReadNotificationIds(
+    ids
+  );
+
+  updateNotificationBadge();
+
+  updateNotificationPanel();
+
+}
+
+
+/* =========================================================
+   CLEAR READ NOTIFICATIONS
+========================================================= */
+
+function clearReadNotifications() {
+
+  if (!currentUser) {
+    return;
+  }
+
+  const readIds =
+    getReadNotificationIds();
+
+  if (
+    readIds.length ===
+    0
+  ) {
+
+    alert(
+      "There are no read notifications to clear."
+    );
+
+    return;
+
+  }
+
+  const unreadIds =
+    allNotifications
+      .filter(
+        notification =>
+          !readIds.includes(
+            notification.id
+          )
+      )
+      .map(
+        notification =>
+          notification.id
+      );
+
+  saveReadNotificationIds(
+    unreadIds
+  );
+
+  updateNotificationBadge();
+
+  updateNotificationPanel();
+
+}
+
+
+/* =========================================================
+   NOTIFICATION BUTTON
+========================================================= */
 
 notifyBtn?.addEventListener(
   "click",
@@ -2562,6 +3508,7 @@ notifyBtn?.addEventListener(
 
 
 /* =========================================================
+   PART 8
    VOICE RECOGNITION
 ========================================================= */
 
@@ -2632,8 +3579,12 @@ if (SpeechRecognition) {
       }
 
 
-      micBtn.textContent =
-        "🎤";
+      if (micBtn) {
+
+        micBtn.textContent =
+          "🎤";
+
+      }
 
 
       if (userInput) {
@@ -2649,8 +3600,12 @@ if (SpeechRecognition) {
   recognition.onend =
     () => {
 
-      micBtn.textContent =
-        "🎤";
+      if (micBtn) {
+
+        micBtn.textContent =
+          "🎤";
+
+      }
 
 
       if (userInput) {
@@ -2672,8 +3627,12 @@ if (SpeechRecognition) {
       );
 
 
-      micBtn.textContent =
-        "🎤";
+      if (micBtn) {
+
+        micBtn.textContent =
+          "🎤";
+
+      }
 
 
       if (userInput) {
@@ -2710,6 +3669,10 @@ logoutBtn?.addEventListener(
   async () => {
 
     try {
+
+      stopNotificationListener();
+
+      closeNotificationPanel();
 
       await signOut(
         auth
@@ -2754,6 +3717,14 @@ document.addEventListener(
       e.preventDefault();
 
       searchBar?.focus();
+
+    }
+
+    if (
+      e.key === "Escape"
+    ) {
+
+      closeNotificationPanel();
 
     }
 

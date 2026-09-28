@@ -3,166 +3,419 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>My Profile | Sociology Connect</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:Arial,sans-serif;background:#f4f7fb;color:#222;}
-
-header{
-background:linear-gradient(135deg,#007bff,#0056b3);
-color:#fff;
-text-align:center;
-padding:25px 15px;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+    transition:.3s;
+}
+
+/* ================= HEADER ================= */
+
+header{
+    background:linear-gradient(135deg,#007bff,#0056b3);
+    color:#fff;
+    text-align:center;
+    padding:28px 15px;
+}
+
+header h1{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+header p{
+    font-size:15px;
+    opacity:1;
+}
+
+/* ================= NAV ================= */
+
 nav{
-background:#fff;
-padding:12px;
-display:flex;
-justify-content:center;
-gap:20px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
+    background:#fff;
+    padding:13px 10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 nav a{
-text-decoration:none;
-color:#007bff;
-font-weight:bold;
+    text-decoration:none;
+    color:#007bff;
+    font-weight:bold;
+    padding:7px 10px;
+    border-radius:8px;
+    transition:.2s;
 }
+
+nav a:hover{
+    background:#eaf3ff;
+}
+
+/* ================= CONTAINER ================= */
 
 .container{
-max-width:700px;
-margin:20px auto;
-padding:15px;
+    max-width:700px;
+    margin:25px auto;
+    padding:15px;
 }
+
+/* ================= PROFILE CARD ================= */
 
 .profile-card{
-background:#fff;
-border-radius:20px;
-overflow:hidden;
-box-shadow:0 4px 15px rgba(0,0,0,.1);
+    background:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.10);
 }
+
+/* ================= COVER ================= */
 
 .cover{
-height:220px;
-background:linear-gradient(135deg,#0d6efd,#4facfe);
+    height:220px;
+    background:
+        linear-gradient(135deg,#0d6efd,#4facfe);
 }
 
+/* ================= PROFILE PHOTO ================= */
+
 .photo-wrapper{
-position:relative;
-width:120px;
-margin:-60px auto 10px;
+    position:relative;
+    width:120px;
+    margin:-60px auto 10px;
 }
 
 .profile-photo{
-width:120px;
-height:120px;
-border-radius:50%;
-object-fit:cover;
-border:5px solid #fff;
-display:block;
-box-shadow:0 4px 12px rgba(0,0,0,.25);
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #fff;
+    display:block;
+    background:#e8eef7;
+    box-shadow:0 4px 14px rgba(0,0,0,.25);
 }
 
 .camera-btn{
-position:absolute;
-bottom:0;
-right:0;
-width:36px;
-height:36px;
-border-radius:50%;
-background:#007bff;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:18px;
-cursor:pointer;
-border:3px solid #fff;
-box-shadow:0 2px 8px rgba(0,0,0,.3);
+    position:absolute;
+    bottom:0;
+    right:0;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#007bff;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    cursor:pointer;
+    border:3px solid #fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.3);
+    transition:.2s;
 }
 
-h2{text-align:center;margin-top:10px;}
-.email{text-align:center;color:#666;margin-bottom:20px;}
+.camera-btn:hover{
+    transform:scale(1.08);
+    background:#0056b3;
+}
+
+/* ================= NAME ================= */
+
+#profileName{
+    text-align:center;
+    margin-top:12px;
+    font-size:27px;
+}
+
+.email{
+    text-align:center;
+    color:#667085;
+    margin:7px 15px 20px;
+    font-size:15px;
+}
+
+/* ================= STATS ================= */
 
 .stats{
-display:flex;
-justify-content:space-around;
-padding:10px 20px 25px;
-text-align:center;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 20px 25px;
+    text-align:center;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.stats div{
+    min-width:90px;
 }
 
 .stats strong{
-display:block;
-font-size:32px;
-color:#0d6efd;
+    display:block;
+    font-size:30px;
+    color:#0d6efd;
+    margin-bottom:4px;
 }
 
-.info{padding:0 20px;}
+/* ================= INFO ================= */
+
+.info{
+    padding:22px 20px 5px;
+}
 
 .info-box{
-background:#f5f7fb;
-padding:16px;
-border-radius:12px;
-margin-bottom:15px;
+    background:#f5f7fb;
+    padding:17px;
+    border-radius:13px;
+    margin-bottom:15px;
+    border:1px solid #e7ebf1;
 }
 
 .info-box strong{
-color:#0d6efd;
-display:block;
-margin-bottom:6px;
+    color:#0d6efd;
+    display:block;
+    margin-bottom:7px;
+    font-size:16px;
 }
 
+.info-box span{
+    color:#374151;
+    line-height:1.6;
+}
+
+/* ================= EDIT ================= */
+
 .edit-section{
-margin:20px;
-padding-top:20px;
-border-top:1px solid #ddd;
+    margin:20px;
+    padding-top:22px;
+    border-top:1px solid #ddd;
 }
 
 .edit-section h3{
-text-align:center;
-margin-bottom:20px;
+    text-align:center;
+    margin-bottom:20px;
+    font-size:21px;
 }
 
 label{
-display:block;
-margin:12px 0 5px;
-font-size:18px;
+    display:block;
+    margin:14px 0 6px;
+    font-size:16px;
+    font-weight:bold;
 }
 
-input,select,textarea{
-width:100%;
-padding:14px;
-border:1px solid #ccc;
-border-radius:12px;
-font-size:17px;
+input,
+select,
+textarea{
+    width:100%;
+    padding:14px;
+    border:1px solid #cfd6df;
+    border-radius:12px;
+    font-size:16px;
+    font-family:Arial,sans-serif;
+    background:#fff;
+    color:#172033;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#007bff;
+    box-shadow:0 0 0 3px rgba(0,123,255,.12);
 }
 
 textarea{
-min-height:110px;
-resize:vertical;
+    min-height:110px;
+    resize:vertical;
 }
 
 button{
-width:100%;
-margin-top:20px;
-padding:15px;
-border:none;
-border-radius:12px;
-background:#0057d9;
-color:#fff;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
+    width:100%;
+    margin-top:20px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:#0057d9;
+    color:#fff;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
 }
 
-button:hover{background:#0043a8;}
+button:hover{
+    background:#0043a8;
+    transform:translateY(-1px);
+}
+
+/* ================= STATUS ================= */
+
+#profileStatus{
+    text-align:center;
+    margin-top:12px;
+    font-size:14px;
+    min-height:20px;
+}
+
+/* ================= FOOTER ================= */
 
 footer{
-text-align:center;
-padding:25px;
-color:#777;
+    text-align:center;
+    padding:28px 15px;
+    color:#667085;
+    line-height:1.7;
+}
+
+footer strong{
+    color:#0057d9;
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark{
+    background:#0f172a;
+    color:#f8fafc;
+}
+
+body.dark nav{
+    background:#111827;
+    box-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+
+body.dark nav a{
+    color:#60a5fa;
+}
+
+body.dark nav a:hover{
+    background:#1e293b;
+}
+
+body.dark .profile-card{
+    background:#111827;
+    box-shadow:0 5px 20px rgba(0,0,0,.45);
+}
+
+body.dark .profile-photo{
+    border-color:#111827;
+}
+
+body.dark .email{
+    color:#cbd5e1;
+}
+
+body.dark .stats{
+    border-color:#334155;
+}
+
+body.dark .stats strong{
+    color:#60a5fa;
+}
+
+body.dark .info-box{
+    background:#1e293b;
+    border-color:#334155;
+}
+
+body.dark .info-box strong{
+    color:#60a5fa;
+}
+
+body.dark .info-box span{
+    color:#e2e8f0;
+}
+
+body.dark .edit-section{
+    border-color:#334155;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea{
+    background:#1e293b;
+    color:#f8fafc;
+    border-color:#475569;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+    color:#94a3b8;
+}
+
+body.dark footer{
+    color:#cbd5e1;
+}
+
+body.dark footer strong{
+    color:#60a5fa;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+    header{
+        padding:23px 12px;
+    }
+
+    header h1{
+        font-size:25px;
+    }
+
+    nav{
+        gap:7px;
+        padding:10px 6px;
+    }
+
+    nav a{
+        font-size:14px;
+        padding:7px 8px;
+    }
+
+    .container{
+        margin:15px auto;
+        padding:10px;
+    }
+
+    .cover{
+        height:180px;
+    }
+
+    .stats{
+        padding-left:8px;
+        padding-right:8px;
+    }
+
+    .stats strong{
+        font-size:25px;
+    }
+
+    .stats div{
+        font-size:14px;
+    }
+
+    .edit-section{
+        margin:18px 15px;
+    }
 }
 </style>
 </head>
@@ -170,291 +423,692 @@ color:#777;
 <body>
 
 <header>
-<h1>👤 My Profile</h1>
-<p>Sociology Connect – Arsi University</p>
+    <h1>👤 My Profile</h1>
+    <p>Sociology Connect – Arsi University</p>
 </header>
 
 <nav>
-<a href="index.html">🏠 Home</a>
-<a href="profile.html">👤 Profile</a>
-<a href="login.html">🔐 Login</a>
+    <a href="index.html">🏠 Home</a>
+    <a href="profile.html">👤 Profile</a>
+    <a href="research.html">🔬 Research Hub</a>
+    <a href="login.html">🔐 Login</a>
 </nav>
 
 <div class="container">
 
-<div class="profile-card">
+    <div class="profile-card">
 
-<div class="cover"></div>
+        <!-- COVER -->
+        <div class="cover"></div>
 
-<div class="photo-wrapper">
-<img id="profilePhoto" class="profile-photo" src="IMG_20260910_154710.png" alt="Profile">
-<label for="photoInput" class="camera-btn">📷</label>
-<input type="file" id="photoInput" accept="image/*" hidden>
-</div>
+        <!-- PROFILE PHOTO -->
+        <div class="photo-wrapper">
 
-<h2 id="profileName">Student Name</h2>
-<div class="email">Sociology & Social Work</div>
+            <img
+                id="profilePhoto"
+                class="profile-photo"
+                src="IMG_20260910_154710.png"
+                alt="Profile Photo"
+            >
 
-<div class="stats">
-<div><strong>12</strong>Posts</div>
-<div><strong>340</strong>Followers</div>
-<div><strong>180</strong>Following</div>
-</div>
+            <label
+                for="photoInput"
+                class="camera-btn"
+                title="Change profile photo"
+            >
+                📷
+            </label>
 
-<div class="info">
+            <input
+                type="file"
+                id="photoInput"
+                accept="image/*"
+                hidden
+            >
 
-<div class="info-box">
-<strong>🎓 Year</strong>
-<span id="profileYear">Not added</span>
-</div>
+        </div>
 
-<div class="info-box">
-<strong>📝 Bio</strong>
-<span id="profileBio">No bio added yet.</span>
-</div>
+        <!-- NAME -->
+        <h2 id="profileName">Student Name</h2>
 
-</div>
+        <div class="email">
+            Sociology &amp; Social Work
+        </div>
 
-<div class="edit-section">
+        <!-- STATS -->
+        <div class="stats">
 
-<h3>✏️ Edit Profile</h3>
+            <div>
+                <strong id="postCount">0</strong>
+                Posts
+            </div>
 
-<label>Full Name</label>
-<input id="fullName" type="text" placeholder="Enter your name">
+            <div>
+                <strong id="followerCount">0</strong>
+                Followers
+            </div>
 
-<label>Year</label>
-<select id="year">
-<option value="">Select your year</option>
-<option>1st Year</option>
-<option>2nd Year</option>
-<option>3rd Year</option>
-<option>4th Year</option>
-<option>Graduate</option>
-</select>
+            <div>
+                <strong id="followingCount">0</strong>
+                Following
+            </div>
 
-<label>Bio</label>
-<textarea id="bio" placeholder="Write something..."></textarea>
+        </div>
 
-<button onclick="saveProfile()">💾 Save Profile</button>
+        <!-- PROFILE INFORMATION -->
+        <div class="info">
 
-</div>
+            <div class="info-box">
+                <strong>🎓 Year</strong>
+                <span id="profileYear">
+                    Not added
+                </span>
+            </div>
 
-</div>
+            <div class="info-box">
+                <strong>📝 Bio</strong>
+                <span id="profileBio">
+                    No bio added yet.
+                </span>
+            </div>
+
+            <div class="info-box">
+                <strong>📧 Email</strong>
+                <span id="profileEmail">
+                    Not available
+                </span>
+            </div>
+
+            <div class="info-box">
+                <strong>🏫 Department</strong>
+                <span>
+                    Sociology &amp; Social Work
+                </span>
+            </div>
+
+        </div>
+
+        <!-- EDIT PROFILE -->
+        <div class="edit-section">
+
+            <h3>✏️ Edit Profile</h3>
+
+            <label for="fullName">
+                Full Name
+            </label>
+
+            <input
+                id="fullName"
+                type="text"
+                placeholder="Enter your full name"
+            >
+
+            <label for="year">
+                Academic Year
+            </label>
+
+            <select id="year">
+
+                <option value="">
+                    Select your year
+                </option>
+
+                <option value="1st Year">
+                    1st Year
+                </option>
+
+                <option value="2nd Year">
+                    2nd Year
+                </option>
+
+                <option value="3rd Year">
+                    3rd Year
+                </option>
+
+                <option value="4th Year">
+                    4th Year
+                </option>
+
+                <option value="Graduate">
+                    Graduate
+                </option>
+
+            </select>
+
+            <label for="bio">
+                Bio
+            </label>
+
+            <textarea
+                id="bio"
+                placeholder="Write something about yourself..."
+            ></textarea>
+
+            <button id="saveProfileBtn" onclick="saveProfile()">
+                💾 Save Profile
+            </button>
+
+            <div id="profileStatus"></div>
+
+        </div>
+
+    </div>
 
 </div>
 
 <footer>
-Sociology Connect © 2026
+
+    <strong>Sociology Connect</strong> © 2026<br>
+    Sociology &amp; Social Work<br>
+    Created by Horsa Gowe
+
 </footer>
+
+
 <script type="module">
 
 import { auth, db } from "./firebase.js";
 
 import {
-  doc,
-  setDoc,
-  serverTimestamp
+    doc,
+    getDoc,
+    setDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 import {
-  onAuthStateChanged
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
-/* ================= LOAD PROFILE ================= */
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
 
-function loadProfile(){
+const profileName =
+    document.getElementById("profileName");
 
-  const data =
-    JSON.parse(
-      localStorage.getItem("scProfile")
-    ) || {};
+const profileYear =
+    document.getElementById("profileYear");
 
-  document.getElementById("profileName").textContent =
-    data.name || "Student Name";
+const profileBio =
+    document.getElementById("profileBio");
 
-  document.getElementById("profileYear").textContent =
-    data.year || "Not added";
+const profileEmail =
+    document.getElementById("profileEmail");
 
-  document.getElementById("profileBio").textContent =
-    data.bio || "No bio added yet.";
+const profilePhoto =
+    document.getElementById("profilePhoto");
 
-  if(data.photo){
+const fullName =
+    document.getElementById("fullName");
 
-    document.getElementById("profilePhoto").src =
-      data.photo;
+const year =
+    document.getElementById("year");
 
-  }
+const bio =
+    document.getElementById("bio");
 
-  document.getElementById("fullName").value =
-    data.name || "";
+const statusBox =
+    document.getElementById("profileStatus");
 
-  document.getElementById("year").value =
-    data.year || "";
+const saveBtn =
+    document.getElementById("saveProfileBtn");
 
-  document.getElementById("bio").value =
-    data.bio || "";
+
+/* =========================================================
+   STATUS MESSAGE
+   ========================================================= */
+
+function showStatus(message){
+
+    statusBox.textContent = message;
+
+    setTimeout(()=>{
+        statusBox.textContent = "";
+    },3000);
 
 }
 
 
-/* ================= SAVE PROFILE ================= */
+/* =========================================================
+   LOAD LOCAL PROFILE
+   ========================================================= */
+
+function loadLocalProfile(){
+
+    const data =
+        JSON.parse(
+            localStorage.getItem("scProfile")
+        ) || {};
+
+
+    profileName.textContent =
+        data.name || "Student Name";
+
+    profileYear.textContent =
+        data.year || "Not added";
+
+    profileBio.textContent =
+        data.bio || "No bio added yet.";
+
+    profileEmail.textContent =
+        data.email || "Not available";
+
+
+    fullName.value =
+        data.name || "";
+
+    year.value =
+        data.year || "";
+
+    bio.value =
+        data.bio || "";
+
+
+    if(data.photo){
+
+        profilePhoto.src =
+            data.photo;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD FIREBASE PROFILE
+   ========================================================= */
+
+async function loadFirebaseProfile(user){
+
+    try{
+
+        const profileRef =
+            doc(db,"users",user.uid);
+
+        const profileSnap =
+            await getDoc(profileRef);
+
+
+        if(profileSnap.exists()){
+
+            const data =
+                profileSnap.data();
+
+
+            const localData =
+                JSON.parse(
+                    localStorage.getItem("scProfile")
+                ) || {};
+
+
+            const mergedData = {
+                ...localData,
+                ...data,
+                email:user.email || data.email || ""
+            };
+
+
+            localStorage.setItem(
+                "scProfile",
+                JSON.stringify(mergedData)
+            );
+
+
+            profileName.textContent =
+                mergedData.name || "Student Name";
+
+            profileYear.textContent =
+                mergedData.year || "Not added";
+
+            profileBio.textContent =
+                mergedData.bio || "No bio added yet.";
+
+            profileEmail.textContent =
+                mergedData.email || "Not available";
+
+
+            fullName.value =
+                mergedData.name || "";
+
+            year.value =
+                mergedData.year || "";
+
+            bio.value =
+                mergedData.bio || "";
+
+
+            if(mergedData.photo){
+
+                profilePhoto.src =
+                    mergedData.photo;
+
+            }
+
+        }else{
+
+            profileEmail.textContent =
+                user.email || "Not available";
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "Profile loading error:",
+            error
+        );
+
+        profileEmail.textContent =
+            user.email || "Not available";
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE PROFILE
+   ========================================================= */
 
 window.saveProfile = async()=>{
 
-  const user = auth.currentUser;
-
-  if(!user){
-
-    alert("Please login first.");
-
-    return;
-
-  }
-
-  const name =
-    document.getElementById("fullName").value.trim();
-
-  const year =
-    document.getElementById("year").value;
-
-  const bio =
-    document.getElementById("bio").value.trim();
+    const user =
+        auth.currentUser;
 
 
-  if(!name){
+    if(!user){
 
-    alert("Please enter your full name.");
+        alert("Please login first.");
 
-    return;
+        return;
 
-  }
-
-
-  const data = {
-    name,
-    year,
-    bio,
-    email: user.email || "",
-    uid: user.uid,
-    updatedAt: serverTimestamp()
-  };
+    }
 
 
-  try{
+    const name =
+        fullName.value.trim();
 
-    await setDoc(
-      doc(db,"users",user.uid),
-      data,
-      { merge:true }
-    );
+    const selectedYear =
+        year.value;
 
-
-    /* Keep existing local profile */
-
-    const oldData =
-      JSON.parse(
-        localStorage.getItem("scProfile")
-      ) || {};
-
-    oldData.name = name;
-    oldData.year = year;
-    oldData.bio = bio;
-
-    localStorage.setItem(
-      "scProfile",
-      JSON.stringify(oldData)
-    );
+    const selectedBio =
+        bio.value.trim();
 
 
-    loadProfile();
+    if(!name){
 
-    alert(
-      "Profile updated successfully!"
-    );
+        alert(
+            "Please enter your full name."
+        );
+
+        return;
+
+    }
 
 
-  }catch(error){
+    saveBtn.disabled = true;
 
-    console.error(
-      "Profile save error:",
-      error
-    );
+    saveBtn.textContent =
+        "⏳ Saving...";
 
-    alert(
-      "Could not save profile: " +
-      error.message
-    );
 
-  }
+    const data = {
+
+        name:name,
+
+        year:selectedYear,
+
+        bio:selectedBio,
+
+        email:user.email || "",
+
+        uid:user.uid,
+
+        updatedAt:serverTimestamp()
+
+    };
+
+
+    try{
+
+        await setDoc(
+            doc(db,"users",user.uid),
+            data,
+            {merge:true}
+        );
+
+
+        /* =========================
+           UPDATE LOCAL PROFILE
+           ========================= */
+
+        const oldData =
+            JSON.parse(
+                localStorage.getItem("scProfile")
+            ) || {};
+
+
+        oldData.name =
+            name;
+
+        oldData.year =
+            selectedYear;
+
+        oldData.bio =
+            selectedBio;
+
+        oldData.email =
+            user.email || "";
+
+
+        localStorage.setItem(
+            "scProfile",
+            JSON.stringify(oldData)
+        );
+
+
+        /* =========================
+           UPDATE SCREEN
+           ========================= */
+
+        profileName.textContent =
+            name;
+
+        profileYear.textContent =
+            selectedYear || "Not added";
+
+        profileBio.textContent =
+            selectedBio || "No bio added yet.";
+
+        profileEmail.textContent =
+            user.email || "Not available";
+
+
+        showStatus(
+            "✅ Profile updated successfully!"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Profile save error:",
+            error
+        );
+
+        alert(
+            "Could not save profile: " +
+            error.message
+        );
+
+    }finally{
+
+        saveBtn.disabled = false;
+
+        saveBtn.textContent =
+            "💾 Save Profile";
+
+    }
 
 };
 
 
-/* ================= PROFILE PHOTO ================= */
+/* =========================================================
+   PROFILE PHOTO
+   ========================================================= */
 
 const photoInput =
-  document.getElementById("photoInput");
+    document.getElementById("photoInput");
 
 
 photoInput.addEventListener(
-  "change",
-  function(){
+    "change",
+    function(){
 
-    const file =
-      this.files[0];
-
-    if(!file) return;
+        const file =
+            this.files[0];
 
 
-    const reader =
-      new FileReader();
+        if(!file){
+
+            return;
+
+        }
 
 
-    reader.onload =
-      function(e){
+        /* Limit very large images */
 
-        const data =
-          JSON.parse(
-            localStorage.getItem("scProfile")
-          ) || {};
+        if(file.size > 5 * 1024 * 1024){
 
-        data.photo =
-          e.target.result;
+            alert(
+                "Please choose an image smaller than 5MB."
+            );
 
-        localStorage.setItem(
-          "scProfile",
-          JSON.stringify(data)
-        );
+            this.value = "";
 
-        loadProfile();
+            return;
 
-      };
+        }
 
 
-    reader.readAsDataURL(file);
+        const reader =
+            new FileReader();
 
-  }
+
+        reader.onload =
+            function(event){
+
+                const data =
+                    JSON.parse(
+                        localStorage.getItem("scProfile")
+                    ) || {};
+
+
+                data.photo =
+                    event.target.result;
+
+
+                localStorage.setItem(
+                    "scProfile",
+                    JSON.stringify(data)
+                );
+
+
+                profilePhoto.src =
+                    event.target.result;
+
+
+                showStatus(
+                    "📷 Profile photo updated."
+                );
+
+            };
+
+
+        reader.readAsDataURL(file);
+
+    }
 );
 
 
-/* ================= AUTH ================= */
+/* =========================================================
+   AUTH
+   ========================================================= */
 
 onAuthStateChanged(
-  auth,
-  (user)=>{
+    auth,
+    async(user)=>{
 
-    if(user){
+        if(user){
 
-      loadProfile();
+            profileEmail.textContent =
+                user.email || "Not available";
+
+            loadLocalProfile();
+
+            await loadFirebaseProfile(user);
+
+        }else{
+
+            loadLocalProfile();
+
+            profileEmail.textContent =
+                "Please login";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   THEME SUPPORT
+   ========================================================= */
+
+function applySavedTheme(){
+
+    const theme =
+        localStorage.getItem("theme");
+
+
+    if(
+        theme === "dark" ||
+        localStorage.getItem("darkMode") === "true"
+    ){
+
+        document.body.classList.add("dark");
 
     }else{
 
-      loadProfile();
+        document.body.classList.remove("dark");
 
     }
 
-  }
+}
+
+
+applySavedTheme();
+
+
+/* Listen for theme changes from another tab */
+
+window.addEventListener(
+    "storage",
+    function(event){
+
+        if(
+            event.key === "theme" ||
+            event.key === "darkMode"
+        ){
+
+            applySavedTheme();
+
+        }
+
+    }
 );
 
 </script>

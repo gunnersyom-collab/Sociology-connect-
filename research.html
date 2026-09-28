@@ -280,6 +280,13 @@ button{
     color:#005bbb;
 }
 
+.result-actions{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
 
 /* =========================================================
    COPY BUTTON
@@ -306,6 +313,29 @@ button{
     background:#198754;
     color:white;
     border-color:#198754;
+}
+
+
+/* =========================================================
+   CLEAR RESULT BUTTON
+   ========================================================= */
+
+.clear-btn{
+    background:#fff0f0;
+    color:#c62828;
+    border:1px solid #ffcaca;
+    padding:7px 12px;
+    border-radius:8px;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.2s;
+}
+
+.clear-btn:hover{
+    background:#dc3545;
+    color:white;
+    border-color:#dc3545;
 }
 
 
@@ -419,6 +449,32 @@ button{
 
 .delete-btn:hover{
     background:#b02a37;
+}
+
+
+/* =========================================================
+   ADMIN CLEAR ALL RESEARCH
+   ========================================================= */
+
+.admin-clear-btn{
+    background:#7f1d1d;
+    color:white;
+    padding:10px 16px;
+    border-radius:10px;
+    font-weight:bold;
+    margin-top:15px;
+    border:none;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.admin-clear-btn:hover{
+    background:#991b1b;
+}
+
+.admin-clear-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
 }
 
 
@@ -584,6 +640,17 @@ body.dark .copy-btn:hover{
     color:white;
 }
 
+body.dark .clear-btn{
+    background:#3b1d22;
+    color:#ff9b9b;
+    border-color:#71333b;
+}
+
+body.dark .clear-btn:hover{
+    background:#dc3545;
+    color:white;
+}
+
 body.dark .step,
 body.dark .area{
     background:#10253d;
@@ -663,11 +730,23 @@ body.dark .saved-date{
         flex-direction:column;
     }
 
+    .result-actions{
+        width:100%;
+    }
+
+    .result-actions button{
+        flex:1;
+    }
+
     .saved-actions{
         flex-direction:column;
     }
 
     .saved-actions button{
+        width:100%;
+    }
+
+    .admin-clear-btn{
         width:100%;
     }
 
@@ -851,13 +930,25 @@ body.dark .saved-date{
                 Generated Topics
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('topicResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('topicResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('topicResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -911,13 +1002,25 @@ body.dark .saved-date{
                 AI Mari Response
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('mariResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('mariResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('mariResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -970,13 +1073,25 @@ body.dark .saved-date{
                 Research Questions
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('questionResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('questionResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('questionResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -1057,13 +1172,25 @@ body.dark .saved-date{
                 APA 7 Citation
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('apaResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('apaResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('apaResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -1116,13 +1243,25 @@ body.dark .saved-date{
                 Abstract
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('abstractResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('abstractResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('abstractResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -1175,13 +1314,25 @@ body.dark .saved-date{
                 Problem Statement
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('problemResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('problemResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('problemResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -1234,13 +1385,25 @@ body.dark .saved-date{
                 Research Objectives
             </h4>
 
-            <button
-                class="copy-btn"
-                onclick="copyResult('objectiveResult',this)">
+            <div class="result-actions">
 
-                📋 Copy
+                <button
+                    class="copy-btn"
+                    onclick="copyResult('objectiveResult',this)">
 
-            </button>
+                    📋 Copy
+
+                </button>
+
+                <button
+                    class="clear-btn"
+                    onclick="clearResult('objectiveResult',this)">
+
+                    🗑️ Clear
+
+                </button>
+
+            </div>
 
         </div>
 
@@ -1319,6 +1482,22 @@ body.dark .saved-date{
         </div>
 
     </div>
+
+
+    <!-- =====================================================
+         ADMIN ONLY CLEAR ALL
+         ===================================================== -->
+
+    <button
+        id="adminClearResearchBtn"
+        class="admin-clear-btn"
+        type="button"
+        onclick="clearAllResearch()"
+        style="display:none;">
+
+        🧹 Clear All Research — Admin Only
+
+    </button>
 
 </section>
 
@@ -1902,6 +2081,13 @@ import {
 let currentUser = null;
 
 
+/* =========================================================
+   ADMIN EMAIL
+   ========================================================= */
+
+const ADMIN_EMAIL = "yom@gmail.com";
+
+
 
 /* =========================================================
    AUTH STATE
@@ -1910,6 +2096,36 @@ let currentUser = null;
 onAuthStateChanged(auth, async (user) => {
 
     currentUser = user || null;
+
+
+    /* =====================================================
+       ADMIN BUTTON VISIBILITY
+       ===================================================== */
+
+    const adminButton =
+        document.getElementById(
+            "adminClearResearchBtn"
+        );
+
+
+    if(adminButton){
+
+        if(
+            currentUser &&
+            currentUser.email === ADMIN_EMAIL
+        ){
+
+            adminButton.style.display =
+                "inline-block";
+
+        }else{
+
+            adminButton.style.display =
+                "none";
+
+        }
+
+    }
 
 
     if(currentUser){
@@ -2036,12 +2252,6 @@ window.saveResearch = async function(){
 
     try{
 
-
-        /* =================================================
-           SAVE TO FIRESTORE
-           IMPORTANT:
-           Collection name = research
-           ================================================= */
 
         await addDoc(
 
@@ -2175,11 +2385,6 @@ async function loadSavedResearch(){
     try{
 
 
-        /* =================================================
-           READ FROM SAME COLLECTION:
-           research
-           ================================================= */
-
         const researchQuery =
             query(
 
@@ -2205,10 +2410,6 @@ async function loadSavedResearch(){
 
 
 
-        /* =================================================
-           NO RESEARCH
-           ================================================= */
-
         if(snapshot.empty){
 
             container.innerHTML = `
@@ -2232,10 +2433,6 @@ async function loadSavedResearch(){
 
 
 
-        /* =================================================
-           CONVERT DOCUMENTS
-           ================================================= */
-
         const items = [];
 
 
@@ -2255,10 +2452,6 @@ async function loadSavedResearch(){
         );
 
 
-
-        /* =================================================
-           SORT NEWEST FIRST
-           ================================================= */
 
         items.sort(
             (a,b) => {
@@ -2285,10 +2478,6 @@ async function loadSavedResearch(){
         container.innerHTML = "";
 
 
-
-        /* =================================================
-           DISPLAY EACH RESEARCH
-           ================================================= */
 
         items.forEach(
             (item) => {
@@ -2547,10 +2736,6 @@ async function deleteSavedResearch(id){
     try{
 
 
-        /* =================================================
-           DELETE FROM research COLLECTION
-           ================================================= */
-
         await deleteDoc(
 
             doc(
@@ -2581,6 +2766,202 @@ async function deleteSavedResearch(id){
     }
 
 }
+
+
+
+/* =========================================================
+   CLEAR ALL RESEARCH — ADMIN ONLY
+   ========================================================= */
+
+window.clearAllResearch = async function(){
+
+    /* =====================================================
+       CHECK LOGIN
+       ===================================================== */
+
+    if(!currentUser){
+
+        alert(
+            "🔐 Please login first."
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       CHECK ADMIN EMAIL
+       ===================================================== */
+
+    if(
+        currentUser.email !== ADMIN_EMAIL
+    ){
+
+        alert(
+            "⛔ Admin access only."
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       FIRST CONFIRMATION
+       ===================================================== */
+
+    const confirmed =
+        confirm(
+            "⚠️ WARNING!\n\nThis will delete ALL saved research from Sociology Connect.\n\nAre you sure you want to continue?"
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       SECOND CONFIRMATION
+       ===================================================== */
+
+    const finalConfirmed =
+        confirm(
+            "🚨 FINAL CONFIRMATION\n\nALL saved research will be permanently deleted.\n\nPress OK to delete everything."
+        );
+
+
+    if(!finalConfirmed){
+
+        return;
+
+    }
+
+
+
+    const button =
+        document.getElementById(
+            "adminClearResearchBtn"
+        );
+
+
+    if(button){
+
+        button.disabled = true;
+
+        button.textContent =
+            "⏳ Clearing Research...";
+
+    }
+
+
+
+    try{
+
+
+        /* =================================================
+           GET ALL RESEARCH DOCUMENTS
+           ================================================= */
+
+        const researchSnapshot =
+            await getDocs(
+
+                collection(
+                    db,
+                    "research"
+                )
+
+            );
+
+
+        const total =
+            researchSnapshot.size;
+
+
+        if(total === 0){
+
+            alert(
+                "📂 There is no saved research to clear."
+            );
+
+
+            if(button){
+
+                button.disabled = false;
+
+                button.textContent =
+                    "🧹 Clear All Research — Admin Only";
+
+            }
+
+            return;
+
+        }
+
+
+
+        /* =================================================
+           DELETE ALL DOCUMENTS
+           ================================================= */
+
+        const deletePromises =
+            researchSnapshot.docs.map(
+                researchDoc =>
+                    deleteDoc(
+                        researchDoc.ref
+                    )
+            );
+
+
+        await Promise.all(
+            deletePromises
+        );
+
+
+
+        /* =================================================
+           RELOAD LIST
+           ================================================= */
+
+        await loadSavedResearch();
+
+
+
+        alert(
+            `✅ Successfully cleared ${total} saved research project${total === 1 ? "" : "s"}.`
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CLEAR ALL RESEARCH ERROR:",
+            error
+        );
+
+
+        alert(
+            "❌ Could not clear all research. Please check your Firestore Rules and try again."
+        );
+
+
+    }finally{
+
+        if(button){
+
+            button.disabled = false;
+
+            button.textContent =
+                "🧹 Clear All Research — Admin Only";
+
+        }
+
+    }
+
+};
 
 
 
@@ -2711,6 +3092,63 @@ async function copyText(
      ========================================================= -->
 
 <script>
+
+
+/* =========================================================
+   CLEAR INDIVIDUAL GENERATED RESULT
+   ========================================================= */
+
+function clearResult(
+    elementId,
+    button
+){
+
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if(!element){
+
+        return;
+
+    }
+
+
+    element.textContent = "";
+
+
+    const originalText =
+        button.innerHTML;
+
+
+    button.innerHTML =
+        "✅ Cleared!";
+
+
+    button.style.background =
+        "#198754";
+
+    button.style.color =
+        "white";
+
+
+    setTimeout(() => {
+
+        button.innerHTML =
+            originalText;
+
+        button.style.background =
+            "";
+
+        button.style.color =
+            "";
+
+    },1200);
+
+}
+
 
 
 /* =========================================================

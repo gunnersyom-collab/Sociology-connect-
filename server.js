@@ -69,6 +69,17 @@ app.post("/api/chat", async (req, res) => {
 
 
     // =================================================
+    // REQUEST TIMEOUT
+    // =================================================
+
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 15000);
+
+
+    // =================================================
     // SEND REQUEST TO GEMINI
     // =================================================
 
@@ -82,6 +93,8 @@ app.post("/api/chat", async (req, res) => {
           "Content-Type": "application/json",
           "x-goog-api-key": process.env.GEMINI_API_KEY
         },
+
+        signal: controller.signal,
 
         body: JSON.stringify({
 
@@ -100,12 +113,29 @@ app.post("/api/chat", async (req, res) => {
 
             }
 
-          ]
+          ],
+
+          generationConfig: {
+
+            thinkingConfig: {
+              thinkingLevel: "low"
+            },
+
+            maxOutputTokens: 800
+
+          }
 
         })
 
       }
     );
+
+
+    // =================================================
+    // CLEAR TIMEOUT
+    // =================================================
+
+    clearTimeout(timeout);
 
 
     // =================================================
@@ -174,6 +204,30 @@ app.post("/api/chat", async (req, res) => {
 
 
   } catch (error) {
+
+    // =================================================
+    // TIMEOUT ERROR
+    // =================================================
+
+    if (error.name === "AbortError") {
+
+      console.error(
+        "Gemini request timed out."
+      );
+
+      return res.status(504).json({
+
+        error:
+          "AI Mari took too long to respond. Please try again."
+
+      });
+
+    }
+
+
+    // =================================================
+    // SERVER ERROR
+    // =================================================
 
     console.error(
       "Server Error:",

@@ -31,6 +31,12 @@ body{
     min-height:100vh;
 }
 
+button,
+input,
+textarea{
+    font-family:inherit;
+}
+
 /* =========================================================
    HEADER
    ========================================================= */
@@ -550,6 +556,86 @@ button:hover{
 }
 
 /* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
+
+.notification-form{
+    background:#f8fbff;
+    border:1px solid #dbe9ff;
+    padding:20px;
+    border-radius:14px;
+    margin-top:15px;
+}
+
+.notification-tools{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:15px;
+}
+
+.notification-tools button{
+    margin-top:0;
+}
+
+.notification-summary{
+    background:#eaf4ff;
+    border:1px solid #cfe5ff;
+    color:#0056b3;
+    padding:14px;
+    border-radius:12px;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+#notificationsList{
+    margin-top:18px;
+}
+
+.notification-card{
+    background:#f8fbff;
+    border:1px solid #dbe9ff;
+    border-left:5px solid #007bff;
+    padding:18px;
+    border-radius:13px;
+    margin-top:14px;
+    transition:.25s;
+}
+
+.notification-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,123,255,.08);
+}
+
+.notification-card h3{
+    color:#0056b3;
+    margin-bottom:9px;
+}
+
+.notification-card p{
+    color:#555;
+    line-height:1.6;
+    white-space:pre-wrap;
+}
+
+.notification-card small{
+    display:block;
+    margin-top:10px;
+    color:#777;
+}
+
+.notification-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.notification-actions button{
+    margin-top:0;
+}
+
+/* =========================================================
    STATUS
    ========================================================= */
 
@@ -647,6 +733,22 @@ footer{
     }
 
     .report-actions button{
+        width:100%;
+    }
+
+    .notification-tools{
+        flex-direction:column;
+    }
+
+    .notification-tools button{
+        width:100%;
+    }
+
+    .notification-actions{
+        flex-direction:column;
+    }
+
+    .notification-actions button{
         width:100%;
     }
 
@@ -859,6 +961,10 @@ footer{
             📅 Manage Events
         </button>
 
+        <button onclick="scrollToSection('notificationsSection')">
+            🔔 Notifications
+        </button>
+
         <button
             class="delete-btn"
             onclick="clearAllPosts()">
@@ -1023,7 +1129,7 @@ footer{
 </div>
 
 <!-- =========================================================
-     NOTIFICATIONS
+     NOTIFICATIONS CENTER
      ========================================================= -->
 
 <div class="card" id="notificationsSection">
@@ -1035,11 +1141,72 @@ footer{
         Sociology Connect students.
     </p>
 
-    <button onclick="showComingSoon('Notifications Center')">
+    <div class="notification-summary" id="notificationSummary">
 
-        🔔 Manage Notifications
+        🔔 Loading notifications...
 
-    </button>
+    </div>
+
+    <div class="notification-form">
+
+        <h3 style="color:#0056b3;margin-bottom:12px;">
+            📢 Create New Notification
+        </h3>
+
+        <label for="notificationTitle">
+            Notification Title
+        </label>
+
+        <input
+            id="notificationTitle"
+            type="text"
+            maxlength="100"
+            placeholder="Example: Important Department Announcement"
+        >
+
+        <label for="notificationMessage">
+            Notification Message
+        </label>
+
+        <textarea
+            id="notificationMessage"
+            maxlength="1000"
+            placeholder="Write the notification message for students..."
+        ></textarea>
+
+        <button
+            style="width:100%;padding:15px;font-size:17px;"
+            onclick="createNotification()">
+
+            📢 Publish Notification
+
+        </button>
+
+    </div>
+
+    <div class="notification-tools">
+
+        <button onclick="loadNotifications()">
+
+            🔄 Refresh Notifications
+
+        </button>
+
+        <button
+            class="delete-btn"
+            onclick="deleteAllNotifications()">
+
+            🗑️ Delete All Notifications
+
+        </button>
+
+    </div>
+
+    <div id="notificationsList">
+
+        <p>Loading notifications...</p>
+
+    </div>
 
 </div>
 
@@ -1302,6 +1469,9 @@ const researchCount =
 const reportsCount =
     document.getElementById("reportsCount");
 
+const notificationSummary =
+    document.getElementById("notificationSummary");
+
 
 /* =========================================================
    ESCAPE HTML
@@ -1315,6 +1485,36 @@ function escapeHTML(value){
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+   ========================================================= */
+
+function formatTimestamp(timestamp){
+
+    if(
+        !timestamp ||
+        typeof timestamp.toDate !== "function"
+    ){
+
+        return "Just now";
+
+    }
+
+    try{
+
+        return timestamp
+            .toDate()
+            .toLocaleString();
+
+    }catch(error){
+
+        return "Recently";
+
+    }
 
 }
 
@@ -1350,6 +1550,11 @@ async function updateStats(){
         const reportsSnap =
             await getDocs(
                 collection(db,"reports")
+            );
+
+        const notificationsSnap =
+            await getDocs(
+                collection(db,"notifications")
             );
 
 
@@ -1415,12 +1620,19 @@ async function updateStats(){
             reportsSnap.size;
 
 
+        notificationSummary.textContent =
+            `🔔 ${notificationsSnap.size} notification${notificationsSnap.size === 1 ? "" : "s"} currently published`;
+
+
     }catch(error){
 
         console.error(
             "Stats Error:",
             error
         );
+
+        notificationSummary.textContent =
+            "⚠️ Notification data could not be loaded.";
 
     }
 
@@ -1466,6 +1678,8 @@ onAuthStateChanged(
         await loadReports();
 
         await loadStudents();
+
+        await loadNotifications();
 
         await updateStats();
 
@@ -1695,6 +1909,401 @@ document
 
         }
     );
+
+
+/* =========================================================
+   NOTIFICATIONS CENTER
+   ========================================================= */
+
+async function loadNotifications(){
+
+    const list =
+        document.getElementById(
+            "notificationsList"
+        );
+
+
+    list.innerHTML =
+        "<p>Loading notifications...</p>";
+
+
+    try{
+
+        const notificationsQuery =
+            query(
+                collection(
+                    db,
+                    "notifications"
+                ),
+                orderBy(
+                    "createdAt",
+                    "desc"
+                )
+            );
+
+
+        const snapshot =
+            await getDocs(
+                notificationsQuery
+            );
+
+
+        list.innerHTML = "";
+
+
+        notificationSummary.textContent =
+            `🔔 ${snapshot.size} notification${snapshot.size === 1 ? "" : "s"} currently published`;
+
+
+        if(snapshot.empty){
+
+            list.innerHTML =
+                "<p>🔔 No notifications published yet.</p>";
+
+            return;
+
+        }
+
+
+        snapshot.forEach(
+            (item)=>{
+
+                const data =
+                    item.data();
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "notification-card";
+
+
+                div.innerHTML = `
+
+                    <h3>
+                        🔔 ${escapeHTML(
+                            data.title ||
+                            "Untitled Notification"
+                        )}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            data.message ||
+                            "No message available."
+                        )}
+                    </p>
+
+                    <small>
+                        🕒 ${escapeHTML(
+                            formatTimestamp(
+                                data.createdAt
+                            )
+                        )}
+                    </small>
+
+                    <small>
+                        👤 Published by:
+                        ${escapeHTML(
+                            data.createdBy ||
+                            ADMIN_EMAIL
+                        )}
+                    </small>
+
+                    <div class="notification-actions">
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteNotification('${item.id}')">
+
+                            🗑️ Delete
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Notifications Error:",
+            error
+        );
+
+
+        notificationSummary.textContent =
+            "❌ Could not load notifications.";
+
+        list.innerHTML =
+            "<p>❌ Could not load notifications. Check Firestore Rules.</p>";
+
+    }
+
+}
+
+
+/* =========================================================
+   CREATE NOTIFICATION
+   ========================================================= */
+
+window.createNotification =
+async()=>{
+
+    const title =
+        document
+            .getElementById(
+                "notificationTitle"
+            )
+            .value
+            .trim();
+
+
+    const message =
+        document
+            .getElementById(
+                "notificationMessage"
+            )
+            .value
+            .trim();
+
+
+    if(
+        !title ||
+        !message
+    ){
+
+        alert(
+            "Please enter both notification title and message."
+        );
+
+        return;
+
+    }
+
+
+    if(title.length < 3){
+
+        alert(
+            "Notification title is too short."
+        );
+
+        return;
+
+    }
+
+
+    if(message.length < 3){
+
+        alert(
+            "Notification message is too short."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        await addDoc(
+            collection(
+                db,
+                "notifications"
+            ),
+            {
+                title:title,
+
+                message:message,
+
+                createdAt:
+                    serverTimestamp(),
+
+                createdBy:
+                    auth.currentUser?.email ||
+                    ADMIN_EMAIL
+            }
+        );
+
+
+        document
+            .getElementById(
+                "notificationTitle"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "notificationMessage"
+            )
+            .value = "";
+
+
+        status.textContent =
+            "✅ Notification published successfully!";
+
+
+        await loadNotifications();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(
+            "Create Notification Error:",
+            error
+        );
+
+
+        status.textContent =
+            "❌ Could not publish notification: " +
+            error.message;
+
+    }
+
+};
+
+
+/* =========================================================
+   DELETE NOTIFICATION
+   ========================================================= */
+
+window.deleteNotification =
+async(id)=>{
+
+    if(
+        !confirm(
+            "Are you sure you want to delete this notification?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await deleteDoc(
+            doc(
+                db,
+                "notifications",
+                id
+            )
+        );
+
+
+        status.textContent =
+            "✅ Notification deleted.";
+
+
+        await loadNotifications();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(
+            "Delete Notification Error:",
+            error
+        );
+
+
+        status.textContent =
+            "❌ Could not delete notification.";
+
+    }
+
+};
+
+
+/* =========================================================
+   DELETE ALL NOTIFICATIONS
+   ========================================================= */
+
+window.deleteAllNotifications =
+async()=>{
+
+    if(
+        !confirm(
+            "⚠️ Delete ALL notifications?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "notifications"
+                )
+            );
+
+
+        if(snapshot.empty){
+
+            status.textContent =
+                "ℹ️ There are no notifications to delete.";
+
+            return;
+
+        }
+
+
+        for(
+            const item of snapshot.docs
+        ){
+
+            await deleteDoc(
+                item.ref
+            );
+
+        }
+
+
+        status.textContent =
+            "🗑️ All notifications deleted successfully.";
+
+
+        await loadNotifications();
+
+        await updateStats();
+
+
+    }catch(error){
+
+        console.error(
+            "Delete All Notifications Error:",
+            error
+        );
+
+
+        status.textContent =
+            "❌ Could not delete all notifications.";
+
+    }
+
+};
 
 
 /* =========================================================
@@ -2793,6 +3402,8 @@ async()=>{
     await loadReports();
 
     await loadStudents();
+
+    await loadNotifications();
 
     await updateStats();
 

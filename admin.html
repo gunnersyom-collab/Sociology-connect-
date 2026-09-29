@@ -24,16 +24,33 @@
     box-sizing:border-box;
 }
 
+:root{
+    --primary:#007bff;
+    --primary-dark:#0056b3;
+    --body-bg:#f4f7fb;
+    --card-bg:#ffffff;
+    --text:#222;
+    --muted:#666;
+    --border:#dbe9ff;
+    --input-bg:#ffffff;
+    --soft-bg:#f8fbff;
+    --shadow:0 5px 18px rgba(0,0,0,.07);
+}
+
 body{
     font-family:Arial,sans-serif;
-    background:#f4f7fb;
-    color:#222;
+    background:var(--body-bg);
+    color:var(--text);
     min-height:100vh;
+    transition:
+        background .25s ease,
+        color .25s ease;
 }
 
 button,
 input,
-textarea{
+textarea,
+select{
     font-family:inherit;
 }
 
@@ -42,11 +59,20 @@ textarea{
    ========================================================= */
 
 header{
-    background:linear-gradient(135deg,#007bff,#0056b3);
+    background:linear-gradient(
+        135deg,
+        #007bff,
+        #0056b3
+    );
+
     color:white;
+
     padding:30px 15px;
+
     text-align:center;
-    box-shadow:0 4px 15px rgba(0,0,0,.15);
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.15);
 }
 
 header h1{
@@ -59,21 +85,69 @@ header p{
 }
 
 /* =========================================================
+   DARK MODE BUTTON
+   ========================================================= */
+
+.dark-mode-btn{
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:7px;
+
+    margin-top:15px;
+
+    padding:10px 17px;
+
+    background:rgba(255,255,255,.15);
+
+    color:#ffffff;
+
+    border:1px solid
+        rgba(255,255,255,.35);
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s ease;
+}
+
+.dark-mode-btn:hover{
+    background:rgba(255,255,255,.28);
+
+    transform:translateY(-1px);
+}
+
+/* =========================================================
    NAVIGATION
    ========================================================= */
 
 nav{
     background:#0069d9;
+
     padding:13px 10px;
+
     text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.08);
 }
 
 nav a{
     color:white;
+
     text-decoration:none;
+
     font-weight:bold;
+
     margin:0 10px;
+
     transition:.2s;
 }
 
@@ -88,7 +162,9 @@ nav a:hover{
 
 .container{
     max-width:1100px;
+
     margin:25px auto;
+
     padding:15px;
 }
 
@@ -97,20 +173,29 @@ nav a:hover{
    ========================================================= */
 
 #accessDenied{
-    background:white;
+    background:var(--card-bg);
+
     padding:35px 25px;
+
     border-radius:18px;
+
     text-align:center;
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.08);
+
+    border:1px solid transparent;
 }
 
 #accessDenied h2{
     color:#dc3545;
+
     margin-bottom:12px;
 }
 
 #accessDenied p{
-    color:#666;
+    color:var(--muted);
+
     line-height:1.6;
 }
 
@@ -128,38 +213,59 @@ nav a:hover{
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     gap:16px;
+
     margin-bottom:22px;
 }
 
 .stat{
-    background:linear-gradient(135deg,#007bff,#0056b3);
+    background:
+        linear-gradient(
+            135deg,
+            #007bff,
+            #0056b3
+        );
+
     color:white;
+
     padding:22px 15px;
+
     border-radius:17px;
+
     text-align:center;
-    box-shadow:0 5px 15px rgba(0,0,0,.12);
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.12);
+
     transition:.25s;
 }
 
 .stat:hover{
     transform:translateY(-4px);
-    box-shadow:0 10px 25px rgba(0,0,0,.16);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.16);
 }
 
 .stat-icon{
     font-size:28px;
+
     margin-bottom:5px;
 }
 
 .stat h3{
     font-size:30px;
+
     margin-bottom:5px;
 }
 
 .stat p{
     opacity:.9;
+
     font-size:14px;
 }
 
@@ -168,21 +274,35 @@ nav a:hover{
    ========================================================= */
 
 .card{
-    background:white;
+    background:var(--card-bg);
+
     padding:24px;
+
     border-radius:17px;
+
     margin-bottom:22px;
-    box-shadow:0 5px 18px rgba(0,0,0,.07);
+
+    box-shadow:var(--shadow);
+
+    border:1px solid transparent;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        border .25s ease;
 }
 
 .card h2{
     color:#007bff;
+
     margin-bottom:14px;
 }
 
 .card-description{
-    color:#666;
+    color:var(--muted);
+
     line-height:1.7;
+
     margin-bottom:18px;
 }
 
@@ -192,25 +312,38 @@ nav a:hover{
 
 .control-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:12px;
 }
 
 .control-btn{
     background:#f4f8ff;
+
     color:#0056b3;
+
     border:1px solid #dbe9ff;
+
     padding:16px 12px;
+
     border-radius:12px;
+
     cursor:pointer;
+
     font-weight:bold;
+
     font-size:14px;
+
     transition:.25s;
 }
 
 .control-btn:hover{
     background:#007bff;
+
     color:white;
+
     transform:translateY(-2px);
 }
 
@@ -220,7 +353,9 @@ nav a:hover{
 
 .quick-actions{
     display:flex;
+
     flex-wrap:wrap;
+
     gap:10px;
 }
 
@@ -234,7 +369,9 @@ nav a:hover{
 
 label{
     display:block;
+
     font-weight:bold;
+
     margin-top:13px;
 }
 
@@ -242,12 +379,23 @@ input,
 textarea,
 select{
     width:100%;
+
     padding:13px;
+
     margin-top:7px;
+
     border:1px solid #ccc;
+
     border-radius:10px;
+
     font-size:15px;
+
     outline:none;
+
+    background:var(--input-bg);
+
+    color:var(--text);
+
     transition:.2s;
 }
 
@@ -255,12 +403,21 @@ input:focus,
 textarea:focus,
 select:focus{
     border-color:#007bff;
-    box-shadow:0 0 0 3px rgba(0,123,255,.08);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,123,255,.08);
 }
 
 textarea{
     min-height:120px;
+
     resize:vertical;
+}
+
+input::placeholder,
+textarea::placeholder{
+    color:#888;
 }
 
 /* =========================================================
@@ -269,18 +426,27 @@ textarea{
 
 button{
     background:#007bff;
+
     color:white;
+
     border:none;
+
     padding:11px 18px;
+
     border-radius:9px;
+
     cursor:pointer;
+
     font-weight:bold;
+
     margin-top:12px;
+
     transition:.25s;
 }
 
 button:hover{
     background:#0056b3;
+
     transform:translateY(-1px);
 }
 
@@ -301,29 +467,49 @@ button:hover{
 }
 
 /* =========================================================
+   FULL WIDTH BUTTON
+   ========================================================= */
+
+.full-button{
+    width:100%;
+
+    padding:15px;
+
+    font-size:17px;
+}
+
+/* =========================================================
    ANALYTICS
    ========================================================= */
 
 .analytics-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:15px;
 }
 
 .analytics-box{
-    background:#f8fbff;
+    background:var(--soft-bg);
+
     border:1px solid #e1edff;
+
     border-radius:14px;
+
     padding:18px;
 }
 
 .analytics-box h3{
     color:#007bff;
+
     margin-bottom:8px;
 }
 
 .analytics-box p{
-    color:#666;
+    color:var(--muted);
+
     line-height:1.5;
 }
 
@@ -333,10 +519,21 @@ button:hover{
 
 .item{
     background:#f8f9fa;
+
     padding:17px;
-    border-left:4px solid #007bff;
+
+    border-left:
+        4px solid #007bff;
+
     border-radius:10px;
+
     margin-top:12px;
+
+    border-top:1px solid transparent;
+
+    border-right:1px solid transparent;
+
+    border-bottom:1px solid transparent;
 }
 
 .item h3{
@@ -345,12 +542,15 @@ button:hover{
 
 .item p{
     line-height:1.6;
+
     color:#555;
 }
 
 .item small{
     display:block;
+
     margin-top:8px;
+
     color:#777;
 }
 
@@ -360,24 +560,41 @@ button:hover{
 
 #newsList{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px,1fr)
+        );
+
     gap:18px;
+
     margin-top:20px;
 }
 
 #newsList .item{
-    background:#fff;
+    background:var(--card-bg);
+
     padding:20px;
-    border-top:4px solid #007bff;
+
+    border-top:
+        4px solid #007bff;
+
     border-left:none;
+
     border-radius:15px;
-    box-shadow:0 5px 18px rgba(0,0,0,.07);
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.07);
+
     transition:.25s;
 }
 
 #newsList .item:hover{
     transform:translateY(-4px);
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.12);
 }
 
 #newsList .item h3{
@@ -385,7 +602,8 @@ button:hover{
 }
 
 #newsList .item p{
-    color:#555;
+    color:var(--muted);
+
     line-height:1.6;
 }
 
@@ -395,24 +613,35 @@ button:hover{
 
 .student-tools{
     display:flex;
+
     gap:10px;
+
     flex-wrap:wrap;
+
     margin-top:15px;
 }
 
 .student-search{
     flex:1;
+
     min-width:220px;
+
     margin-top:0;
 }
 
 .students-summary{
     background:#f4f8ff;
+
     border:1px solid #dbe9ff;
+
     padding:15px;
+
     border-radius:12px;
+
     margin-top:15px;
+
     color:#0056b3;
+
     font-weight:bold;
 }
 
@@ -422,45 +651,68 @@ button:hover{
 
 .student-card{
     background:#f8fbff;
+
     border:1px solid #dceaff;
-    border-left:5px solid #007bff;
+
+    border-left:
+        5px solid #007bff;
+
     padding:18px;
+
     border-radius:13px;
+
     margin-top:12px;
+
     transition:.25s;
 }
 
 .student-card:hover{
     transform:translateY(-2px);
-    box-shadow:0 6px 18px rgba(0,123,255,.08);
+
+    box-shadow:
+        0 6px 18px
+        rgba(0,123,255,.08);
 }
 
 .student-card h3{
     color:#0056b3;
+
     margin-bottom:8px;
 }
 
 .student-card p{
     color:#555;
+
     margin:6px 0;
+
     line-height:1.5;
 }
 
 .student-card small{
     color:#777;
+
     display:block;
+
     margin-top:8px;
+
     word-break:break-all;
 }
 
 .student-badge{
     display:inline-block;
+
     background:#e7f1ff;
+
     color:#0056b3;
+
     padding:5px 10px;
+
     border-radius:20px;
+
     font-size:12px;
+
     font-weight:bold;
+
     margin-top:8px;
 }
 
@@ -470,20 +722,28 @@ button:hover{
 
 .report-box{
     background:#fff8f8;
+
     border:1px solid #ffd6d6;
-    border-left:5px solid #dc3545;
+
+    border-left:
+        5px solid #dc3545;
+
     padding:18px;
+
     border-radius:12px;
+
     margin-top:12px;
 }
 
 .report-box h3{
     color:#dc3545;
+
     margin-bottom:7px;
 }
 
 .report-box p{
     color:#666;
+
     line-height:1.6;
 }
 
@@ -493,53 +753,74 @@ button:hover{
 
 .report-card{
     background:#fff8f8;
+
     border:1px solid #ffd6d6;
-    border-left:5px solid #dc3545;
+
+    border-left:
+        5px solid #dc3545;
+
     padding:18px;
+
     border-radius:13px;
+
     margin-top:14px;
 }
 
 .report-card h3{
     color:#dc3545;
+
     margin-bottom:10px;
 }
 
 .report-card p{
     color:#555;
+
     line-height:1.6;
+
     margin:6px 0;
 }
 
 .report-card small{
     color:#777;
+
     display:block;
+
     margin-top:8px;
 }
 
 .report-status{
     display:inline-block;
+
     padding:5px 10px;
+
     border-radius:20px;
+
     font-size:12px;
+
     font-weight:bold;
+
     margin-top:8px;
 }
 
 .status-pending{
     background:#fff3cd;
+
     color:#856404;
 }
 
 .status-reviewed{
     background:#d1e7dd;
+
     color:#0f5132;
 }
 
 .report-actions{
     display:flex;
+
     flex-wrap:wrap;
+
     gap:8px;
+
     margin-top:12px;
 }
 
@@ -561,16 +842,29 @@ button:hover{
 
 .notification-form{
     background:#f8fbff;
+
     border:1px solid #dbe9ff;
+
     padding:20px;
+
     border-radius:14px;
+
     margin-top:15px;
+}
+
+.notification-heading{
+    color:#0056b3;
+
+    margin-bottom:12px;
 }
 
 .notification-tools{
     display:flex;
+
     flex-wrap:wrap;
+
     gap:10px;
+
     margin-top:15px;
 }
 
@@ -580,11 +874,17 @@ button:hover{
 
 .notification-summary{
     background:#eaf4ff;
+
     border:1px solid #cfe5ff;
+
     color:#0056b3;
+
     padding:14px;
+
     border-radius:12px;
+
     font-weight:bold;
+
     margin-top:15px;
 }
 
@@ -594,40 +894,58 @@ button:hover{
 
 .notification-card{
     background:#f8fbff;
+
     border:1px solid #dbe9ff;
-    border-left:5px solid #007bff;
+
+    border-left:
+        5px solid #007bff;
+
     padding:18px;
+
     border-radius:13px;
+
     margin-top:14px;
+
     transition:.25s;
 }
 
 .notification-card:hover{
     transform:translateY(-2px);
-    box-shadow:0 6px 18px rgba(0,123,255,.08);
+
+    box-shadow:
+        0 6px 18px
+        rgba(0,123,255,.08);
 }
 
 .notification-card h3{
     color:#0056b3;
+
     margin-bottom:9px;
 }
 
 .notification-card p{
     color:#555;
+
     line-height:1.6;
+
     white-space:pre-wrap;
 }
 
 .notification-card small{
     display:block;
+
     margin-top:10px;
+
     color:#777;
 }
 
 .notification-actions{
     display:flex;
+
     flex-wrap:wrap;
+
     gap:8px;
+
     margin-top:12px;
 }
 
@@ -641,8 +959,11 @@ button:hover{
 
 #status{
     margin-top:12px;
+
     font-weight:bold;
+
     padding:10px;
+
     border-radius:8px;
 }
 
@@ -652,11 +973,302 @@ button:hover{
 
 footer{
     background:#222;
+
     color:white;
+
     text-align:center;
+
     padding:22px;
+
     margin-top:35px;
+
     line-height:1.7;
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark{
+
+    --body-bg:#0b1220;
+
+    --card-bg:#111c2f;
+
+    --text:#f8fafc;
+
+    --muted:#aebbd0;
+
+    --border:#26364d;
+
+    --input-bg:#0f1a2b;
+
+    --soft-bg:#162338;
+
+    --shadow:
+        0 10px 35px
+        rgba(0,0,0,.35);
+
+    background:var(--body-bg);
+
+    color:var(--text);
+}
+
+/* Header */
+
+body.dark header{
+    background:
+        linear-gradient(
+            135deg,
+            #082f5f,
+            #061d3d
+        );
+}
+
+/* Navigation */
+
+body.dark nav{
+    background:#0e2948;
+}
+
+body.dark nav a{
+    color:#e5edf8;
+}
+
+/* Access */
+
+body.dark #accessDenied{
+    background:#111c2f;
+
+    border-color:#26364d;
+}
+
+body.dark #accessDenied p{
+    color:#aebbd0;
+}
+
+/* Cards */
+
+body.dark .card{
+    background:#111c2f;
+
+    border-color:#26364d;
+
+    color:#f8fafc;
+}
+
+body.dark .card h2{
+    color:#60a5fa;
+}
+
+body.dark .card-description{
+    color:#aebbd0;
+}
+
+/* Control Center */
+
+body.dark .control-btn{
+    background:#162338;
+
+    color:#dbeafe;
+
+    border-color:#2b405c;
+}
+
+body.dark .control-btn:hover{
+    background:#1d4f85;
+
+    color:#ffffff;
+}
+
+/* Analytics */
+
+body.dark .analytics-box{
+    background:#162338;
+
+    border-color:#2b405c;
+
+    color:#f8fafc;
+}
+
+body.dark .analytics-box h3{
+    color:#60a5fa;
+}
+
+body.dark .analytics-box p{
+    color:#c7d4e5;
+}
+
+/* Forms */
+
+body.dark input,
+body.dark textarea,
+body.dark select{
+    background:#0f1a2b;
+
+    color:#f8fafc;
+
+    border-color:#334b68;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+    color:#8192aa;
+}
+
+body.dark input:focus,
+body.dark textarea:focus,
+body.dark select:focus{
+    border-color:#60a5fa;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(96,165,250,.12);
+}
+
+/* Content */
+
+body.dark .item{
+    background:#162338;
+
+    color:#f8fafc;
+
+    border-right-color:#2b405c;
+
+    border-top-color:#2b405c;
+
+    border-bottom-color:#2b405c;
+}
+
+body.dark .item p{
+    color:#c7d4e5;
+}
+
+body.dark .item small{
+    color:#91a4bb;
+}
+
+/* News */
+
+body.dark #newsList .item{
+    background:#162338;
+
+    color:#f8fafc;
+
+    border-color:#2b405c;
+
+    border-top-color:#007bff;
+}
+
+body.dark #newsList .item p{
+    color:#c7d4e5;
+}
+
+/* Students */
+
+body.dark .students-summary{
+    background:#162338;
+
+    border-color:#2b405c;
+
+    color:#60a5fa;
+}
+
+body.dark .student-card{
+    background:#162338;
+
+    border-color:#2b405c;
+
+    border-left-color:#007bff;
+
+    color:#f8fafc;
+}
+
+body.dark .student-card h3{
+    color:#60a5fa;
+}
+
+body.dark .student-card p{
+    color:#dbe4f0;
+}
+
+body.dark .student-card small{
+    color:#91a4bb;
+}
+
+body.dark .student-badge{
+    background:#12345a;
+
+    color:#93c5fd;
+}
+
+/* Reports */
+
+body.dark .report-box,
+body.dark .report-card{
+    background:#241820;
+
+    border-color:#63333d;
+
+    color:#f8fafc;
+}
+
+body.dark .report-box p,
+body.dark .report-card p{
+    color:#d5dce6;
+}
+
+body.dark .report-card small{
+    color:#9eacbd;
+}
+
+/* Notifications */
+
+body.dark .notification-form,
+body.dark .notification-card{
+    background:#162338;
+
+    border-color:#2b405c;
+
+    color:#f8fafc;
+}
+
+body.dark .notification-heading{
+    color:#60a5fa;
+}
+
+body.dark .notification-summary{
+    background:#12345a;
+
+    border-color:#28527c;
+
+    color:#93c5fd;
+}
+
+body.dark .notification-card h3{
+    color:#60a5fa;
+}
+
+body.dark .notification-card p{
+    color:#dbe4f0;
+}
+
+body.dark .notification-card small{
+    color:#91a4bb;
+}
+
+/* Footer */
+
+body.dark footer{
+    background:#080d16;
+
+    color:#aebbd0;
+}
+
+/* Status */
+
+body.dark #status{
+    color:#dbeafe;
 }
 
 /* =========================================================
@@ -666,11 +1278,13 @@ footer{
 @media(max-width:850px){
 
     .grid{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     .control-grid{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
     .analytics-grid{
@@ -685,18 +1299,26 @@ footer{
         font-size:25px;
     }
 
+    header{
+        padding:25px 12px;
+    }
+
     .container{
         margin:15px auto;
+
         padding:10px;
     }
 
     nav a{
         display:inline-block;
+
         margin:5px;
     }
 
     .grid{
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:
+            repeat(2,1fr);
+
         gap:10px;
     }
 
@@ -752,6 +1374,12 @@ footer{
         width:100%;
     }
 
+    .dark-mode-btn{
+        width:auto;
+
+        min-width:140px;
+    }
+
 }
 
 </style>
@@ -760,21 +1388,51 @@ footer{
 
 <body>
 
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
 <header>
 
-    <h1>🛠️ Admin Dashboard</h1>
+    <h1>
+        🛠️ Admin Dashboard
+    </h1>
 
-    <p>Sociology Connect – Arsi University</p>
+    <p>
+        Sociology Connect – Arsi University
+    </p>
+
+    <button
+        id="darkModeToggle"
+        class="dark-mode-btn">
+
+        🌙 Dark Mode
+
+    </button>
 
 </header>
 
+
+<!-- =========================================================
+     NAVIGATION
+     ========================================================= -->
+
 <nav>
 
-    <a href="index.html">🏠 Home</a>
-    <a href="profile.html">👤 Profile</a>
-    <a href="login.html">🔐 Login</a>
+    <a href="index.html">
+        🏠 Home
+    </a>
+
+    <a href="profile.html">
+        👤 Profile
+    </a>
+
+    <a href="login.html">
+        🔐 Login
+    </a>
 
 </nav>
+
 
 <div class="container">
 
@@ -784,17 +1442,24 @@ footer{
 
 <div id="accessDenied">
 
-    <h2>🔒 Admin Access</h2>
+    <h2>
+        🔒 Admin Access
+    </h2>
 
     <p>
-        Please login with the administrator account to access this dashboard.
+        Please login with the administrator account
+        to access this dashboard.
     </p>
 
-    <button onclick="window.location.href='login.html'">
+    <button
+        onclick="window.location.href='login.html'">
+
         🔐 Go to Login
+
     </button>
 
 </div>
+
 
 <!-- =========================================================
      DASHBOARD
@@ -809,54 +1474,142 @@ footer{
 <div class="grid">
 
     <div class="stat">
-        <div class="stat-icon">👥</div>
-        <h3 id="studentsCount">0</h3>
-        <p>Students</p>
+
+        <div class="stat-icon">
+            👥
+        </div>
+
+        <h3 id="studentsCount">
+            0
+        </h3>
+
+        <p>
+            Students
+        </p>
+
     </div>
 
-    <div class="stat">
-        <div class="stat-icon">📝</div>
-        <h3 id="postsCount">0</h3>
-        <p>Posts</p>
-    </div>
 
     <div class="stat">
-        <div class="stat-icon">💬</div>
-        <h3 id="commentsCount">0</h3>
-        <p>Comments</p>
+
+        <div class="stat-icon">
+            📝
+        </div>
+
+        <h3 id="postsCount">
+            0
+        </h3>
+
+        <p>
+            Posts
+        </p>
+
     </div>
 
-    <div class="stat">
-        <div class="stat-icon">❤️</div>
-        <h3 id="likesCount">0</h3>
-        <p>Likes</p>
-    </div>
 
     <div class="stat">
-        <div class="stat-icon">📰</div>
-        <h3 id="newsCount">0</h3>
-        <p>News</p>
+
+        <div class="stat-icon">
+            💬
+        </div>
+
+        <h3 id="commentsCount">
+            0
+        </h3>
+
+        <p>
+            Comments
+        </p>
+
     </div>
 
-    <div class="stat">
-        <div class="stat-icon">📅</div>
-        <h3 id="eventsCount">0</h3>
-        <p>Events</p>
-    </div>
 
     <div class="stat">
-        <div class="stat-icon">🔬</div>
-        <h3 id="researchCount">0</h3>
-        <p>Research</p>
+
+        <div class="stat-icon">
+            ❤️
+        </div>
+
+        <h3 id="likesCount">
+            0
+        </h3>
+
+        <p>
+            Likes
+        </p>
+
     </div>
 
+
     <div class="stat">
-        <div class="stat-icon">🚩</div>
-        <h3 id="reportsCount">0</h3>
-        <p>Reports</p>
+
+        <div class="stat-icon">
+            📰
+        </div>
+
+        <h3 id="newsCount">
+            0
+        </h3>
+
+        <p>
+            News
+        </p>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon">
+            📅
+        </div>
+
+        <h3 id="eventsCount">
+            0
+        </h3>
+
+        <p>
+            Events
+        </p>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon">
+            🔬
+        </div>
+
+        <h3 id="researchCount">
+            0
+        </h3>
+
+        <p>
+            Research
+        </p>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-icon">
+            🚩
+        </div>
+
+        <h3 id="reportsCount">
+            0
+        </h3>
+
+        <p>
+            Reports
+        </p>
+
     </div>
 
 </div>
+
 
 <!-- =========================================================
      WELCOME
@@ -864,14 +1617,19 @@ footer{
 
 <div class="card">
 
-    <h2>👋 Welcome, Administrator</h2>
+    <h2>
+        👋 Welcome, Administrator
+    </h2>
 
     <p class="card-description">
+
         From this dashboard you can manage Sociology Connect
         news, events, community posts and platform tools.
+
     </p>
 
 </div>
+
 
 <!-- =========================================================
      ADMIN CONTROL CENTER
@@ -879,11 +1637,17 @@ footer{
 
 <div class="card">
 
-    <h2>🎛️ Admin Control Center</h2>
+    <h2>
+        🎛️ Admin Control Center
+    </h2>
 
     <p class="card-description">
-        Manage important areas of Sociology Connect from one place.
+
+        Manage important areas of Sociology Connect
+        from one place.
+
     </p>
+
 
     <div class="control-grid">
 
@@ -895,6 +1659,7 @@ footer{
 
         </button>
 
+
         <button
             class="control-btn"
             onclick="scrollToSection('postsSection')">
@@ -902,6 +1667,7 @@ footer{
             📝 Post Management
 
         </button>
+
 
         <button
             class="control-btn"
@@ -911,6 +1677,7 @@ footer{
 
         </button>
 
+
         <button
             class="control-btn"
             onclick="scrollToSection('notificationsSection')">
@@ -919,6 +1686,7 @@ footer{
 
         </button>
 
+
         <button
             class="control-btn"
             onclick="scrollToSection('researchSection')">
@@ -926,6 +1694,7 @@ footer{
             🔬 Research Hub
 
         </button>
+
 
         <button
             class="control-btn"
@@ -939,31 +1708,46 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      QUICK ACTIONS
      ========================================================= -->
 
 <div class="card">
 
-    <h2>⚡ Quick Actions</h2>
+    <h2>
+        ⚡ Quick Actions
+    </h2>
 
     <div class="quick-actions">
 
         <button onclick="refreshDashboard()">
+
             🔄 Refresh Dashboard
+
         </button>
+
 
         <button onclick="scrollToSection('newsSection')">
+
             📰 Manage News
+
         </button>
+
 
         <button onclick="scrollToSection('eventsSection')">
+
             📅 Manage Events
+
         </button>
 
+
         <button onclick="scrollToSection('notificationsSection')">
+
             🔔 Notifications
+
         </button>
+
 
         <button
             class="delete-btn"
@@ -972,6 +1756,7 @@ footer{
             🧹 Clear All Posts
 
         </button>
+
 
         <button
             class="logout-btn"
@@ -985,47 +1770,72 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      ANALYTICS
      ========================================================= -->
 
-<div class="card" id="analyticsSection">
+<div
+    class="card"
+    id="analyticsSection">
 
-    <h2>📊 Activity Overview</h2>
+    <h2>
+        📊 Activity Overview
+    </h2>
 
     <p class="card-description">
+
         A quick overview of the Sociology Connect community.
+
     </p>
+
 
     <div class="analytics-grid">
 
+
         <div class="analytics-box">
 
-            <h3>👥 Community</h3>
+            <h3>
+                👥 Community
+            </h3>
 
             <p>
-                Students currently registered on Sociology Connect.
+
+                Students currently registered
+                on Sociology Connect.
+
             </p>
 
         </div>
 
+
         <div class="analytics-box">
 
-            <h3>📝 Engagement</h3>
+            <h3>
+                📝 Engagement
+            </h3>
 
             <p>
-                Posts, comments and likes created by the community.
+
+                Posts, comments and likes
+                created by the community.
+
             </p>
 
         </div>
 
+
         <div class="analytics-box">
 
-            <h3>🔬 Academic Activity</h3>
+            <h3>
+                🔬 Academic Activity
+            </h3>
 
             <p>
-                Research resources and academic activities available
-                through the platform.
+
+                Research resources and academic
+                activities available through the platform.
+
             </p>
 
         </div>
@@ -1034,17 +1844,26 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      STUDENT MANAGEMENT
      ========================================================= -->
 
-<div class="card" id="studentsSection">
+<div
+    class="card"
+    id="studentsSection">
 
-    <h2>👥 Student Management</h2>
+    <h2>
+        👥 Student Management
+    </h2>
 
     <p class="card-description">
-        View and search students registered on Sociology Connect.
+
+        View and search students registered
+        on Sociology Connect.
+
     </p>
+
 
     <div
         class="students-summary"
@@ -1053,6 +1872,7 @@ footer{
         Loading registered students...
 
     </div>
+
 
     <div class="student-tools">
 
@@ -1063,33 +1883,49 @@ footer{
             placeholder="🔍 Search by name, email or User ID..."
         >
 
+
         <button onclick="loadStudents()">
+
             🔄 Refresh Students
+
         </button>
 
     </div>
 
+
     <div id="studentsList">
 
-        <p>Loading students...</p>
+        <p>
+            Loading students...
+        </p>
 
     </div>
 
 </div>
 
+
 <!-- =========================================================
      POST MANAGEMENT
      ========================================================= -->
 
-<div class="card" id="postsSection">
+<div
+    class="card"
+    id="postsSection">
 
-    <h2>📝 Post Management</h2>
+    <h2>
+        📝 Post Management
+    </h2>
 
     <p class="card-description">
-        Manage community posts and maintain a safe academic environment.
+
+        Manage community posts and maintain
+        a safe academic environment.
+
     </p>
 
-    <button onclick="showComingSoon('Post Management')">
+
+    <button
+        onclick="showComingSoon('Post Management')">
 
         📝 Manage Community Posts
 
@@ -1097,22 +1933,32 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      REPORTS
      ========================================================= -->
 
-<div class="card" id="reportsSection">
+<div
+    class="card"
+    id="reportsSection">
 
-    <h2>🚩 Reports & Moderation</h2>
+    <h2>
+        🚩 Reports & Moderation
+    </h2>
 
     <p class="card-description">
-        Review reports submitted by Sociology Connect students
-        and manage reported community content.
+
+        Review reports submitted by Sociology Connect
+        students and manage reported community content.
+
     </p>
+
 
     <div class="report-box">
 
-        <h3>🚩 Report Center</h3>
+        <h3>
+            🚩 Report Center
+        </h3>
 
         <p id="reportSummary">
             Loading reports...
@@ -1120,42 +1966,62 @@ footer{
 
     </div>
 
+
     <div id="reportsList">
 
-        <p>Loading reports...</p>
+        <p>
+            Loading reports...
+        </p>
 
     </div>
 
 </div>
 
+
 <!-- =========================================================
-     NOTIFICATIONS CENTER
+     NOTIFICATIONS
      ========================================================= -->
 
-<div class="card" id="notificationsSection">
+<div
+    class="card"
+    id="notificationsSection">
 
-    <h2>🔔 Notifications Center</h2>
+    <h2>
+        🔔 Notifications Center
+    </h2>
 
     <p class="card-description">
-        Create important announcements and notifications for
-        Sociology Connect students.
+
+        Create important announcements and notifications
+        for Sociology Connect students.
+
     </p>
 
-    <div class="notification-summary" id="notificationSummary">
+
+    <div
+        class="notification-summary"
+        id="notificationSummary">
 
         🔔 Loading notifications...
 
     </div>
 
+
     <div class="notification-form">
 
-        <h3 style="color:#0056b3;margin-bottom:12px;">
+        <h3 class="notification-heading">
+
             📢 Create New Notification
+
         </h3>
 
+
         <label for="notificationTitle">
+
             Notification Title
+
         </label>
+
 
         <input
             id="notificationTitle"
@@ -1164,9 +2030,13 @@ footer{
             placeholder="Example: Important Department Announcement"
         >
 
+
         <label for="notificationMessage">
+
             Notification Message
+
         </label>
+
 
         <textarea
             id="notificationMessage"
@@ -1174,8 +2044,9 @@ footer{
             placeholder="Write the notification message for students..."
         ></textarea>
 
+
         <button
-            style="width:100%;padding:15px;font-size:17px;"
+            class="full-button"
             onclick="createNotification()">
 
             📢 Publish Notification
@@ -1184,13 +2055,16 @@ footer{
 
     </div>
 
+
     <div class="notification-tools">
 
-        <button onclick="loadNotifications()">
+        <button
+            onclick="loadNotifications()">
 
             🔄 Refresh Notifications
 
         </button>
+
 
         <button
             class="delete-btn"
@@ -1202,48 +2076,67 @@ footer{
 
     </div>
 
+
     <div id="notificationsList">
 
-        <p>Loading notifications...</p>
+        <p>
+            Loading notifications...
+        </p>
 
     </div>
 
 </div>
 
+
 <!-- =========================================================
      RESEARCH HUB
      ========================================================= -->
 
-<div class="card" id="researchSection">
+<div
+    class="card"
+    id="researchSection">
 
-    <h2>🔬 Research Hub Management</h2>
+    <h2>
+        🔬 Research Hub Management
+    </h2>
 
     <p class="card-description">
-        Manage research topics, academic resources, research questions,
-        APA 7 materials and other Research Hub content.
+
+        Manage research topics, academic resources,
+        research questions, APA 7 materials and other
+        Research Hub content.
+
     </p>
+
 
     <div class="quick-actions">
 
-        <button onclick="showComingSoon('Research Topics')">
+        <button
+            onclick="showComingSoon('Research Topics')">
 
             🧠 Research Topics
 
         </button>
 
-        <button onclick="showComingSoon('Research Questions')">
+
+        <button
+            onclick="showComingSoon('Research Questions')">
 
             📋 Research Questions
 
         </button>
 
-        <button onclick="showComingSoon('Research Resources')">
+
+        <button
+            onclick="showComingSoon('Research Resources')">
 
             📚 Resources
 
         </button>
 
-        <button onclick="showComingSoon('APA 7 Materials')">
+
+        <button
+            onclick="showComingSoon('APA 7 Materials')">
 
             📖 APA 7
 
@@ -1253,22 +2146,34 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      NEWS
      ========================================================= -->
 
-<div class="card" id="newsSection">
+<div
+    class="card"
+    id="newsSection">
 
-    <h2>📰 Add Latest News</h2>
+    <h2>
+        📰 Add Latest News
+    </h2>
 
     <p class="card-description">
-        Publish announcements, department updates, scholarship
-        information and important notices for Sociology Connect students.
+
+        Publish announcements, department updates,
+        scholarship information and important notices
+        for Sociology Connect students.
+
     </p>
 
+
     <label for="newsTitle">
+
         News Title
+
     </label>
+
 
     <input
         id="newsTitle"
@@ -1276,17 +2181,22 @@ footer{
         placeholder="Enter news title"
     >
 
+
     <label for="newsDescription">
+
         News Description
+
     </label>
+
 
     <textarea
         id="newsDescription"
         placeholder="Write the news or announcement..."
     ></textarea>
 
+
     <button
-        style="width:100%;padding:15px;font-size:17px;"
+        class="full-button"
         onclick="addNews()">
 
         📢 Publish News
@@ -1295,22 +2205,33 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      EVENTS
      ========================================================= -->
 
-<div class="card" id="eventsSection">
+<div
+    class="card"
+    id="eventsSection">
 
-    <h2>📅 Add Event / Deadline</h2>
+    <h2>
+        📅 Add Event / Deadline
+    </h2>
 
     <p class="card-description">
-        Create upcoming events, deadlines, seminars, workshops
-        and department activities.
+
+        Create upcoming events, deadlines, seminars,
+        workshops and department activities.
+
     </p>
 
+
     <label for="eventTitle">
+
         Event Title
+
     </label>
+
 
     <input
         id="eventTitle"
@@ -1318,26 +2239,35 @@ footer{
         placeholder="Example: Research Proposal Deadline"
     >
 
+
     <label for="eventDescription">
+
         Description
+
     </label>
+
 
     <textarea
         id="eventDescription"
         placeholder="Write event information..."
     ></textarea>
 
+
     <label for="eventDate">
+
         Date
+
     </label>
+
 
     <input
         id="eventDate"
         type="date"
     >
 
+
     <button
-        style="width:100%;padding:15px;font-size:17px;"
+        class="full-button"
         onclick="addEvent()">
 
         📅 Add Event
@@ -1346,21 +2276,28 @@ footer{
 
 </div>
 
+
 <!-- =========================================================
      PUBLISHED NEWS
      ========================================================= -->
 
 <div class="card">
 
-    <h2>📰 Published News</h2>
+    <h2>
+        📰 Published News
+    </h2>
+
 
     <div id="newsList">
 
-        <p>Loading news...</p>
+        <p>
+            Loading news...
+        </p>
 
     </div>
 
 </div>
+
 
 <!-- =========================================================
      EVENTS LIST
@@ -1368,21 +2305,28 @@ footer{
 
 <div class="card">
 
-    <h2>📅 Events & Deadlines</h2>
+    <h2>
+        📅 Events & Deadlines
+    </h2>
+
 
     <div id="eventsList">
 
-        <p>Loading events...</p>
+        <p>
+            Loading events...
+        </p>
 
     </div>
 
 </div>
+
 
 <div id="status"></div>
 
 </div>
 
 </div>
+
 
 <!-- =========================================================
      FOOTER
@@ -1403,9 +2347,111 @@ footer{
 </footer>
 
 
+<!-- =========================================================
+     DARK MODE
+     ========================================================= -->
+
+<script>
+
+const darkModeToggle =
+    document.getElementById(
+        "darkModeToggle"
+    );
+
+
+function applyDarkMode(){
+
+    const savedMode =
+        localStorage.getItem(
+            "sociologyConnectDarkMode"
+        );
+
+
+    if(
+        savedMode === "enabled"
+    ){
+
+        document.body.classList.add(
+            "dark"
+        );
+
+
+        if(darkModeToggle){
+
+            darkModeToggle.innerHTML =
+                "☀️ Light Mode";
+
+        }
+
+    }else{
+
+        document.body.classList.remove(
+            "dark"
+        );
+
+
+        if(darkModeToggle){
+
+            darkModeToggle.innerHTML =
+                "🌙 Dark Mode";
+
+        }
+
+    }
+
+}
+
+
+if(darkModeToggle){
+
+    darkModeToggle.addEventListener(
+        "click",
+        function(){
+
+            document.body.classList.toggle(
+                "dark"
+            );
+
+
+            const enabled =
+                document.body.classList.contains(
+                    "dark"
+                );
+
+
+            localStorage.setItem(
+                "sociologyConnectDarkMode",
+                enabled
+                    ? "enabled"
+                    : "disabled"
+            );
+
+
+            darkModeToggle.innerHTML =
+                enabled
+                    ? "☀️ Light Mode"
+                    : "🌙 Dark Mode";
+
+        }
+    );
+
+}
+
+
+applyDarkMode();
+
+</script>
+
+
+<!-- =========================================================
+     FIREBASE / ADMIN JAVASCRIPT
+     ========================================================= -->
+
 <script type="module">
 
-import { auth, db } from "./firebase.js";
+import { auth, db }
+from "./firebase.js";
+
 
 import {
     collection,
@@ -1417,19 +2463,23 @@ import {
     serverTimestamp,
     query,
     orderBy
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
 
 import {
     onAuthStateChanged,
     signOut
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
 /* =========================================================
    ADMIN
    ========================================================= */
 
-const ADMIN_EMAIL = "yom@gmail.com";
+const ADMIN_EMAIL =
+    "yom@gmail.com";
 
 
 /* =========================================================
@@ -1437,40 +2487,75 @@ const ADMIN_EMAIL = "yom@gmail.com";
    ========================================================= */
 
 const dashboard =
-    document.getElementById("dashboard");
+    document.getElementById(
+        "dashboard"
+    );
+
 
 const accessDenied =
-    document.getElementById("accessDenied");
+    document.getElementById(
+        "accessDenied"
+    );
+
 
 const status =
-    document.getElementById("status");
+    document.getElementById(
+        "status"
+    );
+
 
 const studentsCount =
-    document.getElementById("studentsCount");
+    document.getElementById(
+        "studentsCount"
+    );
+
 
 const postsCount =
-    document.getElementById("postsCount");
+    document.getElementById(
+        "postsCount"
+    );
+
 
 const commentsCount =
-    document.getElementById("commentsCount");
+    document.getElementById(
+        "commentsCount"
+    );
+
 
 const likesCount =
-    document.getElementById("likesCount");
+    document.getElementById(
+        "likesCount"
+    );
+
 
 const newsCount =
-    document.getElementById("newsCount");
+    document.getElementById(
+        "newsCount"
+    );
+
 
 const eventsCount =
-    document.getElementById("eventsCount");
+    document.getElementById(
+        "eventsCount"
+    );
+
 
 const researchCount =
-    document.getElementById("researchCount");
+    document.getElementById(
+        "researchCount"
+    );
+
 
 const reportsCount =
-    document.getElementById("reportsCount");
+    document.getElementById(
+        "reportsCount"
+    );
+
 
 const notificationSummary =
-    document.getElementById("notificationSummary");
+    document.getElementById(
+        "notificationSummary"
+    );
 
 
 /* =========================================================
@@ -1497,12 +2582,14 @@ function formatTimestamp(timestamp){
 
     if(
         !timestamp ||
-        typeof timestamp.toDate !== "function"
+        typeof timestamp.toDate !==
+        "function"
     ){
 
         return "Just now";
 
     }
+
 
     try{
 
@@ -1529,32 +2616,55 @@ async function updateStats(){
 
         const usersSnap =
             await getDocs(
-                collection(db,"users")
+                collection(
+                    db,
+                    "users"
+                )
             );
+
 
         const postsSnap =
             await getDocs(
-                collection(db,"posts")
+                collection(
+                    db,
+                    "posts"
+                )
             );
+
 
         const newsSnap =
             await getDocs(
-                collection(db,"news")
+                collection(
+                    db,
+                    "news"
+                )
             );
+
 
         const eventsSnap =
             await getDocs(
-                collection(db,"events")
+                collection(
+                    db,
+                    "events"
+                )
             );
+
 
         const reportsSnap =
             await getDocs(
-                collection(db,"reports")
+                collection(
+                    db,
+                    "reports"
+                )
             );
+
 
         const notificationsSnap =
             await getDocs(
-                collection(db,"notifications")
+                collection(
+                    db,
+                    "notifications"
+                )
             );
 
 
@@ -1564,7 +2674,8 @@ async function updateStats(){
 
 
         for(
-            const post of postsSnap.docs
+            const post of
+            postsSnap.docs
         ){
 
             const commentSnap =
@@ -1577,7 +2688,9 @@ async function updateStats(){
                     )
                 );
 
-            comments += commentSnap.size;
+
+            comments +=
+                commentSnap.size;
 
 
             const likesSnap =
@@ -1590,7 +2703,9 @@ async function updateStats(){
                     )
                 );
 
-            likes += likesSnap.size;
+
+            likes +=
+                likesSnap.size;
 
         }
 
@@ -1598,23 +2713,30 @@ async function updateStats(){
         studentsCount.textContent =
             usersSnap.size;
 
+
         postsCount.textContent =
             postsSnap.size;
+
 
         commentsCount.textContent =
             comments;
 
+
         likesCount.textContent =
             likes;
+
 
         newsCount.textContent =
             newsSnap.size;
 
+
         eventsCount.textContent =
             eventsSnap.size;
 
+
         researchCount.textContent =
             "0";
+
 
         reportsCount.textContent =
             reportsSnap.size;
@@ -1630,6 +2752,7 @@ async function updateStats(){
             "Stats Error:",
             error
         );
+
 
         notificationSummary.textContent =
             "⚠️ Notification data could not be loaded.";
@@ -1656,8 +2779,10 @@ onAuthStateChanged(
             accessDenied.style.display =
                 "block";
 
+
             dashboard.style.display =
                 "none";
+
 
             return;
 
@@ -1666,6 +2791,7 @@ onAuthStateChanged(
 
         accessDenied.style.display =
             "none";
+
 
         dashboard.style.display =
             "block";
@@ -1701,14 +2827,20 @@ let allStudents = [];
 async function loadStudents(){
 
     const list =
-        document.getElementById("studentsList");
+        document.getElementById(
+            "studentsList"
+        );
+
 
     const summary =
-        document.getElementById("studentsSummary");
+        document.getElementById(
+            "studentsSummary"
+        );
 
 
     list.innerHTML =
         "<p>Loading students...</p>";
+
 
     summary.textContent =
         "Loading registered students...";
@@ -1718,7 +2850,10 @@ async function loadStudents(){
 
         const usersSnapshot =
             await getDocs(
-                collection(db,"users")
+                collection(
+                    db,
+                    "users"
+                )
             );
 
 
@@ -1727,13 +2862,16 @@ async function loadStudents(){
                 (item)=>({
 
                     id:item.id,
+
                     ...item.data()
 
                 })
             );
 
 
-        renderStudents(allStudents);
+        renderStudents(
+            allStudents
+        );
 
 
     }catch(error){
@@ -1743,8 +2881,10 @@ async function loadStudents(){
             error
         );
 
+
         summary.textContent =
             "❌ Could not load students.";
+
 
         list.innerHTML =
             "<p>❌ Could not load students. Check Firestore permissions.</p>";
@@ -1761,20 +2901,28 @@ async function loadStudents(){
 function renderStudents(students){
 
     const list =
-        document.getElementById("studentsList");
+        document.getElementById(
+            "studentsList"
+        );
+
 
     const summary =
-        document.getElementById("studentsSummary");
+        document.getElementById(
+            "studentsSummary"
+        );
 
 
     summary.textContent =
         `👥 ${students.length} registered student${students.length === 1 ? "" : "s"}`;
 
 
-    list.innerHTML = "";
+    list.innerHTML =
+        "";
 
 
-    if(students.length === 0){
+    if(
+        students.length === 0
+    ){
 
         list.innerHTML =
             "<p>👤 No students found.</p>";
@@ -1788,7 +2936,9 @@ function renderStudents(students){
         (student)=>{
 
             const div =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             div.className =
@@ -1834,7 +2984,9 @@ function renderStudents(students){
             `;
 
 
-            list.appendChild(div);
+            list.appendChild(
+                div
+            );
 
         }
     );
@@ -1847,7 +2999,9 @@ function renderStudents(students){
    ========================================================= */
 
 document
-    .getElementById("studentSearch")
+    .getElementById(
+        "studentSearch"
+    )
     .addEventListener(
         "input",
         function(){
@@ -1895,7 +3049,7 @@ document
                             ).toLowerCase();
 
 
-                        return (
+                        return(
                             name.includes(search) ||
                             email.includes(search) ||
                             id.includes(search)
@@ -1905,7 +3059,9 @@ document
                 );
 
 
-            renderStudents(filtered);
+            renderStudents(
+                filtered
+            );
 
         }
     );
@@ -1948,14 +3104,17 @@ async function loadNotifications(){
             );
 
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
 
         notificationSummary.textContent =
             `🔔 ${snapshot.size} notification${snapshot.size === 1 ? "" : "s"} currently published`;
 
 
-        if(snapshot.empty){
+        if(
+            snapshot.empty
+        ){
 
             list.innerHTML =
                 "<p>🔔 No notifications published yet.</p>";
@@ -2029,7 +3188,9 @@ async function loadNotifications(){
                 `;
 
 
-                list.appendChild(div);
+                list.appendChild(
+                    div
+                );
 
             }
         );
@@ -2045,6 +3206,7 @@ async function loadNotifications(){
 
         notificationSummary.textContent =
             "❌ Could not load notifications.";
+
 
         list.innerHTML =
             "<p>❌ Could not load notifications. Check Firestore Rules.</p>";
@@ -2093,7 +3255,9 @@ async()=>{
     }
 
 
-    if(title.length < 3){
+    if(
+        title.length < 3
+    ){
 
         alert(
             "Notification title is too short."
@@ -2104,7 +3268,9 @@ async()=>{
     }
 
 
-    if(message.length < 3){
+    if(
+        message.length < 3
+    ){
 
         alert(
             "Notification message is too short."
@@ -2123,6 +3289,7 @@ async()=>{
                 "notifications"
             ),
             {
+
                 title:title,
 
                 message:message,
@@ -2133,6 +3300,7 @@ async()=>{
                 createdBy:
                     auth.currentUser?.email ||
                     ADMIN_EMAIL
+
             }
         );
 
@@ -2141,14 +3309,16 @@ async()=>{
             .getElementById(
                 "notificationTitle"
             )
-            .value = "";
+            .value =
+            "";
 
 
         document
             .getElementById(
                 "notificationMessage"
             )
-            .value = "";
+            .value =
+            "";
 
 
         status.textContent =
@@ -2260,7 +3430,9 @@ async()=>{
             );
 
 
-        if(snapshot.empty){
+        if(
+            snapshot.empty
+        ){
 
             status.textContent =
                 "ℹ️ There are no notifications to delete.";
@@ -2271,7 +3443,8 @@ async()=>{
 
 
         for(
-            const item of snapshot.docs
+            const item of
+            snapshot.docs
         ){
 
             await deleteDoc(
@@ -2310,17 +3483,23 @@ async()=>{
    ADD NEWS
    ========================================================= */
 
-window.addNews = async()=>{
+window.addNews =
+async()=>{
 
     const title =
         document
-            .getElementById("newsTitle")
+            .getElementById(
+                "newsTitle"
+            )
             .value
             .trim();
 
+
     const description =
         document
-            .getElementById("newsDescription")
+            .getElementById(
+                "newsDescription"
+            )
             .value
             .trim();
 
@@ -2342,23 +3521,37 @@ window.addNews = async()=>{
     try{
 
         await addDoc(
-            collection(db,"news"),
+            collection(
+                db,
+                "news"
+            ),
             {
+
                 title,
+
                 description,
+
                 createdAt:
                     serverTimestamp()
+
             }
         );
 
 
         document
-            .getElementById("newsTitle")
-            .value = "";
+            .getElementById(
+                "newsTitle"
+            )
+            .value =
+            "";
+
 
         document
-            .getElementById("newsDescription")
-            .value = "";
+            .getElementById(
+                "newsDescription"
+            )
+            .value =
+            "";
 
 
         status.textContent =
@@ -2373,6 +3566,7 @@ window.addNews = async()=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not publish news: " +
@@ -2390,7 +3584,9 @@ window.addNews = async()=>{
 async function loadNews(){
 
     const list =
-        document.getElementById("newsList");
+        document.getElementById(
+            "newsList"
+        );
 
 
     list.innerHTML =
@@ -2401,7 +3597,10 @@ async function loadNews(){
 
         const newsQuery =
             query(
-                collection(db,"news"),
+                collection(
+                    db,
+                    "news"
+                ),
                 orderBy(
                     "createdAt",
                     "desc"
@@ -2410,13 +3609,18 @@ async function loadNews(){
 
 
         const snapshot =
-            await getDocs(newsQuery);
+            await getDocs(
+                newsQuery
+            );
 
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
 
-        if(snapshot.empty){
+        if(
+            snapshot.empty
+        ){
 
             list.innerHTML =
                 "<p>No news published yet.</p>";
@@ -2434,7 +3638,9 @@ async function loadNews(){
 
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
 
                 div.className =
@@ -2444,11 +3650,15 @@ async function loadNews(){
                 div.innerHTML = `
 
                     <h3>
-                        📰 ${escapeHTML(data.title)}
+                        📰 ${escapeHTML(
+                            data.title
+                        )}
                     </h3>
 
                     <p>
-                        ${escapeHTML(data.description)}
+                        ${escapeHTML(
+                            data.description
+                        )}
                     </p>
 
                     <button
@@ -2469,7 +3679,9 @@ async function loadNews(){
                 `;
 
 
-                list.appendChild(div);
+                list.appendChild(
+                    div
+                );
 
             }
         );
@@ -2478,6 +3690,7 @@ async function loadNews(){
     }catch(error){
 
         console.error(error);
+
 
         list.innerHTML =
             "<p>❌ Could not load news.</p>";
@@ -2508,7 +3721,11 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(db,"news",id)
+            doc(
+                db,
+                "news",
+                id
+            )
         );
 
 
@@ -2524,6 +3741,7 @@ async(id)=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not delete news.";
@@ -2575,16 +3793,24 @@ async(id)=>{
     try{
 
         await setDoc(
-            doc(db,"news",id),
+            doc(
+                db,
+                "news",
+                id
+            ),
             {
+
                 title:
                     title.trim(),
 
                 description:
                     description.trim()
+
             },
             {
+
                 merge:true
+
             }
         );
 
@@ -2601,6 +3827,7 @@ async(id)=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not update news.";
@@ -2619,19 +3846,27 @@ async()=>{
 
     const title =
         document
-            .getElementById("eventTitle")
+            .getElementById(
+                "eventTitle"
+            )
             .value
             .trim();
+
 
     const description =
         document
-            .getElementById("eventDescription")
+            .getElementById(
+                "eventDescription"
+            )
             .value
             .trim();
 
+
     const date =
         document
-            .getElementById("eventDate")
+            .getElementById(
+                "eventDate"
+            )
             .value;
 
 
@@ -2653,28 +3888,47 @@ async()=>{
     try{
 
         await addDoc(
-            collection(db,"events"),
+            collection(
+                db,
+                "events"
+            ),
             {
+
                 title,
+
                 description,
+
                 date,
+
                 createdAt:
                     serverTimestamp()
+
             }
         );
 
 
         document
-            .getElementById("eventTitle")
-            .value = "";
+            .getElementById(
+                "eventTitle"
+            )
+            .value =
+            "";
+
 
         document
-            .getElementById("eventDescription")
-            .value = "";
+            .getElementById(
+                "eventDescription"
+            )
+            .value =
+            "";
+
 
         document
-            .getElementById("eventDate")
-            .value = "";
+            .getElementById(
+                "eventDate"
+            )
+            .value =
+            "";
 
 
         status.textContent =
@@ -2689,6 +3943,7 @@ async()=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not add event: " +
@@ -2719,7 +3974,10 @@ async function loadEvents(){
 
         const eventsQuery =
             query(
-                collection(db,"events"),
+                collection(
+                    db,
+                    "events"
+                ),
                 orderBy(
                     "date",
                     "asc"
@@ -2728,13 +3986,18 @@ async function loadEvents(){
 
 
         const snapshot =
-            await getDocs(eventsQuery);
+            await getDocs(
+                eventsQuery
+            );
 
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
 
-        if(snapshot.empty){
+        if(
+            snapshot.empty
+        ){
 
             list.innerHTML =
                 "<p>No events added yet.</p>";
@@ -2752,7 +4015,9 @@ async function loadEvents(){
 
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
 
                 div.className =
@@ -2762,16 +4027,22 @@ async function loadEvents(){
                 div.innerHTML = `
 
                     <h3>
-                        📅 ${escapeHTML(data.title)}
+                        📅 ${escapeHTML(
+                            data.title
+                        )}
                     </h3>
 
                     <p>
-                        ${escapeHTML(data.description)}
+                        ${escapeHTML(
+                            data.description
+                        )}
                     </p>
 
                     <small>
                         📆 Date:
-                        ${escapeHTML(data.date)}
+                        ${escapeHTML(
+                            data.date
+                        )}
                     </small>
 
                     <button
@@ -2792,7 +4063,9 @@ async function loadEvents(){
                 `;
 
 
-                list.appendChild(div);
+                list.appendChild(
+                    div
+                );
 
             }
         );
@@ -2801,6 +4074,7 @@ async function loadEvents(){
     }catch(error){
 
         console.error(error);
+
 
         list.innerHTML =
             "<p>❌ Could not load events.</p>";
@@ -2831,7 +4105,11 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(db,"events",id)
+            doc(
+                db,
+                "events",
+                id
+            )
         );
 
 
@@ -2847,6 +4125,7 @@ async(id)=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not delete event.";
@@ -2914,8 +4193,13 @@ async(id)=>{
     try{
 
         await setDoc(
-            doc(db,"events",id),
+            doc(
+                db,
+                "events",
+                id
+            ),
             {
+
                 title:
                     title.trim(),
 
@@ -2927,7 +4211,9 @@ async(id)=>{
 
             },
             {
+
                 merge:true
+
             }
         );
 
@@ -2945,6 +4231,7 @@ async(id)=>{
 
         console.error(error);
 
+
         status.textContent =
             "❌ Could not update event.";
 
@@ -2960,14 +4247,20 @@ async(id)=>{
 async function loadReports(){
 
     const list =
-        document.getElementById("reportsList");
+        document.getElementById(
+            "reportsList"
+        );
+
 
     const summary =
-        document.getElementById("reportSummary");
+        document.getElementById(
+            "reportSummary"
+        );
 
 
     list.innerHTML =
         "<p>Loading reports...</p>";
+
 
     summary.textContent =
         "Loading reports...";
@@ -2977,7 +4270,10 @@ async function loadReports(){
 
         const reportsQuery =
             query(
-                collection(db,"reports"),
+                collection(
+                    db,
+                    "reports"
+                ),
                 orderBy(
                     "createdAt",
                     "desc"
@@ -2986,19 +4282,26 @@ async function loadReports(){
 
 
         const snapshot =
-            await getDocs(reportsQuery);
+            await getDocs(
+                reportsQuery
+            );
 
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
 
-        if(snapshot.empty){
+        if(
+            snapshot.empty
+        ){
 
             summary.textContent =
                 "No reports have been submitted.";
 
+
             list.innerHTML =
                 "<p>✅ No reports found.</p>";
+
 
             return;
 
@@ -3016,11 +4319,16 @@ async function loadReports(){
                 const data =
                     item.data();
 
+
                 const statusValue =
-                    data.status || "pending";
+                    data.status ||
+                    "pending";
 
 
-                if(statusValue === "pending"){
+                if(
+                    statusValue ===
+                    "pending"
+                ){
 
                     pendingCount++;
 
@@ -3032,7 +4340,9 @@ async function loadReports(){
 
 
                 const div =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
 
                 div.className =
@@ -3040,19 +4350,22 @@ async function loadReports(){
 
 
                 const safeStatus =
-                    statusValue === "reviewed"
+                    statusValue ===
+                    "reviewed"
                         ? "reviewed"
                         : "pending";
 
 
                 const statusClass =
-                    safeStatus === "reviewed"
+                    safeStatus ===
+                    "reviewed"
                         ? "status-reviewed"
                         : "status-pending";
 
 
                 const statusText =
-                    safeStatus === "reviewed"
+                    safeStatus ===
+                    "reviewed"
                         ? "✅ Reviewed"
                         : "⏳ Pending";
 
@@ -3072,7 +4385,10 @@ async function loadReports(){
                     </p>
 
                     <p>
-                        <strong>Reported User ID:</strong>
+                        <strong>
+                            Reported User ID:
+                        </strong>
+
                         ${escapeHTML(
                             data.reportedUserId ||
                             "Unknown"
@@ -3080,7 +4396,10 @@ async function loadReports(){
                     </p>
 
                     <p>
-                        <strong>Reporter:</strong>
+                        <strong>
+                            Reporter:
+                        </strong>
+
                         ${escapeHTML(
                             data.reporterName ||
                             "Unknown"
@@ -3088,7 +4407,10 @@ async function loadReports(){
                     </p>
 
                     <p>
-                        <strong>Reporter Email:</strong>
+                        <strong>
+                            Reporter Email:
+                        </strong>
+
                         ${escapeHTML(
                             data.reporterEmail ||
                             "Not available"
@@ -3096,7 +4418,10 @@ async function loadReports(){
                     </p>
 
                     <p>
-                        <strong>Post:</strong>
+                        <strong>
+                            Post:
+                        </strong>
+
                         ${escapeHTML(
                             data.postText ||
                             "Post text unavailable"
@@ -3105,11 +4430,14 @@ async function loadReports(){
 
                     <small>
                         Report ID:
-                        ${escapeHTML(item.id)}
+                        ${escapeHTML(
+                            item.id
+                        )}
                     </small>
 
                     <span
-                        class="report-status ${statusClass}">
+                        class="report-status
+                        ${statusClass}">
 
                         ${statusText}
 
@@ -3118,7 +4446,8 @@ async function loadReports(){
                     <div class="report-actions">
 
                         ${
-                            safeStatus === "pending"
+                            safeStatus ===
+                            "pending"
                             ? `
                                 <button
                                     class="review-btn"
@@ -3144,7 +4473,9 @@ async function loadReports(){
                 `;
 
 
-                list.appendChild(div);
+                list.appendChild(
+                    div
+                );
 
             }
         );
@@ -3167,6 +4498,7 @@ async function loadReports(){
         summary.textContent =
             "❌ Could not load reports.";
 
+
         list.innerHTML =
             "<p>❌ Could not load reports. Check Firestore Rules.</p>";
 
@@ -3185,9 +4517,15 @@ async(id)=>{
     try{
 
         await setDoc(
-            doc(db,"reports",id),
+            doc(
+                db,
+                "reports",
+                id
+            ),
             {
-                status:"reviewed",
+
+                status:
+                    "reviewed",
 
                 reviewedAt:
                     serverTimestamp(),
@@ -3198,7 +4536,9 @@ async(id)=>{
 
             },
             {
+
                 merge:true
+
             }
         );
 
@@ -3215,6 +4555,7 @@ async(id)=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not update report.";
@@ -3245,7 +4586,11 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(db,"reports",id)
+            doc(
+                db,
+                "reports",
+                id
+            )
         );
 
 
@@ -3261,6 +4606,7 @@ async(id)=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not delete report.";
@@ -3292,11 +4638,16 @@ async()=>{
 
         const postsSnapshot =
             await getDocs(
-                collection(db,"posts")
+                collection(
+                    db,
+                    "posts"
+                )
             );
 
 
-        if(postsSnapshot.empty){
+        if(
+            postsSnapshot.empty
+        ){
 
             status.textContent =
                 "ℹ️ There are no posts to delete.";
@@ -3307,7 +4658,8 @@ async()=>{
 
 
         for(
-            const post of postsSnapshot.docs
+            const post of
+            postsSnapshot.docs
         ){
 
             const postId =
@@ -3326,7 +4678,8 @@ async()=>{
 
 
             for(
-                const comment of comments.docs
+                const comment of
+                comments.docs
             ){
 
                 await deleteDoc(
@@ -3348,7 +4701,8 @@ async()=>{
 
 
             for(
-                const like of likes.docs
+                const like of
+                likes.docs
             ){
 
                 await deleteDoc(
@@ -3375,6 +4729,7 @@ async()=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Could not delete all posts.";
@@ -3434,7 +4789,10 @@ async()=>{
 
     try{
 
-        await signOut(auth);
+        await signOut(
+            auth
+        );
+
 
         window.location.href =
             "login.html";
@@ -3443,6 +4801,7 @@ async()=>{
     }catch(error){
 
         console.error(error);
+
 
         status.textContent =
             "❌ Logout failed.";
@@ -3460,14 +4819,19 @@ window.scrollToSection =
 function(id){
 
     const section =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
 
 
     if(section){
 
         section.scrollIntoView({
+
             behavior:"smooth",
+
             block:"start"
+
         });
 
     }
@@ -3487,9 +4851,13 @@ function(name){
         name +
         " will be connected to Firebase in the next upgrade.";
 
+
     status.scrollIntoView({
+
         behavior:"smooth",
+
         block:"center"
+
     });
 
 };

@@ -12,7 +12,7 @@
    REAL-TIME NOTIFICATIONS
    AI MARI
    DARK MODE
-   SEARCH
+   GLOBAL SEARCH 🔍
    VOICE INPUT
    LOGOUT
 ========================================================= */
@@ -98,6 +98,19 @@ let eventsUnsubscribe = null;
 let notificationsUnsubscribe = null;
 
 let latestNotifications = [];
+
+
+/* =========================================================
+   SEARCH STATE
+========================================================= */
+
+let searchTimer = null;
+
+/*
+   Used to make sure an older search result
+   does not overwrite a newer search result.
+*/
+let searchRequestId = 0;
 
 
 /* =========================================================
@@ -415,6 +428,20 @@ onAuthStateChanged(
 
       }
 
+      /*
+         Refresh current search because
+         Research becomes available after login.
+      */
+
+      if (
+        searchBar &&
+        searchBar.value.trim()
+      ) {
+
+        searchWebsite();
+
+      }
+
     } else {
 
       if (userInfo) {
@@ -454,6 +481,21 @@ onAuthStateChanged(
       if (postsContainer) {
 
         loadPosts();
+
+      }
+
+      /*
+         Refresh search because
+         private Research results are no
+         longer available.
+      */
+
+      if (
+        searchBar &&
+        searchBar.value.trim()
+      ) {
+
+        searchWebsite();
 
       }
 
@@ -1995,6 +2037,10 @@ function loadNews() {
             card.className =
               "card";
 
+            card.id =
+              "news-" +
+              docSnap.id;
+
             card.innerHTML = `
 
               <h3>
@@ -2130,6 +2176,10 @@ function loadEvents() {
 
             card.className =
               "event-card";
+
+            card.id =
+              "event-" +
+              docSnap.id;
 
             card.innerHTML = `
 
@@ -2866,74 +2916,1403 @@ themeBtn?.addEventListener(
 
 
 /* =========================================================
-   SEARCH
+   GLOBAL SEARCH 🔍
+   SEARCHES:
+   POSTS
+   NEWS
+   EVENTS
+   RESEARCH
 ========================================================= */
 
-function searchWebsite() {
 
-  if (!searchBar) {
-    return;
+/* =========================================================
+   CREATE SEARCH RESULT BOX
+========================================================= */
+
+function createSearchResultsBox() {
+
+  let box =
+    document.getElementById(
+      "globalSearchResults"
+    );
+
+  if (box) {
+    return box;
   }
 
-  const search =
-    searchBar.value
-      .toLowerCase()
-      .trim();
-
-  let count =
-    0;
-
-  const items =
-    document.querySelectorAll(
-      "#postsContainer .post-card, " +
-      "#newsContainer .card, " +
-      "#eventsContainer .event-card, " +
-      "#trendingContainer .post-card"
+  box =
+    document.createElement(
+      "div"
     );
 
-  items.forEach(
-    item => {
+  box.id =
+    "globalSearchResults";
 
-      const text =
-        item.textContent
-          .toLowerCase();
+  box.style.maxWidth =
+    "700px";
 
-      const show =
-        !search ||
-        text.includes(search);
+  box.style.margin =
+    "10px auto 20px";
 
-      item.style.display =
-        show
-          ? ""
-          : "none";
+  box.style.padding =
+    "0 15px";
 
-      if (show) {
-        count++;
-      }
+  const searchContainer =
+    searchBar?.closest(
+      ".search-container"
+    );
 
+  if (searchContainer) {
+
+    searchContainer.insertAdjacentElement(
+      "afterend",
+      box
+    );
+
+  } else if (searchBar?.parentElement) {
+
+    searchBar.parentElement.appendChild(
+      box
+    );
+
+  }
+
+  return box;
+
+}
+
+
+/* =========================================================
+   SEARCH RESULT STYLES
+========================================================= */
+
+function addSearchStyles() {
+
+  if (
+    document.getElementById(
+      "globalSearchStyles"
+    )
+  ) {
+
+    return;
+
+  }
+
+  const style =
+    document.createElement(
+      "style"
+    );
+
+  style.id =
+    "globalSearchStyles";
+
+  style.textContent = `
+
+    #globalSearchResults {
+      position: relative;
+      z-index: 999;
     }
+
+    .global-search-panel {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+
+    .global-search-header {
+      padding: 12px 15px;
+      font-weight: 700;
+      border-bottom: 1px solid #eee;
+      color: #007bff;
+    }
+
+    .global-search-result {
+      padding: 13px 15px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    .global-search-result:last-child {
+      border-bottom: none;
+    }
+
+    .global-search-result:hover {
+      background: #f1f7ff;
+    }
+
+    .global-search-category {
+      font-size: 12px;
+      font-weight: 700;
+      color: #007bff;
+      margin-bottom: 5px;
+    }
+
+    .global-search-title {
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .global-search-text {
+      font-size: 14px;
+      opacity: .8;
+      line-height: 1.5;
+    }
+
+    .global-search-empty {
+      padding: 20px;
+      text-align: center;
+      color: #777;
+    }
+
+    .global-search-loading {
+      padding: 20px;
+      text-align: center;
+      color: #007bff;
+      font-weight: 600;
+    }
+
+    .global-search-footer {
+      padding: 10px 15px;
+      text-align: center;
+      font-size: 12px;
+      opacity: .7;
+    }
+
+    #globalSearchResults mark {
+      background: #fff3a3;
+      color: inherit;
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+
+    body.dark #globalSearchResults .global-search-panel {
+      background: #1e1e1e;
+      border-color: #444;
+      color: #fff;
+    }
+
+    body.dark #globalSearchResults .global-search-header {
+      border-color: #444;
+    }
+
+    body.dark #globalSearchResults .global-search-result {
+      border-color: #444;
+    }
+
+    body.dark #globalSearchResults .global-search-result:hover {
+      background: #292929;
+    }
+
+    body.dark #globalSearchResults .global-search-empty {
+      color: #aaa;
+    }
+
+  `;
+
+  document.head.appendChild(
+    style
   );
 
-  const counter =
-    document.getElementById(
-      "searchCount"
+}
+
+
+/* =========================================================
+   NORMALIZE SEARCH TEXT
+========================================================= */
+
+function normalizeSearchText(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+    .toLowerCase()
+    .trim();
+
+}
+
+
+/* =========================================================
+   CHECK MATCH
+========================================================= */
+
+function searchMatches(
+  fields,
+  search
+) {
+
+  const text =
+    fields
+      .map(
+        value =>
+          normalizeSearchText(
+            value
+          )
+      )
+      .join(" ");
+
+  return text.includes(
+    search
+  );
+
+}
+
+
+/* =========================================================
+   SEARCH POSTS
+========================================================= */
+
+async function searchPosts(
+  search
+) {
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "posts"
+        )
+      );
+
+    const results = [];
+
+    snapshot.forEach(
+      postDoc => {
+
+        const post =
+          postDoc.data();
+
+        if (
+          searchMatches(
+            [
+              post.text,
+              post.name,
+              post.email
+            ],
+            search
+          )
+        ) {
+
+          results.push({
+
+            type:
+              "post",
+
+            id:
+              postDoc.id,
+
+            title:
+              post.name ||
+              "Student Post",
+
+            text:
+              post.text ||
+              "",
+
+            icon:
+              "📝"
+
+          });
+
+        }
+
+      }
     );
 
-  if (counter) {
+    return results;
 
-    counter.textContent =
-      search
-        ? `${count} results found`
-        : "";
+  } catch (error) {
+
+    console.error(
+      "SEARCH POSTS ERROR:",
+      error
+    );
+
+    return [];
 
   }
 
 }
 
 
+/* =========================================================
+   SEARCH NEWS
+========================================================= */
+
+async function searchNews(
+  search
+) {
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "news"
+        )
+      );
+
+    const results = [];
+
+    snapshot.forEach(
+      newsDoc => {
+
+        const news =
+          newsDoc.data();
+
+        if (
+          searchMatches(
+            [
+              news.title,
+              news.description
+            ],
+            search
+          )
+        ) {
+
+          results.push({
+
+            type:
+              "news",
+
+            id:
+              newsDoc.id,
+
+            title:
+              news.title ||
+              "Latest News",
+
+            text:
+              news.description ||
+              "",
+
+            icon:
+              "📰"
+
+          });
+
+        }
+
+      }
+    );
+
+    return results;
+
+  } catch (error) {
+
+    console.error(
+      "SEARCH NEWS ERROR:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   SEARCH EVENTS
+========================================================= */
+
+async function searchEvents(
+  search
+) {
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "events"
+        )
+      );
+
+    const results = [];
+
+    snapshot.forEach(
+      eventDoc => {
+
+        const event =
+          eventDoc.data();
+
+        if (
+          searchMatches(
+            [
+              event.title,
+              event.description,
+              event.date
+            ],
+            search
+          )
+        ) {
+
+          results.push({
+
+            type:
+              "event",
+
+            id:
+              eventDoc.id,
+
+            title:
+              event.title ||
+              "Event",
+
+            text:
+              event.description ||
+              "",
+
+            date:
+              event.date ||
+              "",
+
+            icon:
+              "📅"
+
+          });
+
+        }
+
+      }
+    );
+
+    return results;
+
+  } catch (error) {
+
+    console.error(
+      "SEARCH EVENTS ERROR:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   SEARCH RESEARCH
+   ONLY USER-ACCESSIBLE RESEARCH
+========================================================= */
+
+async function searchResearch(
+  search
+) {
+
+  /*
+     User must be logged in because
+     Firestore rules protect research.
+  */
+
+  if (!currentUser) {
+
+    return [];
+
+  }
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(
+          db,
+          "research"
+        )
+      );
+
+    const results = [];
+
+    snapshot.forEach(
+      researchDoc => {
+
+        const research =
+          researchDoc.data();
+
+        if (
+          searchMatches(
+            [
+              research.topic,
+              research.researchQuestions,
+              research.objectives,
+              research.abstract,
+              research.problemStatement,
+              research.apa7,
+              research.aiMariResponse
+            ],
+            search
+          )
+        ) {
+
+          results.push({
+
+            type:
+              "research",
+
+            id:
+              researchDoc.id,
+
+            title:
+              research.topic ||
+              "Saved Research",
+
+            text:
+              research.researchQuestions ||
+              research.abstract ||
+              research.problemStatement ||
+              research.aiMariResponse ||
+              "",
+
+            icon:
+              "🔬"
+
+          });
+
+        }
+
+      }
+    );
+
+    return results;
+
+  } catch (error) {
+
+    /*
+       If Firestore blocks research
+       access, do not break the
+       other search categories.
+    */
+
+    console.warn(
+      "RESEARCH SEARCH SKIPPED:",
+      error
+    );
+
+    return [];
+
+  }
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT SEARCH TEXT
+========================================================= */
+
+function highlightSearchText(
+  text,
+  search
+) {
+
+  const safeText =
+    escapeHTML(
+      text || ""
+    );
+
+  if (!search) {
+
+    return safeText;
+
+  }
+
+  /*
+     Escape regular-expression
+     special characters.
+  */
+
+  const escapedSearch =
+    String(search)
+      .replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&"
+      );
+
+  try {
+
+    const regex =
+      new RegExp(
+        `(${escapedSearch})`,
+        "gi"
+      );
+
+    return safeText.replace(
+      regex,
+      "<mark>$1</mark>"
+    );
+
+  } catch {
+
+    return safeText;
+
+  }
+
+}
+
+
+/* =========================================================
+   SHOW SEARCH RESULTS
+========================================================= */
+
+function displaySearchResults(
+  results,
+  search
+) {
+
+  const box =
+    createSearchResultsBox();
+
+  if (!box) {
+    return;
+  }
+
+  box.innerHTML =
+    "";
+
+  if (!search) {
+
+    return;
+
+  }
+
+  /*
+     Maximum 30 results.
+  */
+
+  const limitedResults =
+    results.slice(
+      0,
+      30
+    );
+
+  const panel =
+    document.createElement(
+      "div"
+    );
+
+  panel.className =
+    "global-search-panel";
+
+
+  /* =======================================================
+     HEADER
+  ======================================================= */
+
+  const header =
+    document.createElement(
+      "div"
+    );
+
+  header.className =
+    "global-search-header";
+
+  header.textContent =
+    `🔎 ${results.length} result${
+      results.length === 1
+        ? ""
+        : "s"
+    } found`;
+
+  panel.appendChild(
+    header
+  );
+
+
+  /* =======================================================
+     NO RESULTS
+  ======================================================= */
+
+  if (!limitedResults.length) {
+
+    const empty =
+      document.createElement(
+        "div"
+      );
+
+    empty.className =
+      "global-search-empty";
+
+    empty.innerHTML =
+      `
+        🔍 No results found for
+        <strong>
+          "${escapeHTML(search)}"
+        </strong>
+        <br><br>
+        Try another keyword.
+      `;
+
+    panel.appendChild(
+      empty
+    );
+
+    box.appendChild(
+      panel
+    );
+
+    return;
+
+  }
+
+
+  /* =======================================================
+     RESULTS
+  ======================================================= */
+
+  limitedResults.forEach(
+    result => {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "global-search-result";
+
+      let category =
+        "Result";
+
+      if (
+        result.type ===
+        "post"
+      ) {
+
+        category =
+          "📝 POST";
+
+      } else if (
+        result.type ===
+        "news"
+      ) {
+
+        category =
+          "📰 NEWS";
+
+      } else if (
+        result.type ===
+        "event"
+      ) {
+
+        category =
+          "📅 EVENT";
+
+      } else if (
+        result.type ===
+        "research"
+      ) {
+
+        category =
+          "🔬 RESEARCH";
+
+      }
+
+      const shortText =
+        String(
+          result.text || ""
+        ).length > 180
+          ? String(
+              result.text || ""
+            ).substring(
+              0,
+              180
+            ) + "..."
+          : String(
+              result.text || ""
+            );
+
+      item.innerHTML = `
+
+        <div class="global-search-category">
+          ${category}
+        </div>
+
+        <div class="global-search-title">
+          ${highlightSearchText(
+            result.title,
+            search
+          )}
+        </div>
+
+        <div class="global-search-text">
+          ${highlightSearchText(
+            shortText,
+            search
+          )}
+        </div>
+
+        ${
+          result.date
+            ? `
+              <div
+                class="global-search-text"
+                style="margin-top:5px;"
+              >
+                📅 ${escapeHTML(
+                  result.date
+                )}
+              </div>
+            `
+            : ""
+        }
+
+      `;
+
+
+      /* =====================================================
+         CLICK RESULT
+      ===================================================== */
+
+      item.addEventListener(
+        "click",
+        () => {
+
+          openSearchResult(
+            result
+          );
+
+        }
+      );
+
+      panel.appendChild(
+        item
+      );
+
+    }
+  );
+
+
+  /* =======================================================
+     SHOW LIMIT MESSAGE
+  ======================================================= */
+
+  if (
+    results.length >
+    30
+  ) {
+
+    const more =
+      document.createElement(
+        "div"
+      );
+
+    more.className =
+      "global-search-footer";
+
+    more.textContent =
+      "Showing first 30 results.";
+
+    panel.appendChild(
+      more
+    );
+
+  }
+
+  box.appendChild(
+    panel
+  );
+
+}
+
+
+/* =========================================================
+   OPEN SEARCH RESULT
+========================================================= */
+
+function openSearchResult(
+  result
+) {
+
+  const box =
+    document.getElementById(
+      "globalSearchResults"
+    );
+
+  if (box) {
+
+    box.innerHTML =
+      "";
+
+  }
+
+
+  /* =======================================================
+     POST
+  ======================================================= */
+
+  if (
+    result.type ===
+    "post"
+  ) {
+
+    const target =
+      document.getElementById(
+        "post-" +
+        result.id
+      );
+
+    if (target) {
+
+      target.style.outline =
+        "3px solid #007bff";
+
+      target.scrollIntoView({
+        behavior:
+          "smooth",
+        block:
+          "center"
+      });
+
+      setTimeout(
+        () => {
+
+          target.style.outline =
+            "";
+
+        },
+        2500
+      );
+
+    } else {
+
+      window.location.hash =
+        "post-" +
+        result.id;
+
+    }
+
+    return;
+
+  }
+
+
+  /* =======================================================
+     NEWS
+  ======================================================= */
+
+  if (
+    result.type ===
+    "news"
+  ) {
+
+    const target =
+      document.getElementById(
+        "news-" +
+        result.id
+      );
+
+    if (target) {
+
+      target.style.outline =
+        "3px solid #007bff";
+
+      target.scrollIntoView({
+        behavior:
+          "smooth",
+        block:
+          "center"
+      });
+
+      setTimeout(
+        () => {
+
+          target.style.outline =
+            "";
+
+        },
+        2500
+      );
+
+    } else {
+
+      const container =
+        document.getElementById(
+          "newsContainer"
+        );
+
+      container?.scrollIntoView({
+        behavior:
+          "smooth",
+        block:
+          "start"
+      });
+
+    }
+
+    return;
+
+  }
+
+
+  /* =======================================================
+     EVENTS
+  ======================================================= */
+
+  if (
+    result.type ===
+    "event"
+  ) {
+
+    const target =
+      document.getElementById(
+        "event-" +
+        result.id
+      );
+
+    if (target) {
+
+      target.style.outline =
+        "3px solid #007bff";
+
+      target.scrollIntoView({
+        behavior:
+          "smooth",
+        block:
+          "center"
+      });
+
+      setTimeout(
+        () => {
+
+          target.style.outline =
+            "";
+
+        },
+        2500
+      );
+
+    } else {
+
+      const container =
+        document.getElementById(
+          "eventsContainer"
+        );
+
+      container?.scrollIntoView({
+        behavior:
+          "smooth",
+        block:
+          "start"
+      });
+
+    }
+
+    return;
+
+  }
+
+
+  /* =======================================================
+     RESEARCH
+  ======================================================= */
+
+  if (
+    result.type ===
+    "research"
+  ) {
+
+    window.location.href =
+      "research.html";
+
+  }
+
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH FUNCTION
+========================================================= */
+
+async function searchWebsite() {
+
+  if (!searchBar) {
+    return;
+  }
+
+  const search =
+    normalizeSearchText(
+      searchBar.value
+    );
+
+  const box =
+    createSearchResultsBox();
+
+  if (!box) {
+    return;
+  }
+
+  /*
+     Empty search
+  */
+
+  if (!search) {
+
+    box.innerHTML =
+      "";
+
+    return;
+
+  }
+
+  /*
+     Create a unique request ID.
+     If user types a new search while
+     this search is running, the old
+     result will not replace the new one.
+  */
+
+  const requestId =
+    ++searchRequestId;
+
+
+  /*
+     Loading message
+  */
+
+  box.innerHTML = `
+    <div class="global-search-panel">
+      <div class="global-search-loading">
+        🔎 Searching Sociology Connect...
+      </div>
+    </div>
+  `;
+
+
+  try {
+
+    /*
+       Search all sections
+       at the same time.
+    */
+
+    const [
+      posts,
+      news,
+      events,
+      research
+    ] =
+      await Promise.all([
+        searchPosts(
+          search
+        ),
+
+        searchNews(
+          search
+        ),
+
+        searchEvents(
+          search
+        ),
+
+        searchResearch(
+          search
+        )
+      ]);
+
+
+    /*
+       Do not show an old request
+       after a newer search has started.
+    */
+
+    if (
+      requestId !==
+      searchRequestId
+    ) {
+
+      return;
+
+    }
+
+
+    /*
+       Combine results.
+    */
+
+    const results = [
+
+      ...posts,
+
+      ...news,
+
+      ...events,
+
+      ...research
+
+    ];
+
+
+    /*
+       Sort results by category
+       for consistent display.
+    */
+
+    results.sort(
+      (a, b) => {
+
+        const order = {
+          post: 1,
+          news: 2,
+          event: 3,
+          research: 4
+        };
+
+        return (
+          (order[a.type] || 99) -
+          (order[b.type] || 99)
+        );
+
+      }
+    );
+
+
+    displaySearchResults(
+      results,
+      search
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "GLOBAL SEARCH ERROR:",
+      error
+    );
+
+    if (
+      requestId !==
+      searchRequestId
+    ) {
+
+      return;
+
+    }
+
+    box.innerHTML = `
+      <div class="global-search-panel">
+        <div class="global-search-empty">
+          ❌ Search failed.
+          Please try again.
+        </div>
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
 searchBar?.addEventListener(
   "input",
-  searchWebsite
+  () => {
+
+    clearTimeout(
+      searchTimer
+    );
+
+    searchTimer =
+      setTimeout(
+        () => {
+
+          searchWebsite();
+
+        },
+        350
+      );
+
+  }
+);
+
+
+/* =========================================================
+   SEARCH ENTER KEY
+========================================================= */
+
+searchBar?.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key ===
+      "Enter"
+    ) {
+
+      event.preventDefault();
+
+      clearTimeout(
+        searchTimer
+      );
+
+      searchWebsite();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   SEARCH STYLES STARTUP
+========================================================= */
+
+addSearchStyles();
+
+
+/* =========================================================
+   CLOSE SEARCH WHEN CLICKING OUTSIDE
+========================================================= */
+
+document.addEventListener(
+  "click",
+  event => {
+
+    if (!searchBar) {
+      return;
+    }
+
+    const box =
+      document.getElementById(
+        "globalSearchResults"
+      );
+
+    if (!box) {
+      return;
+    }
+
+    const searchContainer =
+      searchBar.closest(
+        ".search-container"
+      );
+
+    if (
+      !searchContainer?.contains(
+        event.target
+      ) &&
+      !box.contains(
+        event.target
+      )
+    ) {
+
+      box.innerHTML =
+        "";
+
+    }
+
+  }
 );
 
 

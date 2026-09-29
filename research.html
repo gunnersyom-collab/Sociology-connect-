@@ -9,7 +9,6 @@
 
 <title>Research Hub | Sociology Connect</title>
 
-
 <style>
 
 /* =========================================================
@@ -422,7 +421,7 @@ button{
 
 .saved-preview{
     white-space:pre-wrap;
-    max-height:350px;
+    max-height:300px;
     overflow:auto;
     background:white;
     border:1px solid #e5e7eb;
@@ -449,6 +448,32 @@ button{
 
 .delete-btn:hover{
     background:#b02a37;
+}
+
+
+/* =========================================================
+   ADMIN CLEAR ALL RESEARCH
+   ========================================================= */
+
+.admin-clear-btn{
+    background:#7f1d1d;
+    color:white;
+    padding:10px 16px;
+    border-radius:10px;
+    font-weight:bold;
+    margin-top:15px;
+    border:none;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.admin-clear-btn:hover{
+    background:#991b1b;
+}
+
+.admin-clear-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
 }
 
 
@@ -720,6 +745,10 @@ body.dark .saved-date{
         width:100%;
     }
 
+    .admin-clear-btn{
+        width:100%;
+    }
+
 }
 
 </style>
@@ -729,10 +758,6 @@ body.dark .saved-date{
 
 <body>
 
-
-<!-- =========================================================
-     HEADER
-     ========================================================= -->
 
 <header>
 
@@ -807,10 +832,6 @@ body.dark .saved-date{
 <main class="container">
 
 
-<!-- =========================================================
-     HERO
-     ========================================================= -->
-
 <section class="hero">
 
     <h2>
@@ -827,10 +848,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     SEARCH
-     ========================================================= -->
-
 <div class="search-box">
 
     <input
@@ -842,10 +859,6 @@ body.dark .saved-date{
 </div>
 
 
-
-<!-- =========================================================
-     INTRO
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -862,10 +875,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     TOPIC GENERATOR
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -933,10 +942,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     AI MARI
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1006,10 +1011,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     RESEARCH QUESTIONS
-     ========================================================= -->
-
 <section class="card searchable">
 
     <h3>
@@ -1076,10 +1077,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     APA 7
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1176,10 +1173,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     ABSTRACT
-     ========================================================= -->
-
 <section class="card searchable">
 
     <h3>
@@ -1246,10 +1239,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     PROBLEM STATEMENT
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1318,10 +1307,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     OBJECTIVES
-     ========================================================= -->
-
 <section class="card searchable">
 
     <h3>
@@ -1389,10 +1374,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     SAVE RESEARCH
-     ========================================================= -->
-
 <section class="card searchable save-section">
 
     <h3>
@@ -1402,7 +1383,8 @@ body.dark .saved-date{
     <p class="save-intro">
 
         Save your generated research work to your Sociology Connect account.
-        You can access it again later from this Research Hub.
+        All generated research sections, including the AI Mari response,
+        can be saved together and accessed again later.
 
     </p>
 
@@ -1425,10 +1407,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     SAVED RESEARCH
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1453,13 +1431,21 @@ body.dark .saved-date{
 
     </div>
 
+
+    <button
+        id="adminClearResearchBtn"
+        class="admin-clear-btn"
+        type="button"
+        onclick="clearAllResearch()"
+        style="display:none;">
+
+        🧹 Clear All Research — Admin Only
+
+    </button>
+
 </section>
 
 
-
-<!-- =========================================================
-     RESEARCH PROCESS
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1516,10 +1502,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     QUALITATIVE / QUANTITATIVE
-     ========================================================= -->
-
 <section class="card searchable">
 
     <h3>
@@ -1564,10 +1546,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     RESEARCH AREAS
-     ========================================================= -->
-
 <section class="card searchable">
 
     <h3>
@@ -1595,10 +1573,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     APA GUIDE
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1635,10 +1609,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     DATA COLLECTION
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1679,10 +1649,6 @@ body.dark .saved-date{
 </section>
 
 
-
-<!-- =========================================================
-     FAQ
-     ========================================================= -->
 
 <section class="card searchable">
 
@@ -1753,10 +1719,6 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     FOOTER
-     ========================================================= -->
-
 <footer>
 
     <p>
@@ -1775,12 +1737,7 @@ body.dark .saved-date{
 
 
 
-<!-- =========================================================
-     FIREBASE
-     ========================================================= -->
-
 <script type="module">
-
 
 import {
     auth,
@@ -1830,6 +1787,32 @@ onAuthStateChanged(auth, async (user) => {
     currentUser = user || null;
 
 
+    const adminButton =
+        document.getElementById(
+            "adminClearResearchBtn"
+        );
+
+
+    if(adminButton){
+
+        if(
+            currentUser &&
+            currentUser.email === ADMIN_EMAIL
+        ){
+
+            adminButton.style.display =
+                "inline-block";
+
+        }else{
+
+            adminButton.style.display =
+                "none";
+
+        }
+
+    }
+
+
     if(currentUser){
 
         await loadSavedResearch();
@@ -1861,11 +1844,15 @@ onAuthStateChanged(auth, async (user) => {
 window.saveResearch = async function(){
 
     const status =
-        document.getElementById("saveStatus");
+        document.getElementById(
+            "saveStatus"
+        );
 
 
     const button =
-        document.getElementById("saveResearchBtn");
+        document.getElementById(
+            "saveResearchBtn"
+        );
 
 
     if(!currentUser){
@@ -1882,64 +1869,64 @@ window.saveResearch = async function(){
 
 
     /* =====================================================
-       GET GENERATED RESULTS
+       GET ALL GENERATED RESULTS
        ===================================================== */
 
     const topic =
-        document.getElementById("topicResult")
-        .innerText
-        .trim();
+        document.getElementById(
+            "topicResult"
+        ).innerText.trim();
+
+
+    const aiMariResponse =
+        document.getElementById(
+            "mariResult"
+        ).innerText.trim();
 
 
     const questions =
-        document.getElementById("questionResult")
-        .innerText
-        .trim();
+        document.getElementById(
+            "questionResult"
+        ).innerText.trim();
 
 
     const objectives =
-        document.getElementById("objectiveResult")
-        .innerText
-        .trim();
+        document.getElementById(
+            "objectiveResult"
+        ).innerText.trim();
 
 
     const abstract =
-        document.getElementById("abstractResult")
-        .innerText
-        .trim();
+        document.getElementById(
+            "abstractResult"
+        ).innerText.trim();
 
 
     const problemStatement =
-        document.getElementById("problemResult")
-        .innerText
-        .trim();
+        document.getElementById(
+            "problemResult"
+        ).innerText.trim();
 
 
     const apa =
-        document.getElementById("apaResult")
-        .innerText
-        .trim();
+        document.getElementById(
+            "apaResult"
+        ).innerText.trim();
+
 
 
     /* =====================================================
-       AI MARI RESPONSE
+       CHECK WHETHER ANYTHING EXISTS
        ===================================================== */
-
-    const aiMariResponse =
-        document.getElementById("mariResult")
-        .innerText
-        .trim();
-
-
 
     const hasResearch =
         topic ||
+        aiMariResponse ||
         questions ||
         objectives ||
         abstract ||
         problemStatement ||
-        apa ||
-        aiMariResponse;
+        apa;
 
 
     if(!hasResearch){
@@ -1965,7 +1952,6 @@ window.saveResearch = async function(){
 
     try{
 
-
         await addDoc(
 
             collection(
@@ -1984,6 +1970,9 @@ window.saveResearch = async function(){
                 topic:
                     topic || "",
 
+                aiMariResponse:
+                    aiMariResponse || "",
+
                 researchQuestions:
                     questions || "",
 
@@ -1999,9 +1988,6 @@ window.saveResearch = async function(){
                 apa7:
                     apa || "",
 
-                aiMariResponse:
-                    aiMariResponse || "",
-
                 createdAt:
                     serverTimestamp()
 
@@ -2010,22 +1996,19 @@ window.saveResearch = async function(){
         );
 
 
-
         status.className =
             "save-status success";
 
 
         status.textContent =
-            "✅ Your research has been saved successfully!";
+            "✅ All generated research, including AI Mari Response, has been saved successfully!";
 
 
         button.textContent =
             "💾 Save Research";
 
 
-
         await loadSavedResearch();
-
 
 
         setTimeout(() => {
@@ -2100,7 +2083,6 @@ async function loadSavedResearch(){
 
     try{
 
-
         const researchQuery =
             query(
 
@@ -2118,12 +2100,10 @@ async function loadSavedResearch(){
             );
 
 
-
         const snapshot =
             await getDocs(
                 researchQuery
             );
-
 
 
         if(snapshot.empty){
@@ -2148,7 +2128,6 @@ async function loadSavedResearch(){
         }
 
 
-
         const items = [];
 
 
@@ -2166,7 +2145,6 @@ async function loadSavedResearch(){
 
             }
         );
-
 
 
         items.sort(
@@ -2190,14 +2168,11 @@ async function loadSavedResearch(){
         );
 
 
-
         container.innerHTML = "";
-
 
 
         items.forEach(
             (item) => {
-
 
                 const div =
                     document.createElement(
@@ -2209,15 +2184,12 @@ async function loadSavedResearch(){
                     "saved-item";
 
 
-
                 const title =
                     item.topic ||
                     "Saved Research Project";
 
 
-
                 let preview = "";
-
 
 
                 if(item.topic){
@@ -2229,6 +2201,10 @@ async function loadSavedResearch(){
 
                 }
 
+
+                /* =================================================
+                   AI MARI RESPONSE
+                   ================================================= */
 
                 if(item.aiMariResponse){
 
@@ -2289,14 +2265,12 @@ async function loadSavedResearch(){
                 }
 
 
-
                 const dateText =
                     item.createdAt?.toDate
                     ? item.createdAt
                         .toDate()
                         .toLocaleString()
                     : "Recently saved";
-
 
 
                 div.innerHTML = `
@@ -2322,7 +2296,6 @@ async function loadSavedResearch(){
 
                     <div class="saved-actions">
 
-
                         <button
                             class="copy-btn"
                             type="button">
@@ -2340,17 +2313,14 @@ async function loadSavedResearch(){
 
                         </button>
 
-
                     </div>
 
                 `;
 
 
-
                 container.appendChild(
                     div
                 );
-
 
 
                 /* =================================================
@@ -2374,7 +2344,6 @@ async function loadSavedResearch(){
 
                     }
                 );
-
 
 
                 /* =================================================
@@ -2444,7 +2413,6 @@ async function deleteSavedResearch(id){
     }
 
 
-
     const confirmed =
         confirm(
             "Are you sure you want to delete this saved research?"
@@ -2458,9 +2426,7 @@ async function deleteSavedResearch(id){
     }
 
 
-
     try{
-
 
         await deleteDoc(
 
@@ -2471,7 +2437,6 @@ async function deleteSavedResearch(id){
             )
 
         );
-
 
 
         await loadSavedResearch();
@@ -2492,6 +2457,159 @@ async function deleteSavedResearch(id){
     }
 
 }
+
+
+
+/* =========================================================
+   CLEAR ALL RESEARCH — ADMIN ONLY
+   ========================================================= */
+
+window.clearAllResearch = async function(){
+
+    if(!currentUser){
+
+        alert(
+            "🔐 Please login first."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        currentUser.email !== ADMIN_EMAIL
+    ){
+
+        alert(
+            "⛔ Admin access only."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "⚠️ WARNING!\n\nThis will delete ALL saved research from Sociology Connect.\n\nAre you sure you want to continue?"
+        );
+
+
+    if(!confirmed){
+
+        return;
+
+    }
+
+
+    const finalConfirmed =
+        confirm(
+            "🚨 FINAL CONFIRMATION\n\nALL saved research will be permanently deleted.\n\nPress OK to delete everything."
+        );
+
+
+    if(!finalConfirmed){
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "adminClearResearchBtn"
+        );
+
+
+    if(button){
+
+        button.disabled = true;
+
+        button.textContent =
+            "⏳ Clearing Research...";
+
+    }
+
+
+    try{
+
+        const researchSnapshot =
+            await getDocs(
+
+                collection(
+                    db,
+                    "research"
+                )
+
+            );
+
+
+        const total =
+            researchSnapshot.size;
+
+
+        if(total === 0){
+
+            alert(
+                "📂 There is no saved research to clear."
+            );
+
+
+            return;
+
+        }
+
+
+        const deletePromises =
+            researchSnapshot.docs.map(
+                researchDoc =>
+                    deleteDoc(
+                        researchDoc.ref
+                    )
+            );
+
+
+        await Promise.all(
+            deletePromises
+        );
+
+
+        await loadSavedResearch();
+
+
+        alert(
+            `✅ Successfully cleared ${total} saved research project${total === 1 ? "" : "s"}.`
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "CLEAR ALL RESEARCH ERROR:",
+            error
+        );
+
+
+        alert(
+            "❌ Could not clear all research. Please check your Firestore Rules and try again."
+        );
+
+
+    }finally{
+
+        if(button){
+
+            button.disabled = false;
+
+            button.textContent =
+                "🧹 Clear All Research — Admin Only";
+
+        }
+
+    }
+
+};
 
 
 
@@ -2585,7 +2703,6 @@ async function copyText(
     }
 
 
-
     const original =
         button.innerHTML;
 
@@ -2597,7 +2714,6 @@ async function copyText(
     button.classList.add(
         "copied"
     );
-
 
 
     setTimeout(() => {
@@ -2616,10 +2732,6 @@ async function copyText(
 </script>
 
 
-
-<!-- =========================================================
-     NORMAL JAVASCRIPT
-     ========================================================= -->
 
 <script>
 
@@ -2719,7 +2831,6 @@ async function copyResult(
     }
 
 
-
     try{
 
         await navigator.clipboard.writeText(
@@ -2764,7 +2875,6 @@ async function copyResult(
     }
 
 
-
     const originalText =
         button.innerHTML;
 
@@ -2776,7 +2886,6 @@ async function copyResult(
     button.classList.add(
         "copied"
     );
-
 
 
     setTimeout(() => {
@@ -3091,7 +3200,6 @@ function generateAPA(){
         return;
 
     }
-
 
 
     let citation =

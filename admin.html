@@ -7,10 +7,7 @@
 
 <title>Admin Dashboard | Sociology Connect</title>
 
-<meta
-    name="description"
-    content="Sociology Connect Admin Dashboard"
-/>
+<meta name="description" content="Sociology Connect Admin Dashboard">
 
 <style>
 
@@ -27,14 +24,23 @@
 :root{
     --primary:#007bff;
     --primary-dark:#0056b3;
+    --primary-soft:#eaf4ff;
     --body-bg:#f4f7fb;
     --card-bg:#ffffff;
-    --text:#222;
-    --muted:#666;
-    --border:#dbe9ff;
+    --text:#172033;
+    --muted:#667085;
+    --border:#dbe7f5;
     --input-bg:#ffffff;
-    --soft-bg:#f8fbff;
-    --shadow:0 5px 18px rgba(0,0,0,.07);
+    --soft-bg:#f7faff;
+    --danger:#dc3545;
+    --success:#198754;
+    --warning:#f59e0b;
+    --shadow:0 8px 25px rgba(15,23,42,.07);
+    --shadow-hover:0 14px 35px rgba(15,23,42,.12);
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
@@ -42,9 +48,10 @@ body{
     background:var(--body-bg);
     color:var(--text);
     min-height:100vh;
+    line-height:1.5;
     transition:
-        background .25s ease,
-        color .25s ease;
+        background .3s ease,
+        color .3s ease;
 }
 
 button,
@@ -54,34 +61,55 @@ select{
     font-family:inherit;
 }
 
+button{
+    -webkit-tap-highlight-color:transparent;
+}
+
 /* =========================================================
    HEADER
    ========================================================= */
 
 header{
-    background:linear-gradient(
-        135deg,
-        #007bff,
-        #0056b3
-    );
+    position:relative;
+    overflow:hidden;
 
-    color:white;
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(255,255,255,.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(255,255,255,.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #0084ff,
+            #0056b3
+        );
 
-    padding:30px 15px;
+    color:#fff;
+
+    padding:42px 18px 35px;
 
     text-align:center;
 
     box-shadow:
-        0 4px 15px rgba(0,0,0,.15);
+        0 8px 25px rgba(0,70,150,.18);
 }
 
 header h1{
-    font-size:30px;
+    font-size:clamp(25px,4vw,36px);
+    font-weight:800;
+    letter-spacing:-.5px;
 }
 
 header p{
     margin-top:8px;
-    opacity:.9;
+    opacity:.92;
+    font-size:15px;
 }
 
 /* =========================================================
@@ -90,38 +118,38 @@ header p{
 
 .dark-mode-btn{
     display:inline-flex;
-
     align-items:center;
     justify-content:center;
+    gap:8px;
 
-    gap:7px;
-
-    margin-top:15px;
+    margin-top:18px;
 
     padding:10px 17px;
 
-    background:rgba(255,255,255,.15);
+    background:rgba(255,255,255,.13);
+    color:#fff;
 
-    color:#ffffff;
+    border:1px solid rgba(255,255,255,.35);
 
-    border:1px solid
-        rgba(255,255,255,.35);
-
-    border-radius:10px;
+    border-radius:999px;
 
     font-size:14px;
-
-    font-weight:bold;
+    font-weight:700;
 
     cursor:pointer;
 
-    transition:.25s ease;
+    backdrop-filter:blur(8px);
+
+    transition:
+        background .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
 }
 
 .dark-mode-btn:hover{
-    background:rgba(255,255,255,.28);
-
-    transform:translateY(-1px);
+    background:rgba(255,255,255,.24);
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
 /* =========================================================
@@ -129,31 +157,47 @@ header p{
    ========================================================= */
 
 nav{
-    background:#0069d9;
+    position:sticky;
+    top:0;
+    z-index:50;
 
-    padding:13px 10px;
+    background:rgba(0,105,217,.96);
+
+    padding:12px 10px;
 
     text-align:center;
 
     box-shadow:
-        0 2px 8px rgba(0,0,0,.08);
+        0 4px 14px rgba(0,0,0,.08);
+
+    backdrop-filter:blur(10px);
 }
 
 nav a{
-    color:white;
+    display:inline-block;
+
+    color:#fff;
 
     text-decoration:none;
 
-    font-weight:bold;
+    font-weight:700;
+    font-size:14px;
 
-    margin:0 10px;
+    padding:8px 12px;
 
-    transition:.2s;
+    margin:2px;
+
+    border-radius:9px;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
 }
 
 nav a:hover{
-    opacity:.8;
-    text-decoration:underline;
+    background:rgba(255,255,255,.14);
+    transform:translateY(-1px);
+    text-decoration:none;
 }
 
 /* =========================================================
@@ -161,11 +205,11 @@ nav a:hover{
    ========================================================= */
 
 .container{
-    max-width:1100px;
+    width:min(1180px,calc(100% - 28px));
 
-    margin:25px auto;
+    margin:28px auto;
 
-    padding:15px;
+    padding:0;
 }
 
 /* =========================================================
@@ -175,28 +219,26 @@ nav a:hover{
 #accessDenied{
     background:var(--card-bg);
 
-    padding:35px 25px;
+    padding:42px 25px;
 
-    border-radius:18px;
+    border-radius:22px;
 
     text-align:center;
 
-    box-shadow:
-        0 5px 20px rgba(0,0,0,.08);
+    box-shadow:var(--shadow);
 
-    border:1px solid transparent;
+    border:1px solid var(--border);
 }
 
 #accessDenied h2{
-    color:#dc3545;
-
+    color:var(--danger);
     margin-bottom:12px;
+    font-size:25px;
 }
 
 #accessDenied p{
     color:var(--muted);
-
-    line-height:1.6;
+    line-height:1.7;
 }
 
 /* =========================================================
@@ -217,85 +259,114 @@ nav a:hover{
     grid-template-columns:
         repeat(4,1fr);
 
-    gap:16px;
+    gap:17px;
 
-    margin-bottom:22px;
+    margin-bottom:24px;
 }
 
 .stat{
+    position:relative;
+    overflow:hidden;
+
     background:
         linear-gradient(
-            135deg,
-            #007bff,
+            145deg,
+            #0785ff,
             #0056b3
         );
 
-    color:white;
+    color:#fff;
 
-    padding:22px 15px;
+    padding:22px 18px;
 
-    border-radius:17px;
+    min-height:145px;
 
-    text-align:center;
+    border-radius:20px;
+
+    text-align:left;
 
     box-shadow:
-        0 5px 15px rgba(0,0,0,.12);
+        0 8px 22px rgba(0,90,190,.16);
 
-    transition:.25s;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.stat::after{
+    content:"";
+
+    position:absolute;
+
+    width:90px;
+    height:90px;
+
+    right:-30px;
+    top:-30px;
+
+    background:rgba(255,255,255,.09);
+
+    border-radius:50%;
 }
 
 .stat:hover{
-    transform:translateY(-4px);
-
-    box-shadow:
-        0 10px 25px rgba(0,0,0,.16);
+    transform:translateY(-5px);
+    box-shadow:0 15px 30px rgba(0,90,190,.22);
 }
 
 .stat-icon{
-    font-size:28px;
-
-    margin-bottom:5px;
+    font-size:27px;
+    margin-bottom:10px;
 }
 
 .stat h3{
-    font-size:30px;
-
-    margin-bottom:5px;
+    font-size:31px;
+    line-height:1;
+    margin-bottom:7px;
 }
 
 .stat p{
     opacity:.9;
-
     font-size:14px;
+    font-weight:600;
 }
 
 /* =========================================================
-   CARDS
+   GENERAL CARDS
    ========================================================= */
 
 .card{
     background:var(--card-bg);
 
-    padding:24px;
+    padding:27px;
 
-    border-radius:17px;
+    border-radius:20px;
 
-    margin-bottom:22px;
+    margin-bottom:23px;
 
     box-shadow:var(--shadow);
 
-    border:1px solid transparent;
+    border:1px solid var(--border);
 
     transition:
-        background .25s ease,
-        color .25s ease,
-        border .25s ease;
+        background .3s ease,
+        color .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+}
+
+.card:hover{
+    box-shadow:var(--shadow-hover);
 }
 
 .card h2{
-    color:#007bff;
+    color:var(--primary);
 
-    margin-bottom:14px;
+    margin-bottom:10px;
+
+    font-size:21px;
+
+    font-weight:800;
 }
 
 .card-description{
@@ -303,7 +374,9 @@ nav a:hover{
 
     line-height:1.7;
 
-    margin-bottom:18px;
+    margin-bottom:19px;
+
+    font-size:14px;
 }
 
 /* =========================================================
@@ -316,35 +389,58 @@ nav a:hover{
     grid-template-columns:
         repeat(3,1fr);
 
-    gap:12px;
+    gap:14px;
 }
 
 .control-btn{
-    background:#f4f8ff;
+    position:relative;
 
-    color:#0056b3;
+    min-height:78px;
 
-    border:1px solid #dbe9ff;
+    background:
+        linear-gradient(
+            145deg,
+            var(--soft-bg),
+            #eef6ff
+        );
 
-    padding:16px 12px;
+    color:var(--primary-dark);
 
-    border-radius:12px;
+    border:1px solid var(--border);
+
+    padding:17px 14px;
+
+    border-radius:15px;
 
     cursor:pointer;
 
-    font-weight:bold;
+    font-weight:800;
 
     font-size:14px;
 
-    transition:.25s;
+    text-align:left;
+
+    transition:
+        transform .25s ease,
+        background .25s ease,
+        color .25s ease,
+        box-shadow .25s ease;
 }
 
 .control-btn:hover{
-    background:#007bff;
+    background:
+        linear-gradient(
+            145deg,
+            #007bff,
+            #0056b3
+        );
 
-    color:white;
+    color:#fff;
 
-    transform:translateY(-2px);
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 10px 22px rgba(0,123,255,.2);
 }
 
 /* =========================================================
@@ -352,27 +448,31 @@ nav a:hover{
    ========================================================= */
 
 .quick-actions{
-    display:flex;
+    display:grid;
 
-    flex-wrap:wrap;
+    grid-template-columns:
+        repeat(3,1fr);
 
-    gap:10px;
+    gap:11px;
 }
 
 .quick-actions button{
     margin-top:0;
+    width:100%;
 }
 
 /* =========================================================
-   FORM
+   FORMS
    ========================================================= */
 
 label{
     display:block;
 
-    font-weight:bold;
+    font-weight:700;
 
-    margin-top:13px;
+    margin-top:15px;
+
+    font-size:14px;
 }
 
 input,
@@ -380,13 +480,13 @@ textarea,
 select{
     width:100%;
 
-    padding:13px;
+    padding:13px 14px;
 
     margin-top:7px;
 
-    border:1px solid #ccc;
+    border:1px solid #ccd7e5;
 
-    border-radius:10px;
+    border-radius:11px;
 
     font-size:15px;
 
@@ -396,7 +496,10 @@ select{
 
     color:var(--text);
 
-    transition:.2s;
+    transition:
+        border .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
 }
 
 input:focus,
@@ -405,19 +508,18 @@ select:focus{
     border-color:#007bff;
 
     box-shadow:
-        0 0 0 3px
-        rgba(0,123,255,.08);
+        0 0 0 4px
+        rgba(0,123,255,.09);
 }
 
 textarea{
     min-height:120px;
-
     resize:vertical;
 }
 
 input::placeholder,
 textarea::placeholder{
-    color:#888;
+    color:#8a96a6;
 }
 
 /* =========================================================
@@ -425,57 +527,86 @@ textarea::placeholder{
    ========================================================= */
 
 button{
-    background:#007bff;
+    background:
+        linear-gradient(
+            135deg,
+            #0785ff,
+            #0066d6
+        );
 
-    color:white;
+    color:#fff;
 
     border:none;
 
-    padding:11px 18px;
+    padding:11px 17px;
 
-    border-radius:9px;
+    border-radius:10px;
 
     cursor:pointer;
 
-    font-weight:bold;
+    font-weight:700;
 
     margin-top:12px;
 
-    transition:.25s;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
 }
 
 button:hover{
-    background:#0056b3;
+    filter:brightness(.96);
 
-    transform:translateY(-1px);
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 6px 15px rgba(0,123,255,.16);
+}
+
+button:active{
+    transform:translateY(0);
 }
 
 .delete-btn{
-    background:#dc3545;
+    background:
+        linear-gradient(
+            135deg,
+            #e83e4d,
+            #c82333
+        );
 }
 
 .delete-btn:hover{
-    background:#b02a37;
+    background:
+        linear-gradient(
+            135deg,
+            #dc3545,
+            #b02a37
+        );
 }
 
 .logout-btn{
-    background:#6c757d;
+    background:
+        linear-gradient(
+            135deg,
+            #6c757d,
+            #545b62
+        );
 }
 
 .logout-btn:hover{
-    background:#545b62;
+    background:
+        linear-gradient(
+            135deg,
+            #6c757d,
+            #495057
+        );
 }
-
-/* =========================================================
-   FULL WIDTH BUTTON
-   ========================================================= */
 
 .full-button{
     width:100%;
-
-    padding:15px;
-
-    font-size:17px;
+    padding:14px;
+    font-size:16px;
 }
 
 /* =========================================================
@@ -494,23 +625,28 @@ button:hover{
 .analytics-box{
     background:var(--soft-bg);
 
-    border:1px solid #e1edff;
+    border:1px solid var(--border);
 
-    border-radius:14px;
+    border-radius:16px;
 
-    padding:18px;
+    padding:20px;
+
+    transition:.25s;
+}
+
+.analytics-box:hover{
+    transform:translateY(-3px);
 }
 
 .analytics-box h3{
-    color:#007bff;
-
-    margin-bottom:8px;
+    color:var(--primary);
+    margin-bottom:9px;
 }
 
 .analytics-box p{
     color:var(--muted);
-
-    line-height:1.5;
+    line-height:1.6;
+    font-size:14px;
 }
 
 /* =========================================================
@@ -518,39 +654,43 @@ button:hover{
    ========================================================= */
 
 .item{
-    background:#f8f9fa;
+    background:#f8faff;
 
-    padding:17px;
+    padding:19px;
 
-    border-left:
-        4px solid #007bff;
+    border-left:4px solid var(--primary);
 
-    border-radius:10px;
+    border-radius:13px;
 
-    margin-top:12px;
+    margin-top:13px;
 
-    border-top:1px solid transparent;
+    border-top:1px solid var(--border);
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
 
-    border-right:1px solid transparent;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+}
 
-    border-bottom:1px solid transparent;
+.item:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(15,23,42,.07);
 }
 
 .item h3{
-    margin-bottom:8px;
+    margin-bottom:9px;
 }
 
 .item p{
-    line-height:1.6;
-
+    line-height:1.7;
     color:#555;
 }
 
 .item small{
     display:block;
-
-    margin-top:8px;
-
+    margin-top:9px;
     color:#777;
 }
 
@@ -562,49 +702,38 @@ button:hover{
     display:grid;
 
     grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(260px,1fr)
-        );
+        repeat(auto-fit,minmax(280px,1fr));
 
-    gap:18px;
+    gap:17px;
 
-    margin-top:20px;
+    margin-top:18px;
 }
 
 #newsList .item{
     background:var(--card-bg);
 
-    padding:20px;
+    padding:21px;
 
-    border-top:
-        4px solid #007bff;
+    border-top:4px solid var(--primary);
 
-    border-left:none;
+    border-left:1px solid var(--border);
 
-    border-radius:15px;
+    border-radius:16px;
 
     box-shadow:
-        0 5px 18px rgba(0,0,0,.07);
+        0 5px 18px rgba(0,0,0,.06);
 
     transition:.25s;
 }
 
 #newsList .item:hover{
-    transform:translateY(-4px);
-
-    box-shadow:
-        0 10px 25px rgba(0,0,0,.12);
-}
-
-#newsList .item h3{
-    margin-bottom:10px;
+    transform:translateY(-5px);
+    box-shadow:var(--shadow-hover);
 }
 
 #newsList .item p{
     color:var(--muted);
-
-    line-height:1.6;
+    line-height:1.65;
 }
 
 /* =========================================================
@@ -613,36 +742,36 @@ button:hover{
 
 .student-tools{
     display:flex;
-
     gap:10px;
-
     flex-wrap:wrap;
-
     margin-top:15px;
 }
 
 .student-search{
     flex:1;
-
-    min-width:220px;
-
+    min-width:240px;
     margin-top:0;
 }
 
 .students-summary{
-    background:#f4f8ff;
+    background:
+        linear-gradient(
+            135deg,
+            #edf6ff,
+            #f7fbff
+        );
 
-    border:1px solid #dbe9ff;
+    border:1px solid var(--border);
 
-    padding:15px;
+    padding:15px 17px;
 
-    border-radius:12px;
+    border-radius:13px;
 
     margin-top:15px;
 
-    color:#0056b3;
+    color:var(--primary-dark);
 
-    font-weight:bold;
+    font-weight:800;
 }
 
 #studentsList{
@@ -650,70 +779,73 @@ button:hover{
 }
 
 .student-card{
-    background:#f8fbff;
+    position:relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbff,
+            #ffffff
+        );
 
     border:1px solid #dceaff;
 
-    border-left:
-        5px solid #007bff;
+    border-left:5px solid var(--primary);
 
-    padding:18px;
+    padding:20px;
 
-    border-radius:13px;
+    border-radius:16px;
 
-    margin-top:12px;
+    margin-top:13px;
 
-    transition:.25s;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
 }
 
 .student-card:hover{
-    transform:translateY(-2px);
+    transform:translateY(-3px);
 
     box-shadow:
-        0 6px 18px
-        rgba(0,123,255,.08);
+        0 10px 24px
+        rgba(0,123,255,.09);
 }
 
 .student-card h3{
-    color:#0056b3;
-
-    margin-bottom:8px;
+    color:var(--primary-dark);
+    margin-bottom:9px;
 }
 
 .student-card p{
     color:#555;
-
-    margin:6px 0;
-
-    line-height:1.5;
+    margin:7px 0;
+    line-height:1.55;
 }
 
 .student-card small{
     color:#777;
-
     display:block;
-
-    margin-top:8px;
-
+    margin-top:9px;
     word-break:break-all;
 }
 
 .student-badge{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
 
     background:#e7f1ff;
 
-    color:#0056b3;
+    color:var(--primary-dark);
 
-    padding:5px 10px;
+    padding:6px 11px;
 
-    border-radius:20px;
+    border-radius:999px;
 
     font-size:12px;
 
-    font-weight:bold;
+    font-weight:800;
 
-    margin-top:8px;
+    margin-top:9px;
 }
 
 /* =========================================================
@@ -721,29 +853,31 @@ button:hover{
    ========================================================= */
 
 .report-box{
-    background:#fff8f8;
+    background:
+        linear-gradient(
+            135deg,
+            #fff8f8,
+            #fffdfd
+        );
 
     border:1px solid #ffd6d6;
 
-    border-left:
-        5px solid #dc3545;
+    border-left:5px solid var(--danger);
 
-    padding:18px;
+    padding:19px;
 
-    border-radius:12px;
+    border-radius:14px;
 
     margin-top:12px;
 }
 
 .report-box h3{
-    color:#dc3545;
-
+    color:var(--danger);
     margin-bottom:7px;
 }
 
 .report-box p{
     color:#666;
-
     line-height:1.6;
 }
 
@@ -752,76 +886,69 @@ button:hover{
 }
 
 .report-card{
-    background:#fff8f8;
+    background:#fffafa;
 
     border:1px solid #ffd6d6;
 
-    border-left:
-        5px solid #dc3545;
+    border-left:5px solid var(--danger);
 
-    padding:18px;
+    padding:20px;
 
-    border-radius:13px;
+    border-radius:16px;
 
     margin-top:14px;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.report-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 9px 22px rgba(220,53,69,.08);
 }
 
 .report-card h3{
-    color:#dc3545;
-
-    margin-bottom:10px;
+    color:var(--danger);
+    margin-bottom:11px;
 }
 
 .report-card p{
     color:#555;
-
     line-height:1.6;
-
-    margin:6px 0;
+    margin:7px 0;
 }
 
 .report-card small{
     color:#777;
-
     display:block;
-
-    margin-top:8px;
+    margin-top:9px;
 }
 
 .report-status{
-    display:inline-block;
-
-    padding:5px 10px;
-
-    border-radius:20px;
-
+    display:inline-flex;
+    padding:6px 11px;
+    border-radius:999px;
     font-size:12px;
-
-    font-weight:bold;
-
-    margin-top:8px;
+    font-weight:800;
+    margin-top:10px;
 }
 
 .status-pending{
     background:#fff3cd;
-
     color:#856404;
 }
 
 .status-reviewed{
     background:#d1e7dd;
-
     color:#0f5132;
 }
 
 .report-actions{
     display:flex;
-
     flex-wrap:wrap;
-
     gap:8px;
-
-    margin-top:12px;
+    margin-top:13px;
 }
 
 .report-actions button{
@@ -829,7 +956,12 @@ button:hover{
 }
 
 .review-btn{
-    background:#198754;
+    background:
+        linear-gradient(
+            135deg,
+            #20a464,
+            #198754
+        );
 }
 
 .review-btn:hover{
@@ -841,30 +973,31 @@ button:hover{
    ========================================================= */
 
 .notification-form{
-    background:#f8fbff;
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbff,
+            #ffffff
+        );
 
-    border:1px solid #dbe9ff;
+    border:1px solid var(--border);
 
-    padding:20px;
+    padding:21px;
 
-    border-radius:14px;
+    border-radius:16px;
 
-    margin-top:15px;
+    margin-top:16px;
 }
 
 .notification-heading{
-    color:#0056b3;
-
-    margin-bottom:12px;
+    color:var(--primary-dark);
+    margin-bottom:13px;
 }
 
 .notification-tools{
     display:flex;
-
     flex-wrap:wrap;
-
     gap:10px;
-
     margin-top:15px;
 }
 
@@ -873,17 +1006,22 @@ button:hover{
 }
 
 .notification-summary{
-    background:#eaf4ff;
+    background:
+        linear-gradient(
+            135deg,
+            #eaf4ff,
+            #f4f9ff
+        );
 
     border:1px solid #cfe5ff;
 
-    color:#0056b3;
+    color:var(--primary-dark);
 
-    padding:14px;
+    padding:15px 17px;
 
-    border-radius:12px;
+    border-radius:13px;
 
-    font-weight:bold;
+    font-weight:800;
 
     margin-top:15px;
 }
@@ -893,60 +1031,58 @@ button:hover{
 }
 
 .notification-card{
-    background:#f8fbff;
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbff,
+            #ffffff
+        );
 
-    border:1px solid #dbe9ff;
+    border:1px solid var(--border);
 
-    border-left:
-        5px solid #007bff;
+    border-left:5px solid var(--primary);
 
-    padding:18px;
+    padding:20px;
 
-    border-radius:13px;
+    border-radius:16px;
 
     margin-top:14px;
 
-    transition:.25s;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
 }
 
 .notification-card:hover{
-    transform:translateY(-2px);
+    transform:translateY(-3px);
 
     box-shadow:
-        0 6px 18px
-        rgba(0,123,255,.08);
+        0 10px 24px
+        rgba(0,123,255,.09);
 }
 
 .notification-card h3{
-    color:#0056b3;
-
-    margin-bottom:9px;
+    color:var(--primary-dark);
+    margin-bottom:10px;
 }
 
 .notification-card p{
     color:#555;
-
-    line-height:1.6;
-
+    line-height:1.65;
     white-space:pre-wrap;
 }
 
 .notification-card small{
     display:block;
-
     margin-top:10px;
-
     color:#777;
 }
 
 .notification-actions{
     display:flex;
-
     flex-wrap:wrap;
-
     gap:8px;
-
-    margin-top:12px;
+    margin-top:13px;
 }
 
 .notification-actions button{
@@ -958,13 +1094,15 @@ button:hover{
    ========================================================= */
 
 #status{
-    margin-top:12px;
+    margin-top:14px;
 
-    font-weight:bold;
+    font-weight:700;
 
-    padding:10px;
+    padding:12px 14px;
 
-    border-radius:8px;
+    border-radius:10px;
+
+    min-height:0;
 }
 
 /* =========================================================
@@ -972,17 +1110,24 @@ button:hover{
    ========================================================= */
 
 footer{
-    background:#222;
+    background:
+        linear-gradient(
+            135deg,
+            #18202d,
+            #0d121b
+        );
 
-    color:white;
+    color:#dbe4f0;
 
     text-align:center;
 
-    padding:22px;
+    padding:25px 15px;
 
-    margin-top:35px;
+    margin-top:38px;
 
-    line-height:1.7;
+    line-height:1.8;
+
+    font-size:14px;
 }
 
 /* =========================================================
@@ -990,27 +1135,21 @@ footer{
    ========================================================= */
 
 body.dark{
-
-    --body-bg:#0b1220;
-
-    --card-bg:#111c2f;
-
-    --text:#f8fafc;
-
+    --body-bg:#08111f;
+    --card-bg:#101b2d;
+    --text:#f4f7fb;
     --muted:#aebbd0;
-
-    --border:#26364d;
-
-    --input-bg:#0f1a2b;
-
-    --soft-bg:#162338;
+    --border:#263952;
+    --input-bg:#0d1828;
+    --soft-bg:#142237;
 
     --shadow:
-        0 10px 35px
-        rgba(0,0,0,.35);
+        0 10px 35px rgba(0,0,0,.35);
+
+    --shadow-hover:
+        0 15px 40px rgba(0,0,0,.45);
 
     background:var(--body-bg);
-
     color:var(--text);
 }
 
@@ -1018,17 +1157,30 @@ body.dark{
 
 body.dark header{
     background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(59,130,246,.20),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(37,99,235,.15),
+            transparent 30%
+        ),
         linear-gradient(
             135deg,
-            #082f5f,
-            #061d3d
+            #062957,
+            #03152e
         );
 }
 
 /* Navigation */
 
 body.dark nav{
-    background:#0e2948;
+    background:
+        rgba(8,27,50,.96);
+
+    border-bottom:1px solid #203754;
 }
 
 body.dark nav a{
@@ -1038,9 +1190,8 @@ body.dark nav a{
 /* Access */
 
 body.dark #accessDenied{
-    background:#111c2f;
-
-    border-color:#26364d;
+    background:#101b2d;
+    border-color:#263952;
 }
 
 body.dark #accessDenied p{
@@ -1050,11 +1201,9 @@ body.dark #accessDenied p{
 /* Cards */
 
 body.dark .card{
-    background:#111c2f;
-
-    border-color:#26364d;
-
-    color:#f8fafc;
+    background:#101b2d;
+    border-color:#263952;
+    color:#f4f7fb;
 }
 
 body.dark .card h2{
@@ -1065,30 +1214,37 @@ body.dark .card-description{
     color:#aebbd0;
 }
 
-/* Control Center */
+/* Control */
 
 body.dark .control-btn{
-    background:#162338;
+    background:
+        linear-gradient(
+            145deg,
+            #142237,
+            #182a43
+        );
 
-    color:#dbeafe;
+    color:#bfdbfe;
 
     border-color:#2b405c;
 }
 
 body.dark .control-btn:hover{
-    background:#1d4f85;
+    background:
+        linear-gradient(
+            145deg,
+            #1762a8,
+            #0b4783
+        );
 
-    color:#ffffff;
+    color:#fff;
 }
 
 /* Analytics */
 
 body.dark .analytics-box{
-    background:#162338;
-
+    background:#142237;
     border-color:#2b405c;
-
-    color:#f8fafc;
 }
 
 body.dark .analytics-box h3{
@@ -1104,10 +1260,8 @@ body.dark .analytics-box p{
 body.dark input,
 body.dark textarea,
 body.dark select{
-    background:#0f1a2b;
-
+    background:#0d1828;
     color:#f8fafc;
-
     border-color:#334b68;
 }
 
@@ -1122,22 +1276,18 @@ body.dark select:focus{
     border-color:#60a5fa;
 
     box-shadow:
-        0 0 0 3px
+        0 0 0 4px
         rgba(96,165,250,.12);
 }
 
 /* Content */
 
 body.dark .item{
-    background:#162338;
-
+    background:#142237;
     color:#f8fafc;
 
-    border-right-color:#2b405c;
-
-    border-top-color:#2b405c;
-
-    border-bottom-color:#2b405c;
+    border-color:#2b405c;
+    border-left-color:#3b82f6;
 }
 
 body.dark .item p{
@@ -1151,13 +1301,11 @@ body.dark .item small{
 /* News */
 
 body.dark #newsList .item{
-    background:#162338;
-
+    background:#142237;
     color:#f8fafc;
 
     border-color:#2b405c;
-
-    border-top-color:#007bff;
+    border-top-color:#3b82f6;
 }
 
 body.dark #newsList .item p{
@@ -1167,21 +1315,27 @@ body.dark #newsList .item p{
 /* Students */
 
 body.dark .students-summary{
-    background:#162338;
+    background:
+        linear-gradient(
+            135deg,
+            #122a46,
+            #142237
+        );
 
     border-color:#2b405c;
-
     color:#60a5fa;
 }
 
 body.dark .student-card{
-    background:#162338;
+    background:
+        linear-gradient(
+            135deg,
+            #142237,
+            #172a43
+        );
 
     border-color:#2b405c;
-
-    border-left-color:#007bff;
-
-    color:#f8fafc;
+    border-left-color:#3b82f6;
 }
 
 body.dark .student-card h3{
@@ -1198,7 +1352,6 @@ body.dark .student-card small{
 
 body.dark .student-badge{
     background:#12345a;
-
     color:#93c5fd;
 }
 
@@ -1206,10 +1359,14 @@ body.dark .student-badge{
 
 body.dark .report-box,
 body.dark .report-card{
-    background:#241820;
+    background:
+        linear-gradient(
+            135deg,
+            #251821,
+            #21151c
+        );
 
     border-color:#63333d;
-
     color:#f8fafc;
 }
 
@@ -1226,10 +1383,14 @@ body.dark .report-card small{
 
 body.dark .notification-form,
 body.dark .notification-card{
-    background:#162338;
+    background:
+        linear-gradient(
+            135deg,
+            #142237,
+            #172a43
+        );
 
     border-color:#2b405c;
-
     color:#f8fafc;
 }
 
@@ -1239,9 +1400,7 @@ body.dark .notification-heading{
 
 body.dark .notification-summary{
     background:#12345a;
-
     border-color:#28527c;
-
     color:#93c5fd;
 }
 
@@ -1257,10 +1416,21 @@ body.dark .notification-card small{
     color:#91a4bb;
 }
 
+/* Inline heading compatibility */
+
+body.dark .notification-form h3{
+    color:#60a5fa !important;
+}
+
 /* Footer */
 
 body.dark footer{
-    background:#080d16;
+    background:
+        linear-gradient(
+            135deg,
+            #050a12,
+            #080d16
+        );
 
     color:#aebbd0;
 }
@@ -1272,10 +1442,37 @@ body.dark #status{
 }
 
 /* =========================================================
-   MOBILE
+   GLOBAL TRANSITIONS
    ========================================================= */
 
-@media(max-width:850px){
+header,
+nav,
+.card,
+#accessDenied,
+.analytics-box,
+.control-btn,
+.item,
+.student-card,
+.notification-form,
+.notification-card,
+.report-card,
+.report-box,
+input,
+textarea,
+select,
+footer{
+    transition:
+        background .3s ease,
+        color .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media(max-width:950px){
 
     .grid{
         grid-template-columns:
@@ -1288,31 +1485,48 @@ body.dark #status{
     }
 
     .analytics-grid{
-        grid-template-columns:1fr;
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:
+            repeat(2,1fr);
     }
 
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media(max-width:600px){
+
+    header{
+        padding:30px 12px 27px;
+    }
 
     header h1{
         font-size:25px;
     }
 
-    header{
-        padding:25px 12px;
+    header p{
+        font-size:14px;
     }
 
-    .container{
-        margin:15px auto;
-
-        padding:10px;
+    nav{
+        padding:10px 7px;
     }
 
     nav a{
-        display:inline-block;
+        font-size:13px;
+        margin:3px;
+        padding:7px 9px;
+    }
 
-        margin:5px;
+    .container{
+        width:min(100% - 18px,1180px);
+        margin:17px auto;
     }
 
     .grid{
@@ -1323,23 +1537,51 @@ body.dark #status{
     }
 
     .stat{
-        padding:18px 8px;
+        min-height:125px;
+        padding:17px 12px;
+        border-radius:16px;
+    }
+
+    .stat-icon{
+        font-size:23px;
     }
 
     .stat h3{
         font-size:25px;
     }
 
+    .stat p{
+        font-size:12px;
+    }
+
+    .card{
+        padding:20px 16px;
+        border-radius:17px;
+        margin-bottom:17px;
+    }
+
+    .card h2{
+        font-size:19px;
+    }
+
     .control-grid{
         grid-template-columns:1fr;
     }
 
+    .control-btn{
+        min-height:65px;
+    }
+
     .quick-actions{
-        flex-direction:column;
+        grid-template-columns:1fr;
     }
 
     .quick-actions button{
         width:100%;
+    }
+
+    .analytics-grid{
+        grid-template-columns:1fr;
     }
 
     .student-tools{
@@ -1347,6 +1589,11 @@ body.dark #status{
     }
 
     .student-search{
+        width:100%;
+        min-width:0;
+    }
+
+    .student-tools button{
         width:100%;
     }
 
@@ -1374,16 +1621,38 @@ body.dark #status{
         width:100%;
     }
 
-    .dark-mode-btn{
-        width:auto;
+    #newsList{
+        grid-template-columns:1fr;
+    }
 
-        min-width:140px;
+    .dark-mode-btn{
+        min-width:145px;
+    }
+
+    footer{
+        font-size:13px;
+        padding:22px 12px;
+    }
+
+}
+
+/* =========================================================
+   SMALL PHONE
+   ========================================================= */
+
+@media(max-width:380px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .stat{
+        min-height:auto;
     }
 
 }
 
 </style>
-
 </head>
 
 <body>
@@ -1404,7 +1673,9 @@ body.dark #status{
 
     <button
         id="darkModeToggle"
-        class="dark-mode-btn">
+        class="dark-mode-btn"
+        type="button"
+        aria-label="Toggle dark mode">
 
         🌙 Dark Mode
 
@@ -1467,6 +1738,7 @@ body.dark #status{
 
 <div id="dashboard">
 
+
 <!-- =========================================================
      STATISTICS
      ========================================================= -->
@@ -1474,138 +1746,51 @@ body.dark #status{
 <div class="grid">
 
     <div class="stat">
-
-        <div class="stat-icon">
-            👥
-        </div>
-
-        <h3 id="studentsCount">
-            0
-        </h3>
-
-        <p>
-            Students
-        </p>
-
+        <div class="stat-icon">👥</div>
+        <h3 id="studentsCount">0</h3>
+        <p>Students</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            📝
-        </div>
-
-        <h3 id="postsCount">
-            0
-        </h3>
-
-        <p>
-            Posts
-        </p>
-
+        <div class="stat-icon">📝</div>
+        <h3 id="postsCount">0</h3>
+        <p>Posts</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            💬
-        </div>
-
-        <h3 id="commentsCount">
-            0
-        </h3>
-
-        <p>
-            Comments
-        </p>
-
+        <div class="stat-icon">💬</div>
+        <h3 id="commentsCount">0</h3>
+        <p>Comments</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            ❤️
-        </div>
-
-        <h3 id="likesCount">
-            0
-        </h3>
-
-        <p>
-            Likes
-        </p>
-
+        <div class="stat-icon">❤️</div>
+        <h3 id="likesCount">0</h3>
+        <p>Likes</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            📰
-        </div>
-
-        <h3 id="newsCount">
-            0
-        </h3>
-
-        <p>
-            News
-        </p>
-
+        <div class="stat-icon">📰</div>
+        <h3 id="newsCount">0</h3>
+        <p>News</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            📅
-        </div>
-
-        <h3 id="eventsCount">
-            0
-        </h3>
-
-        <p>
-            Events
-        </p>
-
+        <div class="stat-icon">📅</div>
+        <h3 id="eventsCount">0</h3>
+        <p>Events</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            🔬
-        </div>
-
-        <h3 id="researchCount">
-            0
-        </h3>
-
-        <p>
-            Research
-        </p>
-
+        <div class="stat-icon">🔬</div>
+        <h3 id="researchCount">0</h3>
+        <p>Research</p>
     </div>
 
-
     <div class="stat">
-
-        <div class="stat-icon">
-            🚩
-        </div>
-
-        <h3 id="reportsCount">
-            0
-        </h3>
-
-        <p>
-            Reports
-        </p>
-
+        <div class="stat-icon">🚩</div>
+        <h3 id="reportsCount">0</h3>
+        <p>Reports</p>
     </div>
 
 </div>
@@ -1648,7 +1833,6 @@ body.dark #status{
 
     </p>
 
-
     <div class="control-grid">
 
         <button
@@ -1659,7 +1843,6 @@ body.dark #status{
 
         </button>
 
-
         <button
             class="control-btn"
             onclick="scrollToSection('postsSection')">
@@ -1667,7 +1850,6 @@ body.dark #status{
             📝 Post Management
 
         </button>
-
 
         <button
             class="control-btn"
@@ -1677,7 +1859,6 @@ body.dark #status{
 
         </button>
 
-
         <button
             class="control-btn"
             onclick="scrollToSection('notificationsSection')">
@@ -1686,7 +1867,6 @@ body.dark #status{
 
         </button>
 
-
         <button
             class="control-btn"
             onclick="scrollToSection('researchSection')">
@@ -1694,7 +1874,6 @@ body.dark #status{
             🔬 Research Hub
 
         </button>
-
 
         <button
             class="control-btn"
@@ -1722,32 +1901,20 @@ body.dark #status{
     <div class="quick-actions">
 
         <button onclick="refreshDashboard()">
-
             🔄 Refresh Dashboard
-
         </button>
-
 
         <button onclick="scrollToSection('newsSection')">
-
             📰 Manage News
-
         </button>
-
 
         <button onclick="scrollToSection('eventsSection')">
-
             📅 Manage Events
-
         </button>
-
 
         <button onclick="scrollToSection('notificationsSection')">
-
             🔔 Notifications
-
         </button>
-
 
         <button
             class="delete-btn"
@@ -1756,7 +1923,6 @@ body.dark #status{
             🧹 Clear All Posts
 
         </button>
-
 
         <button
             class="logout-btn"
@@ -1784,14 +1950,10 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         A quick overview of the Sociology Connect community.
-
     </p>
 
-
     <div class="analytics-grid">
-
 
         <div class="analytics-box">
 
@@ -1800,14 +1962,11 @@ body.dark #status{
             </h3>
 
             <p>
-
                 Students currently registered
                 on Sociology Connect.
-
             </p>
 
         </div>
-
 
         <div class="analytics-box">
 
@@ -1816,14 +1975,11 @@ body.dark #status{
             </h3>
 
             <p>
-
                 Posts, comments and likes
                 created by the community.
-
             </p>
 
         </div>
-
 
         <div class="analytics-box">
 
@@ -1832,10 +1988,8 @@ body.dark #status{
             </h3>
 
             <p>
-
                 Research resources and academic
                 activities available through the platform.
-
             </p>
 
         </div>
@@ -1858,12 +2012,9 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         View and search students registered
         on Sociology Connect.
-
     </p>
-
 
     <div
         class="students-summary"
@@ -1872,7 +2023,6 @@ body.dark #status{
         Loading registered students...
 
     </div>
-
 
     <div class="student-tools">
 
@@ -1883,22 +2033,14 @@ body.dark #status{
             placeholder="🔍 Search by name, email or User ID..."
         >
 
-
         <button onclick="loadStudents()">
-
             🔄 Refresh Students
-
         </button>
 
     </div>
 
-
     <div id="studentsList">
-
-        <p>
-            Loading students...
-        </p>
-
+        <p>Loading students...</p>
     </div>
 
 </div>
@@ -1917,12 +2059,9 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         Manage community posts and maintain
         a safe academic environment.
-
     </p>
-
 
     <button
         onclick="showComingSoon('Post Management')">
@@ -1947,12 +2086,9 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         Review reports submitted by Sociology Connect
         students and manage reported community content.
-
     </p>
-
 
     <div class="report-box">
 
@@ -1966,13 +2102,8 @@ body.dark #status{
 
     </div>
 
-
     <div id="reportsList">
-
-        <p>
-            Loading reports...
-        </p>
-
+        <p>Loading reports...</p>
     </div>
 
 </div>
@@ -1991,12 +2122,9 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         Create important announcements and notifications
         for Sociology Connect students.
-
     </p>
-
 
     <div
         class="notification-summary"
@@ -2006,22 +2134,15 @@ body.dark #status{
 
     </div>
 
-
     <div class="notification-form">
 
         <h3 class="notification-heading">
-
             📢 Create New Notification
-
         </h3>
 
-
         <label for="notificationTitle">
-
             Notification Title
-
         </label>
-
 
         <input
             id="notificationTitle"
@@ -2030,20 +2151,15 @@ body.dark #status{
             placeholder="Example: Important Department Announcement"
         >
 
-
         <label for="notificationMessage">
-
             Notification Message
-
         </label>
-
 
         <textarea
             id="notificationMessage"
             maxlength="1000"
             placeholder="Write the notification message for students..."
         ></textarea>
-
 
         <button
             class="full-button"
@@ -2055,16 +2171,11 @@ body.dark #status{
 
     </div>
 
-
     <div class="notification-tools">
 
-        <button
-            onclick="loadNotifications()">
-
+        <button onclick="loadNotifications()">
             🔄 Refresh Notifications
-
         </button>
-
 
         <button
             class="delete-btn"
@@ -2076,13 +2187,8 @@ body.dark #status{
 
     </div>
 
-
     <div id="notificationsList">
-
-        <p>
-            Loading notifications...
-        </p>
-
+        <p>Loading notifications...</p>
     </div>
 
 </div>
@@ -2101,13 +2207,10 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         Manage research topics, academic resources,
         research questions, APA 7 materials and other
         Research Hub content.
-
     </p>
-
 
     <div class="quick-actions">
 
@@ -2118,7 +2221,6 @@ body.dark #status{
 
         </button>
 
-
         <button
             onclick="showComingSoon('Research Questions')">
 
@@ -2126,14 +2228,12 @@ body.dark #status{
 
         </button>
 
-
         <button
             onclick="showComingSoon('Research Resources')">
 
             📚 Resources
 
         </button>
-
 
         <button
             onclick="showComingSoon('APA 7 Materials')">
@@ -2160,20 +2260,14 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         Publish announcements, department updates,
         scholarship information and important notices
         for Sociology Connect students.
-
     </p>
 
-
     <label for="newsTitle">
-
         News Title
-
     </label>
-
 
     <input
         id="newsTitle"
@@ -2181,19 +2275,14 @@ body.dark #status{
         placeholder="Enter news title"
     >
 
-
     <label for="newsDescription">
-
         News Description
-
     </label>
-
 
     <textarea
         id="newsDescription"
         placeholder="Write the news or announcement..."
     ></textarea>
-
 
     <button
         class="full-button"
@@ -2219,19 +2308,13 @@ body.dark #status{
     </h2>
 
     <p class="card-description">
-
         Create upcoming events, deadlines, seminars,
         workshops and department activities.
-
     </p>
 
-
     <label for="eventTitle">
-
         Event Title
-
     </label>
-
 
     <input
         id="eventTitle"
@@ -2239,32 +2322,23 @@ body.dark #status{
         placeholder="Example: Research Proposal Deadline"
     >
 
-
     <label for="eventDescription">
-
         Description
-
     </label>
-
 
     <textarea
         id="eventDescription"
         placeholder="Write event information..."
     ></textarea>
 
-
     <label for="eventDate">
-
         Date
-
     </label>
-
 
     <input
         id="eventDate"
         type="date"
     >
-
 
     <button
         class="full-button"
@@ -2287,13 +2361,8 @@ body.dark #status{
         📰 Published News
     </h2>
 
-
     <div id="newsList">
-
-        <p>
-            Loading news...
-        </p>
-
+        <p>Loading news...</p>
     </div>
 
 </div>
@@ -2309,13 +2378,8 @@ body.dark #status{
         📅 Events & Deadlines
     </h2>
 
-
     <div id="eventsList">
-
-        <p>
-            Loading events...
-        </p>
-
+        <p>Loading events...</p>
     </div>
 
 </div>
@@ -2354,10 +2418,7 @@ body.dark #status{
 <script>
 
 const darkModeToggle =
-    document.getElementById(
-        "darkModeToggle"
-    );
-
+    document.getElementById("darkModeToggle");
 
 function applyDarkMode(){
 
@@ -2366,41 +2427,27 @@ function applyDarkMode(){
             "sociologyConnectDarkMode"
         );
 
+    if(savedMode === "enabled"){
 
-    if(
-        savedMode === "enabled"
-    ){
-
-        document.body.classList.add(
-            "dark"
-        );
-
+        document.body.classList.add("dark");
 
         if(darkModeToggle){
-
             darkModeToggle.innerHTML =
                 "☀️ Light Mode";
-
         }
 
     }else{
 
-        document.body.classList.remove(
-            "dark"
-        );
-
+        document.body.classList.remove("dark");
 
         if(darkModeToggle){
-
             darkModeToggle.innerHTML =
                 "🌙 Dark Mode";
-
         }
 
     }
 
 }
-
 
 if(darkModeToggle){
 
@@ -2408,16 +2455,10 @@ if(darkModeToggle){
         "click",
         function(){
 
-            document.body.classList.toggle(
-                "dark"
-            );
-
+            document.body.classList.toggle("dark");
 
             const enabled =
-                document.body.classList.contains(
-                    "dark"
-                );
-
+                document.body.classList.contains("dark");
 
             localStorage.setItem(
                 "sociologyConnectDarkMode",
@@ -2425,7 +2466,6 @@ if(darkModeToggle){
                     ? "enabled"
                     : "disabled"
             );
-
 
             darkModeToggle.innerHTML =
                 enabled
@@ -2436,7 +2476,6 @@ if(darkModeToggle){
     );
 
 }
-
 
 applyDarkMode();
 
@@ -2452,7 +2491,6 @@ applyDarkMode();
 import { auth, db }
 from "./firebase.js";
 
-
 import {
     collection,
     addDoc,
@@ -2466,7 +2504,6 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-
 import {
     onAuthStateChanged,
     signOut
@@ -2478,8 +2515,7 @@ from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
    ADMIN
    ========================================================= */
 
-const ADMIN_EMAIL =
-    "yom@gmail.com";
+const ADMIN_EMAIL = "yom@gmail.com";
 
 
 /* =========================================================
@@ -2487,75 +2523,40 @@ const ADMIN_EMAIL =
    ========================================================= */
 
 const dashboard =
-    document.getElementById(
-        "dashboard"
-    );
-
+    document.getElementById("dashboard");
 
 const accessDenied =
-    document.getElementById(
-        "accessDenied"
-    );
-
+    document.getElementById("accessDenied");
 
 const status =
-    document.getElementById(
-        "status"
-    );
-
+    document.getElementById("status");
 
 const studentsCount =
-    document.getElementById(
-        "studentsCount"
-    );
-
+    document.getElementById("studentsCount");
 
 const postsCount =
-    document.getElementById(
-        "postsCount"
-    );
-
+    document.getElementById("postsCount");
 
 const commentsCount =
-    document.getElementById(
-        "commentsCount"
-    );
-
+    document.getElementById("commentsCount");
 
 const likesCount =
-    document.getElementById(
-        "likesCount"
-    );
-
+    document.getElementById("likesCount");
 
 const newsCount =
-    document.getElementById(
-        "newsCount"
-    );
-
+    document.getElementById("newsCount");
 
 const eventsCount =
-    document.getElementById(
-        "eventsCount"
-    );
-
+    document.getElementById("eventsCount");
 
 const researchCount =
-    document.getElementById(
-        "researchCount"
-    );
-
+    document.getElementById("researchCount");
 
 const reportsCount =
-    document.getElementById(
-        "reportsCount"
-    );
-
+    document.getElementById("reportsCount");
 
 const notificationSummary =
-    document.getElementById(
-        "notificationSummary"
-    );
+    document.getElementById("notificationSummary");
 
 
 /* =========================================================
@@ -2582,14 +2583,10 @@ function formatTimestamp(timestamp){
 
     if(
         !timestamp ||
-        typeof timestamp.toDate !==
-        "function"
+        typeof timestamp.toDate !== "function"
     ){
-
         return "Just now";
-
     }
-
 
     try{
 
@@ -2616,66 +2613,39 @@ async function updateStats(){
 
         const usersSnap =
             await getDocs(
-                collection(
-                    db,
-                    "users"
-                )
+                collection(db,"users")
             );
-
 
         const postsSnap =
             await getDocs(
-                collection(
-                    db,
-                    "posts"
-                )
+                collection(db,"posts")
             );
-
 
         const newsSnap =
             await getDocs(
-                collection(
-                    db,
-                    "news"
-                )
+                collection(db,"news")
             );
-
 
         const eventsSnap =
             await getDocs(
-                collection(
-                    db,
-                    "events"
-                )
+                collection(db,"events")
             );
-
 
         const reportsSnap =
             await getDocs(
-                collection(
-                    db,
-                    "reports"
-                )
+                collection(db,"reports")
             );
-
 
         const notificationsSnap =
             await getDocs(
-                collection(
-                    db,
-                    "notifications"
-                )
+                collection(db,"notifications")
             );
 
-
         let comments = 0;
-
         let likes = 0;
 
-
         for(
-            const post of
-            postsSnap.docs
+            const post of postsSnap.docs
         ){
 
             const commentSnap =
@@ -2688,10 +2658,7 @@ async function updateStats(){
                     )
                 );
 
-
-            comments +=
-                commentSnap.size;
-
+            comments += commentSnap.size;
 
             const likesSnap =
                 await getDocs(
@@ -2703,48 +2670,36 @@ async function updateStats(){
                     )
                 );
 
-
-            likes +=
-                likesSnap.size;
+            likes += likesSnap.size;
 
         }
-
 
         studentsCount.textContent =
             usersSnap.size;
 
-
         postsCount.textContent =
             postsSnap.size;
-
 
         commentsCount.textContent =
             comments;
 
-
         likesCount.textContent =
             likes;
-
 
         newsCount.textContent =
             newsSnap.size;
 
-
         eventsCount.textContent =
             eventsSnap.size;
-
 
         researchCount.textContent =
             "0";
 
-
         reportsCount.textContent =
             reportsSnap.size;
 
-
         notificationSummary.textContent =
             `🔔 ${notificationsSnap.size} notification${notificationsSnap.size === 1 ? "" : "s"} currently published`;
-
 
     }catch(error){
 
@@ -2752,7 +2707,6 @@ async function updateStats(){
             "Stats Error:",
             error
         );
-
 
         notificationSummary.textContent =
             "⚠️ Notification data could not be loaded.";
@@ -2779,34 +2733,24 @@ onAuthStateChanged(
             accessDenied.style.display =
                 "block";
 
-
             dashboard.style.display =
                 "none";
-
 
             return;
 
         }
 
-
         accessDenied.style.display =
             "none";
-
 
         dashboard.style.display =
             "block";
 
-
         await loadNews();
-
         await loadEvents();
-
         await loadReports();
-
         await loadStudents();
-
         await loadNotifications();
-
         await updateStats();
 
     }
@@ -2820,59 +2764,36 @@ onAuthStateChanged(
 let allStudents = [];
 
 
-/* =========================================================
-   LOAD STUDENTS
-   ========================================================= */
-
 async function loadStudents(){
 
     const list =
-        document.getElementById(
-            "studentsList"
-        );
-
+        document.getElementById("studentsList");
 
     const summary =
-        document.getElementById(
-            "studentsSummary"
-        );
-
+        document.getElementById("studentsSummary");
 
     list.innerHTML =
         "<p>Loading students...</p>";
 
-
     summary.textContent =
         "Loading registered students...";
-
 
     try{
 
         const usersSnapshot =
             await getDocs(
-                collection(
-                    db,
-                    "users"
-                )
+                collection(db,"users")
             );
-
 
         allStudents =
             usersSnapshot.docs.map(
                 (item)=>({
-
                     id:item.id,
-
                     ...item.data()
-
                 })
             );
 
-
-        renderStudents(
-            allStudents
-        );
-
+        renderStudents(allStudents);
 
     }catch(error){
 
@@ -2881,10 +2802,8 @@ async function loadStudents(){
             error
         );
 
-
         summary.textContent =
             "❌ Could not load students.";
-
 
         list.innerHTML =
             "<p>❌ Could not load students. Check Firestore permissions.</p>";
@@ -2894,35 +2813,20 @@ async function loadStudents(){
 }
 
 
-/* =========================================================
-   RENDER STUDENTS
-   ========================================================= */
-
 function renderStudents(students){
 
     const list =
-        document.getElementById(
-            "studentsList"
-        );
-
+        document.getElementById("studentsList");
 
     const summary =
-        document.getElementById(
-            "studentsSummary"
-        );
-
+        document.getElementById("studentsSummary");
 
     summary.textContent =
         `👥 ${students.length} registered student${students.length === 1 ? "" : "s"}`;
 
+    list.innerHTML = "";
 
-    list.innerHTML =
-        "";
-
-
-    if(
-        students.length === 0
-    ){
+    if(students.length === 0){
 
         list.innerHTML =
             "<p>👤 No students found.</p>";
@@ -2931,30 +2835,23 @@ function renderStudents(students){
 
     }
 
-
     students.forEach(
         (student)=>{
 
             const div =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             div.className =
                 "student-card";
-
 
             const name =
                 student.name ||
                 student.displayName ||
                 "Unnamed Student";
 
-
             const email =
                 student.email ||
                 "Email not available";
-
 
             div.innerHTML = `
 
@@ -2983,10 +2880,7 @@ function renderStudents(students){
 
             `;
 
-
-            list.appendChild(
-                div
-            );
+            list.appendChild(div);
 
         }
     );
@@ -2994,14 +2888,8 @@ function renderStudents(students){
 }
 
 
-/* =========================================================
-   STUDENT SEARCH
-   ========================================================= */
-
 document
-    .getElementById(
-        "studentSearch"
-    )
+    .getElementById("studentSearch")
     .addEventListener(
         "input",
         function(){
@@ -3011,17 +2899,13 @@ document
                     .trim()
                     .toLowerCase();
 
-
             if(!search){
 
-                renderStudents(
-                    allStudents
-                );
+                renderStudents(allStudents);
 
                 return;
 
             }
-
 
             const filtered =
                 allStudents.filter(
@@ -3034,20 +2918,17 @@ document
                                 ""
                             ).toLowerCase();
 
-
                         const email =
                             String(
                                 student.email ||
                                 ""
                             ).toLowerCase();
 
-
                         const id =
                             String(
                                 student.id ||
                                 ""
                             ).toLowerCase();
-
 
                         return(
                             name.includes(search) ||
@@ -3058,17 +2939,14 @@ document
                     }
                 );
 
-
-            renderStudents(
-                filtered
-            );
+            renderStudents(filtered);
 
         }
     );
 
 
 /* =========================================================
-   NOTIFICATIONS CENTER
+   NOTIFICATIONS
    ========================================================= */
 
 async function loadNotifications(){
@@ -3078,10 +2956,8 @@ async function loadNotifications(){
             "notificationsList"
         );
 
-
     list.innerHTML =
         "<p>Loading notifications...</p>";
-
 
     try{
 
@@ -3097,24 +2973,17 @@ async function loadNotifications(){
                 )
             );
 
-
         const snapshot =
             await getDocs(
                 notificationsQuery
             );
 
-
-        list.innerHTML =
-            "";
-
+        list.innerHTML = "";
 
         notificationSummary.textContent =
             `🔔 ${snapshot.size} notification${snapshot.size === 1 ? "" : "s"} currently published`;
 
-
-        if(
-            snapshot.empty
-        ){
+        if(snapshot.empty){
 
             list.innerHTML =
                 "<p>🔔 No notifications published yet.</p>";
@@ -3123,23 +2992,17 @@ async function loadNotifications(){
 
         }
 
-
         snapshot.forEach(
             (item)=>{
 
                 const data =
                     item.data();
 
-
                 const div =
-                    document.createElement(
-                        "div"
-                    );
-
+                    document.createElement("div");
 
                 div.className =
                     "notification-card";
-
 
                 div.innerHTML = `
 
@@ -3187,14 +3050,10 @@ async function loadNotifications(){
 
                 `;
 
-
-                list.appendChild(
-                    div
-                );
+                list.appendChild(div);
 
             }
         );
-
 
     }catch(error){
 
@@ -3203,10 +3062,8 @@ async function loadNotifications(){
             error
         );
 
-
         notificationSummary.textContent =
             "❌ Could not load notifications.";
-
 
         list.innerHTML =
             "<p>❌ Could not load notifications. Check Firestore Rules.</p>";
@@ -3231,7 +3088,6 @@ async()=>{
             .value
             .trim();
 
-
     const message =
         document
             .getElementById(
@@ -3240,11 +3096,7 @@ async()=>{
             .value
             .trim();
 
-
-    if(
-        !title ||
-        !message
-    ){
+    if(!title || !message){
 
         alert(
             "Please enter both notification title and message."
@@ -3254,10 +3106,7 @@ async()=>{
 
     }
 
-
-    if(
-        title.length < 3
-    ){
+    if(title.length < 3){
 
         alert(
             "Notification title is too short."
@@ -3267,10 +3116,7 @@ async()=>{
 
     }
 
-
-    if(
-        message.length < 3
-    ){
+    if(message.length < 3){
 
         alert(
             "Notification message is too short."
@@ -3280,7 +3126,6 @@ async()=>{
 
     }
 
-
     try{
 
         await addDoc(
@@ -3289,46 +3134,33 @@ async()=>{
                 "notifications"
             ),
             {
-
                 title:title,
-
                 message:message,
-
                 createdAt:
                     serverTimestamp(),
-
                 createdBy:
                     auth.currentUser?.email ||
                     ADMIN_EMAIL
-
             }
         );
-
 
         document
             .getElementById(
                 "notificationTitle"
             )
-            .value =
-            "";
-
+            .value = "";
 
         document
             .getElementById(
                 "notificationMessage"
             )
-            .value =
-            "";
-
+            .value = "";
 
         status.textContent =
             "✅ Notification published successfully!";
 
-
         await loadNotifications();
-
         await updateStats();
-
 
     }catch(error){
 
@@ -3336,7 +3168,6 @@ async()=>{
             "Create Notification Error:",
             error
         );
-
 
         status.textContent =
             "❌ Could not publish notification: " +
@@ -3359,11 +3190,8 @@ async(id)=>{
             "Are you sure you want to delete this notification?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -3375,15 +3203,11 @@ async(id)=>{
             )
         );
 
-
         status.textContent =
             "✅ Notification deleted.";
 
-
         await loadNotifications();
-
         await updateStats();
-
 
     }catch(error){
 
@@ -3391,7 +3215,6 @@ async(id)=>{
             "Delete Notification Error:",
             error
         );
-
 
         status.textContent =
             "❌ Could not delete notification.";
@@ -3413,11 +3236,8 @@ async()=>{
             "⚠️ Delete ALL notifications?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -3429,10 +3249,7 @@ async()=>{
                 )
             );
 
-
-        if(
-            snapshot.empty
-        ){
+        if(snapshot.empty){
 
             status.textContent =
                 "ℹ️ There are no notifications to delete.";
@@ -3441,27 +3258,19 @@ async()=>{
 
         }
 
-
         for(
-            const item of
-            snapshot.docs
+            const item of snapshot.docs
         ){
 
-            await deleteDoc(
-                item.ref
-            );
+            await deleteDoc(item.ref);
 
         }
-
 
         status.textContent =
             "🗑️ All notifications deleted successfully.";
 
-
         await loadNotifications();
-
         await updateStats();
-
 
     }catch(error){
 
@@ -3469,7 +3278,6 @@ async()=>{
             "Delete All Notifications Error:",
             error
         );
-
 
         status.textContent =
             "❌ Could not delete all notifications.";
@@ -3488,26 +3296,17 @@ async()=>{
 
     const title =
         document
-            .getElementById(
-                "newsTitle"
-            )
+            .getElementById("newsTitle")
             .value
             .trim();
-
 
     const description =
         document
-            .getElementById(
-                "newsDescription"
-            )
+            .getElementById("newsDescription")
             .value
             .trim();
 
-
-    if(
-        !title ||
-        !description
-    ){
+    if(!title || !description){
 
         alert(
             "Please enter the news title and description."
@@ -3517,7 +3316,6 @@ async()=>{
 
     }
 
-
     try{
 
         await addDoc(
@@ -3526,47 +3324,30 @@ async()=>{
                 "news"
             ),
             {
-
                 title,
-
                 description,
-
                 createdAt:
                     serverTimestamp()
-
             }
         );
 
+        document
+            .getElementById("newsTitle")
+            .value = "";
 
         document
-            .getElementById(
-                "newsTitle"
-            )
-            .value =
-            "";
-
-
-        document
-            .getElementById(
-                "newsDescription"
-            )
-            .value =
-            "";
-
+            .getElementById("newsDescription")
+            .value = "";
 
         status.textContent =
             "✅ News published successfully!";
 
-
         await loadNews();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not publish news: " +
@@ -3584,14 +3365,10 @@ async()=>{
 async function loadNews(){
 
     const list =
-        document.getElementById(
-            "newsList"
-        );
-
+        document.getElementById("newsList");
 
     list.innerHTML =
         "<p>Loading news...</p>";
-
 
     try{
 
@@ -3607,20 +3384,12 @@ async function loadNews(){
                 )
             );
 
-
         const snapshot =
-            await getDocs(
-                newsQuery
-            );
+            await getDocs(newsQuery);
 
+        list.innerHTML = "";
 
-        list.innerHTML =
-            "";
-
-
-        if(
-            snapshot.empty
-        ){
+        if(snapshot.empty){
 
             list.innerHTML =
                 "<p>No news published yet.</p>";
@@ -3629,23 +3398,17 @@ async function loadNews(){
 
         }
 
-
         snapshot.forEach(
             (item)=>{
 
                 const data =
                     item.data();
 
-
                 const div =
-                    document.createElement(
-                        "div"
-                    );
-
+                    document.createElement("div");
 
                 div.className =
                     "item";
-
 
                 div.innerHTML = `
 
@@ -3678,19 +3441,14 @@ async function loadNews(){
 
                 `;
 
-
-                list.appendChild(
-                    div
-                );
+                list.appendChild(div);
 
             }
         );
 
-
     }catch(error){
 
         console.error(error);
-
 
         list.innerHTML =
             "<p>❌ Could not load news.</p>";
@@ -3712,11 +3470,8 @@ async(id)=>{
             "Are you sure you want to delete this news?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -3728,20 +3483,15 @@ async(id)=>{
             )
         );
 
-
         status.textContent =
             "✅ News deleted.";
 
-
         await loadNews();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not delete news.";
@@ -3763,32 +3513,24 @@ async(id)=>{
             "Enter new news title:"
         );
 
-
     if(
         title === null ||
         !title.trim()
     ){
-
         return;
-
     }
-
 
     const description =
         prompt(
             "Enter new news description:"
         );
 
-
     if(
         description === null ||
         !description.trim()
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -3799,35 +3541,23 @@ async(id)=>{
                 id
             ),
             {
-
-                title:
-                    title.trim(),
-
-                description:
-                    description.trim()
-
+                title:title.trim(),
+                description:description.trim()
             },
             {
-
                 merge:true
-
             }
         );
-
 
         status.textContent =
             "✅ News updated successfully!";
 
-
         await loadNews();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not update news.";
@@ -3846,29 +3576,20 @@ async()=>{
 
     const title =
         document
-            .getElementById(
-                "eventTitle"
-            )
+            .getElementById("eventTitle")
             .value
             .trim();
-
 
     const description =
         document
-            .getElementById(
-                "eventDescription"
-            )
+            .getElementById("eventDescription")
             .value
             .trim();
 
-
     const date =
         document
-            .getElementById(
-                "eventDate"
-            )
+            .getElementById("eventDate")
             .value;
-
 
     if(
         !title ||
@@ -3884,7 +3605,6 @@ async()=>{
 
     }
 
-
     try{
 
         await addDoc(
@@ -3893,57 +3613,35 @@ async()=>{
                 "events"
             ),
             {
-
                 title,
-
                 description,
-
                 date,
-
                 createdAt:
                     serverTimestamp()
-
             }
         );
 
+        document
+            .getElementById("eventTitle")
+            .value = "";
 
         document
-            .getElementById(
-                "eventTitle"
-            )
-            .value =
-            "";
-
+            .getElementById("eventDescription")
+            .value = "";
 
         document
-            .getElementById(
-                "eventDescription"
-            )
-            .value =
-            "";
-
-
-        document
-            .getElementById(
-                "eventDate"
-            )
-            .value =
-            "";
-
+            .getElementById("eventDate")
+            .value = "";
 
         status.textContent =
             "✅ Event added successfully!";
 
-
         await loadEvents();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not add event: " +
@@ -3961,14 +3659,10 @@ async()=>{
 async function loadEvents(){
 
     const list =
-        document.getElementById(
-            "eventsList"
-        );
-
+        document.getElementById("eventsList");
 
     list.innerHTML =
         "<p>Loading events...</p>";
-
 
     try{
 
@@ -3984,20 +3678,12 @@ async function loadEvents(){
                 )
             );
 
-
         const snapshot =
-            await getDocs(
-                eventsQuery
-            );
+            await getDocs(eventsQuery);
 
+        list.innerHTML = "";
 
-        list.innerHTML =
-            "";
-
-
-        if(
-            snapshot.empty
-        ){
+        if(snapshot.empty){
 
             list.innerHTML =
                 "<p>No events added yet.</p>";
@@ -4006,23 +3692,17 @@ async function loadEvents(){
 
         }
 
-
         snapshot.forEach(
             (item)=>{
 
                 const data =
                     item.data();
 
-
                 const div =
-                    document.createElement(
-                        "div"
-                    );
-
+                    document.createElement("div");
 
                 div.className =
                     "item";
-
 
                 div.innerHTML = `
 
@@ -4062,19 +3742,14 @@ async function loadEvents(){
 
                 `;
 
-
-                list.appendChild(
-                    div
-                );
+                list.appendChild(div);
 
             }
         );
 
-
     }catch(error){
 
         console.error(error);
-
 
         list.innerHTML =
             "<p>❌ Could not load events.</p>";
@@ -4096,11 +3771,8 @@ async(id)=>{
             "Are you sure you want to delete this event?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -4112,20 +3784,15 @@ async(id)=>{
             )
         );
 
-
         status.textContent =
             "✅ Event deleted.";
 
-
         await loadEvents();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not delete event.";
@@ -4147,48 +3814,36 @@ async(id)=>{
             "Enter new event title:"
         );
 
-
     if(
         title === null ||
         !title.trim()
     ){
-
         return;
-
     }
-
 
     const description =
         prompt(
             "Enter new event description:"
         );
 
-
     if(
         description === null ||
         !description.trim()
     ){
-
         return;
-
     }
-
 
     const date =
         prompt(
             "Enter new event date (YYYY-MM-DD):"
         );
 
-
     if(
         date === null ||
         !date.trim()
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -4199,38 +3854,24 @@ async(id)=>{
                 id
             ),
             {
-
-                title:
-                    title.trim(),
-
-                description:
-                    description.trim(),
-
-                date:
-                    date.trim()
-
+                title:title.trim(),
+                description:description.trim(),
+                date:date.trim()
             },
             {
-
                 merge:true
-
             }
         );
-
 
         status.textContent =
             "✅ Event updated successfully!";
 
-
         await loadEvents();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not update event.";
@@ -4251,20 +3892,16 @@ async function loadReports(){
             "reportsList"
         );
 
-
     const summary =
         document.getElementById(
             "reportSummary"
         );
 
-
     list.innerHTML =
         "<p>Loading reports...</p>";
 
-
     summary.textContent =
         "Loading reports...";
-
 
     try{
 
@@ -4280,38 +3917,27 @@ async function loadReports(){
                 )
             );
 
-
         const snapshot =
             await getDocs(
                 reportsQuery
             );
 
+        list.innerHTML = "";
 
-        list.innerHTML =
-            "";
-
-
-        if(
-            snapshot.empty
-        ){
+        if(snapshot.empty){
 
             summary.textContent =
                 "No reports have been submitted.";
 
-
             list.innerHTML =
                 "<p>✅ No reports found.</p>";
-
 
             return;
 
         }
 
-
         let pendingCount = 0;
-
         let reviewedCount = 0;
-
 
         snapshot.forEach(
             (item)=>{
@@ -4319,56 +3945,38 @@ async function loadReports(){
                 const data =
                     item.data();
 
-
                 const statusValue =
                     data.status ||
                     "pending";
 
-
                 if(
-                    statusValue ===
-                    "pending"
+                    statusValue === "pending"
                 ){
-
                     pendingCount++;
-
                 }else{
-
                     reviewedCount++;
-
                 }
 
-
                 const div =
-                    document.createElement(
-                        "div"
-                    );
-
+                    document.createElement("div");
 
                 div.className =
                     "report-card";
 
-
                 const safeStatus =
-                    statusValue ===
-                    "reviewed"
+                    statusValue === "reviewed"
                         ? "reviewed"
                         : "pending";
 
-
                 const statusClass =
-                    safeStatus ===
-                    "reviewed"
+                    safeStatus === "reviewed"
                         ? "status-reviewed"
                         : "status-pending";
 
-
                 const statusText =
-                    safeStatus ===
-                    "reviewed"
+                    safeStatus === "reviewed"
                         ? "✅ Reviewed"
                         : "⏳ Pending";
-
 
                 div.innerHTML = `
 
@@ -4430,9 +4038,7 @@ async function loadReports(){
 
                     <small>
                         Report ID:
-                        ${escapeHTML(
-                            item.id
-                        )}
+                        ${escapeHTML(item.id)}
                     </small>
 
                     <span
@@ -4446,8 +4052,7 @@ async function loadReports(){
                     <div class="report-actions">
 
                         ${
-                            safeStatus ===
-                            "pending"
+                            safeStatus === "pending"
                             ? `
                                 <button
                                     class="review-btn"
@@ -4472,20 +4077,15 @@ async function loadReports(){
 
                 `;
 
-
-                list.appendChild(
-                    div
-                );
+                list.appendChild(div);
 
             }
         );
-
 
         summary.textContent =
             `🚩 ${snapshot.size} total reports • ` +
             `⏳ ${pendingCount} pending • ` +
             `✅ ${reviewedCount} reviewed`;
-
 
     }catch(error){
 
@@ -4494,10 +4094,8 @@ async function loadReports(){
             error
         );
 
-
         summary.textContent =
             "❌ Could not load reports.";
-
 
         list.innerHTML =
             "<p>❌ Could not load reports. Check Firestore Rules.</p>";
@@ -4523,9 +4121,7 @@ async(id)=>{
                 id
             ),
             {
-
-                status:
-                    "reviewed",
+                status:"reviewed",
 
                 reviewedAt:
                     serverTimestamp(),
@@ -4533,29 +4129,21 @@ async(id)=>{
                 reviewedBy:
                     auth.currentUser?.email ||
                     ADMIN_EMAIL
-
             },
             {
-
                 merge:true
-
             }
         );
-
 
         status.textContent =
             "✅ Report marked as reviewed.";
 
-
         await loadReports();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not update report.";
@@ -4577,11 +4165,8 @@ async(id)=>{
             "Are you sure you want to delete this report?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -4593,20 +4178,15 @@ async(id)=>{
             )
         );
 
-
         status.textContent =
             "✅ Report deleted.";
 
-
         await loadReports();
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not delete report.";
@@ -4628,11 +4208,8 @@ async()=>{
             "⚠️ Delete ALL community posts?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -4644,10 +4221,7 @@ async()=>{
                 )
             );
 
-
-        if(
-            postsSnapshot.empty
-        ){
+        if(postsSnapshot.empty){
 
             status.textContent =
                 "ℹ️ There are no posts to delete.";
@@ -4656,7 +4230,6 @@ async()=>{
 
         }
 
-
         for(
             const post of
             postsSnapshot.docs
@@ -4664,7 +4237,6 @@ async()=>{
 
             const postId =
                 post.id;
-
 
             const comments =
                 await getDocs(
@@ -4675,7 +4247,6 @@ async()=>{
                         "comments"
                     )
                 );
-
 
             for(
                 const comment of
@@ -4688,7 +4259,6 @@ async()=>{
 
             }
 
-
             const likes =
                 await getDocs(
                     collection(
@@ -4698,7 +4268,6 @@ async()=>{
                         "likes"
                     )
                 );
-
 
             for(
                 const like of
@@ -4711,25 +4280,20 @@ async()=>{
 
             }
 
-
             await deleteDoc(
                 post.ref
             );
 
         }
 
-
         status.textContent =
             "🧹 All posts deleted successfully.";
 
-
         await updateStats();
-
 
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Could not delete all posts.";
@@ -4749,19 +4313,12 @@ async()=>{
     status.textContent =
         "🔄 Refreshing...";
 
-
     await loadNews();
-
     await loadEvents();
-
     await loadReports();
-
     await loadStudents();
-
     await loadNotifications();
-
     await updateStats();
-
 
     status.textContent =
         "✅ Dashboard refreshed.";
@@ -4781,27 +4338,19 @@ async()=>{
             "Logout from Admin Dashboard?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
-        await signOut(
-            auth
-        );
-
+        await signOut(auth);
 
         window.location.href =
             "login.html";
 
-
     }catch(error){
 
         console.error(error);
-
 
         status.textContent =
             "❌ Logout failed.";
@@ -4819,19 +4368,13 @@ window.scrollToSection =
 function(id){
 
     const section =
-        document.getElementById(
-            id
-        );
-
+        document.getElementById(id);
 
     if(section){
 
         section.scrollIntoView({
-
             behavior:"smooth",
-
             block:"start"
-
         });
 
     }
@@ -4851,13 +4394,9 @@ function(name){
         name +
         " will be connected to Firebase in the next upgrade.";
 
-
     status.scrollIntoView({
-
         behavior:"smooth",
-
         block:"center"
-
     });
 
 };

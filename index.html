@@ -1,1151 +1,981 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>Sociology Connect | Arsi University</title>
-
-    <meta
-        name="description"
-        content="Sociology Connect is an academic and social platform for Sociology and Social Work students at Arsi University.">
-
-    <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* =========================================================
-           GLOBAL SEARCH
-        ========================================================= */
-
-        .global-search-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .global-search-box .search-icon {
-            position: absolute;
-            left: 16px;
-            font-size: 18px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        #searchBar {
-            width: 100%;
-            padding: 14px 48px 14px 45px;
-            border: 1px solid #ccc;
-            border-radius: 28px;
-            font-size: 15px;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        #searchBar:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.10);
-        }
-
-        #clearSearchBtn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
-            border: none;
-            border-radius: 50%;
-            background: transparent;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .global-search-results {
-            margin-top: 10px;
-            background: var(--card-bg, #ffffff);
-            border: 1px solid #ddd;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            position: relative;
-            z-index: 20;
-        }
-
-        .search-results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 16px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .search-results-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .search-result-item {
-            padding: 15px 16px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .search-result-item:hover {
-            background: rgba(0,123,255,0.06);
-        }
+<!DOCTYPE html>  <html lang="en">  <head>  <meta charset="UTF-8">  
+
+<meta  
+    name="viewport"  
+    content="width=device-width, initial-scale=1.0">  
+
+<title>Sociology Connect | Arsi University</title>  
+
+<meta  
+    name="description"  
+    content="Sociology Connect is an academic and social platform for Sociology and Social Work students at Arsi University.">  
+
+<link rel="stylesheet" href="style.css">  
+
+<style>  
+    /* =========================================================  
+       GLOBAL SEARCH  
+    ========================================================= */  
+
+    .global-search-box {  
+        position: relative;  
+        display: flex;  
+        align-items: center;  
+        width: 100%;  
+    }  
+
+    .global-search-box .search-icon {  
+        position: absolute;  
+        left: 16px;  
+        font-size: 18px;  
+        pointer-events: none;  
+        z-index: 2;  
+    }  
+
+    #searchBar {  
+        width: 100%;  
+        padding: 14px 48px 14px 45px;  
+        border: 1px solid #ccc;  
+        border-radius: 28px;  
+        font-size: 15px;  
+        outline: none;  
+        box-sizing: border-box;  
+    }  
+
+    #searchBar:focus {  
+        border-color: #007bff;  
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.10);  
+    }  
+
+    #clearSearchBtn {  
+        position: absolute;  
+        right: 12px;  
+        top: 50%;  
+        transform: translateY(-50%);  
+        width: 32px;  
+        height: 32px;  
+        border: none;  
+        border-radius: 50%;  
+        background: transparent;  
+        cursor: pointer;  
+        font-size: 18px;  
+    }  
+
+    .global-search-results {  
+        margin-top: 10px;  
+        background: var(--card-bg, #ffffff);  
+        border: 1px solid #ddd;  
+        border-radius: 15px;  
+        overflow: hidden;  
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);  
+        position: relative;  
+        z-index: 20;  
+    }  
+
+    .search-results-header {  
+        display: flex;  
+        justify-content: space-between;  
+        align-items: center;  
+        gap: 10px;  
+        padding: 14px 16px;  
+        border-bottom: 1px solid #eee;  
+    }  
+
+    .search-results-list {  
+        max-height: 500px;  
+        overflow-y: auto;  
+    }  
+
+    .search-result-item {  
+        padding: 15px 16px;  
+        border-bottom: 1px solid #eee;  
+        cursor: pointer;  
+        transition: background 0.2s ease;  
+    }  
+
+    .search-result-item:hover {  
+        background: rgba(0,123,255,0.06);  
+    }  
+
+    .search-result-item:last-child {  
+        border-bottom: none;  
+    }  
 
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
+    .search-result-type {  
+        display: inline-block;  
+        margin-bottom: 5px;  
+        font-size: 12px;  
+        font-weight: 700;  
+        color: #007bff;  
+    }  
 
-        .search-result-type {
-            display: inline-block;
-            margin-bottom: 5px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #007bff;
-        }
+    .search-result-title {  
+        font-size: 15px;  
+        font-weight: 700;  
+        margin-bottom: 5px;  
+    }  
 
-        .search-result-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
+    .search-result-text {  
+        font-size: 13px;  
+        line-height: 1.5;  
+        opacity: 0.8;  
+    }  
 
-        .search-result-text {
-            font-size: 13px;
-            line-height: 1.5;
-            opacity: 0.8;
-        }
+    .search-no-results {  
+        text-align: center;  
+        padding: 30px 20px;  
+    }  
 
-        .search-no-results {
-            text-align: center;
-            padding: 30px 20px;
-        }
+    .search-no-results div {  
+        font-size: 30px;  
+        margin-bottom: 8px;  
+    }  
 
-        .search-no-results div {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
+    .search-no-results p {  
+        margin-top: 5px;  
+        opacity: 0.7;  
+    }  
 
-        .search-no-results p {
-            margin-top: 5px;
-            opacity: 0.7;
-        }
+    @media (max-width: 600px) {  
 
-        @media (max-width: 600px) {
+        .search-results-header {  
+            align-items: flex-start;  
+            flex-direction: column;  
+        }  
 
-            .search-results-header {
-                align-items: flex-start;
-                flex-direction: column;
-            }
+        .search-result-item {  
+            padding: 13px;  
+        }  
 
-            .search-result-item {
-                padding: 13px;
-            }
+    }  
+</style>
 
-        }
-    </style>
+</head>  <body>  <!-- =========================================================  
+     HEADER  
+========================================================= -->  <header>  <div class="header-container">  
 
-</head>
+    <div class="logo">  
 
+        <img  
+            src="1781866925745.png"  
+            alt="Sociology Connect Logo">  
 
-<body>
+        <div>  
 
+            <h1>  
+                Sociology Connect  
+            </h1>  
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
+            <p>  
+                Arsi University – Sociology &amp; Social Work  
+            </p>  
 
-<header>
+            <p>  
+                Created by <strong>Horsa Gowe</strong>  
+            </p>  
 
-    <div class="header-container">
+        </div>  
 
-        <div class="logo">
+    </div>  
 
-            <img
-                src="1781866925745.png"
-                alt="Sociology Connect Logo">
 
-            <div>
+    <div class="header-actions">  
 
-                <h1>
-                    Sociology Connect
-                </h1>
+        <span id="userInfo"></span>  
 
-                <p>
-                    Arsi University – Sociology &amp; Social Work
-                </p>
-
-                <p>
-                    Created by <strong>Horsa Gowe</strong>
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <div class="header-actions">
-
-            <span id="userInfo"></span>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-
-<!-- =========================================================
-     NAVIGATION
-========================================================= -->
-
-<nav>
-
-    <div class="nav-container">
-
-        <a href="#about">
-            🏠 About
-        </a>
-
-        <a href="#resources">
-            📚 Resources
-        </a>
-
-        <a href="#events">
-            📅 Events
-        </a>
-
-        <a href="#news">
-            📰 News
-        </a>
-
-        <a href="#contact">
-            📞 Contact
-        </a>
-
-        <a href="research.html">
-            🔬 Research Hub
-        </a>
-
-        <a href="profile.html">
-            👤 Profile
-        </a>
-
-        <a
-            href="admin.html"
-            id="adminLink">
-            🛠️ Admin Dashboard
-        </a>
-
-        <a
-            href="login.html"
-            id="loginLink">
-            🔐 Login
-        </a>
-
-    </div>
-
-</nav>
-
-
-
-<!-- =========================================================
-     NAVIGATION ACTIONS
-========================================================= -->
-
-<div class="nav-actions">
-
-    <button
-        id="logoutBtn"
-        class="nav-btn"
-        type="button"
-        style="display:none;">
-
-        Logout
-
-    </button>
-
-
-    <button
-        id="notifyBtn"
-        class="nav-btn"
-        type="button"
-        aria-label="Notifications">
-
-        🔔
-
-    </button>
-
-
-    <button
-        id="themeBtn"
-        class="nav-btn"
-        type="button"
-        aria-label="Toggle dark mode">
-
-        🌙
-
-    </button>
+    </div>  
 
 </div>
 
+</header>  <!-- =========================================================  
+     NAVIGATION  
+========================================================= -->  <nav>  <div class="nav-container">  
 
+    <a href="#about">  
+        🏠 About  
+    </a>  
 
-<!-- =========================================================
-     GLOBAL SEARCH
-========================================================= -->
+    <a href="#resources">  
+        📚 Resources  
+    </a>  
 
-<div class="search-container">
+    <a href="#events">  
+        📅 Events  
+    </a>  
 
-    <div class="global-search-box">
+    <a href="#news">  
+        📰 News  
+    </a>  
 
-        <span class="search-icon">
-            🔎
-        </span>
+    <a href="#contact">  
+        📞 Contact  
+    </a>  
 
-        <input
-            id="searchBar"
-            type="search"
-            placeholder="Search Posts, News, Events and Research..."
-            autocomplete="off"
-            aria-label="Global Search">
+    <a href="research.html">  
+        🔬 Research Hub  
+    </a>  
 
-        <button
-            id="clearSearchBtn"
-            type="button"
-            aria-label="Clear search"
-            style="display:none;">
+    <a href="profile.html">  
+        👤 Profile  
+    </a>  
 
-            ✕
+    <a  
+        href="admin.html"  
+        id="adminLink">  
+        🛠️ Admin Dashboard  
+    </a>  
 
-        </button>
-
-    </div>
-
-
-    <div
-        id="globalSearchResults"
-        class="global-search-results"
-        style="display:none;">
-
-        <div class="search-results-header">
-
-            <strong>
-                🔎 Search Results
-            </strong>
-
-            <span id="searchResultCount">
-                0 results
-            </span>
-
-        </div>
-
-
-        <div
-            id="searchResultsList"
-            class="search-results-list">
-        </div>
-
-
-        <div
-            id="searchNoResults"
-            class="search-no-results"
-            style="display:none;">
-
-            <div>
-                🔍
-            </div>
-
-            <strong>
-                No results found
-            </strong>
-
-            <p>
-                Try another keyword.
-            </p>
-
-        </div>
-
-    </div>
+    <a  
+        href="login.html"  
+        id="loginLink">  
+        🔐 Login  
+    </a>  
 
 </div>
 
+</nav>  <!-- =========================================================  
+     NAVIGATION ACTIONS  
+========================================================= -->  <div class="nav-actions">  <button  
+    id="logoutBtn"  
+    class="nav-btn"  
+    type="button"  
+    style="display:none;">  
 
+    Logout  
 
-<!-- =========================================================
-     HERO
-========================================================= -->
+</button>  
 
-<section class="hero">
 
-    <h2>
-        Welcome to Sociology Connect 👋
-    </h2>
+<button  
+    id="notifyBtn"  
+    class="nav-btn"  
+    type="button"  
+    aria-label="Notifications">  
 
-    <p>
-        A digital academic community for Sociology and
-        Social Work students at Arsi University.
-    </p>
+    🔔  
 
-</section>
+</button>  
 
 
+<button  
+    id="themeBtn"  
+    class="nav-btn"  
+    type="button"  
+    aria-label="Toggle dark mode">  
 
-<!-- =========================================================
-     MAIN CONTENT
-========================================================= -->
+    🌙  
 
-<main>
+</button>
 
+</div>  <!-- =========================================================  
+     GLOBAL SEARCH  
+========================================================= -->  <div class="search-container">  <div class="global-search-box">  
 
+    <span class="search-icon">  
+        🔎  
+    </span>  
 
-<!-- =========================================================
-     LATEST NEWS
-========================================================= -->
+    <input  
+        id="searchBar"  
+        type="search"  
+        placeholder="Search Posts, News, Events and Research..."  
+        autocomplete="off"  
+        aria-label="Global Search">  
 
-<section id="news">
+    <button  
+        id="clearSearchBtn"  
+        type="button"  
+        aria-label="Clear search"  
+        style="display:none;">  
 
-    <div class="section-header">
+        ✕  
 
-        <span class="section-icon">
-            📰
-        </span>
+    </button>  
 
-        <div>
+</div>  
 
-            <h2>
-                Latest News
-            </h2>
 
-            <p>
-                Latest academic announcements and updates
-            </p>
+<div  
+    id="globalSearchResults"  
+    class="global-search-results"  
+    style="display:none;">  
 
-        </div>
+    <div class="search-results-header">  
 
-    </div>
+        <strong>  
+            🔎 Search Results  
+        </strong>  
 
+        <span id="searchResultCount">  
+            0 results  
+        </span>  
 
-    <div
-        class="news-grid"
-        id="newsContainer">
+    </div>  
 
-        <div class="card news-loading">
 
-            📰 Loading latest news...
+    <div  
+        id="searchResultsList"  
+        class="search-results-list">  
+    </div>  
 
-        </div>
 
-    </div>
+    <div  
+        id="searchNoResults"  
+        class="search-no-results"  
+        style="display:none;">  
 
-</section>
+        <div>  
+            🔍  
+        </div>  
 
+        <strong>  
+            No results found  
+        </strong>  
 
+        <p>  
+            Try another keyword.  
+        </p>  
 
-<!-- =========================================================
-     COMMUNITY
-========================================================= -->
-
-<section id="community">
-
-    <div class="section-header">
-
-        <span class="section-icon">
-            💬
-        </span>
-
-        <div>
-
-            <h2>
-                Share with the Community
-            </h2>
-
-            <p>
-                Share academic ideas, announcements,
-                questions and useful information.
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="post-composer">
-
-        <textarea
-            id="postInput"
-            placeholder="What would you like to share today?"
-            aria-label="Write a community post"></textarea>
-
-
-        <button
-            id="postBtn"
-            type="button">
-
-            📤 Post
-
-        </button>
-
-    </div>
-
-
-
-    <div id="postsContainer"></div>
-
-</section>
-
-
-
-<!-- =========================================================
-     TRENDING POSTS
-========================================================= -->
-
-<section id="trending">
-
-    <div class="section-header">
-
-        <span class="section-icon">
-            🔥
-        </span>
-
-        <div>
-
-            <h2>
-                Trending Posts
-            </h2>
-
-            <p>
-                Popular posts based on likes and comments.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="trendingContainer"
-        class="trending-grid">
-
-        <div class="post-card">
-
-            🔥 Loading trending posts...
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================================================
-     ABOUT
-========================================================= -->
-
-<section id="about">
-
-    <div class="section-header">
-
-        <span class="section-icon">
-            🌍
-        </span>
-
-        <div>
-
-            <h2>
-                About Sociology Connect
-            </h2>
-
-            <p>
-                Learn more about our student platform.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <p>
-
-        Sociology Connect supports Sociology and Social Work
-        students through academic resources, research guidance,
-        communication and community engagement.
-
-    </p>
-
-</section>
-
-
-
-<!-- =========================================================
-     CORE PILLARS
-========================================================= -->
-
-<section id="features">
-
-    <div class="section-header">
-
-        <span class="section-icon">
-            🌟
-        </span>
-
-        <div>
-
-            <h2>
-                Our Core Pillars
-            </h2>
-
-            <p>
-                The main areas supported by Sociology Connect.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div class="pillars-grid">
-
-
-        <div class="pillar-card">
-
-            <span>📚</span>
-
-            <h3>
-                Academic Resources
-            </h3>
-
-            <p>
-                Useful learning materials for students.
-            </p>
-
-        </div>
-
-
-        <div class="pillar-card">
-
-            <span>🔬</span>
-
-            <h3>
-                Research Support
-            </h3>
-
-            <p>
-                Guidance for research projects and academic work.
-            </p>
-
-        </div>
-
-
-        <div class="pillar-card">
-
-            <span>💻</span>
-
-            <h3>
-                Techno-Sociology
-            </h3>
-
-            <p>
-                Connecting technology with social sciences.
-            </p>
-
-        </div>
-
-
-        <div class="pillar-card">
-
-            <span>🤝</span>
-
-            <h3>
-                Community Engagement
-            </h3>
-
-            <p>
-                Encouraging collaboration among students.
-            </p>
-
-        </div>
-
-
-        <div class="pillar-card">
-
-            <span>👥</span>
-
-            <h3>
-                Student Communication
-            </h3>
-
-            <p>
-                A space for students to communicate and share.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================================================
-     RESEARCH GUIDE
-========================================================= -->
-
-<section id="research-guide">
-
-    <div class="section-header">
-
-        <span class="section-icon">
-            🔬
-        </span>
-
-        <div>
-
-            <h2>
-                Research Guide
-            </h2>
-
-            <p>
-                A simple pathway for conducting academic research.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <ol class="research-steps">
-
-        <li>
-            <span>1</span>
-            Choose a research topic
-        </li>
-
-        <li>
-            <span>2</span>
-            Review literature
-        </li>
-
-        <li>
-            <span>3</span>
-            Create research questions
-        </li>
-
-        <li>
-            <span>4</span>
-            Design methodology
-        </li>
-
-        <li>
-            <span>5</span>
-            Collect data
-        </li>
-
-        <li>
-            <span>6</span>
-            Analyze findings
-        </li>
-
-        <li>
-            <span>7</span>
-            Write and cite properly
-        </li>
-
-    </ol>
-
-</section>
-
-
-
-<!-- =========================================================
-     EVENTS & DEADLINES
-========================================================= -->
-
-<section id="events">
-
-    <div class="section-header">
-
-        <span class="section-icon">
-            📅
-        </span>
-
-        <div>
-
-            <h2>
-                Events &amp; Deadlines
-            </h2>
-
-            <p>
-                Important academic dates and student activities.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <div
-        class="event-grid"
-        id="eventsContainer">
-
-
-        <div class="event-card">
-
-            <strong>
-                📄 Research Proposal
-            </strong>
-
-            <br>
-
-            Proposal updates.
-
-        </div>
-
-
-        <div class="event-card">
-
-            <strong>
-                🎤 Department Seminar
-            </strong>
-
-            <br>
-
-            Seminar information.
-
-        </div>
-
-
-        <div class="event-card">
-
-            <strong>
-                👥 Student Meeting
-            </strong>
-
-            <br>
-
-            Meeting announcements.
-
-        </div>
-
-
-        <div class="event-card">
-
-            <strong>
-                🎓 Graduation Updates
-            </strong>
-
-            <br>
-
-            Graduation information.
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================================================
-     SOCIAL WORK IMAGE
-========================================================= -->
-
-<div class="image-wrapper">
-
-    <img
-        src="social-workers-can-help.png"
-        alt="Social workers can help">
+    </div>  
 
 </div>
 
+</div>  <!-- =========================================================  
+     HERO  
+========================================================= -->  <section class="hero">  <h2>  
+    Welcome to Sociology Connect 👋  
+</h2>  
 
+<p>  
+    A digital academic community for Sociology and  
+    Social Work students at Arsi University.  
+</p>
 
-<!-- =========================================================
-     ACADEMIC RESOURCES
-========================================================= -->
+</section>  <!-- =========================================================  
+     MAIN CONTENT  
+========================================================= -->  <main>  <!-- =========================================================  
+     LATEST NEWS  
+========================================================= -->  <section id="news">  <div class="section-header">  
 
-<section id="resources">
+    <span class="section-icon">  
+        📰  
+    </span>  
 
-    <div class="section-header">
+    <div>  
 
-        <span class="section-icon">
-            📚
-        </span>
+        <h2>  
+            Latest News  
+        </h2>  
 
-        <div>
+        <p>  
+            Latest academic announcements and updates  
+        </p>  
 
-            <h2>
-                Academic Resources
-            </h2>
+    </div>  
 
-            <p>
-                Access useful Sociology and Social Work
-                learning materials.
-            </p>
+</div>  
 
-        </div>
 
-    </div>
+<div  
+    class="news-grid"  
+    id="newsContainer">  
 
+    <div class="card news-loading">  
 
-    <div class="resource-box">
+        📰 Loading latest news...  
 
-        <div class="resource-icon">
-            📄
-        </div>
+    </div>  
 
+</div>
 
-        <div>
+</section>  <!-- =========================================================  
+     COMMUNITY  
+========================================================= -->  <section id="community">  <div class="section-header">  
 
-            <h3>
-                Research Proposal
-            </h3>
+    <span class="section-icon">  
+        💬  
+    </span>  
 
-            <p>
-                Open the available proposal document.
-            </p>
+    <div>  
 
+        <h2>  
+            Share with the Community  
+        </h2>  
 
-            <a
-                href="IBRO PROP (3).pdf"
-                target="_blank"
-                rel="noopener"
-                class="download-btn">
+        <p>  
+            Share academic ideas, announcements,  
+            questions and useful information.  
+        </p>  
 
-                📥 Open Proposal
+    </div>  
 
-            </a>
+</div>  
 
-        </div>
 
-    </div>
 
-</section>
+<div class="post-composer">  
 
+    <textarea  
+        id="postInput"  
+        placeholder="What would you like to share today?"  
+        aria-label="Write a community post"></textarea>  
 
 
-<!-- =========================================================
-     CONTACT
-========================================================= -->
+    <button  
+        id="postBtn"  
+        type="button">  
 
-<section
-    id="contact"
-    class="contact-section">
+        📤 Post  
 
+    </button>  
 
-    <div class="section-header">
+</div>  
 
-        <span class="section-icon">
-            📞
-        </span>
 
-        <div>
 
-            <h2>
-                Contact Sociology Connect
-            </h2>
+<div id="postsContainer"></div>
 
-            <p>
-                Send us your questions or suggestions.
-            </p>
+</section>  <!-- =========================================================  
+     TRENDING POSTS  
+========================================================= -->  <section id="trending">  <div class="section-header">  
 
-        </div>
+    <span class="section-icon">  
+        🔥  
+    </span>  
 
-    </div>
+    <div>  
 
+        <h2>  
+            Trending Posts  
+        </h2>  
 
-    <div class="contact-info">
+        <p>  
+            Popular posts based on likes and comments.  
+        </p>  
 
-        <p>
-            📧
-            <strong>
-                Gunnersyom@gmail.com
-            </strong>
-        </p>
+    </div>  
 
+</div>  
 
-        <p>
-            📱
-            <strong>
-                0934919856
-            </strong>
-        </p>
 
-    </div>
+<div  
+    id="trendingContainer"  
+    class="trending-grid">  
 
+    <div class="post-card">  
 
-    <form
-        action="https://formspree.io/f/mppwdjda"
-        method="POST">
+        🔥 Loading trending posts...  
 
-        <textarea
-            name="comment"
-            rows="5"
-            placeholder="Write your message..."
-            required></textarea>
+    </div>  
 
+</div>
 
-        <button type="submit">
-            📤 Submit Message
-        </button>
+</section>  <!-- =========================================================  
+     ABOUT  
+========================================================= -->  <section id="about">  <div class="section-header">  
 
-    </form>
+    <span class="section-icon">  
+        🌍  
+    </span>  
 
+    <div>  
 
-    <a
-        class="telegram-btn"
-        href="https://t.me/HorsaGowe"
-        target="_blank"
-        rel="noopener">
+        <h2>  
+            About Sociology Connect  
+        </h2>  
 
-        ✈️ Connect on Telegram
+        <p>  
+            Learn more about our student platform.  
+        </p>  
 
-    </a>
+    </div>  
 
-</section>
+</div>  
 
 
+<p>  
 
-<!-- =========================================================
-     AI MARI
-========================================================= -->
+    Sociology Connect supports Sociology and Social Work  
+    students through academic resources, research guidance,  
+    communication and community engagement.  
 
-<section id="chat-container">
+</p>
 
+</section>  <!-- =========================================================  
+     CORE PILLARS  
+========================================================= -->  <section id="features">  <div class="section-header">  
 
-    <div class="section-header">
+    <span class="section-icon">  
+        🌟  
+    </span>  
 
-        <span class="section-icon">
-            🤖
-        </span>
+    <div>  
 
-        <div>
+        <h2>  
+            Our Core Pillars  
+        </h2>  
 
-            <h2>
-                AI Mari
-            </h2>
+        <p>  
+            The main areas supported by Sociology Connect.  
+        </p>  
 
-            <p>
-                Ask questions in Afaan Oromoo,
-                Amharic or English.
-            </p>
+    </div>  
 
-        </div>
+</div>  
 
-    </div>
 
+<div class="pillars-grid">  
 
-    <div id="chat-history">
 
-        <div class="message ai">
+    <div class="pillar-card">  
 
-            <b>
-                AI Mari
-            </b>
+        <span>📚</span>  
 
-            <br>
+        <h3>  
+            Academic Resources  
+        </h3>  
 
-            Hello! 👋 I can help you in Afaan Oromoo,
-            Amharic and English.
+        <p>  
+            Useful learning materials for students.  
+        </p>  
 
-        </div>
+    </div>  
 
-    </div>
 
+    <div class="pillar-card">  
 
-    <div class="chat-input">
+        <span>🔬</span>  
 
-        <input
-            id="userInput"
-            type="text"
-            placeholder="Ask AI Mari anything..."
-            autocomplete="off">
+        <h3>  
+            Research Support  
+        </h3>  
 
+        <p>  
+            Guidance for research projects and academic work.  
+        </p>  
 
-        <button
-            id="micBtn"
-            type="button"
-            aria-label="Voice input">
+    </div>  
 
-            🎤
 
-        </button>
+    <div class="pillar-card">  
 
+        <span>💻</span>  
 
-        <button
-            id="sendBtn"
-            type="button"
-            aria-label="Send message">
+        <h3>  
+            Techno-Sociology  
+        </h3>  
 
-            ➤
+        <p>  
+            Connecting technology with social sciences.  
+        </p>  
 
-        </button>
+    </div>  
 
-    </div>
 
+    <div class="pillar-card">  
 
-</section>
+        <span>🤝</span>  
 
+        <h3>  
+            Community Engagement  
+        </h3>  
 
+        <p>  
+            Encouraging collaboration among students.  
+        </p>  
 
-</main>
+    </div>  
 
 
+    <div class="pillar-card">  
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
+        <span>👥</span>  
 
-<footer>
+        <h3>  
+            Student Communication  
+        </h3>  
 
-    <strong>
-        © 2026 Sociology Connect – Arsi University
-    </strong>
+        <p>  
+            A space for students to communicate and share.  
+        </p>  
 
-    <br>
+    </div>  
 
-    Sociology &amp; Social Work
+</div>
 
-    <br>
+</section>  <!-- =========================================================  
+     RESEARCH GUIDE  
+========================================================= -->  <section id="research-guide">  <div class="section-header">  
 
-    <small>
-        Created by Horsa Gowe
-    </small>
+    <span class="section-icon">  
+        🔬  
+    </span>  
 
-</footer>
+    <div>  
 
+        <h2>  
+            Research Guide  
+        </h2>  
 
+        <p>  
+            A simple pathway for conducting academic research.  
+        </p>  
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
+    </div>  
 
-<script
-    type="module"
-    src="script.js">
-</script>
+</div>  
 
 
-<script
-    type="module"
-    src="auth.js">
-</script>
+<ol class="research-steps">  
 
+    <li>  
+        <span>1</span>  
+        Choose a research topic  
+    </li>  
 
-</body>
+    <li>  
+        <span>2</span>  
+        Review literature  
+    </li>  
 
-</html>
+    <li>  
+        <span>3</span>  
+        Create research questions  
+    </li>  
+
+    <li>  
+        <span>4</span>  
+        Design methodology  
+    </li>  
+
+    <li>  
+        <span>5</span>  
+        Collect data  
+    </li>  
+
+    <li>  
+        <span>6</span>  
+        Analyze findings  
+    </li>  
+
+    <li>  
+        <span>7</span>  
+        Write and cite properly  
+    </li>  
+
+</ol>
+
+</section>  <!-- =========================================================  
+     EVENTS & DEADLINES  
+========================================================= -->  <section id="events">  <div class="section-header">  
+
+    <span class="section-icon">  
+        📅  
+    </span>  
+
+    <div>  
+
+        <h2>  
+            Events &amp; Deadlines  
+        </h2>  
+
+        <p>  
+            Important academic dates and student activities.  
+        </p>  
+
+    </div>  
+
+</div>  
+
+
+<div  
+    class="event-grid"  
+    id="eventsContainer">  
+
+
+    <div class="event-card">  
+
+        <strong>  
+            📄 Research Proposal  
+        </strong>  
+
+        <br>  
+
+        Proposal updates.  
+
+    </div>  
+
+
+    <div class="event-card">  
+
+        <strong>  
+            🎤 Department Seminar  
+        </strong>  
+
+        <br>  
+
+        Seminar information.  
+
+    </div>  
+
+
+    <div class="event-card">  
+
+        <strong>  
+            👥 Student Meeting  
+        </strong>  
+
+        <br>  
+
+        Meeting announcements.  
+
+    </div>  
+
+
+    <div class="event-card">  
+
+        <strong>  
+            🎓 Graduation Updates  
+        </strong>  
+
+        <br>  
+
+        Graduation information.  
+
+    </div>  
+
+
+</div>
+
+</section>  <!-- =========================================================  
+     SOCIAL WORK IMAGE  
+========================================================= -->  <div class="image-wrapper">  <img  
+    src="social-workers-can-help.png"  
+    alt="Social workers can help">
+
+</div>  <!-- =========================================================  
+     ACADEMIC RESOURCES  
+========================================================= -->  <section id="resources">  <div class="section-header">  
+
+    <span class="section-icon">  
+        📚  
+    </span>  
+
+    <div>  
+
+        <h2>  
+            Academic Resources  
+        </h2>  
+
+        <p>  
+            Access useful Sociology and Social Work  
+            learning materials.  
+        </p>  
+
+    </div>  
+
+</div>  
+
+
+<div class="resource-box">  
+
+    <div class="resource-icon">  
+        📄  
+    </div>  
+
+
+    <div>  
+
+        <h3>  
+            Research Proposal  
+        </h3>  
+
+        <p>  
+            Open the available proposal document.  
+        </p>  
+
+
+        <a  
+            href="IBRO PROP (3).pdf"  
+            target="_blank"  
+            rel="noopener"  
+            class="download-btn">  
+
+            📥 Open Proposal  
+
+        </a>  
+
+    </div>  
+
+</div>
+
+</section>  <!-- =========================================================  
+     CONTACT  
+========================================================= -->  <section  
+    id="contact"  
+    class="contact-section">  <div class="section-header">  
+
+    <span class="section-icon">  
+        📞  
+    </span>  
+
+    <div>  
+
+        <h2>  
+            Contact Sociology Connect  
+        </h2>  
+
+        <p>  
+            Send us your questions or suggestions.  
+        </p>  
+
+    </div>  
+
+</div>  
+
+
+<div class="contact-info">  
+
+    <p>  
+        📧  
+        <strong>  
+            Gunnersyom@gmail.com  
+        </strong>  
+    </p>  
+
+
+    <p>  
+        📱  
+        <strong>  
+            0934919856  
+        </strong>  
+    </p>  
+
+</div>  
+
+
+<form  
+    action="https://formspree.io/f/mppwdjda"  
+    method="POST">  
+
+    <textarea  
+        name="comment"  
+        rows="5"  
+        placeholder="Write your message..."  
+        required></textarea>  
+
+
+    <button type="submit">  
+        📤 Submit Message  
+    </button>  
+
+</form>  
+
+
+<a  
+    class="telegram-btn"  
+    href="https://t.me/HorsaGowe"  
+    target="_blank"  
+    rel="noopener">  
+
+    ✈️ Connect on Telegram  
+
+</a>
+
+</section>  <!-- =========================================================  
+     AI MARI  
+========================================================= -->  <section id="chat-container">  <div class="section-header">  
+
+    <span class="section-icon">  
+        🤖  
+    </span>  
+
+    <div>  
+
+        <h2>  
+            AI Mari  
+        </h2>  
+
+        <p>  
+            Ask questions in Afaan Oromoo,  
+            Amharic or English.  
+        </p>  
+
+    </div>  
+
+</div>  
+
+
+<div id="chat-history">  
+
+    <div class="message ai">  
+
+        <b>  
+            AI Mari  
+        </b>  
+
+        <br>  
+
+        Hello! 👋 I can help you in Afaan Oromoo,  
+        Amharic and English.  
+
+    </div>  
+
+</div>  
+
+
+<div class="chat-input">  
+
+    <input  
+        id="userInput"  
+        type="text"  
+        placeholder="Ask AI Mari anything..."  
+        autocomplete="off">  
+
+
+    <button  
+        id="micBtn"  
+        type="button"  
+        aria-label="Voice input">  
+
+        🎤  
+
+    </button>  
+
+
+    <button  
+        id="sendBtn"  
+        type="button"  
+        aria-label="Send message">  
+
+        ➤  
+
+    </button>  
+
+</div>
+
+</section>  </main>  <!-- =========================================================  
+     FOOTER  
+========================================================= -->  <footer>  <strong>  
+    © 2026 Sociology Connect – Arsi University  
+</strong>  
+
+<br>  
+
+Sociology &amp; Social Work  
+
+<br>  
+
+<small>  
+    Created by Horsa Gowe  
+</small>
+
+</footer>  <!-- =========================================================  
+     JAVASCRIPT  
+========================================================= -->  <script  
+    type="module"  
+    src="script.js">  
+</script>  <script  
+    type="module"  
+    src="auth.js">  
+</script>  </body>  </html>

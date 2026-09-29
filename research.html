@@ -422,7 +422,7 @@ button{
 
 .saved-preview{
     white-space:pre-wrap;
-    max-height:250px;
+    max-height:350px;
     overflow:auto;
     background:white;
     border:1px solid #e5e7eb;
@@ -449,32 +449,6 @@ button{
 
 .delete-btn:hover{
     background:#b02a37;
-}
-
-
-/* =========================================================
-   ADMIN CLEAR ALL RESEARCH
-   ========================================================= */
-
-.admin-clear-btn{
-    background:#7f1d1d;
-    color:white;
-    padding:10px 16px;
-    border-radius:10px;
-    font-weight:bold;
-    margin-top:15px;
-    border:none;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.admin-clear-btn:hover{
-    background:#991b1b;
-}
-
-.admin-clear-btn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
 }
 
 
@@ -743,10 +717,6 @@ body.dark .saved-date{
     }
 
     .saved-actions button{
-        width:100%;
-    }
-
-    .admin-clear-btn{
         width:100%;
     }
 
@@ -1483,22 +1453,6 @@ body.dark .saved-date{
 
     </div>
 
-
-    <!-- =====================================================
-         ADMIN ONLY CLEAR ALL
-         ===================================================== -->
-
-    <button
-        id="adminClearResearchBtn"
-        class="admin-clear-btn"
-        type="button"
-        onclick="clearAllResearch()"
-        style="display:none;">
-
-        🧹 Clear All Research — Admin Only
-
-    </button>
-
 </section>
 
 
@@ -1516,110 +1470,45 @@ body.dark .saved-date{
 
     <div class="steps">
 
-
         <div class="step">
-
-            <strong>
-                1. Choose a Topic
-            </strong>
-
-            <p>
-                Select a clear and researchable issue.
-            </p>
-
+            <strong>1. Choose a Topic</strong>
+            <p>Select a clear and researchable issue.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                2. Identify the Problem
-            </strong>
-
-            <p>
-                Explain the problem that needs investigation.
-            </p>
-
+            <strong>2. Identify the Problem</strong>
+            <p>Explain the problem that needs investigation.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                3. Review Literature
-            </strong>
-
-            <p>
-                Study previous research and academic sources.
-            </p>
-
+            <strong>3. Review Literature</strong>
+            <p>Study previous research and academic sources.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                4. Develop Questions
-            </strong>
-
-            <p>
-                Create questions that guide your research.
-            </p>
-
+            <strong>4. Develop Questions</strong>
+            <p>Create questions that guide your research.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                5. Choose Methodology
-            </strong>
-
-            <p>
-                Select suitable research methods.
-            </p>
-
+            <strong>5. Choose Methodology</strong>
+            <p>Select suitable research methods.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                6. Collect Data
-            </strong>
-
-            <p>
-                Gather information from appropriate participants or sources.
-            </p>
-
+            <strong>6. Collect Data</strong>
+            <p>Gather information from appropriate participants or sources.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                7. Analyze Data
-            </strong>
-
-            <p>
-                Analyze and interpret the collected information.
-            </p>
-
+            <strong>7. Analyze Data</strong>
+            <p>Analyze and interpret the collected information.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                8. Write the Report
-            </strong>
-
-            <p>
-                Present findings, conclusions and recommendations.
-            </p>
-
+            <strong>8. Write the Report</strong>
+            <p>Present findings, conclusions and recommendations.</p>
         </div>
-
 
     </div>
 
@@ -1643,67 +1532,28 @@ body.dark .saved-date{
         <table>
 
             <tr>
-
-                <th>
-                    Qualitative
-                </th>
-
-                <th>
-                    Quantitative
-                </th>
-
+                <th>Qualitative</th>
+                <th>Quantitative</th>
             </tr>
 
-
             <tr>
-
-                <td>
-                    Focuses on meanings and experiences.
-                </td>
-
-                <td>
-                    Focuses on numerical data.
-                </td>
-
+                <td>Focuses on meanings and experiences.</td>
+                <td>Focuses on numerical data.</td>
             </tr>
 
-
             <tr>
-
-                <td>
-                    Uses interviews, observations and focus groups.
-                </td>
-
-                <td>
-                    Uses surveys, measurements and statistical data.
-                </td>
-
+                <td>Uses interviews, observations and focus groups.</td>
+                <td>Uses surveys, measurements and statistical data.</td>
             </tr>
 
-
             <tr>
-
-                <td>
-                    Usually uses smaller samples.
-                </td>
-
-                <td>
-                    Can use larger samples.
-                </td>
-
+                <td>Usually uses smaller samples.</td>
+                <td>Can use larger samples.</td>
             </tr>
 
-
             <tr>
-
-                <td>
-                    Produces descriptive findings.
-                </td>
-
-                <td>
-                    Produces numerical findings.
-                </td>
-
+                <td>Produces descriptive findings.</td>
+                <td>Produces numerical findings.</td>
             </tr>
 
         </table>
@@ -1727,53 +1577,18 @@ body.dark .saved-date{
 
     <div class="area-grid">
 
-        <div class="area">
-            👨‍👩‍👧 Family Sociology
-        </div>
-
-        <div class="area">
-            👩‍🎓 Youth Studies
-        </div>
-
-        <div class="area">
-            🏘️ Community Development
-        </div>
-
-        <div class="area">
-            ⚖️ Social Justice
-        </div>
-
-        <div class="area">
-            👩‍💼 Gender Studies
-        </div>
-
-        <div class="area">
-            🏥 Social Work
-        </div>
-
-        <div class="area">
-            🌍 Migration
-        </div>
-
-        <div class="area">
-            🎓 Education
-        </div>
-
-        <div class="area">
-            💼 Employment
-        </div>
-
-        <div class="area">
-            🧠 Mental Health & Society
-        </div>
-
-        <div class="area">
-            🏛️ Social Policy
-        </div>
-
-        <div class="area">
-            🌱 Rural Development
-        </div>
+        <div class="area">👨‍👩‍👧 Family Sociology</div>
+        <div class="area">👩‍🎓 Youth Studies</div>
+        <div class="area">🏘️ Community Development</div>
+        <div class="area">⚖️ Social Justice</div>
+        <div class="area">👩‍💼 Gender Studies</div>
+        <div class="area">🏥 Social Work</div>
+        <div class="area">🌍 Migration</div>
+        <div class="area">🎓 Education</div>
+        <div class="area">💼 Employment</div>
+        <div class="area">🧠 Mental Health & Society</div>
+        <div class="area">🏛️ Social Policy</div>
+        <div class="area">🌱 Rural Development</div>
 
     </div>
 
@@ -1791,62 +1606,30 @@ body.dark .saved-date{
         📚 APA 7 Quick Guide
     </h3>
 
-
     <p>
-
-        <strong>
-            Book:
-        </strong>
-
-        <br>
-
+        <strong>Book:</strong><br>
         Author, A. A. (Year).
-        <em>
-            Title of book
-        </em>.
+        <em>Title of book</em>.
         Publisher.
-
     </p>
-
 
     <br>
 
-
     <p>
-
-        <strong>
-            Journal Article:
-        </strong>
-
-        <br>
-
+        <strong>Journal Article:</strong><br>
         Author, A. A. (Year).
         Title of article.
-        <em>
-            Journal Name, volume
-        </em>
+        <em>Journal Name, volume</em>
         (issue), pages.
-
     </p>
-
 
     <br>
 
-
     <p>
-
-        <strong>
-            Website:
-        </strong>
-
-        <br>
-
+        <strong>Website:</strong><br>
         Author/Organization. (Year).
-        <em>
-            Title of page
-        </em>.
+        <em>Title of page</em>.
         URL
-
     </p>
 
 </section>
@@ -1866,71 +1649,30 @@ body.dark .saved-date{
 
     <div class="steps">
 
-
         <div class="step">
-
-            <strong>
-                Interview
-            </strong>
-
-            <p>
-                Collect information through direct questions.
-            </p>
-
+            <strong>Interview</strong>
+            <p>Collect information through direct questions.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                Questionnaire
-            </strong>
-
-            <p>
-                Collect structured responses from participants.
-            </p>
-
+            <strong>Questionnaire</strong>
+            <p>Collect structured responses from participants.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                Observation
-            </strong>
-
-            <p>
-                Collect information by observing behaviors or situations.
-            </p>
-
+            <strong>Observation</strong>
+            <p>Collect information by observing behaviors or situations.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                Focus Group
-            </strong>
-
-            <p>
-                Collect information through guided group discussion.
-            </p>
-
+            <strong>Focus Group</strong>
+            <p>Collect information through guided group discussion.</p>
         </div>
 
-
         <div class="step">
-
-            <strong>
-                Document Review
-            </strong>
-
-            <p>
-                Use existing documents and records as sources of data.
-            </p>
-
+            <strong>Document Review</strong>
+            <p>Use existing documents and records as sources of data.</p>
         </div>
-
 
     </div>
 
@@ -1951,9 +1693,7 @@ body.dark .saved-date{
 
     <div class="faq-item">
 
-        <h4>
-            What is a research topic?
-        </h4>
+        <h4>What is a research topic?</h4>
 
         <p>
             A research topic is the specific issue or subject that a researcher
@@ -1965,9 +1705,7 @@ body.dark .saved-date{
 
     <div class="faq-item">
 
-        <h4>
-            What is a research question?
-        </h4>
+        <h4>What is a research question?</h4>
 
         <p>
             A research question is a clear question that guides the investigation.
@@ -1978,9 +1716,7 @@ body.dark .saved-date{
 
     <div class="faq-item">
 
-        <h4>
-            What is a research objective?
-        </h4>
+        <h4>What is a research objective?</h4>
 
         <p>
             A research objective explains what the study intends to achieve.
@@ -1991,9 +1727,7 @@ body.dark .saved-date{
 
     <div class="faq-item">
 
-        <h4>
-            What is an abstract?
-        </h4>
+        <h4>What is an abstract?</h4>
 
         <p>
             An abstract is a short summary of the main parts of a research study.
@@ -2004,9 +1738,7 @@ body.dark .saved-date{
 
     <div class="faq-item">
 
-        <h4>
-            What is APA 7?
-        </h4>
+        <h4>What is APA 7?</h4>
 
         <p>
             APA 7 is a style used for academic writing, citations and references.
@@ -2096,36 +1828,6 @@ const ADMIN_EMAIL = "yom@gmail.com";
 onAuthStateChanged(auth, async (user) => {
 
     currentUser = user || null;
-
-
-    /* =====================================================
-       ADMIN BUTTON VISIBILITY
-       ===================================================== */
-
-    const adminButton =
-        document.getElementById(
-            "adminClearResearchBtn"
-        );
-
-
-    if(adminButton){
-
-        if(
-            currentUser &&
-            currentUser.email === ADMIN_EMAIL
-        ){
-
-            adminButton.style.display =
-                "inline-block";
-
-        }else{
-
-            adminButton.style.display =
-                "none";
-
-        }
-
-    }
 
 
     if(currentUser){
@@ -2219,6 +1921,16 @@ window.saveResearch = async function(){
         .trim();
 
 
+    /* =====================================================
+       AI MARI RESPONSE
+       ===================================================== */
+
+    const aiMariResponse =
+        document.getElementById("mariResult")
+        .innerText
+        .trim();
+
+
 
     const hasResearch =
         topic ||
@@ -2226,7 +1938,8 @@ window.saveResearch = async function(){
         objectives ||
         abstract ||
         problemStatement ||
-        apa;
+        apa ||
+        aiMariResponse;
 
 
     if(!hasResearch){
@@ -2285,6 +1998,9 @@ window.saveResearch = async function(){
 
                 apa7:
                     apa || "",
+
+                aiMariResponse:
+                    aiMariResponse || "",
 
                 createdAt:
                     serverTimestamp()
@@ -2509,6 +2225,16 @@ async function loadSavedResearch(){
                     preview +=
                         "🎯 TOPIC\n" +
                         item.topic +
+                        "\n\n";
+
+                }
+
+
+                if(item.aiMariResponse){
+
+                    preview +=
+                        "🤖 AI MARI RESPONSE\n" +
+                        item.aiMariResponse +
                         "\n\n";
 
                 }
@@ -2766,202 +2492,6 @@ async function deleteSavedResearch(id){
     }
 
 }
-
-
-
-/* =========================================================
-   CLEAR ALL RESEARCH — ADMIN ONLY
-   ========================================================= */
-
-window.clearAllResearch = async function(){
-
-    /* =====================================================
-       CHECK LOGIN
-       ===================================================== */
-
-    if(!currentUser){
-
-        alert(
-            "🔐 Please login first."
-        );
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       CHECK ADMIN EMAIL
-       ===================================================== */
-
-    if(
-        currentUser.email !== ADMIN_EMAIL
-    ){
-
-        alert(
-            "⛔ Admin access only."
-        );
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       FIRST CONFIRMATION
-       ===================================================== */
-
-    const confirmed =
-        confirm(
-            "⚠️ WARNING!\n\nThis will delete ALL saved research from Sociology Connect.\n\nAre you sure you want to continue?"
-        );
-
-
-    if(!confirmed){
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       SECOND CONFIRMATION
-       ===================================================== */
-
-    const finalConfirmed =
-        confirm(
-            "🚨 FINAL CONFIRMATION\n\nALL saved research will be permanently deleted.\n\nPress OK to delete everything."
-        );
-
-
-    if(!finalConfirmed){
-
-        return;
-
-    }
-
-
-
-    const button =
-        document.getElementById(
-            "adminClearResearchBtn"
-        );
-
-
-    if(button){
-
-        button.disabled = true;
-
-        button.textContent =
-            "⏳ Clearing Research...";
-
-    }
-
-
-
-    try{
-
-
-        /* =================================================
-           GET ALL RESEARCH DOCUMENTS
-           ================================================= */
-
-        const researchSnapshot =
-            await getDocs(
-
-                collection(
-                    db,
-                    "research"
-                )
-
-            );
-
-
-        const total =
-            researchSnapshot.size;
-
-
-        if(total === 0){
-
-            alert(
-                "📂 There is no saved research to clear."
-            );
-
-
-            if(button){
-
-                button.disabled = false;
-
-                button.textContent =
-                    "🧹 Clear All Research — Admin Only";
-
-            }
-
-            return;
-
-        }
-
-
-
-        /* =================================================
-           DELETE ALL DOCUMENTS
-           ================================================= */
-
-        const deletePromises =
-            researchSnapshot.docs.map(
-                researchDoc =>
-                    deleteDoc(
-                        researchDoc.ref
-                    )
-            );
-
-
-        await Promise.all(
-            deletePromises
-        );
-
-
-
-        /* =================================================
-           RELOAD LIST
-           ================================================= */
-
-        await loadSavedResearch();
-
-
-
-        alert(
-            `✅ Successfully cleared ${total} saved research project${total === 1 ? "" : "s"}.`
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "CLEAR ALL RESEARCH ERROR:",
-            error
-        );
-
-
-        alert(
-            "❌ Could not clear all research. Please check your Firestore Rules and try again."
-        );
-
-
-    }finally{
-
-        if(button){
-
-            button.disabled = false;
-
-            button.textContent =
-                "🧹 Clear All Research — Admin Only";
-
-        }
-
-    }
-
-};
 
 
 

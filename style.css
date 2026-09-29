@@ -1965,3 +1965,886 @@ body:not(.dark) footer strong{
         padding:7px 9px;
     }
 }
+
+/* =========================================================
+   AI STUDY LAB — NEW STYLE ONLY
+   NOTHING ABOVE THIS SECTION IS CHANGED
+========================================================= */
+
+/* Study Lab main area */
+.study-lab,
+.study-lab-page,
+#studyLab{
+    width:100%;
+    max-width:1250px;
+    margin:0 auto;
+    padding:25px 20px 50px;
+    color:var(--text);
+}
+
+/* Study Lab hero */
+.study-lab-hero,
+.study-hero{
+    width:100%;
+    min-height:230px;
+    padding:35px;
+    margin:20px 0 25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:30px;
+
+    background:
+        radial-gradient(circle at 85% 25%,rgba(37,99,235,.12),transparent 35%),
+        linear-gradient(135deg,#ffffff,#f5f9ff);
+
+    border:1px solid #dbe7f5;
+    border-radius:24px;
+
+    box-shadow:0 12px 35px rgba(15,23,42,.08);
+}
+
+.study-lab-hero h1,
+.study-hero h1{
+    font-size:clamp(2rem,5vw,3rem);
+    color:#2563eb;
+    margin-bottom:8px;
+    font-weight:800;
+}
+
+.study-lab-hero p,
+.study-hero p{
+    color:#64748b;
+    max-width:700px;
+}
+
+
+/* Study Lab sections */
+.study-lab section,
+.study-lab-page section,
+#studyLab section{
+    width:100%;
+    margin-bottom:22px;
+}
+
+
+/* Main Study Lab grid */
+.study-lab-grid,
+.study-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+}
+
+
+/* Study Lab cards */
+.study-lab-card,
+.study-card,
+.lab-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
+    color:var(--text);
+
+    transition:.25s ease;
+}
+
+.study-lab-card:hover,
+.study-card:hover,
+.lab-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 40px rgba(37,99,235,.13);
+}
+
+
+/* Full width cards */
+.study-lab-card.full-width,
+.study-card.full-width,
+.lab-card.full-width{
+    grid-column:1 / -1;
+}
+
+
+/* Study Lab headings */
+.study-lab h1,
+.study-lab h2,
+.study-lab h3,
+.study-lab-page h1,
+.study-lab-page h2,
+.study-lab-page h3,
+#studyLab h1,
+#studyLab h2,
+#studyLab h3{
+    color:var(--text);
+}
+
+.study-lab h2,
+.study-lab-page h2,
+#studyLab h2{
+    font-size:1.25rem;
+    margin-bottom:7px;
+}
+
+.study-lab h3,
+.study-lab-page h3,
+#studyLab h3{
+    font-size:1rem;
+    margin-bottom:5px;
+}
+
+
+/* Descriptions */
+.study-lab p,
+.study-lab-page p,
+#studyLab p{
+    color:var(--muted);
+}
+
+
+/* Upload box */
+.upload-box,
+.drop-zone,
+.drop-area,
+.document-drop-zone{
+    width:100%;
+    min-height:190px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:25px;
+
+    border:2px dashed #b9d2f2;
+    border-radius:18px;
+
+    background:#f8fbff;
+
+    transition:.25s ease;
+}
+
+.upload-box:hover,
+.drop-zone:hover,
+.drop-area:hover,
+.document-drop-zone:hover{
+    border-color:#2563eb;
+    background:#eef6ff;
+}
+
+
+/* Upload icon */
+.upload-box .icon,
+.drop-zone .icon,
+.upload-icon{
+    font-size:2.5rem;
+    margin-bottom:10px;
+}
+
+
+/* Buttons */
+.study-lab button,
+.study-lab-page button,
+#studyLab button{
+    border:none;
+
+    background:linear-gradient(
+        135deg,
+        #0a66c2,
+        #2563eb
+    );
+
+    color:#ffffff;
+
+    padding:10px 16px;
+
+    border-radius:11px;
+
+    font-weight:700;
+
+    transition:.2s ease;
+}
+
+.study-lab button:hover,
+.study-lab-page button:hover,
+#studyLab button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 7px 18px rgba(37,99,235,.22);
+}
+
+
+/* Secondary buttons */
+.study-lab .secondary,
+.study-lab-page .secondary,
+#studyLab .secondary{
+    background:#eef4fb;
+    color:#172033;
+    border:1px solid #d8e3ef;
+}
+
+
+/* Inputs */
+.study-lab input,
+.study-lab textarea,
+.study-lab select,
+.study-lab-page input,
+.study-lab-page textarea,
+.study-lab-page select,
+#studyLab input,
+#studyLab textarea,
+#studyLab select{
+    width:100%;
+
+    padding:12px 14px;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    background:var(--card);
+
+    color:var(--text);
+
+    outline:none;
+
+    transition:.2s ease;
+}
+
+.study-lab input:focus,
+.study-lab textarea:focus,
+.study-lab select:focus,
+.study-lab-page input:focus,
+.study-lab-page textarea:focus,
+.study-lab-page select:focus,
+#studyLab input:focus,
+#studyLab textarea:focus,
+#studyLab select:focus{
+    border-color:#2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,.12);
+}
+
+
+/* File input */
+.study-lab input[type="file"],
+.study-lab-page input[type="file"],
+#studyLab input[type="file"]{
+    padding:10px;
+    background:var(--bg);
+}
+
+
+/* Text areas */
+.study-lab textarea,
+.study-lab-page textarea,
+#studyLab textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+
+/* Tool controls */
+.study-controls,
+.tool-controls,
+.generator-controls{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin:12px 0;
+}
+
+
+/* Result areas */
+.result-box,
+.study-result,
+.ai-result,
+.output-box{
+    width:100%;
+
+    min-height:100px;
+
+    margin-top:14px;
+
+    padding:15px;
+
+    background:var(--bg);
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    color:var(--text);
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+}
+
+
+/* Current document */
+.current-document,
+.document-preview{
+    min-height:220px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    background:var(--bg);
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+    padding:25px;
+}
+
+
+/* Document list */
+.document-list{
+    display:grid;
+    gap:12px;
+}
+
+.document-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+
+    padding:14px;
+
+    border:1px solid var(--border);
+
+    background:var(--card);
+
+    border-radius:14px;
+}
+
+
+/* Question cards */
+.question-card{
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-left:4px solid #2563eb;
+
+    border-radius:14px;
+
+    padding:16px;
+
+    margin-bottom:12px;
+
+    color:var(--text);
+}
+
+
+/* Flashcards */
+.flashcards-container,
+.flashcard-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+
+    gap:15px;
+}
+
+.flashcard{
+    min-height:180px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:20px;
+
+    background:linear-gradient(
+        135deg,
+        #eef6ff,
+        #ffffff
+    );
+
+    border:1px solid #d7e6f8;
+
+    border-radius:18px;
+
+    color:#172033;
+
+    box-shadow:0 7px 20px rgba(15,23,42,.06);
+}
+
+
+/* OCR */
+.ocr-progress{
+    width:100%;
+    height:10px;
+
+    overflow:hidden;
+
+    background:#e5e7eb;
+
+    border-radius:999px;
+
+    margin:10px 0;
+}
+
+.ocr-progress-bar{
+    height:100%;
+    width:0%;
+
+    background:linear-gradient(
+        90deg,
+        #0a66c2,
+        #2563eb
+    );
+
+    border-radius:999px;
+
+    transition:.3s ease;
+}
+
+
+/* Search results */
+.search-results{
+    display:grid;
+    gap:10px;
+}
+
+.search-result{
+    padding:14px;
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:13px;
+
+    color:var(--text);
+}
+
+.search-result mark{
+    background:#fff3a3;
+    color:#172033;
+    border-radius:3px;
+    padding:1px 3px;
+}
+
+
+/* Export center */
+.export-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+    gap:14px;
+}
+
+.export-item{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:16px;
+
+    border:1px solid var(--border);
+
+    background:var(--card);
+
+    border-radius:16px;
+
+    color:var(--text);
+}
+
+.export-item:hover{
+    border-color:#2563eb;
+    transform:translateY(-2px);
+}
+
+.export-icon{
+    width:45px;
+    height:45px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    background:#eaf3ff;
+
+    font-size:1.35rem;
+}
+
+
+/* Infographic preview */
+.infographic-preview{
+    width:100%;
+    min-height:300px;
+
+    padding:25px;
+
+    background:#ffffff;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    overflow:hidden;
+}
+
+
+/* PowerPoint preview */
+.presentation-preview{
+    width:100%;
+    min-height:250px;
+
+    padding:25px;
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    color:var(--text);
+}
+
+
+/* Study tips */
+.study-tips{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:14px;
+}
+
+.study-tip{
+    padding:18px;
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+    text-align:center;
+}
+
+.study-tip-number{
+    width:38px;
+    height:38px;
+
+    margin:0 auto 10px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#e8f3ff;
+
+    color:#2563eb;
+
+    font-weight:800;
+}
+
+
+/* Loading */
+.study-loading,
+#studyLoading,
+.loading-overlay{
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(5px);
+}
+
+.loading-box{
+    background:var(--card);
+
+    color:var(--text);
+
+    padding:30px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+
+/* Toast */
+.study-toast,
+#studyToast,
+.toast{
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    z-index:10000;
+
+    padding:13px 18px;
+
+    background:#172033;
+
+    color:#ffffff;
+
+    border-radius:12px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+
+/* =========================================================
+   STUDY LAB DARK MODE
+========================================================= */
+
+body.dark .study-lab-hero,
+body.dark .study-hero{
+    background:
+        radial-gradient(circle at 85% 25%,rgba(37,99,235,.22),transparent 35%),
+        linear-gradient(135deg,#111c2f,#0f1b30);
+
+    border-color:#26364d;
+}
+
+body.dark .upload-box,
+body.dark .drop-zone,
+body.dark .drop-area,
+body.dark .document-drop-zone{
+    background:#0f1b2d;
+    border-color:#355477;
+}
+
+body.dark .upload-box:hover,
+body.dark .drop-zone:hover,
+body.dark .drop-area:hover,
+body.dark .document-drop-zone:hover{
+    background:#122d4d;
+    border-color:#3b82f6;
+}
+
+body.dark .study-lab input,
+body.dark .study-lab textarea,
+body.dark .study-lab select,
+body.dark .study-lab-page input,
+body.dark .study-lab-page textarea,
+body.dark .study-lab-page select,
+body.dark #studyLab input,
+body.dark #studyLab textarea,
+body.dark #studyLab select{
+    background:#0f1b2d;
+    color:#f8fafc;
+    border-color:#334963;
+}
+
+body.dark .study-lab input::placeholder,
+body.dark .study-lab textarea::placeholder,
+body.dark .study-lab-page input::placeholder,
+body.dark .study-lab-page textarea::placeholder,
+body.dark #studyLab input::placeholder,
+body.dark #studyLab textarea::placeholder{
+    color:#8fa2ba;
+}
+
+body.dark .result-box,
+body.dark .study-result,
+body.dark .ai-result,
+body.dark .output-box,
+body.dark .current-document,
+body.dark .document-preview{
+    background:#0f1b2d;
+    border-color:#26364d;
+    color:#f8fafc;
+}
+
+body.dark .flashcard{
+    background:linear-gradient(
+        135deg,
+        #122d4d,
+        #111c2f
+    );
+
+    border-color:#2b4565;
+
+    color:#f8fafc;
+}
+
+body.dark .export-icon,
+body.dark .study-tip-number{
+    background:#122d4d;
+}
+
+body.dark .search-result mark{
+    background:#6b5b00;
+    color:#ffffff;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:1000px){
+
+    .study-lab-grid,
+    .study-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .export-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .study-tips{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .study-controls,
+    .tool-controls,
+    .generator-controls{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:768px){
+
+    .study-lab,
+    .study-lab-page,
+    #studyLab{
+        padding:15px 12px 35px;
+    }
+
+    .study-lab-hero,
+    .study-hero{
+        flex-direction:column;
+        align-items:flex-start;
+
+        padding:25px 20px;
+
+        margin:15px 0 20px;
+    }
+
+    .study-lab-hero h1,
+    .study-hero h1{
+        font-size:2rem;
+    }
+
+    .study-lab-grid,
+    .study-grid{
+        grid-template-columns:1fr;
+    }
+
+    .study-lab-card.full-width,
+    .study-card.full-width,
+    .lab-card.full-width{
+        grid-column:auto;
+    }
+
+    .study-controls,
+    .tool-controls,
+    .generator-controls{
+        grid-template-columns:1fr;
+    }
+
+    .export-grid{
+        grid-template-columns:1fr;
+    }
+
+    .study-tips{
+        grid-template-columns:1fr;
+    }
+
+    .document-item{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .study-lab button,
+    .study-lab-page button,
+    #studyLab button{
+        width:100%;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
+
+@media(max-width:480px){
+
+    .study-lab,
+    .study-lab-page,
+    #studyLab{
+        padding:10px 8px 30px;
+    }
+
+    .study-lab-hero,
+    .study-hero{
+        padding:20px 16px;
+        border-radius:18px;
+    }
+
+    .study-lab-hero h1,
+    .study-hero h1{
+        font-size:1.7rem;
+    }
+
+    .study-lab-card,
+    .study-card,
+    .lab-card{
+        padding:15px;
+        border-radius:17px;
+    }
+
+    .upload-box,
+    .drop-zone,
+    .drop-area,
+    .document-drop-zone{
+        min-height:160px;
+        padding:18px 12px;
+    }
+}

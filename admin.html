@@ -49,9 +49,7 @@ body{
     color:var(--text);
     min-height:100vh;
     line-height:1.5;
-    transition:
-        background .3s ease,
-        color .3s ease;
+    transition:background .3s ease,color .3s ease;
 }
 
 button,
@@ -65,6 +63,13 @@ button{
     -webkit-tap-highlight-color:transparent;
 }
 
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+    outline:3px solid rgba(0,123,255,.18);
+    outline-offset:2px;
+}
+
 /* =========================================================
    HEADER
    ========================================================= */
@@ -74,30 +79,15 @@ header{
     overflow:hidden;
 
     background:
-        radial-gradient(
-            circle at 15% 20%,
-            rgba(255,255,255,.18),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 85% 80%,
-            rgba(255,255,255,.12),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #0084ff,
-            #0056b3
-        );
+        radial-gradient(circle at 15% 20%,rgba(255,255,255,.18),transparent 30%),
+        radial-gradient(circle at 85% 80%,rgba(255,255,255,.12),transparent 30%),
+        linear-gradient(135deg,#0084ff,#0056b3);
 
     color:#fff;
-
     padding:42px 18px 35px;
-
     text-align:center;
 
-    box-shadow:
-        0 8px 25px rgba(0,70,150,.18);
+    box-shadow:0 8px 25px rgba(0,70,150,.18);
 }
 
 header h1{
@@ -123,27 +113,23 @@ header p{
     gap:8px;
 
     margin-top:18px;
-
     padding:10px 17px;
 
     background:rgba(255,255,255,.13);
     color:#fff;
 
     border:1px solid rgba(255,255,255,.35);
-
     border-radius:999px;
 
     font-size:14px;
     font-weight:700;
-
     cursor:pointer;
 
     backdrop-filter:blur(8px);
 
-    transition:
-        background .25s ease,
-        transform .25s ease,
-        box-shadow .25s ease;
+    transition:background .25s ease,
+                transform .25s ease,
+                box-shadow .25s ease;
 }
 
 .dark-mode-btn:hover{
@@ -162,42 +148,31 @@ nav{
     z-index:50;
 
     background:rgba(0,105,217,.96);
-
     padding:12px 10px;
-
     text-align:center;
 
-    box-shadow:
-        0 4px 14px rgba(0,0,0,.08);
-
+    box-shadow:0 4px 14px rgba(0,0,0,.08);
     backdrop-filter:blur(10px);
 }
 
 nav a{
     display:inline-block;
-
     color:#fff;
-
     text-decoration:none;
 
     font-weight:700;
     font-size:14px;
 
     padding:8px 12px;
-
     margin:2px;
-
     border-radius:9px;
 
-    transition:
-        background .2s ease,
-        transform .2s ease;
+    transition:background .2s ease,transform .2s ease;
 }
 
 nav a:hover{
     background:rgba(255,255,255,.14);
     transform:translateY(-1px);
-    text-decoration:none;
 }
 
 /* =========================================================
@@ -206,10 +181,7 @@ nav a:hover{
 
 .container{
     width:min(1180px,calc(100% - 28px));
-
     margin:28px auto;
-
-    padding:0;
 }
 
 /* =========================================================
@@ -218,15 +190,11 @@ nav a:hover{
 
 #accessDenied{
     background:var(--card-bg);
-
     padding:42px 25px;
-
     border-radius:22px;
-
     text-align:center;
 
     box-shadow:var(--shadow);
-
     border:1px solid var(--border);
 }
 
@@ -250,85 +218,232 @@ nav a:hover{
 }
 
 /* =========================================================
-   STATISTICS
+   MODERN STATISTICS CARD
    ========================================================= */
 
-.grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(4,1fr);
-
-    gap:17px;
-
+.stats-wrapper{
+    width:100%;
     margin-bottom:24px;
+
+    padding:24px;
+
+    background:var(--card-bg);
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    box-shadow:var(--shadow);
+
+    transition:
+        background .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease;
 }
 
-.stat{
+.stats-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:19px;
+}
+
+.stats-kicker{
+    display:inline-block;
+
+    color:var(--primary);
+
+    font-size:11px;
+    font-weight:800;
+
+    letter-spacing:1.6px;
+
+    margin-bottom:3px;
+}
+
+.stats-header h2{
+    margin:0;
+
+    color:var(--text);
+
+    font-size:22px;
+    font-weight:800;
+}
+
+.stats-header p{
+    margin-top:4px;
+
+    color:var(--muted);
+
+    font-size:13px;
+}
+
+/* =========================================================
+   STAT MINI CARDS
+   ========================================================= */
+
+.stats-grid{
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:13px;
+}
+
+.stat-card{
     position:relative;
+
+    min-height:100px;
+
+    padding:16px;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
     overflow:hidden;
 
-    background:
-        linear-gradient(
-            145deg,
-            #0785ff,
-            #0056b3
-        );
+    background:#f8fbff;
 
-    color:#fff;
-
-    padding:22px 18px;
-
-    min-height:145px;
-
-    border-radius:20px;
-
-    text-align:left;
-
-    box-shadow:
-        0 8px 22px rgba(0,90,190,.16);
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:17px;
 
     transition:
         transform .25s ease,
-        box-shadow .25s ease;
+        box-shadow .25s ease,
+        border-color .25s ease;
 }
 
-.stat::after{
-    content:"";
+.stat-card:hover{
+    transform:translateY(-4px);
 
-    position:absolute;
-
-    width:90px;
-    height:90px;
-
-    right:-30px;
-    top:-30px;
-
-    background:rgba(255,255,255,.09);
-
-    border-radius:50%;
+    box-shadow:
+        0 12px 25px rgba(15,23,42,.10);
 }
 
-.stat:hover{
-    transform:translateY(-5px);
-    box-shadow:0 15px 30px rgba(0,90,190,.22);
-}
+/* icon */
 
 .stat-icon{
-    font-size:27px;
-    margin-bottom:10px;
+    width:48px;
+    height:48px;
+
+    min-width:48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:15px;
+
+    font-size:22px;
+
+    box-shadow:
+        0 5px 14px rgba(0,0,0,.07);
 }
 
-.stat h3{
-    font-size:31px;
+.stat-info{
+    display:flex;
+    flex-direction:column;
+
+    gap:3px;
+
+    position:relative;
+    z-index:2;
+}
+
+.stat-label{
+    color:#737d8c;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.stat-info strong{
+    color:#172033;
+
+    font-size:25px;
     line-height:1;
-    margin-bottom:7px;
+
+    font-weight:850;
 }
 
-.stat p{
-    opacity:.9;
-    font-size:14px;
-    font-weight:600;
+.stat-line{
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:3px;
+}
+
+/* =========================================================
+   INDIVIDUAL STAT DESIGNS
+   ========================================================= */
+
+.students-stat .stat-icon{
+    background:#e8f2ff;
+}
+
+.students-stat .stat-line{
+    background:#007bff;
+}
+
+.posts-stat .stat-icon{
+    background:#f0eaff;
+}
+
+.posts-stat .stat-line{
+    background:#7657e8;
+}
+
+.comments-stat .stat-icon{
+    background:#e8f8f1;
+}
+
+.comments-stat .stat-line{
+    background:#20a66a;
+}
+
+.likes-stat .stat-icon{
+    background:#fff0f3;
+}
+
+.likes-stat .stat-line{
+    background:#e63961;
+}
+
+.news-stat .stat-icon{
+    background:#fff6df;
+}
+
+.news-stat .stat-line{
+    background:#f0a500;
+}
+
+.events-stat .stat-icon{
+    background:#eaf7ff;
+}
+
+.events-stat .stat-line{
+    background:#00a6d6;
+}
+
+.research-stat .stat-icon{
+    background:#eeeaff;
+}
+
+.research-stat .stat-line{
+    background:#6f42c1;
+}
+
+.reports-stat .stat-icon{
+    background:#fff0e8;
+}
+
+.reports-stat .stat-line{
+    background:#e85d04;
 }
 
 /* =========================================================
@@ -365,7 +480,6 @@ nav a:hover{
     margin-bottom:10px;
 
     font-size:21px;
-
     font-weight:800;
 }
 
@@ -385,10 +499,7 @@ nav a:hover{
 
 .control-grid{
     display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
+    grid-template-columns:repeat(3,1fr);
     gap:14px;
 }
 
@@ -398,11 +509,7 @@ nav a:hover{
     min-height:78px;
 
     background:
-        linear-gradient(
-            145deg,
-            var(--soft-bg),
-            #eef6ff
-        );
+        linear-gradient(145deg,var(--soft-bg),#eef6ff);
 
     color:var(--primary-dark);
 
@@ -415,7 +522,6 @@ nav a:hover{
     cursor:pointer;
 
     font-weight:800;
-
     font-size:14px;
 
     text-align:left;
@@ -428,19 +534,13 @@ nav a:hover{
 }
 
 .control-btn:hover{
-    background:
-        linear-gradient(
-            145deg,
-            #007bff,
-            #0056b3
-        );
+    background:linear-gradient(145deg,#007bff,#0056b3);
 
     color:#fff;
 
     transform:translateY(-3px);
 
-    box-shadow:
-        0 10px 22px rgba(0,123,255,.2);
+    box-shadow:0 10px 22px rgba(0,123,255,.2);
 }
 
 /* =========================================================
@@ -449,10 +549,7 @@ nav a:hover{
 
 .quick-actions{
     display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
+    grid-template-columns:repeat(3,1fr);
     gap:11px;
 }
 
@@ -493,7 +590,6 @@ select{
     outline:none;
 
     background:var(--input-bg);
-
     color:var(--text);
 
     transition:
@@ -508,8 +604,7 @@ select:focus{
     border-color:#007bff;
 
     box-shadow:
-        0 0 0 4px
-        rgba(0,123,255,.09);
+        0 0 0 4px rgba(0,123,255,.09);
 }
 
 textarea{
@@ -527,12 +622,7 @@ textarea::placeholder{
    ========================================================= */
 
 button{
-    background:
-        linear-gradient(
-            135deg,
-            #0785ff,
-            #0066d6
-        );
+    background:linear-gradient(135deg,#0785ff,#0066d6);
 
     color:#fff;
 
@@ -559,8 +649,7 @@ button:hover{
 
     transform:translateY(-2px);
 
-    box-shadow:
-        0 6px 15px rgba(0,123,255,.16);
+    box-shadow:0 6px 15px rgba(0,123,255,.16);
 }
 
 button:active{
@@ -568,39 +657,19 @@ button:active{
 }
 
 .delete-btn{
-    background:
-        linear-gradient(
-            135deg,
-            #e83e4d,
-            #c82333
-        );
+    background:linear-gradient(135deg,#e83e4d,#c82333);
 }
 
 .delete-btn:hover{
-    background:
-        linear-gradient(
-            135deg,
-            #dc3545,
-            #b02a37
-        );
+    background:linear-gradient(135deg,#dc3545,#b02a37);
 }
 
 .logout-btn{
-    background:
-        linear-gradient(
-            135deg,
-            #6c757d,
-            #545b62
-        );
+    background:linear-gradient(135deg,#6c757d,#545b62);
 }
 
 .logout-btn:hover{
-    background:
-        linear-gradient(
-            135deg,
-            #6c757d,
-            #495057
-        );
+    background:linear-gradient(135deg,#6c757d,#495057);
 }
 
 .full-button{
@@ -615,10 +684,7 @@ button:active{
 
 .analytics-grid{
     display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
+    grid-template-columns:repeat(3,1fr);
     gap:15px;
 }
 
@@ -676,7 +742,9 @@ button:active{
 
 .item:hover{
     transform:translateY(-2px);
-    box-shadow:0 8px 20px rgba(15,23,42,.07);
+
+    box-shadow:
+        0 8px 20px rgba(15,23,42,.07);
 }
 
 .item h3{
@@ -695,7 +763,7 @@ button:active{
 }
 
 /* =========================================================
-   NEWS LIST
+   NEWS
    ========================================================= */
 
 #newsList{
@@ -715,13 +783,11 @@ button:active{
     padding:21px;
 
     border-top:4px solid var(--primary);
-
     border-left:1px solid var(--border);
 
     border-radius:16px;
 
-    box-shadow:
-        0 5px 18px rgba(0,0,0,.06);
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
 
     transition:.25s;
 }
@@ -754,12 +820,7 @@ button:active{
 }
 
 .students-summary{
-    background:
-        linear-gradient(
-            135deg,
-            #edf6ff,
-            #f7fbff
-        );
+    background:linear-gradient(135deg,#edf6ff,#f7fbff);
 
     border:1px solid var(--border);
 
@@ -781,15 +842,9 @@ button:active{
 .student-card{
     position:relative;
 
-    background:
-        linear-gradient(
-            135deg,
-            #f8fbff,
-            #ffffff
-        );
+    background:linear-gradient(135deg,#f8fbff,#ffffff);
 
     border:1px solid #dceaff;
-
     border-left:5px solid var(--primary);
 
     padding:20px;
@@ -807,8 +862,7 @@ button:active{
     transform:translateY(-3px);
 
     box-shadow:
-        0 10px 24px
-        rgba(0,123,255,.09);
+        0 10px 24px rgba(0,123,255,.09);
 }
 
 .student-card h3{
@@ -842,7 +896,6 @@ button:active{
     border-radius:999px;
 
     font-size:12px;
-
     font-weight:800;
 
     margin-top:9px;
@@ -853,15 +906,9 @@ button:active{
    ========================================================= */
 
 .report-box{
-    background:
-        linear-gradient(
-            135deg,
-            #fff8f8,
-            #fffdfd
-        );
+    background:linear-gradient(135deg,#fff8f8,#fffdfd);
 
     border:1px solid #ffd6d6;
-
     border-left:5px solid var(--danger);
 
     padding:19px;
@@ -889,7 +936,6 @@ button:active{
     background:#fffafa;
 
     border:1px solid #ffd6d6;
-
     border-left:5px solid var(--danger);
 
     padding:20px;
@@ -905,7 +951,9 @@ button:active{
 
 .report-card:hover{
     transform:translateY(-2px);
-    box-shadow:0 9px 22px rgba(220,53,69,.08);
+
+    box-shadow:
+        0 9px 22px rgba(220,53,69,.08);
 }
 
 .report-card h3{
@@ -927,10 +975,14 @@ button:active{
 
 .report-status{
     display:inline-flex;
+
     padding:6px 11px;
+
     border-radius:999px;
+
     font-size:12px;
     font-weight:800;
+
     margin-top:10px;
 }
 
@@ -956,16 +1008,7 @@ button:active{
 }
 
 .review-btn{
-    background:
-        linear-gradient(
-            135deg,
-            #20a464,
-            #198754
-        );
-}
-
-.review-btn:hover{
-    background:#146c43;
+    background:linear-gradient(135deg,#20a464,#198754);
 }
 
 /* =========================================================
@@ -973,12 +1016,7 @@ button:active{
    ========================================================= */
 
 .notification-form{
-    background:
-        linear-gradient(
-            135deg,
-            #f8fbff,
-            #ffffff
-        );
+    background:linear-gradient(135deg,#f8fbff,#ffffff);
 
     border:1px solid var(--border);
 
@@ -1006,12 +1044,7 @@ button:active{
 }
 
 .notification-summary{
-    background:
-        linear-gradient(
-            135deg,
-            #eaf4ff,
-            #f4f9ff
-        );
+    background:linear-gradient(135deg,#eaf4ff,#f4f9ff);
 
     border:1px solid #cfe5ff;
 
@@ -1031,15 +1064,9 @@ button:active{
 }
 
 .notification-card{
-    background:
-        linear-gradient(
-            135deg,
-            #f8fbff,
-            #ffffff
-        );
+    background:linear-gradient(135deg,#f8fbff,#ffffff);
 
     border:1px solid var(--border);
-
     border-left:5px solid var(--primary);
 
     padding:20px;
@@ -1057,8 +1084,7 @@ button:active{
     transform:translateY(-3px);
 
     box-shadow:
-        0 10px 24px
-        rgba(0,123,255,.09);
+        0 10px 24px rgba(0,123,255,.09);
 }
 
 .notification-card h3{
@@ -1110,12 +1136,7 @@ button:active{
    ========================================================= */
 
 footer{
-    background:
-        linear-gradient(
-            135deg,
-            #18202d,
-            #0d121b
-        );
+    background:linear-gradient(135deg,#18202d,#0d121b);
 
     color:#dbe4f0;
 
@@ -1143,51 +1164,28 @@ body.dark{
     --input-bg:#0d1828;
     --soft-bg:#142237;
 
-    --shadow:
-        0 10px 35px rgba(0,0,0,.35);
-
-    --shadow-hover:
-        0 15px 40px rgba(0,0,0,.45);
+    --shadow:0 10px 35px rgba(0,0,0,.35);
+    --shadow-hover:0 15px 40px rgba(0,0,0,.45);
 
     background:var(--body-bg);
     color:var(--text);
 }
 
-/* Header */
-
 body.dark header{
     background:
-        radial-gradient(
-            circle at 15% 20%,
-            rgba(59,130,246,.20),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 85% 80%,
-            rgba(37,99,235,.15),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #062957,
-            #03152e
-        );
+        radial-gradient(circle at 15% 20%,rgba(59,130,246,.20),transparent 30%),
+        radial-gradient(circle at 85% 80%,rgba(37,99,235,.15),transparent 30%),
+        linear-gradient(135deg,#062957,#03152e);
 }
 
-/* Navigation */
-
 body.dark nav{
-    background:
-        rgba(8,27,50,.96);
-
+    background:rgba(8,27,50,.96);
     border-bottom:1px solid #203754;
 }
 
 body.dark nav a{
     color:#e5edf8;
 }
-
-/* Access */
 
 body.dark #accessDenied{
     background:#101b2d;
@@ -1198,7 +1196,67 @@ body.dark #accessDenied p{
     color:#aebbd0;
 }
 
-/* Cards */
+/* stats dark */
+
+body.dark .stats-wrapper{
+    background:#101b2d;
+    border-color:#263952;
+}
+
+body.dark .stats-header h2{
+    color:#f4f7fb;
+}
+
+body.dark .stats-header p{
+    color:#aebbd0;
+}
+
+body.dark .stat-card{
+    background:#142237;
+    border-color:#2b405c;
+}
+
+body.dark .stat-label{
+    color:#aebbd0;
+}
+
+body.dark .stat-info strong{
+    color:#fff;
+}
+
+body.dark .students-stat .stat-icon{
+    background:rgba(0,123,255,.16);
+}
+
+body.dark .posts-stat .stat-icon{
+    background:rgba(118,87,232,.16);
+}
+
+body.dark .comments-stat .stat-icon{
+    background:rgba(32,166,106,.16);
+}
+
+body.dark .likes-stat .stat-icon{
+    background:rgba(230,57,97,.16);
+}
+
+body.dark .news-stat .stat-icon{
+    background:rgba(240,165,0,.16);
+}
+
+body.dark .events-stat .stat-icon{
+    background:rgba(0,166,214,.16);
+}
+
+body.dark .research-stat .stat-icon{
+    background:rgba(111,66,193,.16);
+}
+
+body.dark .reports-stat .stat-icon{
+    background:rgba(232,93,4,.16);
+}
+
+/* cards */
 
 body.dark .card{
     background:#101b2d;
@@ -1214,15 +1272,10 @@ body.dark .card-description{
     color:#aebbd0;
 }
 
-/* Control */
+/* control */
 
 body.dark .control-btn{
-    background:
-        linear-gradient(
-            145deg,
-            #142237,
-            #182a43
-        );
+    background:linear-gradient(145deg,#142237,#182a43);
 
     color:#bfdbfe;
 
@@ -1230,17 +1283,11 @@ body.dark .control-btn{
 }
 
 body.dark .control-btn:hover{
-    background:
-        linear-gradient(
-            145deg,
-            #1762a8,
-            #0b4783
-        );
-
+    background:linear-gradient(145deg,#1762a8,#0b4783);
     color:#fff;
 }
 
-/* Analytics */
+/* analytics */
 
 body.dark .analytics-box{
     background:#142237;
@@ -1255,7 +1302,7 @@ body.dark .analytics-box p{
     color:#c7d4e5;
 }
 
-/* Forms */
+/* forms */
 
 body.dark input,
 body.dark textarea,
@@ -1276,11 +1323,10 @@ body.dark select:focus{
     border-color:#60a5fa;
 
     box-shadow:
-        0 0 0 4px
-        rgba(96,165,250,.12);
+        0 0 0 4px rgba(96,165,250,.12);
 }
 
-/* Content */
+/* content */
 
 body.dark .item{
     background:#142237;
@@ -1298,8 +1344,6 @@ body.dark .item small{
     color:#91a4bb;
 }
 
-/* News */
-
 body.dark #newsList .item{
     background:#142237;
     color:#f8fafc;
@@ -1312,27 +1356,17 @@ body.dark #newsList .item p{
     color:#c7d4e5;
 }
 
-/* Students */
+/* students */
 
 body.dark .students-summary{
-    background:
-        linear-gradient(
-            135deg,
-            #122a46,
-            #142237
-        );
+    background:linear-gradient(135deg,#122a46,#142237);
 
     border-color:#2b405c;
     color:#60a5fa;
 }
 
 body.dark .student-card{
-    background:
-        linear-gradient(
-            135deg,
-            #142237,
-            #172a43
-        );
+    background:linear-gradient(135deg,#142237,#172a43);
 
     border-color:#2b405c;
     border-left-color:#3b82f6;
@@ -1355,16 +1389,11 @@ body.dark .student-badge{
     color:#93c5fd;
 }
 
-/* Reports */
+/* reports */
 
 body.dark .report-box,
 body.dark .report-card{
-    background:
-        linear-gradient(
-            135deg,
-            #251821,
-            #21151c
-        );
+    background:linear-gradient(135deg,#251821,#21151c);
 
     border-color:#63333d;
     color:#f8fafc;
@@ -1379,23 +1408,19 @@ body.dark .report-card small{
     color:#9eacbd;
 }
 
-/* Notifications */
+/* notifications */
 
 body.dark .notification-form,
 body.dark .notification-card{
-    background:
-        linear-gradient(
-            135deg,
-            #142237,
-            #172a43
-        );
+    background:linear-gradient(135deg,#142237,#172a43);
 
     border-color:#2b405c;
     color:#f8fafc;
 }
 
-body.dark .notification-heading{
-    color:#60a5fa;
+body.dark .notification-heading,
+body.dark .notification-form h3{
+    color:#60a5fa !important;
 }
 
 body.dark .notification-summary{
@@ -1416,89 +1441,38 @@ body.dark .notification-card small{
     color:#91a4bb;
 }
 
-/* Inline heading compatibility */
-
-body.dark .notification-form h3{
-    color:#60a5fa !important;
-}
-
-/* Footer */
-
 body.dark footer{
-    background:
-        linear-gradient(
-            135deg,
-            #050a12,
-            #080d16
-        );
-
+    background:linear-gradient(135deg,#050a12,#080d16);
     color:#aebbd0;
 }
-
-/* Status */
 
 body.dark #status{
     color:#dbeafe;
 }
 
 /* =========================================================
-   GLOBAL TRANSITIONS
-   ========================================================= */
-
-header,
-nav,
-.card,
-#accessDenied,
-.analytics-box,
-.control-btn,
-.item,
-.student-card,
-.notification-form,
-.notification-card,
-.report-card,
-.report-box,
-input,
-textarea,
-select,
-footer{
-    transition:
-        background .3s ease,
-        color .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-}
-
-/* =========================================================
-   TABLET
+   RESPONSIVE
    ========================================================= */
 
 @media(max-width:950px){
 
-    .grid{
-        grid-template-columns:
-            repeat(2,1fr);
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
     .control-grid{
-        grid-template-columns:
-            repeat(2,1fr);
+        grid-template-columns:repeat(2,1fr);
     }
 
     .analytics-grid{
-        grid-template-columns:
-            repeat(2,1fr);
+        grid-template-columns:repeat(2,1fr);
     }
 
     .quick-actions{
-        grid-template-columns:
-            repeat(2,1fr);
+        grid-template-columns:repeat(2,1fr);
     }
 
 }
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
 
 @media(max-width:600px){
 
@@ -1529,30 +1503,54 @@ footer{
         margin:17px auto;
     }
 
-    .grid{
-        grid-template-columns:
-            repeat(2,1fr);
+    /* stats */
 
+    .stats-wrapper{
+        padding:18px;
+        border-radius:20px;
+    }
+
+    .stats-header{
+        margin-bottom:15px;
+    }
+
+    .stats-header h2{
+        font-size:19px;
+    }
+
+    .stats-header p{
+        font-size:12px;
+    }
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
         gap:10px;
     }
 
-    .stat{
-        min-height:125px;
-        padding:17px 12px;
-        border-radius:16px;
+    .stat-card{
+        min-height:88px;
+        padding:12px;
+        gap:9px;
+        border-radius:15px;
     }
 
     .stat-icon{
-        font-size:23px;
+        width:40px;
+        height:40px;
+        min-width:40px;
+        border-radius:12px;
+        font-size:18px;
     }
 
-    .stat h3{
-        font-size:25px;
+    .stat-label{
+        font-size:10px;
     }
 
-    .stat p{
-        font-size:12px;
+    .stat-info strong{
+        font-size:21px;
     }
+
+    /* other */
 
     .card{
         padding:20px 16px;
@@ -1597,26 +1595,14 @@ footer{
         width:100%;
     }
 
-    .report-actions{
-        flex-direction:column;
-    }
-
-    .report-actions button{
-        width:100%;
-    }
-
-    .notification-tools{
-        flex-direction:column;
-    }
-
-    .notification-tools button{
-        width:100%;
-    }
-
+    .report-actions,
+    .notification-tools,
     .notification-actions{
         flex-direction:column;
     }
 
+    .report-actions button,
+    .notification-tools button,
     .notification-actions button{
         width:100%;
     }
@@ -1636,18 +1622,10 @@ footer{
 
 }
 
-/* =========================================================
-   SMALL PHONE
-   ========================================================= */
-
 @media(max-width:380px){
 
-    .grid{
+    .stats-grid{
         grid-template-columns:1fr;
-    }
-
-    .stat{
-        min-height:auto;
     }
 
 }
@@ -1663,9 +1641,7 @@ footer{
 
 <header>
 
-    <h1>
-        🛠️ Admin Dashboard
-    </h1>
+    <h1>🛠️ Admin Dashboard</h1>
 
     <p>
         Sociology Connect – Arsi University
@@ -1690,17 +1666,9 @@ footer{
 
 <nav>
 
-    <a href="index.html">
-        🏠 Home
-    </a>
-
-    <a href="profile.html">
-        👤 Profile
-    </a>
-
-    <a href="login.html">
-        🔐 Login
-    </a>
+    <a href="index.html">🏠 Home</a>
+    <a href="profile.html">👤 Profile</a>
+    <a href="login.html">🔐 Login</a>
 
 </nav>
 
@@ -1713,9 +1681,7 @@ footer{
 
 <div id="accessDenied">
 
-    <h2>
-        🔒 Admin Access
-    </h2>
+    <h2>🔒 Admin Access</h2>
 
     <p>
         Please login with the administrator account
@@ -1740,57 +1706,234 @@ footer{
 
 
 <!-- =========================================================
-     STATISTICS
+     MODERN STATISTICS
+     ONE BIG CARD + 8 MINI CARDS
      ========================================================= -->
 
-<div class="grid">
+<div class="stats-wrapper">
 
-    <div class="stat">
-        <div class="stat-icon">👥</div>
-        <h3 id="studentsCount">0</h3>
-        <p>Students</p>
+    <div class="stats-header">
+
+        <div>
+
+            <span class="stats-kicker">
+                ADMIN OVERVIEW
+            </span>
+
+            <h2>
+                📊 Dashboard Overview
+            </h2>
+
+            <p>
+                Quick overview of Sociology Connect activity
+            </p>
+
+        </div>
+
     </div>
 
-    <div class="stat">
-        <div class="stat-icon">📝</div>
-        <h3 id="postsCount">0</h3>
-        <p>Posts</p>
-    </div>
 
-    <div class="stat">
-        <div class="stat-icon">💬</div>
-        <h3 id="commentsCount">0</h3>
-        <p>Comments</p>
-    </div>
+    <div class="stats-grid">
 
-    <div class="stat">
-        <div class="stat-icon">❤️</div>
-        <h3 id="likesCount">0</h3>
-        <p>Likes</p>
-    </div>
+        <!-- STUDENTS -->
 
-    <div class="stat">
-        <div class="stat-icon">📰</div>
-        <h3 id="newsCount">0</h3>
-        <p>News</p>
-    </div>
+        <div class="stat-card students-stat">
 
-    <div class="stat">
-        <div class="stat-icon">📅</div>
-        <h3 id="eventsCount">0</h3>
-        <p>Events</p>
-    </div>
+            <div class="stat-icon">
+                👥
+            </div>
 
-    <div class="stat">
-        <div class="stat-icon">🔬</div>
-        <h3 id="researchCount">0</h3>
-        <p>Research</p>
-    </div>
+            <div class="stat-info">
 
-    <div class="stat">
-        <div class="stat-icon">🚩</div>
-        <h3 id="reportsCount">0</h3>
-        <p>Reports</p>
+                <span class="stat-label">
+                    Students
+                </span>
+
+                <strong id="studentsCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- POSTS -->
+
+        <div class="stat-card posts-stat">
+
+            <div class="stat-icon">
+                📝
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    Posts
+                </span>
+
+                <strong id="postsCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- COMMENTS -->
+
+        <div class="stat-card comments-stat">
+
+            <div class="stat-icon">
+                💬
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    Comments
+                </span>
+
+                <strong id="commentsCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- LIKES -->
+
+        <div class="stat-card likes-stat">
+
+            <div class="stat-icon">
+                ❤️
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    Likes
+                </span>
+
+                <strong id="likesCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- NEWS -->
+
+        <div class="stat-card news-stat">
+
+            <div class="stat-icon">
+                📰
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    News
+                </span>
+
+                <strong id="newsCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- EVENTS -->
+
+        <div class="stat-card events-stat">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    Events
+                </span>
+
+                <strong id="eventsCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- RESEARCH -->
+
+        <div class="stat-card research-stat">
+
+            <div class="stat-icon">
+                🔬
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    Research
+                </span>
+
+                <strong id="researchCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
+
+        <!-- REPORTS -->
+
+        <div class="stat-card reports-stat">
+
+            <div class="stat-icon">
+                🚩
+            </div>
+
+            <div class="stat-info">
+
+                <span class="stat-label">
+                    Reports
+                </span>
+
+                <strong id="reportsCount">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="stat-line"></div>
+
+        </div>
+
     </div>
 
 </div>
@@ -2511,16 +2654,8 @@ import {
 from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
-/* =========================================================
-   ADMIN
-   ========================================================= */
-
 const ADMIN_EMAIL = "yom@gmail.com";
 
-
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
 
 const dashboard =
     document.getElementById("dashboard");
@@ -2559,10 +2694,6 @@ const notificationSummary =
     document.getElementById("notificationSummary");
 
 
-/* =========================================================
-   ESCAPE HTML
-   ========================================================= */
-
 function escapeHTML(value){
 
     return String(value ?? "")
@@ -2574,10 +2705,6 @@ function escapeHTML(value){
 
 }
 
-
-/* =========================================================
-   FORMAT DATE
-   ========================================================= */
 
 function formatTimestamp(timestamp){
 
@@ -2644,9 +2771,7 @@ async function updateStats(){
         let comments = 0;
         let likes = 0;
 
-        for(
-            const post of postsSnap.docs
-        ){
+        for(const post of postsSnap.docs){
 
             const commentSnap =
                 await getDocs(
@@ -2703,10 +2828,7 @@ async function updateStats(){
 
     }catch(error){
 
-        console.error(
-            "Stats Error:",
-            error
-        );
+        console.error("Stats Error:",error);
 
         notificationSummary.textContent =
             "⚠️ Notification data could not be loaded.";
@@ -2717,7 +2839,7 @@ async function updateStats(){
 
 
 /* =========================================================
-   AUTH CHECK
+   AUTH
    ========================================================= */
 
 onAuthStateChanged(
@@ -2758,11 +2880,10 @@ onAuthStateChanged(
 
 
 /* =========================================================
-   STUDENT MANAGEMENT
+   STUDENTS
    ========================================================= */
 
 let allStudents = [];
-
 
 async function loadStudents(){
 
@@ -2787,7 +2908,7 @@ async function loadStudents(){
 
         allStudents =
             usersSnapshot.docs.map(
-                (item)=>({
+                item=>({
                     id:item.id,
                     ...item.data()
                 })
@@ -2797,10 +2918,7 @@ async function loadStudents(){
 
     }catch(error){
 
-        console.error(
-            "Students Error:",
-            error
-        );
+        console.error("Students Error:",error);
 
         summary.textContent =
             "❌ Could not load students.";
@@ -2835,114 +2953,102 @@ function renderStudents(students){
 
     }
 
-    students.forEach(
-        (student)=>{
+    students.forEach(student=>{
 
-            const div =
-                document.createElement("div");
+        const div =
+            document.createElement("div");
 
-            div.className =
-                "student-card";
+        div.className =
+            "student-card";
 
-            const name =
-                student.name ||
-                student.displayName ||
-                "Unnamed Student";
+        const name =
+            student.name ||
+            student.displayName ||
+            "Unnamed Student";
 
-            const email =
-                student.email ||
-                "Email not available";
+        const email =
+            student.email ||
+            "Email not available";
 
-            div.innerHTML = `
+        div.innerHTML = `
 
-                <h3>
-                    👤 ${escapeHTML(name)}
-                </h3>
+            <h3>
+                👤 ${escapeHTML(name)}
+            </h3>
 
-                <p>
-                    <strong>📧 Email:</strong>
-                    ${escapeHTML(email)}
-                </p>
+            <p>
+                <strong>📧 Email:</strong>
+                ${escapeHTML(email)}
+            </p>
 
-                <p>
-                    <strong>🆔 User ID:</strong>
-                    ${escapeHTML(student.id)}
-                </p>
+            <p>
+                <strong>🆔 User ID:</strong>
+                ${escapeHTML(student.id)}
+            </p>
 
-                <span class="student-badge">
-                    🎓 Registered Student
-                </span>
+            <span class="student-badge">
+                🎓 Registered Student
+            </span>
 
-                <small>
-                    Account ID:
-                    ${escapeHTML(student.id)}
-                </small>
+            <small>
+                Account ID:
+                ${escapeHTML(student.id)}
+            </small>
 
-            `;
+        `;
 
-            list.appendChild(div);
+        list.appendChild(div);
 
-        }
-    );
+    });
 
 }
 
 
 document
     .getElementById("studentSearch")
-    .addEventListener(
-        "input",
-        function(){
+    .addEventListener("input",function(){
 
-            const search =
-                this.value
-                    .trim()
-                    .toLowerCase();
+        const search =
+            this.value.trim().toLowerCase();
 
-            if(!search){
+        if(!search){
 
-                renderStudents(allStudents);
-
-                return;
-
-            }
-
-            const filtered =
-                allStudents.filter(
-                    (student)=>{
-
-                        const name =
-                            String(
-                                student.name ||
-                                student.displayName ||
-                                ""
-                            ).toLowerCase();
-
-                        const email =
-                            String(
-                                student.email ||
-                                ""
-                            ).toLowerCase();
-
-                        const id =
-                            String(
-                                student.id ||
-                                ""
-                            ).toLowerCase();
-
-                        return(
-                            name.includes(search) ||
-                            email.includes(search) ||
-                            id.includes(search)
-                        );
-
-                    }
-                );
-
-            renderStudents(filtered);
+            renderStudents(allStudents);
+            return;
 
         }
-    );
+
+        const filtered =
+            allStudents.filter(student=>{
+
+                const name =
+                    String(
+                        student.name ||
+                        student.displayName ||
+                        ""
+                    ).toLowerCase();
+
+                const email =
+                    String(
+                        student.email || ""
+                    ).toLowerCase();
+
+                const id =
+                    String(
+                        student.id || ""
+                    ).toLowerCase();
+
+                return(
+                    name.includes(search) ||
+                    email.includes(search) ||
+                    id.includes(search)
+                );
+
+            });
+
+        renderStudents(filtered);
+
+    });
 
 
 /* =========================================================
@@ -2963,14 +3069,8 @@ async function loadNotifications(){
 
         const notificationsQuery =
             query(
-                collection(
-                    db,
-                    "notifications"
-                ),
-                orderBy(
-                    "createdAt",
-                    "desc"
-                )
+                collection(db,"notifications"),
+                orderBy("createdAt","desc")
             );
 
         const snapshot =
@@ -2992,68 +3092,66 @@ async function loadNotifications(){
 
         }
 
-        snapshot.forEach(
-            (item)=>{
+        snapshot.forEach(item=>{
 
-                const data =
-                    item.data();
+            const data =
+                item.data();
 
-                const div =
-                    document.createElement("div");
+            const div =
+                document.createElement("div");
 
-                div.className =
-                    "notification-card";
+            div.className =
+                "notification-card";
 
-                div.innerHTML = `
+            div.innerHTML = `
 
-                    <h3>
-                        🔔 ${escapeHTML(
-                            data.title ||
-                            "Untitled Notification"
-                        )}
-                    </h3>
+                <h3>
+                    🔔 ${escapeHTML(
+                        data.title ||
+                        "Untitled Notification"
+                    )}
+                </h3>
 
-                    <p>
-                        ${escapeHTML(
-                            data.message ||
-                            "No message available."
-                        )}
-                    </p>
+                <p>
+                    ${escapeHTML(
+                        data.message ||
+                        "No message available."
+                    )}
+                </p>
 
-                    <small>
-                        🕒 ${escapeHTML(
-                            formatTimestamp(
-                                data.createdAt
-                            )
-                        )}
-                    </small>
+                <small>
+                    🕒 ${escapeHTML(
+                        formatTimestamp(
+                            data.createdAt
+                        )
+                    )}
+                </small>
 
-                    <small>
-                        👤 Published by:
-                        ${escapeHTML(
-                            data.createdBy ||
-                            ADMIN_EMAIL
-                        )}
-                    </small>
+                <small>
+                    👤 Published by:
+                    ${escapeHTML(
+                        data.createdBy ||
+                        ADMIN_EMAIL
+                    )}
+                </small>
 
-                    <div class="notification-actions">
+                <div class="notification-actions">
 
-                        <button
-                            class="delete-btn"
-                            onclick="deleteNotification('${item.id}')">
+                    <button
+                        class="delete-btn"
+                        onclick="deleteNotification('${item.id}')">
 
-                            🗑️ Delete
+                        🗑️ Delete
 
-                        </button>
+                    </button>
 
-                    </div>
+                </div>
 
-                `;
+            `;
 
-                list.appendChild(div);
+            list.appendChild(div);
 
-            }
-        );
+        });
 
     }catch(error){
 
@@ -3073,26 +3171,18 @@ async function loadNotifications(){
 }
 
 
-/* =========================================================
-   CREATE NOTIFICATION
-   ========================================================= */
-
 window.createNotification =
 async()=>{
 
     const title =
         document
-            .getElementById(
-                "notificationTitle"
-            )
+            .getElementById("notificationTitle")
             .value
             .trim();
 
     const message =
         document
-            .getElementById(
-                "notificationMessage"
-            )
+            .getElementById("notificationMessage")
             .value
             .trim();
 
@@ -3108,20 +3198,14 @@ async()=>{
 
     if(title.length < 3){
 
-        alert(
-            "Notification title is too short."
-        );
-
+        alert("Notification title is too short.");
         return;
 
     }
 
     if(message.length < 3){
 
-        alert(
-            "Notification message is too short."
-        );
-
+        alert("Notification message is too short.");
         return;
 
     }
@@ -3129,15 +3213,11 @@ async()=>{
     try{
 
         await addDoc(
-            collection(
-                db,
-                "notifications"
-            ),
+            collection(db,"notifications"),
             {
                 title:title,
                 message:message,
-                createdAt:
-                    serverTimestamp(),
+                createdAt:serverTimestamp(),
                 createdBy:
                     auth.currentUser?.email ||
                     ADMIN_EMAIL
@@ -3145,15 +3225,11 @@ async()=>{
         );
 
         document
-            .getElementById(
-                "notificationTitle"
-            )
+            .getElementById("notificationTitle")
             .value = "";
 
         document
-            .getElementById(
-                "notificationMessage"
-            )
+            .getElementById("notificationMessage")
             .value = "";
 
         status.textContent =
@@ -3178,10 +3254,6 @@ async()=>{
 };
 
 
-/* =========================================================
-   DELETE NOTIFICATION
-   ========================================================= */
-
 window.deleteNotification =
 async(id)=>{
 
@@ -3196,11 +3268,7 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(
-                db,
-                "notifications",
-                id
-            )
+            doc(db,"notifications",id)
         );
 
         status.textContent =
@@ -3224,10 +3292,6 @@ async(id)=>{
 };
 
 
-/* =========================================================
-   DELETE ALL NOTIFICATIONS
-   ========================================================= */
-
 window.deleteAllNotifications =
 async()=>{
 
@@ -3243,10 +3307,7 @@ async()=>{
 
         const snapshot =
             await getDocs(
-                collection(
-                    db,
-                    "notifications"
-                )
+                collection(db,"notifications")
             );
 
         if(snapshot.empty){
@@ -3258,9 +3319,7 @@ async()=>{
 
         }
 
-        for(
-            const item of snapshot.docs
-        ){
+        for(const item of snapshot.docs){
 
             await deleteDoc(item.ref);
 
@@ -3288,7 +3347,7 @@ async()=>{
 
 
 /* =========================================================
-   ADD NEWS
+   NEWS
    ========================================================= */
 
 window.addNews =
@@ -3319,15 +3378,11 @@ async()=>{
     try{
 
         await addDoc(
-            collection(
-                db,
-                "news"
-            ),
+            collection(db,"news"),
             {
                 title,
                 description,
-                createdAt:
-                    serverTimestamp()
+                createdAt:serverTimestamp()
             }
         );
 
@@ -3358,10 +3413,6 @@ async()=>{
 };
 
 
-/* =========================================================
-   LOAD NEWS
-   ========================================================= */
-
 async function loadNews(){
 
     const list =
@@ -3374,14 +3425,8 @@ async function loadNews(){
 
         const newsQuery =
             query(
-                collection(
-                    db,
-                    "news"
-                ),
-                orderBy(
-                    "createdAt",
-                    "desc"
-                )
+                collection(db,"news"),
+                orderBy("createdAt","desc")
             );
 
         const snapshot =
@@ -3398,53 +3443,47 @@ async function loadNews(){
 
         }
 
-        snapshot.forEach(
-            (item)=>{
+        snapshot.forEach(item=>{
 
-                const data =
-                    item.data();
+            const data =
+                item.data();
 
-                const div =
-                    document.createElement("div");
+            const div =
+                document.createElement("div");
 
-                div.className =
-                    "item";
+            div.className =
+                "item";
 
-                div.innerHTML = `
+            div.innerHTML = `
 
-                    <h3>
-                        📰 ${escapeHTML(
-                            data.title
-                        )}
-                    </h3>
+                <h3>
+                    📰 ${escapeHTML(data.title)}
+                </h3>
 
-                    <p>
-                        ${escapeHTML(
-                            data.description
-                        )}
-                    </p>
+                <p>
+                    ${escapeHTML(data.description)}
+                </p>
 
-                    <button
-                        onclick="editNews('${item.id}')">
+                <button
+                    onclick="editNews('${item.id}')">
 
-                        ✏️ Edit
+                    ✏️ Edit
 
-                    </button>
+                </button>
 
-                    <button
-                        class="delete-btn"
-                        onclick="deleteNews('${item.id}')">
+                <button
+                    class="delete-btn"
+                    onclick="deleteNews('${item.id}')">
 
-                        🗑️ Delete
+                    🗑️ Delete
 
-                    </button>
+                </button>
 
-                `;
+            `;
 
-                list.appendChild(div);
+            list.appendChild(div);
 
-            }
-        );
+        });
 
     }catch(error){
 
@@ -3457,10 +3496,6 @@ async function loadNews(){
 
 }
 
-
-/* =========================================================
-   DELETE NEWS
-   ========================================================= */
 
 window.deleteNews =
 async(id)=>{
@@ -3476,11 +3511,7 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(
-                db,
-                "news",
-                id
-            )
+            doc(db,"news",id)
         );
 
         status.textContent =
@@ -3500,10 +3531,6 @@ async(id)=>{
 
 };
 
-
-/* =========================================================
-   EDIT NEWS
-   ========================================================= */
 
 window.editNews =
 async(id)=>{
@@ -3535,18 +3562,12 @@ async(id)=>{
     try{
 
         await setDoc(
-            doc(
-                db,
-                "news",
-                id
-            ),
+            doc(db,"news",id),
             {
                 title:title.trim(),
                 description:description.trim()
             },
-            {
-                merge:true
-            }
+            {merge:true}
         );
 
         status.textContent =
@@ -3568,7 +3589,7 @@ async(id)=>{
 
 
 /* =========================================================
-   ADD EVENT
+   EVENTS
    ========================================================= */
 
 window.addEvent =
@@ -3591,11 +3612,7 @@ async()=>{
             .getElementById("eventDate")
             .value;
 
-    if(
-        !title ||
-        !description ||
-        !date
-    ){
+    if(!title || !description || !date){
 
         alert(
             "Please complete all event fields."
@@ -3608,16 +3625,12 @@ async()=>{
     try{
 
         await addDoc(
-            collection(
-                db,
-                "events"
-            ),
+            collection(db,"events"),
             {
                 title,
                 description,
                 date,
-                createdAt:
-                    serverTimestamp()
+                createdAt:serverTimestamp()
             }
         );
 
@@ -3652,10 +3665,6 @@ async()=>{
 };
 
 
-/* =========================================================
-   LOAD EVENTS
-   ========================================================= */
-
 async function loadEvents(){
 
     const list =
@@ -3668,14 +3677,8 @@ async function loadEvents(){
 
         const eventsQuery =
             query(
-                collection(
-                    db,
-                    "events"
-                ),
-                orderBy(
-                    "date",
-                    "asc"
-                )
+                collection(db,"events"),
+                orderBy("date","asc")
             );
 
         const snapshot =
@@ -3692,60 +3695,52 @@ async function loadEvents(){
 
         }
 
-        snapshot.forEach(
-            (item)=>{
+        snapshot.forEach(item=>{
 
-                const data =
-                    item.data();
+            const data =
+                item.data();
 
-                const div =
-                    document.createElement("div");
+            const div =
+                document.createElement("div");
 
-                div.className =
-                    "item";
+            div.className =
+                "item";
 
-                div.innerHTML = `
+            div.innerHTML = `
 
-                    <h3>
-                        📅 ${escapeHTML(
-                            data.title
-                        )}
-                    </h3>
+                <h3>
+                    📅 ${escapeHTML(data.title)}
+                </h3>
 
-                    <p>
-                        ${escapeHTML(
-                            data.description
-                        )}
-                    </p>
+                <p>
+                    ${escapeHTML(data.description)}
+                </p>
 
-                    <small>
-                        📆 Date:
-                        ${escapeHTML(
-                            data.date
-                        )}
-                    </small>
+                <small>
+                    📆 Date:
+                    ${escapeHTML(data.date)}
+                </small>
 
-                    <button
-                        onclick="editEvent('${item.id}')">
+                <button
+                    onclick="editEvent('${item.id}')">
 
-                        ✏️ Edit
+                    ✏️ Edit
 
-                    </button>
+                </button>
 
-                    <button
-                        class="delete-btn"
-                        onclick="deleteEvent('${item.id}')">
+                <button
+                    class="delete-btn"
+                    onclick="deleteEvent('${item.id}')">
 
-                        🗑️ Delete
+                    🗑️ Delete
 
-                    </button>
+                </button>
 
-                `;
+            `;
 
-                list.appendChild(div);
+            list.appendChild(div);
 
-            }
-        );
+        });
 
     }catch(error){
 
@@ -3758,10 +3753,6 @@ async function loadEvents(){
 
 }
 
-
-/* =========================================================
-   DELETE EVENT
-   ========================================================= */
 
 window.deleteEvent =
 async(id)=>{
@@ -3777,11 +3768,7 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(
-                db,
-                "events",
-                id
-            )
+            doc(db,"events",id)
         );
 
         status.textContent =
@@ -3801,10 +3788,6 @@ async(id)=>{
 
 };
 
-
-/* =========================================================
-   EDIT EVENT
-   ========================================================= */
 
 window.editEvent =
 async(id)=>{
@@ -3848,19 +3831,13 @@ async(id)=>{
     try{
 
         await setDoc(
-            doc(
-                db,
-                "events",
-                id
-            ),
+            doc(db,"events",id),
             {
                 title:title.trim(),
                 description:description.trim(),
                 date:date.trim()
             },
-            {
-                merge:true
-            }
+            {merge:true}
         );
 
         status.textContent =
@@ -3882,20 +3859,16 @@ async(id)=>{
 
 
 /* =========================================================
-   LOAD REPORTS
+   REPORTS
    ========================================================= */
 
 async function loadReports(){
 
     const list =
-        document.getElementById(
-            "reportsList"
-        );
+        document.getElementById("reportsList");
 
     const summary =
-        document.getElementById(
-            "reportSummary"
-        );
+        document.getElementById("reportSummary");
 
     list.innerHTML =
         "<p>Loading reports...</p>";
@@ -3907,20 +3880,12 @@ async function loadReports(){
 
         const reportsQuery =
             query(
-                collection(
-                    db,
-                    "reports"
-                ),
-                orderBy(
-                    "createdAt",
-                    "desc"
-                )
+                collection(db,"reports"),
+                orderBy("createdAt","desc")
             );
 
         const snapshot =
-            await getDocs(
-                reportsQuery
-            );
+            await getDocs(reportsQuery);
 
         list.innerHTML = "";
 
@@ -3939,148 +3904,127 @@ async function loadReports(){
         let pendingCount = 0;
         let reviewedCount = 0;
 
-        snapshot.forEach(
-            (item)=>{
+        snapshot.forEach(item=>{
 
-                const data =
-                    item.data();
+            const data =
+                item.data();
 
-                const statusValue =
-                    data.status ||
-                    "pending";
+            const statusValue =
+                data.status || "pending";
 
-                if(
-                    statusValue === "pending"
-                ){
-                    pendingCount++;
-                }else{
-                    reviewedCount++;
-                }
-
-                const div =
-                    document.createElement("div");
-
-                div.className =
-                    "report-card";
-
-                const safeStatus =
-                    statusValue === "reviewed"
-                        ? "reviewed"
-                        : "pending";
-
-                const statusClass =
-                    safeStatus === "reviewed"
-                        ? "status-reviewed"
-                        : "status-pending";
-
-                const statusText =
-                    safeStatus === "reviewed"
-                        ? "✅ Reviewed"
-                        : "⏳ Pending";
-
-                div.innerHTML = `
-
-                    <h3>
-                        🚩 Reported Post
-                    </h3>
-
-                    <p>
-                        <strong>Reason:</strong>
-                        ${escapeHTML(
-                            data.reason ||
-                            "No reason provided"
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>
-                            Reported User ID:
-                        </strong>
-
-                        ${escapeHTML(
-                            data.reportedUserId ||
-                            "Unknown"
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>
-                            Reporter:
-                        </strong>
-
-                        ${escapeHTML(
-                            data.reporterName ||
-                            "Unknown"
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>
-                            Reporter Email:
-                        </strong>
-
-                        ${escapeHTML(
-                            data.reporterEmail ||
-                            "Not available"
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>
-                            Post:
-                        </strong>
-
-                        ${escapeHTML(
-                            data.postText ||
-                            "Post text unavailable"
-                        )}
-                    </p>
-
-                    <small>
-                        Report ID:
-                        ${escapeHTML(item.id)}
-                    </small>
-
-                    <span
-                        class="report-status
-                        ${statusClass}">
-
-                        ${statusText}
-
-                    </span>
-
-                    <div class="report-actions">
-
-                        ${
-                            safeStatus === "pending"
-                            ? `
-                                <button
-                                    class="review-btn"
-                                    onclick="markReportReviewed('${item.id}')">
-
-                                    ✅ Mark Reviewed
-
-                                </button>
-                              `
-                            : ""
-                        }
-
-                        <button
-                            class="delete-btn"
-                            onclick="deleteReport('${item.id}')">
-
-                            🗑️ Delete Report
-
-                        </button>
-
-                    </div>
-
-                `;
-
-                list.appendChild(div);
-
+            if(statusValue === "pending"){
+                pendingCount++;
+            }else{
+                reviewedCount++;
             }
-        );
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "report-card";
+
+            const safeStatus =
+                statusValue === "reviewed"
+                    ? "reviewed"
+                    : "pending";
+
+            const statusClass =
+                safeStatus === "reviewed"
+                    ? "status-reviewed"
+                    : "status-pending";
+
+            const statusText =
+                safeStatus === "reviewed"
+                    ? "✅ Reviewed"
+                    : "⏳ Pending";
+
+            div.innerHTML = `
+
+                <h3>
+                    🚩 Reported Post
+                </h3>
+
+                <p>
+                    <strong>Reason:</strong>
+                    ${escapeHTML(
+                        data.reason ||
+                        "No reason provided"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Reported User ID:</strong>
+                    ${escapeHTML(
+                        data.reportedUserId ||
+                        "Unknown"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Reporter:</strong>
+                    ${escapeHTML(
+                        data.reporterName ||
+                        "Unknown"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Reporter Email:</strong>
+                    ${escapeHTML(
+                        data.reporterEmail ||
+                        "Not available"
+                    )}
+                </p>
+
+                <p>
+                    <strong>Post:</strong>
+                    ${escapeHTML(
+                        data.postText ||
+                        "Post text unavailable"
+                    )}
+                </p>
+
+                <small>
+                    Report ID:
+                    ${escapeHTML(item.id)}
+                </small>
+
+                <span class="report-status ${statusClass}">
+                    ${statusText}
+                </span>
+
+                <div class="report-actions">
+
+                    ${
+                        safeStatus === "pending"
+                        ? `
+                            <button
+                                class="review-btn"
+                                onclick="markReportReviewed('${item.id}')">
+
+                                ✅ Mark Reviewed
+
+                            </button>
+                          `
+                        : ""
+                    }
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteReport('${item.id}')">
+
+                        🗑️ Delete Report
+
+                    </button>
+
+                </div>
+
+            `;
+
+            list.appendChild(div);
+
+        });
 
         summary.textContent =
             `🚩 ${snapshot.size} total reports • ` +
@@ -4105,34 +4049,21 @@ async function loadReports(){
 }
 
 
-/* =========================================================
-   MARK REPORT REVIEWED
-   ========================================================= */
-
 window.markReportReviewed =
 async(id)=>{
 
     try{
 
         await setDoc(
-            doc(
-                db,
-                "reports",
-                id
-            ),
+            doc(db,"reports",id),
             {
                 status:"reviewed",
-
-                reviewedAt:
-                    serverTimestamp(),
-
+                reviewedAt:serverTimestamp(),
                 reviewedBy:
                     auth.currentUser?.email ||
                     ADMIN_EMAIL
             },
-            {
-                merge:true
-            }
+            {merge:true}
         );
 
         status.textContent =
@@ -4153,10 +4084,6 @@ async(id)=>{
 };
 
 
-/* =========================================================
-   DELETE REPORT
-   ========================================================= */
-
 window.deleteReport =
 async(id)=>{
 
@@ -4171,11 +4098,7 @@ async(id)=>{
     try{
 
         await deleteDoc(
-            doc(
-                db,
-                "reports",
-                id
-            )
+            doc(db,"reports",id)
         );
 
         status.textContent =
@@ -4215,10 +4138,7 @@ async()=>{
 
         const postsSnapshot =
             await getDocs(
-                collection(
-                    db,
-                    "posts"
-                )
+                collection(db,"posts")
             );
 
         if(postsSnapshot.empty){
@@ -4230,10 +4150,7 @@ async()=>{
 
         }
 
-        for(
-            const post of
-            postsSnapshot.docs
-        ){
+        for(const post of postsSnapshot.docs){
 
             const postId =
                 post.id;
@@ -4248,14 +4165,9 @@ async()=>{
                     )
                 );
 
-            for(
-                const comment of
-                comments.docs
-            ){
+            for(const comment of comments.docs){
 
-                await deleteDoc(
-                    comment.ref
-                );
+                await deleteDoc(comment.ref);
 
             }
 
@@ -4269,20 +4181,13 @@ async()=>{
                     )
                 );
 
-            for(
-                const like of
-                likes.docs
-            ){
+            for(const like of likes.docs){
 
-                await deleteDoc(
-                    like.ref
-                );
+                await deleteDoc(like.ref);
 
             }
 
-            await deleteDoc(
-                post.ref
-            );
+            await deleteDoc(post.ref);
 
         }
 
@@ -4304,7 +4209,7 @@ async()=>{
 
 
 /* =========================================================
-   REFRESH DASHBOARD
+   REFRESH
    ========================================================= */
 
 window.refreshDashboard =
@@ -4327,7 +4232,7 @@ async()=>{
 
 
 /* =========================================================
-   ADMIN LOGOUT
+   LOGOUT
    ========================================================= */
 
 window.logoutAdmin =
@@ -4361,7 +4266,7 @@ async()=>{
 
 
 /* =========================================================
-   SCROLL TO SECTION
+   SCROLL
    ========================================================= */
 
 window.scrollToSection =

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -14,12 +15,19 @@
         name="description"
         content="Sociology Connect is an academic and social platform for Sociology and Social Work students at Arsi University.">
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="theme-color"
+        content="#007bff">
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+    <!-- =========================================================
+         GLOBAL SEARCH STYLE
+    ========================================================== -->
 
     <style>
-        /* =========================================================
-           GLOBAL SEARCH
-        ========================================================= */
 
         .global-search-box {
             position: relative;
@@ -48,7 +56,8 @@
 
         #searchBar:focus {
             border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.10);
+            box-shadow:
+                0 0 0 3px rgba(0,123,255,0.10);
         }
 
         #clearSearchBtn {
@@ -71,7 +80,8 @@
             border: 1px solid #ddd;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
             position: relative;
             z-index: 20;
         }
@@ -140,7 +150,146 @@
             opacity: 0.7;
         }
 
-        @media (max-width: 600px) {
+        /* =========================================================
+           MOBILE MENU
+        ========================================================== */
+
+        .mobile-menu-btn {
+            display: none;
+            border: none;
+            background: transparent;
+            font-size: 25px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-panel {
+            display: none;
+        }
+
+        /* =========================================================
+           HERO CTA
+        ========================================================== */
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 22px;
+            border-radius: 28px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .hero-btn-secondary {
+            background: white;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+
+        /* =========================================================
+           HERO STATS
+        ========================================================== */
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(100px, 1fr));
+            gap: 12px;
+            max-width: 650px;
+            margin: 28px auto 0;
+        }
+
+        .hero-stat {
+            padding: 14px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 20px;
+        }
+
+        .hero-stat span {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================== */
+
+        @media (max-width: 700px) {
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                display: none;
+            }
+
+            .nav-container.mobile-open {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-container.mobile-open a {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .mobile-menu-panel {
+                display: block;
+            }
+
+            .hero-stats {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .hero-stat {
+                padding: 10px 6px;
+            }
+
+            .hero-stat strong {
+                font-size: 17px;
+            }
+
+            .hero-stat span {
+                font-size: 10px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .hero-btn {
+                width: min(100%, 280px);
+            }
 
             .search-results-header {
                 align-items: flex-start;
@@ -152,6 +301,23 @@
             }
 
         }
+
+        @media (max-width: 420px) {
+
+            .hero-stats {
+                gap: 7px;
+            }
+
+            .hero-stat strong {
+                font-size: 15px;
+            }
+
+            .hero-stat span {
+                font-size: 9px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -159,9 +325,10 @@
 
 <body>
 
+
     <!-- =========================================================
          HEADER
-    ========================================================= -->
+    ========================================================== -->
 
     <header>
 
@@ -184,7 +351,8 @@
                     </p>
 
                     <p>
-                        Created by <strong>Horsa Gowe</strong>
+                        Created by
+                        <strong>Horsa Gowe</strong>
                     </p>
 
                 </div>
@@ -196,6 +364,19 @@
 
                 <span id="userInfo"></span>
 
+                <!-- MOBILE MENU -->
+
+                <button
+                    id="mobileMenuBtn"
+                    class="mobile-menu-btn"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false">
+
+                    ☰
+
+                </button>
+
             </div>
 
         </div>
@@ -205,50 +386,65 @@
 
     <!-- =========================================================
          NAVIGATION
-    ========================================================= -->
+    ========================================================== -->
 
     <nav>
 
-        <div class="nav-container">
+        <div
+            class="nav-container"
+            id="navContainer">
+
 
             <a href="#about">
                 🏠 About
             </a>
 
+
             <a href="#resources">
                 📚 Resources
             </a>
+
 
             <a href="#events">
                 📅 Events
             </a>
 
+
             <a href="#news">
                 📰 News
             </a>
+
 
             <a href="#contact">
                 📞 Contact
             </a>
 
+
             <a href="research.html">
                 🔬 Research Hub
             </a>
+
 
             <a href="profile.html">
                 👤 Profile
             </a>
 
+
             <a
                 href="admin.html"
                 id="adminLink">
+
                 🛠️ Admin Dashboard
+
             </a>
+
 
             <a
                 href="login.html"
                 id="loginLink">
+
                 🔐 Login
+
             </a>
 
         </div>
@@ -258,9 +454,10 @@
 
     <!-- =========================================================
          NAVIGATION ACTIONS
-    ========================================================= -->
+    ========================================================== -->
 
     <div class="nav-actions">
+
 
         <button
             id="logoutBtn"
@@ -299,7 +496,7 @@
 
     <!-- =========================================================
          GLOBAL SEARCH
-    ========================================================= -->
+    ========================================================== -->
 
     <div class="search-container">
 
@@ -309,12 +506,14 @@
                 🔎
             </span>
 
+
             <input
                 id="searchBar"
                 type="search"
                 placeholder="Search Posts, News, Events and Research..."
                 autocomplete="off"
                 aria-label="Global Search">
+
 
             <button
                 id="clearSearchBtn"
@@ -334,11 +533,13 @@
             class="global-search-results"
             style="display:none;">
 
+
             <div class="search-results-header">
 
                 <strong>
                     🔎 Search Results
                 </strong>
+
 
                 <span id="searchResultCount">
                     0 results
@@ -379,32 +580,106 @@
 
     <!-- =========================================================
          HERO
-    ========================================================= -->
+    ========================================================== -->
 
     <section class="hero">
+
 
         <h2>
             Welcome to Sociology Connect 👋
         </h2>
 
+
         <p>
-            A digital academic community for Sociology and
-            Social Work students at Arsi University.
+            A digital academic community for
+            Sociology and Social Work students
+            at Arsi University.
         </p>
+
+
+        <!-- CTA BUTTONS -->
+
+        <div class="hero-actions">
+
+
+            <a
+                href="#community"
+                class="hero-btn hero-btn-primary">
+
+                🚀 Get Started
+
+            </a>
+
+
+            <a
+                href="research.html"
+                class="hero-btn hero-btn-secondary">
+
+                🔬 Explore Research Hub
+
+            </a>
+
+        </div>
+
+
+        <!-- HERO STATS -->
+
+        <div class="hero-stats">
+
+
+            <div class="hero-stat">
+
+                <strong>
+                    📚
+                </strong>
+
+                <span>
+                    Academic Resources
+                </span>
+
+            </div>
+
+
+            <div class="hero-stat">
+
+                <strong>
+                    👥
+                </strong>
+
+                <span>
+                    Student Community
+                </span>
+
+            </div>
+
+
+            <div class="hero-stat">
+
+                <strong>
+                    🤖
+                </strong>
+
+                <span>
+                    AI Research Support
+                </span>
+
+            </div>
+
+        </div>
 
     </section>
 
 
     <!-- =========================================================
          MAIN CONTENT
-    ========================================================= -->
+    ========================================================== -->
 
     <main>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              LATEST NEWS
-        ========================================================= -->
+        ====================================================== -->
 
         <section id="news">
 
@@ -444,9 +719,9 @@
         </section>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              COMMUNITY
-        ========================================================= -->
+        ====================================================== -->
 
         <section id="community">
 
@@ -496,9 +771,9 @@
         </section>
 
 
-        <!-- =========================================================
-             TRENDING POSTS
-        ========================================================= -->
+        <!-- =====================================================
+             TRENDING
+        ====================================================== -->
 
         <section id="trending">
 
@@ -538,9 +813,9 @@
         </section>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              ABOUT
-        ========================================================= -->
+        ====================================================== -->
 
         <section id="about">
 
@@ -567,18 +842,19 @@
 
             <p>
 
-                Sociology Connect supports Sociology and Social Work
-                students through academic resources, research guidance,
-                communication and community engagement.
+                Sociology Connect supports Sociology and
+                Social Work students through academic resources,
+                research guidance, communication and
+                community engagement.
 
             </p>
 
         </section>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              CORE PILLARS
-        ========================================================= -->
+        ====================================================== -->
 
         <section id="features">
 
@@ -595,7 +871,8 @@
                     </h2>
 
                     <p>
-                        The main areas supported by Sociology Connect.
+                        The main areas supported by
+                        Sociology Connect.
                     </p>
 
                 </div>
@@ -630,7 +907,8 @@
                     </h3>
 
                     <p>
-                        Guidance for research projects and academic work.
+                        Guidance for research projects
+                        and academic work.
                     </p>
 
                 </div>
@@ -645,7 +923,8 @@
                     </h3>
 
                     <p>
-                        Connecting technology with social sciences.
+                        Connecting technology with
+                        social sciences.
                     </p>
 
                 </div>
@@ -660,7 +939,8 @@
                     </h3>
 
                     <p>
-                        Encouraging collaboration among students.
+                        Encouraging collaboration
+                        among students.
                     </p>
 
                 </div>
@@ -675,27 +955,25 @@
                     </h3>
 
                     <p>
-                        A space for students to communicate and share.
+                        A space for students to
+                        communicate and share.
                     </p>
 
                 </div>
 
-
-                <!-- =================================================
-                     NEW 6TH CORE PILLAR
-                ================================================== -->
 
                 <div class="pillar-card">
 
                     <span>👩‍💼</span>
 
                     <h3>
-                        Social Worker
+                        Social Work
                     </h3>
 
                     <p>
-                        Professional support, care and guidance
-                        for individuals and communities.
+                        Professional support, care
+                        and guidance for individuals
+                        and communities.
                     </p>
 
                 </div>
@@ -705,9 +983,9 @@
         </section>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              RESEARCH GUIDE
-        ========================================================= -->
+        ====================================================== -->
 
         <section id="research-guide">
 
@@ -724,7 +1002,8 @@
                     </h2>
 
                     <p>
-                        A simple pathway for conducting academic research.
+                        A simple pathway for conducting
+                        academic research.
                     </p>
 
                 </div>
@@ -734,35 +1013,42 @@
 
             <ol class="research-steps">
 
+
                 <li>
                     <span>1</span>
                     Choose a research topic
                 </li>
+
 
                 <li>
                     <span>2</span>
                     Review literature
                 </li>
 
+
                 <li>
                     <span>3</span>
                     Create research questions
                 </li>
+
 
                 <li>
                     <span>4</span>
                     Design methodology
                 </li>
 
+
                 <li>
                     <span>5</span>
                     Collect data
                 </li>
 
+
                 <li>
                     <span>6</span>
                     Analyze findings
                 </li>
+
 
                 <li>
                     <span>7</span>
@@ -774,9 +1060,9 @@
         </section>
 
 
-        <!-- =========================================================
-             EVENTS & DEADLINES
-        ========================================================= -->
+        <!-- =====================================================
+             EVENTS
+        ====================================================== -->
 
         <section id="events">
 
@@ -793,7 +1079,8 @@
                     </h2>
 
                     <p>
-                        Important academic dates and student activities.
+                        Important academic dates and
+                        student activities.
                     </p>
 
                 </div>
@@ -857,15 +1144,14 @@
 
                 </div>
 
-
             </div>
 
         </section>
 
 
-        <!-- =========================================================
-             ACADEMIC RESOURCES
-        ========================================================= -->
+        <!-- =====================================================
+             RESOURCES
+        ====================================================== -->
 
         <section id="resources">
 
@@ -882,8 +1168,8 @@
                     </h2>
 
                     <p>
-                        Access useful Sociology and Social Work
-                        learning materials.
+                        Access useful Sociology and
+                        Social Work learning materials.
                     </p>
 
                 </div>
@@ -926,13 +1212,14 @@
         </section>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              CONTACT
-        ========================================================= -->
+        ====================================================== -->
 
         <section
             id="contact"
             class="contact-section">
+
 
             <div class="section-header">
 
@@ -957,19 +1244,26 @@
 
             <div class="contact-info">
 
+
                 <p>
+
                     📧
+
                     <strong>
                         Gunnersyom@gmail.com
                     </strong>
+
                 </p>
 
 
                 <p>
+
                     📱
+
                     <strong>
                         0934919856
                     </strong>
+
                 </p>
 
             </div>
@@ -979,6 +1273,7 @@
                 action="https://formspree.io/f/mppwdjda"
                 method="POST">
 
+
                 <textarea
                     name="comment"
                     rows="5"
@@ -987,7 +1282,9 @@
 
 
                 <button type="submit">
+
                     📤 Submit Message
+
                 </button>
 
             </form>
@@ -1006,11 +1303,12 @@
         </section>
 
 
-        <!-- =========================================================
+        <!-- =====================================================
              AI MARI
-        ========================================================= -->
+        ====================================================== -->
 
         <section id="chat-container">
+
 
             <div class="section-header">
 
@@ -1036,6 +1334,7 @@
 
             <div id="chat-history">
 
+
                 <div class="message ai">
 
                     <b>
@@ -1044,8 +1343,8 @@
 
                     <br>
 
-                    Hello! 👋 I can help you in Afaan Oromoo,
-                    Amharic and English.
+                    Hello! 👋 I can help you in
+                    Afaan Oromoo, Amharic and English.
 
                 </div>
 
@@ -1053,6 +1352,7 @@
 
 
             <div class="chat-input">
+
 
                 <input
                     id="userInput"
@@ -1089,7 +1389,7 @@
 
     <!-- =========================================================
          FOOTER
-    ========================================================= -->
+    ========================================================== -->
 
     <footer>
 
@@ -1111,18 +1411,86 @@
 
 
     <!-- =========================================================
-         JAVASCRIPT
-    ========================================================= -->
+         MOBILE MENU SCRIPT
+         Only handles mobile navigation.
+    ========================================================== -->
+
+    <script>
+
+        const mobileMenuBtn =
+            document.getElementById("mobileMenuBtn");
+
+        const navContainer =
+            document.getElementById("navContainer");
+
+
+        if (mobileMenuBtn && navContainer) {
+
+            mobileMenuBtn.addEventListener(
+                "click",
+                () => {
+
+                    const opened =
+                        navContainer.classList.toggle(
+                            "mobile-open"
+                        );
+
+                    mobileMenuBtn.setAttribute(
+                        "aria-expanded",
+                        opened ? "true" : "false"
+                    );
+
+                    mobileMenuBtn.textContent =
+                        opened ? "✕" : "☰";
+
+                }
+            );
+
+
+            navContainer
+                .querySelectorAll("a")
+                .forEach(link => {
+
+                    link.addEventListener(
+                        "click",
+                        () => {
+
+                            navContainer.classList.remove(
+                                "mobile-open"
+                            );
+
+                            mobileMenuBtn.setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
+
+                            mobileMenuBtn.textContent = "☰";
+
+                        }
+                    );
+
+                });
+
+        }
+
+    </script>
+
+
+    <!-- =========================================================
+         EXISTING JAVASCRIPT
+    ========================================================== -->
 
     <script
         type="module"
         src="script.js">
     </script>
 
+
     <script
         type="module"
         src="auth.js">
     </script>
+
 
 </body>
 

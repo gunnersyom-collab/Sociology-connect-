@@ -1,298 +1,785 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Sign Up | Sociology Connect</title>
-<meta name="description" content="Create your Sociology Connect student account.">
+
+<meta
+    name="description"
+    content="Create your Sociology Connect student account."
+>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
 body{
-font-family:Arial,sans-serif;
-background:linear-gradient(135deg,#007bff,#00b4ff);
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
+    font-family:Arial,sans-serif;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(255,255,255,.25),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #006eff,
+            #00b4ff,
+            #0056b3
+        );
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
 }
 
 .box{
-width:100%;
-max-width:430px;
-background:#fff;
-padding:28px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.18);
+    width:100%;
+    max-width:450px;
+    background:#fff;
+    padding:30px;
+    border-radius:22px;
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.20);
 }
 
-.logo{text-align:center;margin-bottom:12px;}
+.logo{
+    text-align:center;
+    margin-bottom:12px;
+}
 
 .logo img{
-width:70px;
-height:70px;
-object-fit:contain;
+    width:75px;
+    height:75px;
+    object-fit:contain;
 }
 
 h2{
-text-align:center;
-color:#007bff;
-margin-bottom:8px;
+    text-align:center;
+    color:#007bff;
+    margin-bottom:8px;
+    font-size:28px;
 }
 
 .subtitle{
-text-align:center;
-color:#666;
-font-size:14px;
-margin-bottom:20px;
+    text-align:center;
+    color:#667085;
+    font-size:14px;
+    margin-bottom:22px;
+    line-height:1.5;
 }
 
 label{
-display:block;
-margin-top:12px;
-font-weight:bold;
-font-size:14px;
+    display:block;
+    margin-top:14px;
+    font-weight:bold;
+    font-size:14px;
+    color:#172033;
 }
 
-input,select,textarea{
-width:100%;
-padding:13px;
-margin-top:7px;
-border:1px solid #ccc;
-border-radius:10px;
-font-size:15px;
-outline:none;
+input,
+select,
+textarea{
+    width:100%;
+    padding:14px;
+    margin-top:7px;
+    border:1px solid #cfd6df;
+    border-radius:11px;
+    font-size:15px;
+    font-family:Arial,sans-serif;
+    outline:none;
+    background:#fff;
+    color:#172033;
+    transition:.2s;
 }
 
 input:focus,
 select:focus,
 textarea:focus{
-border-color:#007bff;
-box-shadow:0 0 0 2px rgba(0,123,255,.15);
+    border-color:#007bff;
+    box-shadow:
+        0 0 0 3px rgba(0,123,255,.12);
 }
 
 textarea{
-resize:vertical;
-min-height:80px;
+    resize:vertical;
+    min-height:90px;
 }
 
 .password-box{
-position:relative;
+    position:relative;
 }
 
 .password-box input{
-padding-right:50px;
+    padding-right:55px;
 }
 
 .toggle{
-position:absolute;
-right:14px;
-top:50%;
-transform:translateY(-25%);
-cursor:pointer;
-font-size:18px;
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-20%);
+    cursor:pointer;
+    font-size:19px;
+    user-select:none;
 }
 
 button{
-width:100%;
-padding:13px;
-margin-top:18px;
-background:#007bff;
-color:white;
-border:none;
-border-radius:10px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-transition:.3s;
+    width:100%;
+    padding:15px;
+    margin-top:20px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:11px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
 }
 
 button:hover{
-background:#0056b3;
+    background:#0056b3;
+    transform:translateY(-1px);
 }
 
 button:disabled{
-background:#8bbcff;
-cursor:not-allowed;
+    background:#8bbcff;
+    cursor:not-allowed;
+    transform:none;
 }
 
 .note{
-background:#f1f7ff;
-padding:10px;
-border-radius:8px;
-margin-top:15px;
-font-size:13px;
-color:#555;
-line-height:1.5;
+    background:#f1f7ff;
+    padding:12px;
+    border-radius:10px;
+    margin-top:16px;
+    font-size:13px;
+    color:#555;
+    line-height:1.6;
 }
 
 .links{
-text-align:center;
-margin-top:18px;
+    text-align:center;
+    margin-top:20px;
 }
 
 .links a{
-display:block;
-margin-top:10px;
-color:#007bff;
-text-decoration:none;
-font-weight:bold;
+    display:block;
+    margin-top:11px;
+    color:#007bff;
+    text-decoration:none;
+    font-weight:bold;
+    font-size:14px;
 }
 
 .links a:hover{
-text-decoration:underline;
+    text-decoration:underline;
 }
 
 footer{
-text-align:center;
-margin-top:18px;
-font-size:13px;
-color:#777;
+    text-align:center;
+    margin-top:20px;
+    font-size:13px;
+    color:#777;
+    line-height:1.6;
 }
+
+#status{
+    margin-top:12px;
+    text-align:center;
+    font-size:14px;
+    font-weight:bold;
+    min-height:20px;
+}
+
+@media(max-width:500px){
+
+    body{
+        padding:12px;
+    }
+
+    .box{
+        padding:24px 20px;
+        border-radius:18px;
+    }
+
+    h2{
+        font-size:25px;
+    }
+
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="box">
 
-<div class="logo">
-<img src="1781866925745.png" alt="Sociology Connect Logo">
+    <div class="logo">
+
+        <img
+            src="1781866925745.png"
+            alt="Sociology Connect Logo"
+        >
+
+    </div>
+
+
+    <h2>
+        Create Account
+    </h2>
+
+
+    <p class="subtitle">
+        Join Sociology Connect – Arsi University
+    </p>
+
+
+    <!-- FULL NAME -->
+
+    <label for="fullName">
+        Full Name
+    </label>
+
+    <input
+        id="fullName"
+        type="text"
+        placeholder="Enter your full name"
+        autocomplete="name"
+    >
+
+
+    <!-- YEAR -->
+
+    <label for="year">
+        Academic Year
+    </label>
+
+    <select id="year">
+
+        <option value="">
+            Select your year
+        </option>
+
+        <option value="1st Year">
+            1st Year
+        </option>
+
+        <option value="2nd Year">
+            2nd Year
+        </option>
+
+        <option value="3rd Year">
+            3rd Year
+        </option>
+
+        <option value="4th Year">
+            4th Year
+        </option>
+
+        <option value="Graduate">
+            Graduate
+        </option>
+
+    </select>
+
+
+    <!-- BIO -->
+
+    <label for="bio">
+        Short Bio
+    </label>
+
+    <textarea
+        id="bio"
+        placeholder="Tell us a little about yourself..."
+    ></textarea>
+
+
+    <!-- EMAIL -->
+
+    <label for="email">
+        Email
+    </label>
+
+    <input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+    >
+
+
+    <!-- PASSWORD -->
+
+    <label for="password">
+        Password
+    </label>
+
+    <div class="password-box">
+
+        <input
+            id="password"
+            type="password"
+            placeholder="Create a password"
+            autocomplete="new-password"
+        >
+
+        <span
+            id="togglePassword"
+            class="toggle"
+            title="Show password"
+        >
+            👁️
+        </span>
+
+    </div>
+
+
+    <!-- SIGNUP -->
+
+    <button
+        id="signupBtn"
+        type="button"
+    >
+        🚀 Create Account
+    </button>
+
+
+    <div id="status"></div>
+
+
+    <div class="note">
+
+        🔐 Your account gives you access to posts,
+        comments, academic resources, Research Hub,
+        events and other Sociology Connect features.
+
+    </div>
+
+
+    <div class="links">
+
+        <a href="login.html">
+            Already have an account? Login
+        </a>
+
+        <a href="index.html">
+            ← Back to Home
+        </a>
+
+    </div>
+
+
+    <footer>
+
+        © 2026 Sociology Connect • Arsi University
+        <br>
+        Created by Horsa Gowe
+
+    </footer>
+
 </div>
 
-<h2>Create Account</h2>
-
-<p class="subtitle">
-Join Sociology Connect – Arsi University
-</p>
-
-<label>Full Name</label>
-<input id="fullName" type="text" placeholder="Enter your full name">
-
-<label>Year</label>
-<select id="year">
-<option value="">Select your year</option>
-<option>1st Year</option>
-<option>2nd Year</option>
-<option>3rd Year</option>
-<option>4th Year</option>
-<option>Graduate</option>
-</select>
-
-<label>Short Bio</label>
-<textarea id="bio" placeholder="Tell us a little about yourself..."></textarea>
-
-<label>Email</label>
-<input id="email" type="email" placeholder="Enter your email">
-
-<label>Password</label>
-
-<div class="password-box">
-<input id="password" type="password" placeholder="Create a password">
-<span id="togglePassword" class="toggle">👁️</span>
-</div>
-
-<button id="signupBtn">Create Account</button>
-
-<div class="note">
-Your account will be used to access posts, comments, academic resources and other Sociology Connect features.
-</div>
-
-<div class="links">
-<a href="login.html">Already have an account? Login</a>
-<a href="index.html">← Back to Home</a>
-</div>
-
-<footer>
-© 2026 Sociology Connect • Arsi University
-</footer>
-
-</div>
 
 <script type="module">
 
-import { auth, db } from "./firebase.js";
+/* =========================================================
+   FIREBASE
+   ========================================================= */
 
 import {
-createUserWithEmailAndPassword
+    auth,
+    db
+} from "./firebase.js";
+
+
+import {
+    createUserWithEmailAndPassword,
+    updateProfile
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+
 import {
-doc,
-setDoc
+    doc,
+    setDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const passwordInput=document.getElementById("password");
-const togglePassword=document.getElementById("togglePassword");
-const signupBtn=document.getElementById("signupBtn");
 
-togglePassword.addEventListener("click",()=>{
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
 
-if(passwordInput.type==="password"){
-passwordInput.type="text";
-togglePassword.textContent="🙈";
-}else{
-passwordInput.type="password";
-togglePassword.textContent="👁️";
-}
+const fullNameInput =
+    document.getElementById("fullName");
 
-});
+const yearInput =
+    document.getElementById("year");
 
-signupBtn.addEventListener("click",async()=>{
+const bioInput =
+    document.getElementById("bio");
 
-const fullName=document.getElementById("fullName").value.trim();
-const year=document.getElementById("year").value;
-const bio=document.getElementById("bio").value.trim();
-const email=document.getElementById("email").value.trim();
-const password=passwordInput.value;
+const emailInput =
+    document.getElementById("email");
 
-if(!fullName||!year||!email||!password){
-alert("Please fill all required fields.");
-return;
-}
+const passwordInput =
+    document.getElementById("password");
 
-signupBtn.disabled=true;
-signupBtn.textContent="Creating...";
+const togglePassword =
+    document.getElementById("togglePassword");
 
-try{
+const signupBtn =
+    document.getElementById("signupBtn");
 
-const userCredential =
-await createUserWithEmailAndPassword(auth,email,password);
+const statusBox =
+    document.getElementById("status");
 
-await updateProfile(userCredential.user,{
-  displayName: fullName
-});
-await setDoc(doc(db,"users",userCredential.user.uid),{
 
-fullName,
-year,
-bio,
-email,
-department:"Sociology & Social Work",
-university:"Arsi University",
-createdAt:new Date().toISOString()
+/* =========================================================
+   PASSWORD SHOW / HIDE
+   ========================================================= */
 
-});
+togglePassword.addEventListener(
+    "click",
+    function(){
 
-alert("Account created successfully!");
+        if(
+            passwordInput.type ===
+            "password"
+        ){
 
-window.location.href="login.html";
+            passwordInput.type =
+                "text";
 
-}catch(error){
+            togglePassword.textContent =
+                "🙈";
 
-alert(error.message);
+            togglePassword.title =
+                "Hide password";
 
-}finally{
+        }else{
 
-signupBtn.disabled=false;
-signupBtn.textContent="Create Account";
+            passwordInput.type =
+                "password";
 
-}
+            togglePassword.textContent =
+                "👁️";
 
-});
+            togglePassword.title =
+                "Show password";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SIGN UP
+   ========================================================= */
+
+signupBtn.addEventListener(
+    "click",
+    async function(){
+
+        const fullName =
+            fullNameInput.value.trim();
+
+        const year =
+            yearInput.value;
+
+        const bio =
+            bioInput.value.trim();
+
+        const email =
+            emailInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+
+        /* =========================
+           VALIDATION
+           ========================= */
+
+        if(!fullName){
+
+            alert(
+                "Please enter your full name."
+            );
+
+            fullNameInput.focus();
+
+            return;
+
+        }
+
+
+        if(!year){
+
+            alert(
+                "Please select your academic year."
+            );
+
+            yearInput.focus();
+
+            return;
+
+        }
+
+
+        if(!email){
+
+            alert(
+                "Please enter your email."
+            );
+
+            emailInput.focus();
+
+            return;
+
+        }
+
+
+        if(!password){
+
+            alert(
+                "Please create a password."
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+
+        if(password.length < 6){
+
+            alert(
+                "Password must contain at least 6 characters."
+            );
+
+            passwordInput.focus();
+
+            return;
+
+        }
+
+
+        /* =========================
+           START
+           ========================= */
+
+        signupBtn.disabled =
+            true;
+
+        signupBtn.textContent =
+            "⏳ Creating Account...";
+
+        statusBox.textContent =
+            "Creating your account...";
+
+
+        try{
+
+            /* =========================
+               CREATE AUTH ACCOUNT
+               ========================= */
+
+            const userCredential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+            const user =
+                userCredential.user;
+
+
+            /* =========================
+               FIREBASE DISPLAY NAME
+               ========================= */
+
+            await updateProfile(
+                user,
+                {
+                    displayName:
+                        fullName
+                }
+            );
+
+
+            /* =========================
+               FIRESTORE USER PROFILE
+               ========================= */
+
+            await setDoc(
+                doc(
+                    db,
+                    "users",
+                    user.uid
+                ),
+                {
+
+                    uid:
+                        user.uid,
+
+                    email:
+                        email,
+
+                    fullName:
+                        fullName,
+
+                    displayName:
+                        fullName,
+
+                    name:
+                        fullName,
+
+                    year:
+                        year,
+
+                    bio:
+                        bio,
+
+                    department:
+                        "Sociology & Social Work",
+
+                    university:
+                        "Arsi University",
+
+                    role:
+                        "student",
+
+                    photoURL:
+                        "",
+
+                    createdAt:
+                        serverTimestamp(),
+
+                    updatedAt:
+                        serverTimestamp()
+
+                }
+            );
+
+
+            /* =========================
+               SUCCESS
+               ========================= */
+
+            statusBox.textContent =
+                "✅ Account created successfully!";
+
+
+            alert(
+                "✅ Account created successfully!"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+        }catch(error){
+
+            console.error(
+                "Signup error:",
+                error
+            );
+
+
+            let message =
+                error.message;
+
+
+            /* =========================
+               FIREBASE ERROR MESSAGES
+               ========================= */
+
+            if(
+                error.code ===
+                "auth/email-already-in-use"
+            ){
+
+                message =
+                    "This email is already registered. Please login.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/invalid-email"
+            ){
+
+                message =
+                    "Please enter a valid email address.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/weak-password"
+            ){
+
+                message =
+                    "Password is too weak. Use at least 6 characters.";
+
+            }
+
+            else if(
+                error.code ===
+                "auth/network-request-failed"
+            ){
+
+                message =
+                    "Network error. Please check your internet connection.";
+
+            }
+
+
+            alert(
+                "❌ " + message
+            );
+
+
+            statusBox.textContent =
+                "❌ Account creation failed.";
+
+        }
+
+
+        /* =========================
+           RESET BUTTON
+           ========================= */
+
+        finally{
+
+            signupBtn.disabled =
+                false;
+
+            signupBtn.textContent =
+                "🚀 Create Account";
+
+        }
+
+    }
+);
 
 </script>
 

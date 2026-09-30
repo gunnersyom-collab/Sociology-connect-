@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Research Hub | Sociology Connect</title>
 
@@ -20,11 +20,6 @@
     margin:0;
     padding:0;
 }
-
-
-/* =========================================================
-   BODY
-   ========================================================= */
 
 body{
     font-family:Arial,sans-serif;
@@ -316,7 +311,7 @@ button{
 
 
 /* =========================================================
-   CLEAR RESULT BUTTON
+   CLEAR BUTTON
    ========================================================= */
 
 .clear-btn{
@@ -339,7 +334,7 @@ button{
 
 
 /* =========================================================
-   SAVE RESEARCH
+   SAVE
    ========================================================= */
 
 .save-section{
@@ -452,7 +447,7 @@ button{
 
 
 /* =========================================================
-   ADMIN CLEAR ALL RESEARCH
+   ADMIN
    ========================================================= */
 
 .admin-clear-btn{
@@ -528,7 +523,7 @@ button{
 
 
 /* =========================================================
-   RESEARCH AREAS
+   AREAS
    ========================================================= */
 
 .area-grid{
@@ -786,37 +781,24 @@ body.dark .saved-date{
 
     <nav>
 
-        <a href="index.html">
-            🏠 Home
-        </a>
+        <a href="index.html">🏠 Home</a>
 
-        <a href="index.html#about">
-            ℹ️ About
-        </a>
+        <a href="index.html#about">ℹ️ About</a>
 
-        <a href="index.html#resources">
-            📚 Resources
-        </a>
+        <a href="index.html#resources">📚 Resources</a>
 
-        <a href="index.html#events">
-            📅 Events
-        </a>
+        <a href="index.html#events">📅 Events</a>
 
-        <a href="index.html#news">
-            📰 News
-        </a>
+        <a href="index.html#news">📰 News</a>
 
-        <a href="research.html">
-            🔬 Research Hub
-        </a>
+        <a href="research.html">🔬 Research Hub</a>
 
-        <a href="profile.html">
-            👤 Profile
-        </a>
+        <a href="profile.html">👤 Profile</a>
 
         <button
             class="theme-btn"
             id="themeBtn"
+            type="button"
             onclick="toggleTheme()">
 
             🌙
@@ -834,9 +816,7 @@ body.dark .saved-date{
 
 <section class="hero">
 
-    <h2>
-        🔬 Research Hub
-    </h2>
+    <h2>🔬 Research Hub</h2>
 
     <p>
         A research support center for Sociology and Social Work students.
@@ -862,9 +842,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📚 Welcome to the Research Hub
-    </h3>
+    <h3>📚 Welcome to the Research Hub</h3>
 
     <p>
         Research Hub helps students develop academic research step by step.
@@ -878,9 +856,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        🎯 Research Topic Generator
-    </h3>
+    <h3>🎯 Research Topic Generator</h3>
 
     <p>
         Enter an area of interest and generate possible Sociology or
@@ -896,6 +872,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="generateTopic()">
 
             Generate Topics
@@ -905,14 +882,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                Generated Topics
-            </h4>
+            <h4>Generated Topics</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('topicResult',this)">
 
                     📋 Copy
@@ -921,6 +897,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('topicResult',this)">
 
                     🗑️ Clear
@@ -945,9 +922,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        🤖 AI Research Assistant – AI Mari
-    </h3>
+    <h3>🤖 AI Research Assistant – AI Mari</h3>
 
     <p>
         Ask AI Mari questions about research methodology, Sociology,
@@ -964,6 +939,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="askMariFromPage()">
 
             🤖 Ask AI Mari
@@ -973,14 +949,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                AI Mari Response
-            </h4>
+            <h4>AI Mari Response</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('mariResult',this)">
 
                     📋 Copy
@@ -989,6 +964,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('mariResult',this)">
 
                     🗑️ Clear
@@ -1013,9 +989,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        ❓ Research Questions Generator
-    </h3>
+    <h3>❓ Research Questions Generator</h3>
 
     <p>
         Enter your research topic and generate possible research questions.
@@ -1031,6 +1005,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="generateQuestions()">
 
             Generate Questions
@@ -1040,14 +1015,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                Research Questions
-            </h4>
+            <h4>Research Questions</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('questionResult',this)">
 
                     📋 Copy
@@ -1056,6 +1030,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('questionResult',this)">
 
                     🗑️ Clear
@@ -1080,9 +1055,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📚 APA 7 Citation Generator
-    </h3>
+    <h3>📚 APA 7 Citation Generator</h3>
 
     <p>
         Enter basic source information and generate an APA 7 style citation.
@@ -1126,6 +1099,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="generateAPA()">
 
             Generate APA 7
@@ -1135,14 +1109,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                APA 7 Citation
-            </h4>
+            <h4>APA 7 Citation</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('apaResult',this)">
 
                     📋 Copy
@@ -1151,6 +1124,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('apaResult',this)">
 
                     🗑️ Clear
@@ -1175,9 +1149,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📝 Abstract Generator
-    </h3>
+    <h3>📝 Abstract Generator</h3>
 
     <p>
         Enter your research topic and generate a basic academic abstract.
@@ -1193,6 +1165,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="generateAbstract()">
 
             Generate Abstract
@@ -1202,14 +1175,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                Abstract
-            </h4>
+            <h4>Abstract</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('abstractResult',this)">
 
                     📋 Copy
@@ -1218,6 +1190,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('abstractResult',this)">
 
                     🗑️ Clear
@@ -1242,9 +1215,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📌 Problem Statement Generator
-    </h3>
+    <h3>📌 Problem Statement Generator</h3>
 
     <p>
         Generate a starting point for a research problem statement.
@@ -1260,6 +1231,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="generateProblem()">
 
             Generate Problem Statement
@@ -1269,14 +1241,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                Problem Statement
-            </h4>
+            <h4>Problem Statement</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('problemResult',this)">
 
                     📋 Copy
@@ -1285,6 +1256,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('problemResult',this)">
 
                     🗑️ Clear
@@ -1309,9 +1281,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        🎯 Research Objectives Generator
-    </h3>
+    <h3>🎯 Research Objectives Generator</h3>
 
     <p>
         Generate a general objective and specific objectives from your topic.
@@ -1327,6 +1297,7 @@ body.dark .saved-date{
 
         <button
             class="primary-btn"
+            type="button"
             onclick="generateObjectives()">
 
             Generate Objectives
@@ -1336,14 +1307,13 @@ body.dark .saved-date{
 
         <div class="result-header">
 
-            <h4>
-                Research Objectives
-            </h4>
+            <h4>Research Objectives</h4>
 
             <div class="result-actions">
 
                 <button
                     class="copy-btn"
+                    type="button"
                     onclick="copyResult('objectiveResult',this)">
 
                     📋 Copy
@@ -1352,6 +1322,7 @@ body.dark .saved-date{
 
                 <button
                     class="clear-btn"
+                    type="button"
                     onclick="clearResult('objectiveResult',this)">
 
                     🗑️ Clear
@@ -1376,9 +1347,7 @@ body.dark .saved-date{
 
 <section class="card searchable save-section">
 
-    <h3>
-        💾 Save My Research
-    </h3>
+    <h3>💾 Save My Research</h3>
 
     <p class="save-intro">
 
@@ -1392,6 +1361,7 @@ body.dark .saved-date{
     <button
         class="save-btn"
         id="saveResearchBtn"
+        type="button"
         onclick="saveResearch()">
 
         💾 Save Research
@@ -1410,9 +1380,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📂 My Saved Research
-    </h3>
+    <h3>📂 My Saved Research</h3>
 
     <p>
         Your saved research projects will appear here.
@@ -1424,9 +1392,7 @@ body.dark .saved-date{
         class="saved-list">
 
         <div class="result-box">
-
             🔄 Checking your saved research...
-
         </div>
 
     </div>
@@ -1449,10 +1415,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        🔬 Research Process
-    </h3>
-
+    <h3>🔬 Research Process</h3>
 
     <div class="steps">
 
@@ -1504,10 +1467,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📊 Qualitative vs Quantitative Research
-    </h3>
-
+    <h3>📊 Qualitative vs Quantitative Research</h3>
 
     <div class="comparison">
 
@@ -1548,10 +1508,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📖 Research Areas
-    </h3>
-
+    <h3>📖 Research Areas</h3>
 
     <div class="area-grid">
 
@@ -1576,9 +1533,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📚 APA 7 Quick Guide
-    </h3>
+    <h3>📚 APA 7 Quick Guide</h3>
 
     <p>
         <strong>Book:</strong><br>
@@ -1612,10 +1567,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        📋 Data Collection Methods
-    </h3>
-
+    <h3>📋 Data Collection Methods</h3>
 
     <div class="steps">
 
@@ -1652,10 +1604,7 @@ body.dark .saved-date{
 
 <section class="card searchable">
 
-    <h3>
-        ❓ Frequently Asked Questions
-    </h3>
-
+    <h3>❓ Frequently Asked Questions</h3>
 
     <div class="faq-item">
 
@@ -1668,7 +1617,6 @@ body.dark .saved-date{
 
     </div>
 
-
     <div class="faq-item">
 
         <h4>What is a research question?</h4>
@@ -1678,7 +1626,6 @@ body.dark .saved-date{
         </p>
 
     </div>
-
 
     <div class="faq-item">
 
@@ -1690,7 +1637,6 @@ body.dark .saved-date{
 
     </div>
 
-
     <div class="faq-item">
 
         <h4>What is an abstract?</h4>
@@ -1700,7 +1646,6 @@ body.dark .saved-date{
         </p>
 
     </div>
-
 
     <div class="faq-item">
 
@@ -1737,6 +1682,12 @@ body.dark .saved-date{
 
 
 
+<!-- =========================================================
+     FIREBASE + RESEARCH FUNCTIONS
+     IMPORTANT:
+     Functions used by HTML onclick are attached to window.
+     ========================================================= -->
+
 <script type="module">
 
 import {
@@ -1762,7 +1713,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
-
 /* =========================================================
    CURRENT USER
    ========================================================= */
@@ -1777,7 +1727,6 @@ let currentUser = null;
 const ADMIN_EMAIL = "yom@gmail.com";
 
 
-
 /* =========================================================
    AUTH STATE
    ========================================================= */
@@ -1786,11 +1735,8 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user || null;
 
-
     const adminButton =
-        document.getElementById(
-            "adminClearResearchBtn"
-        );
+        document.getElementById("adminClearResearchBtn");
 
 
     if(adminButton){
@@ -1800,13 +1746,11 @@ onAuthStateChanged(auth, async (user) => {
             currentUser.email === ADMIN_EMAIL
         ){
 
-            adminButton.style.display =
-                "inline-block";
+            adminButton.style.display = "inline-block";
 
         }else{
 
-            adminButton.style.display =
-                "none";
+            adminButton.style.display = "none";
 
         }
 
@@ -1835,6 +1779,481 @@ onAuthStateChanged(auth, async (user) => {
 
 });
 
+
+/* =========================================================
+   AI MARI REQUEST
+   ========================================================= */
+
+async function askMari(prompt){
+
+    const response =
+        await fetch(
+            "https://sociology-connect.onrender.com/api/chat",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+                    message:prompt
+                })
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "AI request failed"
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    return data.reply ||
+        "No response received.";
+
+}
+
+
+/* =========================================================
+   ASK AI MARI
+   ========================================================= */
+
+window.askMariFromPage = async function(){
+
+    const input =
+        document.getElementById(
+            "mariPrompt"
+        );
+
+
+    const result =
+        document.getElementById(
+            "mariResult"
+        );
+
+
+    const prompt =
+        input.value.trim();
+
+
+    if(!prompt){
+
+        result.textContent =
+            "Please enter your research question first.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "🤖 AI Mari is thinking...";
+
+
+    try{
+
+        const answer =
+            await askMari(prompt);
+
+
+        result.textContent =
+            answer;
+
+    }catch(error){
+
+        console.error(
+            "AI MARI ERROR:",
+            error
+        );
+
+        result.textContent =
+            "Sorry, AI Mari could not respond right now. Please try again.";
+
+    }
+
+};
+
+
+/* =========================================================
+   TOPIC GENERATOR
+   ========================================================= */
+
+window.generateTopic = async function(){
+
+    const input =
+        document.getElementById(
+            "topicInput"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "topicResult"
+        );
+
+
+    if(!input){
+
+        result.textContent =
+            "Please enter an area of interest.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "🤖 Generating research topics...";
+
+
+    try{
+
+        const answer =
+            await askMari(
+
+                `Generate 10 clear and researchable Sociology or Social Work research topics about "${input}". Make them suitable for university students. Number each topic.`
+
+            );
+
+
+        result.textContent =
+            answer;
+
+    }catch(error){
+
+        console.error(
+            "TOPIC ERROR:",
+            error
+        );
+
+        result.textContent =
+            "Unable to generate topics right now. Please try again.";
+
+    }
+
+};
+
+
+/* =========================================================
+   RESEARCH QUESTIONS
+   ========================================================= */
+
+window.generateQuestions = async function(){
+
+    const topic =
+        document.getElementById(
+            "questionTopic"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "questionResult"
+        );
+
+
+    if(!topic){
+
+        result.textContent =
+            "Please enter your research topic.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "🤖 Generating research questions...";
+
+
+    try{
+
+        const answer =
+            await askMari(
+
+                `For the research topic "${topic}", generate 5 clear and researchable research questions suitable for a university Sociology or Social Work study. Number them.`
+
+            );
+
+
+        result.textContent =
+            answer;
+
+    }catch(error){
+
+        console.error(
+            "QUESTIONS ERROR:",
+            error
+        );
+
+        result.textContent =
+            "Unable to generate research questions right now.";
+
+    }
+
+};
+
+
+/* =========================================================
+   APA 7 GENERATOR
+   ========================================================= */
+
+window.generateAPA = function(){
+
+    const author =
+        document.getElementById(
+            "apaAuthor"
+        ).value.trim();
+
+
+    const year =
+        document.getElementById(
+            "apaYear"
+        ).value.trim();
+
+
+    const title =
+        document.getElementById(
+            "apaTitle"
+        ).value.trim();
+
+
+    const publisher =
+        document.getElementById(
+            "apaPublisher"
+        ).value.trim();
+
+
+    const url =
+        document.getElementById(
+            "apaUrl"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "apaResult"
+        );
+
+
+    if(
+        !author ||
+        !year ||
+        !title ||
+        !publisher
+    ){
+
+        result.textContent =
+            "Please complete Author, Year, Title and Publisher/Journal.";
+
+        return;
+
+    }
+
+
+    let citation =
+        `${author}. (${year}). ${title}. ${publisher}.`;
+
+
+    if(url){
+
+        citation += ` ${url}`;
+
+    }
+
+
+    result.textContent =
+        citation;
+
+};
+
+
+/* =========================================================
+   ABSTRACT GENERATOR
+   ========================================================= */
+
+window.generateAbstract = async function(){
+
+    const topic =
+        document.getElementById(
+            "abstractTopic"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "abstractResult"
+        );
+
+
+    if(!topic){
+
+        result.textContent =
+            "Please enter your research topic.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "🤖 Generating abstract...";
+
+
+    try{
+
+        const answer =
+            await askMari(
+
+                `Write a clear academic abstract for a university Sociology or Social Work research study titled "${topic}". Include background, purpose, methodology, expected or possible findings, and conclusion. Keep it concise and suitable as a draft.`
+
+            );
+
+
+        result.textContent =
+            answer;
+
+    }catch(error){
+
+        console.error(
+            "ABSTRACT ERROR:",
+            error
+        );
+
+        result.textContent =
+            "Unable to generate the abstract right now.";
+
+    }
+
+};
+
+
+/* =========================================================
+   PROBLEM STATEMENT
+   ========================================================= */
+
+window.generateProblem = async function(){
+
+    const topic =
+        document.getElementById(
+            "problemTopic"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "problemResult"
+        );
+
+
+    if(!topic){
+
+        result.textContent =
+            "Please enter your research topic.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "🤖 Generating problem statement...";
+
+
+    try{
+
+        const answer =
+            await askMari(
+
+                `Write a clear academic problem statement for a Sociology or Social Work university research study titled "${topic}". Explain the social problem, its importance, the knowledge or practice gap, and why the study is needed.`
+
+            );
+
+
+        result.textContent =
+            answer;
+
+    }catch(error){
+
+        console.error(
+            "PROBLEM ERROR:",
+            error
+        );
+
+        result.textContent =
+            "Unable to generate the problem statement right now.";
+
+    }
+
+};
+
+
+/* =========================================================
+   OBJECTIVES
+   ========================================================= */
+
+window.generateObjectives = async function(){
+
+    const topic =
+        document.getElementById(
+            "objectiveTopic"
+        ).value.trim();
+
+
+    const result =
+        document.getElementById(
+            "objectiveResult"
+        );
+
+
+    if(!topic){
+
+        result.textContent =
+            "Please enter your research topic.";
+
+        return;
+
+    }
+
+
+    result.textContent =
+        "🤖 Generating research objectives...";
+
+
+    try{
+
+        const answer =
+            await askMari(
+
+                `For the Sociology or Social Work research topic "${topic}", write one clear general objective and five specific research objectives. Use academic language and action verbs such as assess, examine, identify, explore, determine, or analyze.`
+
+            );
+
+
+        result.textContent =
+            answer;
+
+    }catch(error){
+
+        console.error(
+            "OBJECTIVES ERROR:",
+            error
+        );
+
+        result.textContent =
+            "Unable to generate objectives right now.";
+
+    }
+
+};
 
 
 /* =========================================================
@@ -1867,10 +2286,6 @@ window.saveResearch = async function(){
 
     }
 
-
-    /* =====================================================
-       GET ALL GENERATED RESULTS
-       ===================================================== */
 
     const topic =
         document.getElementById(
@@ -1914,11 +2329,6 @@ window.saveResearch = async function(){
         ).innerText.trim();
 
 
-
-    /* =====================================================
-       CHECK WHETHER ANYTHING EXISTS
-       ===================================================== */
-
     const hasResearch =
         topic ||
         aiMariResponse ||
@@ -1942,12 +2352,10 @@ window.saveResearch = async function(){
     }
 
 
-
     button.disabled = true;
 
     button.textContent =
         "⏳ Saving...";
-
 
 
     try{
@@ -2001,7 +2409,7 @@ window.saveResearch = async function(){
 
 
         status.textContent =
-            "✅ All generated research, including AI Mari Response, has been saved successfully!";
+            "✅ Research saved successfully!";
 
 
         button.textContent =
@@ -2049,7 +2457,6 @@ window.saveResearch = async function(){
 };
 
 
-
 /* =========================================================
    LOAD SAVED RESEARCH
    ========================================================= */
@@ -2078,7 +2485,6 @@ async function loadSavedResearch(){
         </div>
 
     `;
-
 
 
     try{
@@ -2202,10 +2608,6 @@ async function loadSavedResearch(){
                 }
 
 
-                /* =================================================
-                   AI MARI RESPONSE
-                   ================================================= */
-
                 if(item.aiMariResponse){
 
                     preview +=
@@ -2279,20 +2681,13 @@ async function loadSavedResearch(){
                         📚 ${escapeHtml(title)}
                     </h4>
 
-
                     <div class="saved-date">
-
                         🕒 ${escapeHtml(dateText)}
-
                     </div>
-
 
                     <div class="saved-preview">
-
                         ${escapeHtml(preview)}
-
                     </div>
-
 
                     <div class="saved-actions">
 
@@ -2323,10 +2718,6 @@ async function loadSavedResearch(){
                 );
 
 
-                /* =================================================
-                   COPY BUTTON
-                   ================================================= */
-
                 const copyButton =
                     div.querySelector(
                         ".copy-btn"
@@ -2345,10 +2736,6 @@ async function loadSavedResearch(){
                     }
                 );
 
-
-                /* =================================================
-                   DELETE BUTTON
-                   ================================================= */
 
                 const deleteButton =
                     div.querySelector(
@@ -2397,7 +2784,6 @@ async function loadSavedResearch(){
     }
 
 }
-
 
 
 /* =========================================================
@@ -2459,9 +2845,8 @@ async function deleteSavedResearch(id){
 }
 
 
-
 /* =========================================================
-   CLEAR ALL RESEARCH — ADMIN ONLY
+   ADMIN CLEAR ALL RESEARCH
    ========================================================= */
 
 window.clearAllResearch = async function(){
@@ -2555,7 +2940,6 @@ window.clearAllResearch = async function(){
                 "📂 There is no saved research to clear."
             );
 
-
             return;
 
         }
@@ -2612,7 +2996,6 @@ window.clearAllResearch = async function(){
 };
 
 
-
 /* =========================================================
    ESCAPE HTML
    ========================================================= */
@@ -2621,43 +3004,20 @@ function escapeHtml(value){
 
     return String(value || "")
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
-
 
 
 /* =========================================================
    COPY SAVED RESEARCH
    ========================================================= */
 
-async function copyText(
-    text,
-    button
-){
+async function copyText(text,button){
 
     try{
 
@@ -2676,27 +3036,21 @@ async function copyText(
         textarea.value =
             text;
 
-
         textarea.style.position =
             "fixed";
 
-
         textarea.style.opacity =
             "0";
-
 
         document.body.appendChild(
             textarea
         );
 
-
         textarea.select();
-
 
         document.execCommand(
             "copy"
         );
-
 
         textarea.remove();
 
@@ -2733,17 +3087,17 @@ async function copyText(
 
 
 
+<!-- =========================================================
+     NORMAL JAVASCRIPT
+     ========================================================= -->
+
 <script>
 
-
 /* =========================================================
-   CLEAR INDIVIDUAL GENERATED RESULT
+   CLEAR RESULT
    ========================================================= */
 
-function clearResult(
-    elementId,
-    button
-){
+function clearResult(elementId,button){
 
     const element =
         document.getElementById(
@@ -2792,15 +3146,11 @@ function clearResult(
 }
 
 
-
 /* =========================================================
-   COPY GENERATED RESULT
+   COPY RESULT
    ========================================================= */
 
-async function copyResult(
-    elementId,
-    button
-){
+async function copyResult(elementId,button){
 
     const element =
         document.getElementById(
@@ -2816,8 +3166,7 @@ async function copyResult(
 
 
     const text =
-        element.innerText
-        .trim();
+        element.innerText.trim();
 
 
     if(!text){
@@ -2848,27 +3197,21 @@ async function copyResult(
         textarea.value =
             text;
 
-
         textarea.style.position =
             "fixed";
 
-
         textarea.style.opacity =
             "0";
-
 
         document.body.appendChild(
             textarea
         );
 
-
         textarea.select();
-
 
         document.execCommand(
             "copy"
         );
-
 
         textarea.remove();
 
@@ -2900,505 +3243,6 @@ async function copyResult(
     },1500);
 
 }
-
-
-
-/* =========================================================
-   AI MARI
-   ========================================================= */
-
-async function askMari(prompt){
-
-    const response =
-        await fetch(
-
-            "https://sociology-connect.onrender.com/api/chat",
-
-            {
-
-                method:"POST",
-
-                headers:{
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body:JSON.stringify({
-
-                    message:
-                        prompt
-
-                })
-
-            }
-
-        );
-
-
-    if(!response.ok){
-
-        throw new Error(
-            "AI request failed"
-        );
-
-    }
-
-
-    const data =
-        await response.json();
-
-
-    return data.reply ||
-        "No response received.";
-
-}
-
-
-
-/* =========================================================
-   ASK AI MARI
-   ========================================================= */
-
-async function askMariFromPage(){
-
-    const input =
-        document.getElementById(
-            "mariPrompt"
-        );
-
-
-    const result =
-        document.getElementById(
-            "mariResult"
-        );
-
-
-    const prompt =
-        input.value.trim();
-
-
-    if(!prompt){
-
-        result.textContent =
-            "Please enter your research question first.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "🤖 AI Mari is thinking...";
-
-
-    try{
-
-        const answer =
-            await askMari(
-                prompt
-            );
-
-
-        result.textContent =
-            answer;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.textContent =
-            "Sorry, AI Mari could not respond right now. Please try again.";
-
-    }
-
-}
-
-
-
-/* =========================================================
-   TOPIC GENERATOR
-   ========================================================= */
-
-async function generateTopic(){
-
-    const input =
-        document.getElementById(
-            "topicInput"
-        )
-        .value
-        .trim();
-
-
-    const result =
-        document.getElementById(
-            "topicResult"
-        );
-
-
-    if(!input){
-
-        result.textContent =
-            "Please enter an area of interest.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "🤖 Generating research topics...";
-
-
-    try{
-
-        const answer =
-            await askMari(
-
-                `Generate 10 clear and researchable Sociology or Social Work research topics about "${input}". Make them suitable for university students. Number each topic.`
-
-            );
-
-
-        result.textContent =
-            answer;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.textContent =
-            "Unable to generate topics right now. Please try again.";
-
-    }
-
-}
-
-
-
-/* =========================================================
-   RESEARCH QUESTIONS
-   ========================================================= */
-
-async function generateQuestions(){
-
-    const topic =
-        document.getElementById(
-            "questionTopic"
-        )
-        .value
-        .trim();
-
-
-    const result =
-        document.getElementById(
-            "questionResult"
-        );
-
-
-    if(!topic){
-
-        result.textContent =
-            "Please enter your research topic.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "🤖 Generating research questions...";
-
-
-    try{
-
-        const answer =
-            await askMari(
-
-                `For the research topic "${topic}", generate 5 clear and researchable research questions suitable for a university Sociology or Social Work study. Number them.`
-
-            );
-
-
-        result.textContent =
-            answer;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.textContent =
-            "Unable to generate research questions right now.";
-
-    }
-
-}
-
-
-
-/* =========================================================
-   APA 7 GENERATOR
-   ========================================================= */
-
-function generateAPA(){
-
-    const author =
-        document.getElementById(
-            "apaAuthor"
-        )
-        .value
-        .trim();
-
-
-    const year =
-        document.getElementById(
-            "apaYear"
-        )
-        .value
-        .trim();
-
-
-    const title =
-        document.getElementById(
-            "apaTitle"
-        )
-        .value
-        .trim();
-
-
-    const publisher =
-        document.getElementById(
-            "apaPublisher"
-        )
-        .value
-        .trim();
-
-
-    const url =
-        document.getElementById(
-            "apaUrl"
-        )
-        .value
-        .trim();
-
-
-    const result =
-        document.getElementById(
-            "apaResult"
-        );
-
-
-    if(
-        !author ||
-        !year ||
-        !title ||
-        !publisher
-    ){
-
-        result.textContent =
-            "Please complete Author, Year, Title and Publisher/Journal.";
-
-        return;
-
-    }
-
-
-    let citation =
-        `${author}. (${year}). ${title}. ${publisher}.`;
-
-
-    if(url){
-
-        citation +=
-            ` ${url}`;
-
-    }
-
-
-    result.textContent =
-        citation;
-
-}
-
-
-
-/* =========================================================
-   ABSTRACT GENERATOR
-   ========================================================= */
-
-async function generateAbstract(){
-
-    const topic =
-        document.getElementById(
-            "abstractTopic"
-        )
-        .value
-        .trim();
-
-
-    const result =
-        document.getElementById(
-            "abstractResult"
-        );
-
-
-    if(!topic){
-
-        result.textContent =
-            "Please enter your research topic.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "🤖 Generating abstract...";
-
-
-    try{
-
-        const answer =
-            await askMari(
-
-                `Write a clear academic abstract for a university Sociology or Social Work research study titled "${topic}". Include background, purpose, methodology, expected or possible findings, and conclusion. Keep it concise and suitable as a draft.`
-
-            );
-
-
-        result.textContent =
-            answer;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.textContent =
-            "Unable to generate the abstract right now.";
-
-    }
-
-}
-
-
-
-/* =========================================================
-   PROBLEM STATEMENT
-   ========================================================= */
-
-async function generateProblem(){
-
-    const topic =
-        document.getElementById(
-            "problemTopic"
-        )
-        .value
-        .trim();
-
-
-    const result =
-        document.getElementById(
-            "problemResult"
-        );
-
-
-    if(!topic){
-
-        result.textContent =
-            "Please enter your research topic.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "🤖 Generating problem statement...";
-
-
-    try{
-
-        const answer =
-            await askMari(
-
-                `Write a clear academic problem statement for a Sociology or Social Work university research study titled "${topic}". Explain the social problem, its importance, the knowledge or practice gap, and why the study is needed.`
-
-            );
-
-
-        result.textContent =
-            answer;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.textContent =
-            "Unable to generate the problem statement right now.";
-
-    }
-
-}
-
-
-
-/* =========================================================
-   OBJECTIVES
-   ========================================================= */
-
-async function generateObjectives(){
-
-    const topic =
-        document.getElementById(
-            "objectiveTopic"
-        )
-        .value
-        .trim();
-
-
-    const result =
-        document.getElementById(
-            "objectiveResult"
-        );
-
-
-    if(!topic){
-
-        result.textContent =
-            "Please enter your research topic.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "🤖 Generating research objectives...";
-
-
-    try{
-
-        const answer =
-            await askMari(
-
-                `For the Sociology or Social Work research topic "${topic}", write one clear general objective and five specific research objectives. Use academic language and action verbs such as assess, examine, identify, explore, determine, or analyze.`
-
-            );
-
-
-        result.textContent =
-            answer;
-
-    }catch(error){
-
-        console.error(error);
-
-        result.textContent =
-            "Unable to generate objectives right now.";
-
-    }
-
-}
-
 
 
 /* =========================================================
@@ -3452,7 +3296,6 @@ function searchResearch(){
 }
 
 
-
 /* =========================================================
    DARK MODE
    ========================================================= */
@@ -3490,7 +3333,6 @@ function updateThemeButton(){
 }
 
 
-
 /* =========================================================
    TOGGLE THEME
    ========================================================= */
@@ -3519,7 +3361,6 @@ function toggleTheme(){
     updateThemeButton();
 
 }
-
 
 
 /* =========================================================
@@ -3554,9 +3395,8 @@ function loadTheme(){
 }
 
 
-
 /* =========================================================
-   ENTER KEY SUPPORT
+   ENTER KEY
    ========================================================= */
 
 document.addEventListener(

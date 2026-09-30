@@ -30,7 +30,7 @@ header{
     background:linear-gradient(135deg,#007bff,#0056b3);
     color:#fff;
     text-align:center;
-    padding:28px 15px;
+    padding:30px 15px;
 }
 
 header h1{
@@ -40,7 +40,6 @@ header h1{
 
 header p{
     font-size:15px;
-    opacity:1;
 }
 
 /* ================= NAV ================= */
@@ -51,7 +50,7 @@ nav{
     display:flex;
     justify-content:center;
     align-items:center;
-    gap:18px;
+    gap:12px;
     flex-wrap:wrap;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
@@ -60,8 +59,8 @@ nav a{
     text-decoration:none;
     color:#007bff;
     font-weight:bold;
-    padding:7px 10px;
-    border-radius:8px;
+    padding:8px 11px;
+    border-radius:9px;
     transition:.2s;
 }
 
@@ -69,41 +68,28 @@ nav a:hover{
     background:#eaf3ff;
 }
 
-/* ================= DARK MODE BUTTON ================= */
-
 #themeBtn{
     width:auto;
     margin:0;
     padding:8px 13px;
     border:none;
-    border-radius:8px;
+    border-radius:9px;
     background:#007bff;
     color:#fff;
     font-size:14px;
     font-weight:bold;
     cursor:pointer;
-    transition:.2s;
 }
 
 #themeBtn:hover{
     background:#0056b3;
-    transform:none;
-}
-
-body.dark #themeBtn{
-    background:#1e293b;
-    color:#f8fafc;
-}
-
-body.dark #themeBtn:hover{
-    background:#334155;
 }
 
 /* ================= CONTAINER ================= */
 
 .container{
-    max-width:700px;
-    margin:25px auto;
+    max-width:760px;
+    margin:28px auto;
     padding:15px;
 }
 
@@ -113,7 +99,7 @@ body.dark #themeBtn:hover{
     background:#fff;
     border-radius:22px;
     overflow:hidden;
-    box-shadow:0 5px 20px rgba(0,0,0,.10);
+    box-shadow:0 5px 22px rgba(0,0,0,.10);
 }
 
 /* ================= COVER ================= */
@@ -121,34 +107,49 @@ body.dark #themeBtn:hover{
 .cover{
     height:220px;
     background:
-        linear-gradient(135deg,#0d6efd,#4facfe);
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 30%),
+        radial-gradient(circle at 80% 80%,rgba(255,255,255,.15),transparent 30%),
+        linear-gradient(135deg,#006eff,#00a2ff,#0056b3);
+    position:relative;
+}
+
+.cover::after{
+    content:"SOCIOLOGY CONNECT";
+    position:absolute;
+    left:25px;
+    bottom:20px;
+    color:rgba(255,255,255,.22);
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:2px;
 }
 
 /* ================= PROFILE PHOTO ================= */
 
 .photo-wrapper{
     position:relative;
-    width:120px;
-    margin:-60px auto 10px;
+    width:130px;
+    margin:-65px auto 10px;
+    z-index:2;
 }
 
 .profile-photo{
-    width:120px;
-    height:120px;
+    width:130px;
+    height:130px;
     border-radius:50%;
     object-fit:cover;
     border:5px solid #fff;
     display:block;
     background:#e8eef7;
-    box-shadow:0 4px 14px rgba(0,0,0,.25);
+    box-shadow:0 5px 18px rgba(0,0,0,.25);
 }
 
 .camera-btn{
     position:absolute;
-    bottom:0;
+    bottom:2px;
     right:0;
-    width:38px;
-    height:38px;
+    width:40px;
+    height:40px;
     border-radius:50%;
     background:#007bff;
     color:#fff;
@@ -171,14 +172,14 @@ body.dark #themeBtn:hover{
 
 #profileName{
     text-align:center;
-    margin-top:12px;
-    font-size:27px;
+    margin-top:14px;
+    font-size:28px;
 }
 
-.email{
+.department{
     text-align:center;
     color:#667085;
-    margin:7px 15px 20px;
+    margin:7px 15px 22px;
     font-size:15px;
 }
 
@@ -187,18 +188,19 @@ body.dark #themeBtn:hover{
 .stats{
     display:flex;
     justify-content:space-around;
-    padding:10px 20px 25px;
+    padding:14px 20px 25px;
     text-align:center;
     border-bottom:1px solid #e5e7eb;
 }
 
 .stats div{
     min-width:90px;
+    color:#667085;
 }
 
 .stats strong{
     display:block;
-    font-size:30px;
+    font-size:29px;
     color:#0d6efd;
     margin-bottom:4px;
 }
@@ -227,13 +229,14 @@ body.dark #themeBtn:hover{
 .info-box span{
     color:#374151;
     line-height:1.6;
+    word-break:break-word;
 }
 
 /* ================= EDIT ================= */
 
 .edit-section{
     margin:20px;
-    padding-top:22px;
+    padding:25px 0 10px;
     border-top:1px solid #ddd;
 }
 
@@ -277,7 +280,7 @@ textarea{
     resize:vertical;
 }
 
-button{
+.save-btn{
     width:100%;
     margin-top:20px;
     padding:15px;
@@ -291,15 +294,28 @@ button{
     transition:.2s;
 }
 
-button:hover{
+.save-btn:hover{
     background:#0043a8;
     transform:translateY(-1px);
 }
 
-button:disabled{
+.save-btn:disabled{
     opacity:.7;
     cursor:not-allowed;
     transform:none;
+}
+
+/* ================= LOGIN MESSAGE ================= */
+
+#loginMessage{
+    display:none;
+    margin:15px 20px 0;
+    padding:13px;
+    border-radius:10px;
+    background:#fff4d6;
+    color:#7a5500;
+    text-align:center;
+    font-size:14px;
 }
 
 /* ================= STATUS ================= */
@@ -315,7 +331,7 @@ button:disabled{
 
 footer{
     text-align:center;
-    padding:28px 15px;
+    padding:30px 15px;
     color:#667085;
     line-height:1.7;
 }
@@ -348,19 +364,23 @@ body.dark nav a:hover{
 
 body.dark .profile-card{
     background:#111827;
-    box-shadow:0 5px 20px rgba(0,0,0,.45);
+    box-shadow:0 5px 22px rgba(0,0,0,.45);
 }
 
 body.dark .profile-photo{
     border-color:#111827;
 }
 
-body.dark .email{
+body.dark .department{
     color:#cbd5e1;
 }
 
 body.dark .stats{
     border-color:#334155;
+}
+
+body.dark .stats div{
+    color:#cbd5e1;
 }
 
 body.dark .stats strong{
@@ -397,6 +417,11 @@ body.dark textarea::placeholder{
     color:#94a3b8;
 }
 
+body.dark #loginMessage{
+    background:#3b2f12;
+    color:#fde68a;
+}
+
 body.dark footer{
     color:#cbd5e1;
 }
@@ -418,17 +443,17 @@ body.dark footer strong{
     }
 
     nav{
-        gap:7px;
+        gap:6px;
         padding:10px 6px;
     }
 
     nav a{
-        font-size:14px;
+        font-size:13px;
         padding:7px 8px;
     }
 
     #themeBtn{
-        font-size:14px;
+        font-size:13px;
         padding:7px 9px;
     }
 
@@ -441,17 +466,43 @@ body.dark footer strong{
         height:180px;
     }
 
+    .cover::after{
+        font-size:20px;
+        left:18px;
+        bottom:15px;
+    }
+
+    .photo-wrapper{
+        width:115px;
+        margin-top:-57px;
+    }
+
+    .profile-photo{
+        width:115px;
+        height:115px;
+    }
+
+    .camera-btn{
+        width:36px;
+        height:36px;
+        font-size:16px;
+    }
+
+    #profileName{
+        font-size:24px;
+    }
+
     .stats{
-        padding-left:8px;
-        padding-right:8px;
+        padding-left:5px;
+        padding-right:5px;
     }
 
     .stats strong{
-        font-size:25px;
+        font-size:24px;
     }
 
     .stats div{
-        font-size:14px;
+        font-size:13px;
     }
 
     .edit-section{
@@ -516,8 +567,13 @@ body.dark footer strong{
         <!-- NAME -->
         <h2 id="profileName">Student Name</h2>
 
-        <div class="email">
+        <div class="department">
             Sociology &amp; Social Work
+        </div>
+
+        <!-- LOGIN MESSAGE -->
+        <div id="loginMessage">
+            🔐 Please login to edit your profile.
         </div>
 
         <!-- STATS -->
@@ -544,7 +600,7 @@ body.dark footer strong{
         <div class="info">
 
             <div class="info-box">
-                <strong>🎓 Year</strong>
+                <strong>🎓 Academic Year</strong>
                 <span id="profileYear">
                     Not added
                 </span>
@@ -629,7 +685,11 @@ body.dark footer strong{
                 placeholder="Write something about yourself..."
             ></textarea>
 
-            <button id="saveProfileBtn" onclick="saveProfile()">
+            <button
+                id="saveProfileBtn"
+                class="save-btn"
+                type="button"
+            >
                 💾 Save Profile
             </button>
 
@@ -642,15 +702,17 @@ body.dark footer strong{
 </div>
 
 <footer>
-
     <strong>Sociology Connect</strong> © 2026<br>
-    Sociology &amp; Social Work<br>
+    Arsi University – Sociology &amp; Social Work<br>
     Created by Horsa Gowe
-
 </footer>
 
 
 <script type="module">
+
+/* =========================================================
+   FIREBASE
+   ========================================================= */
 
 import { auth, db } from "./firebase.js";
 
@@ -710,9 +772,23 @@ const postCount =
 const themeBtn =
     document.getElementById("themeBtn");
 
+const photoInput =
+    document.getElementById("photoInput");
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
 
 /* =========================================================
-   STATUS MESSAGE
+   DEFAULT PHOTO
+   ========================================================= */
+
+const DEFAULT_PHOTO =
+    "IMG_20260910_154710.png";
+
+
+/* =========================================================
+   STATUS
    ========================================================= */
 
 function showStatus(message){
@@ -727,44 +803,101 @@ function showStatus(message){
 
 
 /* =========================================================
-   LOAD LOCAL PROFILE
+   APPLY PROFILE DATA TO SCREEN
+   ========================================================= */
+
+function applyProfile(data,user){
+
+    const name =
+        data.fullName ||
+        data.displayName ||
+        data.name ||
+        user?.displayName ||
+        "Student Name";
+
+    const selectedYear =
+        data.year || "";
+
+    const selectedBio =
+        data.bio || "";
+
+    const email =
+        user?.email ||
+        data.email ||
+        "Not available";
+
+
+    profileName.textContent =
+        name;
+
+    profileYear.textContent =
+        selectedYear || "Not added";
+
+    profileBio.textContent =
+        selectedBio || "No bio added yet.";
+
+    profileEmail.textContent =
+        email;
+
+
+    fullName.value =
+        name === "Student Name" ? "" : name;
+
+    year.value =
+        selectedYear;
+
+    bio.value =
+        selectedBio;
+
+
+    if(data.photoURL){
+
+        profilePhoto.src =
+            data.photoURL;
+
+    }else if(data.photo){
+
+        profilePhoto.src =
+            data.photo;
+
+    }else{
+
+        profilePhoto.src =
+            DEFAULT_PHOTO;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOCAL PROFILE
    ========================================================= */
 
 function loadLocalProfile(){
 
-    const data =
-        JSON.parse(
-            localStorage.getItem("scProfile")
-        ) || {};
+    try{
 
+        const saved =
+            localStorage.getItem("scProfile");
 
-    profileName.textContent =
-        data.name || "Student Name";
+        if(!saved){
 
-    profileYear.textContent =
-        data.year || "Not added";
+            return;
 
-    profileBio.textContent =
-        data.bio || "No bio added yet.";
+        }
 
-    profileEmail.textContent =
-        data.email || "Not available";
+        const data =
+            JSON.parse(saved);
 
+        applyProfile(data,null);
 
-    fullName.value =
-        data.name || "";
+    }catch(error){
 
-    year.value =
-        data.year || "";
-
-    bio.value =
-        data.bio || "";
-
-
-    if(data.photo){
-
-        profilePhoto.src =
-            data.photo;
+        console.error(
+            "Local profile error:",
+            error
+        );
 
     }
 
@@ -792,59 +925,63 @@ async function loadFirebaseProfile(user){
                 profileSnap.data();
 
 
-            const localData =
-                JSON.parse(
-                    localStorage.getItem("scProfile")
-                ) || {};
+            applyProfile(
+                data,
+                user
+            );
 
 
-            const mergedData = {
-                ...localData,
+            /* Keep compatible local cache */
+
+            const localData = {
+
                 ...data,
-                email:user.email || data.email || ""
+
+                fullName:
+                    data.fullName ||
+                    data.displayName ||
+                    data.name ||
+                    "",
+
+                name:
+                    data.fullName ||
+                    data.displayName ||
+                    data.name ||
+                    "",
+
+                email:
+                    user.email ||
+                    data.email ||
+                    "",
+
+                photo:
+                    data.photoURL ||
+                    data.photo ||
+                    ""
+
             };
 
 
             localStorage.setItem(
                 "scProfile",
-                JSON.stringify(mergedData)
+                JSON.stringify(localData)
             );
 
-
-            profileName.textContent =
-                mergedData.name || "Student Name";
-
-            profileYear.textContent =
-                mergedData.year || "Not added";
-
-            profileBio.textContent =
-                mergedData.bio || "No bio added yet.";
-
-            profileEmail.textContent =
-                mergedData.email || "Not available";
-
-
-            fullName.value =
-                mergedData.name || "";
-
-            year.value =
-                mergedData.year || "";
-
-            bio.value =
-                mergedData.bio || "";
-
-
-            if(mergedData.photo){
-
-                profilePhoto.src =
-                    mergedData.photo;
-
-            }
 
         }else{
 
             profileEmail.textContent =
                 user.email || "Not available";
+
+            if(user.displayName){
+
+                fullName.value =
+                    user.displayName;
+
+                profileName.textContent =
+                    user.displayName;
+
+            }
 
         }
 
@@ -852,7 +989,7 @@ async function loadFirebaseProfile(user){
     }catch(error){
 
         console.error(
-            "Profile loading error:",
+            "Firebase profile loading error:",
             error
         );
 
@@ -865,7 +1002,7 @@ async function loadFirebaseProfile(user){
 
 
 /* =========================================================
-   LOAD REAL POST COUNT
+   LOAD USER POST COUNT
    ========================================================= */
 
 async function loadPostCount(user){
@@ -874,30 +1011,35 @@ async function loadPostCount(user){
 
         postCount.textContent = "...";
 
-        const postsQuery = query(
-            collection(db,"posts"),
-            where("userId","==",user.uid)
-        );
 
-        const postsSnapshot =
+        const postsQuery =
+            query(
+                collection(db,"posts"),
+                where(
+                    "userId",
+                    "==",
+                    user.uid
+                )
+            );
+
+
+        const snapshot =
             await getDocs(postsQuery);
 
-        postCount.textContent =
-            postsSnapshot.size;
 
-        console.log(
-            "User post count:",
-            postsSnapshot.size
-        );
+        postCount.textContent =
+            snapshot.size;
+
 
     }catch(error){
 
         console.error(
-            "Post count loading error:",
+            "Post count error:",
             error
         );
 
-        postCount.textContent = "0";
+        postCount.textContent =
+            "0";
 
     }
 
@@ -908,7 +1050,7 @@ async function loadPostCount(user){
    SAVE PROFILE
    ========================================================= */
 
-window.saveProfile = async()=>{
+async function saveProfile(){
 
     const user =
         auth.currentUser;
@@ -916,7 +1058,9 @@ window.saveProfile = async()=>{
 
     if(!user){
 
-        alert("Please login first.");
+        alert(
+            "Please login first."
+        );
 
         return;
 
@@ -950,58 +1094,91 @@ window.saveProfile = async()=>{
         "⏳ Saving...";
 
 
-    const data = {
-
-        name:name,
-
-        year:selectedYear,
-
-        bio:selectedBio,
-
-        email:user.email || "",
-
-        uid:user.uid,
-
-        updatedAt:serverTimestamp()
-
-    };
-
-
     try{
 
+        const profileRef =
+            doc(
+                db,
+                "users",
+                user.uid
+            );
+
+
+        /* Get existing data first */
+
+        const oldSnapshot =
+            await getDoc(profileRef);
+
+        const oldData =
+            oldSnapshot.exists()
+                ? oldSnapshot.data()
+                : {};
+
+
+        const profileData = {
+
+            uid:user.uid,
+
+            email:
+                user.email || "",
+
+            fullName:name,
+
+            displayName:name,
+
+            /* Keep compatibility
+               with older profile code */
+
+            name:name,
+
+            year:selectedYear,
+
+            bio:selectedBio,
+
+            role:
+                oldData.role || "student",
+
+            photoURL:
+                oldData.photoURL ||
+                oldData.photo ||
+                "",
+
+            updatedAt:
+                serverTimestamp()
+
+        };
+
+
         await setDoc(
-            doc(db,"users",user.uid),
-            data,
+            profileRef,
+            profileData,
             {merge:true}
         );
 
 
         /* =========================
-           UPDATE LOCAL PROFILE
+           LOCAL CACHE
            ========================= */
 
-        const oldData =
-            JSON.parse(
-                localStorage.getItem("scProfile")
-            ) || {};
+        const localData = {
 
+            ...oldData,
 
-        oldData.name =
-            name;
+            ...profileData,
 
-        oldData.year =
-            selectedYear;
+            name:name,
 
-        oldData.bio =
-            selectedBio;
+            photo:
+                oldData.photoURL ||
+                oldData.photo ||
+                ""
 
-        oldData.email =
-            user.email || "";
+        };
 
 
         localStorage.setItem(
             "scProfile",
-            JSON.stringify(oldData)
+            JSON.stringify(localData)
         );
 
 
@@ -1009,17 +1186,10 @@ window.saveProfile = async()=>{
            UPDATE SCREEN
            ========================= */
 
-        profileName.textContent =
-            name;
-
-        profileYear.textContent =
-            selectedYear || "Not added";
-
-        profileBio.textContent =
-            selectedBio || "No bio added yet.";
-
-        profileEmail.textContent =
-            user.email || "Not available";
+        applyProfile(
+            profileData,
+            user
+        );
 
 
         showStatus(
@@ -1048,16 +1218,16 @@ window.saveProfile = async()=>{
 
     }
 
-};
+}
+
+
+window.saveProfile =
+    saveProfile;
 
 
 /* =========================================================
    PROFILE PHOTO
    ========================================================= */
-
-const photoInput =
-    document.getElementById("photoInput");
-
 
 photoInput.addEventListener(
     "change",
@@ -1074,9 +1244,24 @@ photoInput.addEventListener(
         }
 
 
-        /* Limit very large images */
+        if(
+            !file.type.startsWith("image/")
+        ){
 
-        if(file.size > 5 * 1024 * 1024){
+            alert(
+                "Please choose an image file."
+            );
+
+            this.value = "";
+
+            return;
+
+        }
+
+
+        if(
+            file.size > 5 * 1024 * 1024
+        ){
 
             alert(
                 "Please choose an image smaller than 5MB."
@@ -1094,31 +1279,57 @@ photoInput.addEventListener(
 
 
         reader.onload =
-            function(event){
+            async function(event){
 
-                const data =
-                    JSON.parse(
-                        localStorage.getItem("scProfile")
-                    ) || {};
-
-
-                data.photo =
+                const imageData =
                     event.target.result;
-
-
-                localStorage.setItem(
-                    "scProfile",
-                    JSON.stringify(data)
-                );
 
 
                 profilePhoto.src =
-                    event.target.result;
+                    imageData;
 
 
-                showStatus(
-                    "📷 Profile photo updated."
-                );
+                /*
+                 * Current Firebase project does not
+                 * use Storage here.
+                 *
+                 * Save the image locally so the selected
+                 * photo remains visible on this device.
+                 */
+
+                try{
+
+                    const saved =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "scProfile"
+                            )
+                        ) || {};
+
+
+                    saved.photo =
+                        imageData;
+
+
+                    localStorage.setItem(
+                        "scProfile",
+                        JSON.stringify(saved)
+                    );
+
+
+                    showStatus(
+                        "📷 Profile photo updated on this device."
+                    );
+
+
+                }catch(error){
+
+                    console.error(
+                        "Photo save error:",
+                        error
+                    );
+
+                }
 
             };
 
@@ -1130,7 +1341,7 @@ photoInput.addEventListener(
 
 
 /* =========================================================
-   AUTH
+   AUTH STATE
    ========================================================= */
 
 onAuthStateChanged(
@@ -1139,23 +1350,48 @@ onAuthStateChanged(
 
         if(user){
 
+            loginMessage.style.display =
+                "none";
+
+
+            saveBtn.disabled =
+                false;
+
+
             profileEmail.textContent =
-                user.email || "Not available";
+                user.email ||
+                "Not available";
+
 
             loadLocalProfile();
 
-            await loadFirebaseProfile(user);
 
-            /* Load real number of posts */
+            await loadFirebaseProfile(
+                user
+            );
 
-            await loadPostCount(user);
+
+            await loadPostCount(
+                user
+            );
+
 
         }else{
 
+            loginMessage.style.display =
+                "block";
+
+
+            saveBtn.disabled =
+                false;
+
+
             loadLocalProfile();
+
 
             profileEmail.textContent =
                 "Please login";
+
 
             postCount.textContent =
                 "0";
@@ -1167,38 +1403,7 @@ onAuthStateChanged(
 
 
 /* =========================================================
-   THEME SUPPORT
-   ========================================================= */
-
-function applySavedTheme(){
-
-    const theme =
-        localStorage.getItem("theme");
-
-    const darkMode =
-        localStorage.getItem("darkMode");
-
-
-    if(
-        theme === "dark" ||
-        darkMode === "true"
-    ){
-
-        document.body.classList.add("dark");
-
-    }else{
-
-        document.body.classList.remove("dark");
-
-    }
-
-    updateThemeButton();
-
-}
-
-
-/* =========================================================
-   UPDATE THEME BUTTON
+   THEME
    ========================================================= */
 
 function updateThemeButton(){
@@ -1220,18 +1425,45 @@ function updateThemeButton(){
 }
 
 
-/* =========================================================
-   DARK / LIGHT MODE BUTTON
-   ========================================================= */
+function applySavedTheme(){
+
+    const theme =
+        localStorage.getItem("theme");
+
+    const darkMode =
+        localStorage.getItem("darkMode");
+
+
+    const isDark =
+        theme === "dark" ||
+        darkMode === "true";
+
+
+    document.body.classList.toggle(
+        "dark",
+        isDark
+    );
+
+
+    updateThemeButton();
+
+}
+
 
 themeBtn.addEventListener(
     "click",
     function(){
 
-        document.body.classList.toggle("dark");
-
         const isDark =
-            document.body.classList.contains("dark");
+            !document.body.classList.contains(
+                "dark"
+            );
+
+
+        document.body.classList.toggle(
+            "dark",
+            isDark
+        );
 
 
         localStorage.setItem(
@@ -1251,13 +1483,15 @@ themeBtn.addEventListener(
 );
 
 
-/* Apply saved theme when page opens */
+/* =========================================================
+   INITIAL THEME
+   ========================================================= */
 
 applySavedTheme();
 
 
 /* =========================================================
-   LISTEN FOR THEME CHANGES FROM ANOTHER TAB
+   SYNC THEME
    ========================================================= */
 
 window.addEventListener(

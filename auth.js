@@ -1,10 +1,13 @@
 /* =========================================================
    SOCIOLOGY CONNECT 2.0
    AUTH.JS
+   ---------------------------------------------------------
    LOGIN
    SIGNUP
    LOGOUT
    PROFILE
+   AUTH STATE
+   USER DATA
 ========================================================= */
 
 import { auth, db } from "./firebase.js";
@@ -25,56 +28,104 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-/* ================= HELPER ================= */
+/* =========================================================
+   HELPER
+========================================================= */
 
 const $ = (id) => document.getElementById(id);
 
+const getValue = (id) => {
+  return $(id)?.value?.trim() || "";
+};
 
-/* ================= SIGN UP ================= */
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+function getAuthErrorMessage(error) {
+
+  console.error("Firebase Auth Error:", error);
+
+  switch (error?.code) {
+
+    case "auth/email-already-in-use":
+      return "This email is already registered. Please login instead.";
+
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+
+    case "auth/weak-password":
+      return "Password is too weak. Use at least 6 characters.";
+
+    case "auth/invalid-credential":
+      return "Email or password is incorrect.";
+
+    case "auth/user-not-found":
+      return "No account was found with this email.";
+
+    case "auth/wrong-password":
+      return "Incorrect password.";
+
+    case "auth/too-many-requests":
+      return "Too many attempts. Please wait a moment and try again.";
+
+    case "auth/network-request-failed":
+      return "Network error. Please check your internet connection.";
+
+    case "auth/operation-not-allowed":
+      return "Email/password authentication is not enabled in Firebase.";
+
+    default:
+      return error?.message ||
+        "Something went wrong. Please try again.";
+  }
+}
+
+
+/* =========================================================
+   SIGN UP
+========================================================= */
 
 async function signup() {
 
+  const fullName = getValue("fullName");
+  const year = $("year")?.value || "";
+  const bio = getValue("bio");
+  const email = getValue("email").toLowerCase();
+  const password = $("password")?.value || "";
+
+  /* ---------- VALIDATION ---------- */
+
+  if (!fullName) {
+    alert("Please enter your full name.");
+    return;
+  }
+
+  if (fullName.length < 2) {
+    alert("Please enter a valid full name.");
+    return;
+  }
+
+  if (!email) {
+    alert("Please enter your email.");
+    return;
+  }
+
+  if (!password) {
+    alert("Please enter your password.");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+
   try {
 
-    const fullName =
-      $("fullName")?.value.trim() || "";
-
-    const year =
-      $("year")?.value || "";
-
-    const bio =
-      $("bio")?.value.trim() || "";
-
-    const email =
-      $("email")?.value.trim() || "";
-
-    const password =
-      $("password")?.value || "";
-
-
-    if (!fullName) {
-      alert("Please enter your full name.");
-      return;
-    }
-
-
-    if (!email) {
-      alert("Please enter your email.");
-      return;
-    }
-
-
-    if (!password) {
-      alert("Please enter your password.");
-      return;
-    }
-
-
-    if (password.length < 6) {
-      alert("Password must be at least 6 characters.");
-      return;
-    }
-
+    /* ---------- CREATE ACCOUNT ---------- */
 
     const credential =
       await createUserWithEmailAndPassword(
@@ -83,128 +134,91 @@ async function signup() {
         password
       );
 
+    const user = credential.user;
 
-    /* UPDATE FIREBASE PROFILE */
+
+    /* ---------- FIREBASE AUTH PROFILE ---------- */
 
     await updateProfile(
-      credential.user,
+      user,
       {
         displayName: fullName
       }
     );
 
 
-    /* SAVE USER DATA */
+    /* ---------- FIRESTORE USER PROFILE ---------- */
 
     await setDoc(
-      doc(
-        db,
-        "users",
-        credential.user.uid
-      ),
+      doc(db, "users", user.uid),
       {
-        uid: credential.user.uid,
-        email: credential.user.email,
+        uid: user.uid,
+        email: user.email || email,
         fullName: fullName,
+        displayName: fullName,
         year: year,
         bio: bio,
-        createdAt: serverTimestamp()
+        photoURL: "",
+        role: "student",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       }
     );
 
 
+    console.log(
+      "✅ ACCOUNT CREATED:",
+      user.email
+    );
+
+
     alert(
-      "Account created successfully! 🎉"
+      "Account created successfully! 🎉\n\nWelcome to Sociology Connect."
     );
 
 
     window.location.href = "index.html";
 
+  }
 
-  } catch (error) {
+  catch (error) {
 
-    console.error(
-      "❌ SIGNUP ERROR:",
-      error
+    alert(
+      getAuthErrorMessage(error)
     );
-
-
-    let message =
-      error.message;
-
-
-    if (
-      error.code ===
-      "auth/email-already-in-use"
-    ) {
-
-      message =
-        "This email is already registered.";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/invalid-email"
-    ) {
-
-      message =
-        "Please enter a valid email.";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/weak-password"
-    ) {
-
-      message =
-        "Password is too weak. Use at least 6 characters.";
-
-    }
-
-
-    alert(message);
 
   }
 
 }
 
 
-/* ================= LOGIN ================= */
+/* =========================================================
+   LOGIN
+========================================================= */
 
 async function login() {
 
+  const email =
+    getValue("email").toLowerCase();
+
+  const password =
+    $("password")?.value || "";
+
+
+  /* ---------- VALIDATION ---------- */
+
+  if (!email) {
+    alert("Please enter your email.");
+    return;
+  }
+
+  if (!password) {
+    alert("Please enter your password.");
+    return;
+  }
+
+
   try {
-
-    const email =
-      $("email")?.value.trim() || "";
-
-    const password =
-      $("password")?.value || "";
-
-
-    if (!email) {
-
-      alert(
-        "Please enter your email."
-      );
-
-      return;
-
-    }
-
-
-    if (!password) {
-
-      alert(
-        "Please enter your password."
-      );
-
-      return;
-
-    }
-
 
     const credential =
       await signInWithEmailAndPassword(
@@ -223,68 +237,22 @@ async function login() {
     window.location.href =
       "index.html";
 
+  }
 
-  } catch (error) {
+  catch (error) {
 
-    console.error(
-      "❌ LOGIN ERROR:",
-      error
+    alert(
+      getAuthErrorMessage(error)
     );
-
-
-    let message =
-      error.message;
-
-
-    if (
-      error.code ===
-      "auth/invalid-credential"
-    ) {
-
-      message =
-        "Email or password is incorrect.";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/user-not-found"
-    ) {
-
-      message =
-        "No account found with this email.";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/wrong-password"
-    ) {
-
-      message =
-        "Incorrect password.";
-
-    }
-
-    else if (
-      error.code ===
-      "auth/invalid-email"
-    ) {
-
-      message =
-        "Please enter a valid email.";
-
-    }
-
-
-    alert(message);
 
   }
 
 }
 
 
-/* ================= LOGOUT ================= */
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 async function logout() {
 
@@ -300,8 +268,9 @@ async function logout() {
     window.location.href =
       "login.html";
 
+  }
 
-  } catch (error) {
+  catch (error) {
 
     console.error(
       "❌ LOGOUT ERROR:",
@@ -310,7 +279,7 @@ async function logout() {
 
 
     alert(
-      error.message
+      getAuthErrorMessage(error)
     );
 
   }
@@ -318,7 +287,9 @@ async function logout() {
 }
 
 
-/* ================= PROFILE ================= */
+/* =========================================================
+   LOAD USER PROFILE
+========================================================= */
 
 async function loadProfile(user) {
 
@@ -339,18 +310,25 @@ async function loadProfile(user) {
       await getDoc(userRef);
 
 
-    const data =
-      snapshot.exists()
-        ? snapshot.data()
-        : {};
+    let data = {};
 
+
+    if (snapshot.exists()) {
+      data = snapshot.data();
+    }
+
+
+    /* ---------- USER NAME ---------- */
 
     const name =
       data.fullName ||
+      data.displayName ||
       user.displayName ||
       user.email?.split("@")[0] ||
       "Student";
 
+
+    /* ---------- HEADER USER ---------- */
 
     if ($("userInfo")) {
 
@@ -359,6 +337,8 @@ async function loadProfile(user) {
 
     }
 
+
+    /* ---------- PROFILE PAGE ---------- */
 
     if ($("profileName")) {
 
@@ -394,10 +374,48 @@ async function loadProfile(user) {
     }
 
 
-  } catch (error) {
+    /* ---------- PROFILE PHOTO ---------- */
+
+    if ($("profilePhoto")) {
+
+      if (data.photoURL) {
+
+        $("profilePhoto").src =
+          data.photoURL;
+
+      }
+
+      else {
+
+        $("profilePhoto").src =
+          "https://ui-avatars.com/api/?name=" +
+          encodeURIComponent(name) +
+          "&background=007bff&color=fff";
+
+      }
+
+    }
+
+
+    /* ---------- USER ROLE ---------- */
+
+    if ($("userRole")) {
+
+      $("userRole").textContent =
+        data.role ||
+        "Student";
+
+    }
+
+
+    return data;
+
+  }
+
+  catch (error) {
 
     console.error(
-      "❌ PROFILE ERROR:",
+      "❌ PROFILE LOAD ERROR:",
       error
     );
 
@@ -406,7 +424,9 @@ async function loadProfile(user) {
 }
 
 
-/* ================= AUTH STATE ================= */
+/* =========================================================
+   AUTH STATE
+========================================================= */
 
 onAuthStateChanged(
   auth,
@@ -422,6 +442,8 @@ onAuthStateChanged(
 
     if (user) {
 
+      /* ---------- LOGIN LINK ---------- */
+
       if ($("loginLink")) {
 
         $("loginLink").style.display =
@@ -430,6 +452,8 @@ onAuthStateChanged(
       }
 
 
+      /* ---------- LOGOUT BUTTON ---------- */
+
       if ($("logoutBtn")) {
 
         $("logoutBtn").style.display =
@@ -437,11 +461,31 @@ onAuthStateChanged(
 
       }
 
+
+      /* ---------- USER PROFILE ---------- */
 
       await loadProfile(user);
 
 
-    } else {
+      /* ---------- USER INFO ---------- */
+
+      if ($("userInfo")) {
+
+        const name =
+          user.displayName ||
+          user.email?.split("@")[0] ||
+          "Student";
+
+        $("userInfo").textContent =
+          "👤 " + name;
+
+      }
+
+    }
+
+    else {
+
+      /* ---------- LOGIN LINK ---------- */
 
       if ($("loginLink")) {
 
@@ -451,10 +495,22 @@ onAuthStateChanged(
       }
 
 
+      /* ---------- LOGOUT BUTTON ---------- */
+
       if ($("logoutBtn")) {
 
         $("logoutBtn").style.display =
           "none";
+
+      }
+
+
+      /* ---------- CLEAR USER INFO ---------- */
+
+      if ($("userInfo")) {
+
+        $("userInfo").textContent =
+          "";
 
       }
 
@@ -464,7 +520,9 @@ onAuthStateChanged(
 );
 
 
-/* ================= GLOBAL BUTTONS ================= */
+/* =========================================================
+   GLOBAL FUNCTIONS
+========================================================= */
 
 window.login =
   login;
@@ -475,9 +533,14 @@ window.signup =
 window.logout =
   logout;
 
+window.loadProfile =
+  loadProfile;
 
-/* ================= READY ================= */
+
+/* =========================================================
+   READY
+========================================================= */
 
 console.log(
-  "✅ AUTH.JS READY"
+  "✅ SOCIOLOGY CONNECT AUTH.JS READY"
 );

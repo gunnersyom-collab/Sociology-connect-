@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>My Profile | Sociology Connect</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -61,7 +63,6 @@ nav a{
     font-weight:bold;
     padding:8px 11px;
     border-radius:9px;
-    transition:.2s;
 }
 
 nav a:hover{
@@ -79,10 +80,6 @@ nav a:hover{
     font-size:14px;
     font-weight:bold;
     cursor:pointer;
-}
-
-#themeBtn:hover{
-    background:#0056b3;
 }
 
 /* ================= CONTAINER ================= */
@@ -107,9 +104,22 @@ nav a:hover{
 .cover{
     height:220px;
     background:
-        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 30%),
-        radial-gradient(circle at 80% 80%,rgba(255,255,255,.15),transparent 30%),
-        linear-gradient(135deg,#006eff,#00a2ff,#0056b3);
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(255,255,255,.22),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(255,255,255,.15),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #006eff,
+            #00a2ff,
+            #0056b3
+        );
     position:relative;
 }
 
@@ -124,7 +134,7 @@ nav a:hover{
     letter-spacing:2px;
 }
 
-/* ================= PROFILE PHOTO ================= */
+/* ================= PHOTO ================= */
 
 .photo-wrapper{
     position:relative;
@@ -160,12 +170,10 @@ nav a:hover{
     cursor:pointer;
     border:3px solid #fff;
     box-shadow:0 2px 8px rgba(0,0,0,.3);
-    transition:.2s;
 }
 
 .camera-btn:hover{
     transform:scale(1.08);
-    background:#0056b3;
 }
 
 /* ================= NAME ================= */
@@ -181,6 +189,18 @@ nav a:hover{
     color:#667085;
     margin:7px 15px 22px;
     font-size:15px;
+}
+
+/* ================= LOGIN ================= */
+
+#loginMessage{
+    display:none;
+    margin:15px 20px 0;
+    padding:13px;
+    border-radius:10px;
+    background:#fff4d6;
+    color:#7a5500;
+    text-align:center;
 }
 
 /* ================= STATS ================= */
@@ -265,7 +285,6 @@ textarea{
     background:#fff;
     color:#172033;
     outline:none;
-    transition:.2s;
 }
 
 input:focus,
@@ -276,14 +295,17 @@ textarea:focus{
 }
 
 textarea{
-    min-height:110px;
+    min-height:120px;
     resize:vertical;
 }
 
+/* ================= SAVE BUTTON ================= */
+
 .save-btn{
     width:100%;
+    display:block;
     margin-top:20px;
-    padding:15px;
+    padding:16px;
     border:none;
     border-radius:12px;
     background:#0057d9;
@@ -291,40 +313,33 @@ textarea{
     font-size:17px;
     font-weight:bold;
     cursor:pointer;
-    transition:.2s;
+    position:relative;
+    z-index:10;
+    pointer-events:auto;
+    touch-action:manipulation;
 }
 
 .save-btn:hover{
     background:#0043a8;
-    transform:translateY(-1px);
+}
+
+.save-btn:active{
+    transform:scale(.98);
 }
 
 .save-btn:disabled{
     opacity:.7;
     cursor:not-allowed;
-    transform:none;
-}
-
-/* ================= LOGIN MESSAGE ================= */
-
-#loginMessage{
-    display:none;
-    margin:15px 20px 0;
-    padding:13px;
-    border-radius:10px;
-    background:#fff4d6;
-    color:#7a5500;
-    text-align:center;
-    font-size:14px;
 }
 
 /* ================= STATUS ================= */
 
 #profileStatus{
     text-align:center;
-    margin-top:12px;
+    margin-top:14px;
+    min-height:24px;
     font-size:14px;
-    min-height:20px;
+    font-weight:bold;
 }
 
 /* ================= FOOTER ================= */
@@ -340,9 +355,7 @@ footer strong{
     color:#0057d9;
 }
 
-/* =========================================================
-   DARK MODE
-   ========================================================= */
+/* ================= DARK MODE ================= */
 
 body.dark{
     background:#0f172a;
@@ -351,20 +364,14 @@ body.dark{
 
 body.dark nav{
     background:#111827;
-    box-shadow:0 2px 10px rgba(0,0,0,.35);
 }
 
 body.dark nav a{
     color:#60a5fa;
 }
 
-body.dark nav a:hover{
-    background:#1e293b;
-}
-
 body.dark .profile-card{
     background:#111827;
-    box-shadow:0 5px 22px rgba(0,0,0,.45);
 }
 
 body.dark .profile-photo{
@@ -412,22 +419,8 @@ body.dark textarea{
     border-color:#475569;
 }
 
-body.dark input::placeholder,
-body.dark textarea::placeholder{
-    color:#94a3b8;
-}
-
-body.dark #loginMessage{
-    background:#3b2f12;
-    color:#fde68a;
-}
-
 body.dark footer{
     color:#cbd5e1;
-}
-
-body.dark footer strong{
-    color:#60a5fa;
 }
 
 /* ================= MOBILE ================= */
@@ -450,11 +443,6 @@ body.dark footer strong{
     nav a{
         font-size:13px;
         padding:7px 8px;
-    }
-
-    #themeBtn{
-        font-size:13px;
-        padding:7px 9px;
     }
 
     .container{
@@ -485,7 +473,6 @@ body.dark footer strong{
     .camera-btn{
         width:36px;
         height:36px;
-        font-size:16px;
     }
 
     #profileName{
@@ -508,203 +495,299 @@ body.dark footer strong{
     .edit-section{
         margin:18px 15px;
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
     <h1>👤 My Profile</h1>
-    <p>Sociology Connect – Arsi University</p>
+
+    <p>
+        Sociology Connect – Arsi University
+    </p>
+
 </header>
 
-<nav>
-    <a href="index.html">🏠 Home</a>
-    <a href="profile.html">👤 Profile</a>
-    <a href="research.html">🔬 Research Hub</a>
-    <a href="login.html">🔐 Login</a>
 
-    <button id="themeBtn" type="button">
+<nav>
+
+    <a href="index.html">
+        🏠 Home
+    </a>
+
+    <a href="profile.html">
+        👤 Profile
+    </a>
+
+    <a href="research.html">
+        🔬 Research Hub
+    </a>
+
+    <a href="login.html">
+        🔐 Login
+    </a>
+
+    <button
+        id="themeBtn"
+        type="button"
+    >
         🌙 Dark
     </button>
+
 </nav>
+
 
 <div class="container">
 
-    <div class="profile-card">
+<div class="profile-card">
 
-        <!-- COVER -->
-        <div class="cover"></div>
+    <div class="cover"></div>
 
-        <!-- PROFILE PHOTO -->
-        <div class="photo-wrapper">
 
-            <img
-                id="profilePhoto"
-                class="profile-photo"
-                src="IMG_20260910_154710.png"
-                alt="Profile Photo"
-            >
+    <!-- PROFILE PHOTO -->
 
-            <label
-                for="photoInput"
-                class="camera-btn"
-                title="Change profile photo"
-            >
-                📷
-            </label>
+    <div class="photo-wrapper">
 
-            <input
-                type="file"
-                id="photoInput"
-                accept="image/*"
-                hidden
-            >
+        <img
+            id="profilePhoto"
+            class="profile-photo"
+            src="IMG_20260910_154710.png"
+            alt="Profile Photo"
+        >
 
-        </div>
+        <label
+            for="photoInput"
+            class="camera-btn"
+        >
+            📷
+        </label>
 
-        <!-- NAME -->
-        <h2 id="profileName">Student Name</h2>
+        <input
+            type="file"
+            id="photoInput"
+            accept="image/*"
+            hidden
+        >
 
-        <div class="department">
-            Sociology &amp; Social Work
-        </div>
+    </div>
 
-        <!-- LOGIN MESSAGE -->
-        <div id="loginMessage">
-            🔐 Please login to edit your profile.
-        </div>
 
-        <!-- STATS -->
-        <div class="stats">
+    <!-- NAME -->
 
-            <div>
-                <strong id="postCount">0</strong>
-                Posts
-            </div>
+    <h2 id="profileName">
+        Student Name
+    </h2>
 
-            <div>
-                <strong id="followerCount">0</strong>
-                Followers
-            </div>
+    <div class="department">
+        Sociology &amp; Social Work
+    </div>
 
-            <div>
-                <strong id="followingCount">0</strong>
-                Following
-            </div>
 
-        </div>
+    <!-- LOGIN MESSAGE -->
 
-        <!-- PROFILE INFORMATION -->
-        <div class="info">
+    <div id="loginMessage">
 
-            <div class="info-box">
-                <strong>🎓 Academic Year</strong>
-                <span id="profileYear">
-                    Not added
-                </span>
-            </div>
+        🔐 Please login to edit your profile.
 
-            <div class="info-box">
-                <strong>📝 Bio</strong>
-                <span id="profileBio">
-                    No bio added yet.
-                </span>
-            </div>
+    </div>
 
-            <div class="info-box">
-                <strong>📧 Email</strong>
-                <span id="profileEmail">
-                    Not available
-                </span>
-            </div>
 
-            <div class="info-box">
-                <strong>🏫 Department</strong>
-                <span>
-                    Sociology &amp; Social Work
-                </span>
-            </div>
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div>
+
+            <strong id="postCount">
+                0
+            </strong>
+
+            Posts
 
         </div>
 
-        <!-- EDIT PROFILE -->
-        <div class="edit-section">
 
-            <h3>✏️ Edit Profile</h3>
+        <div>
 
-            <label for="fullName">
-                Full Name
-            </label>
+            <strong>
+                0
+            </strong>
 
-            <input
-                id="fullName"
-                type="text"
-                placeholder="Enter your full name"
-            >
+            Followers
 
-            <label for="year">
-                Academic Year
-            </label>
+        </div>
 
-            <select id="year">
 
-                <option value="">
-                    Select your year
-                </option>
+        <div>
 
-                <option value="1st Year">
-                    1st Year
-                </option>
+            <strong>
+                0
+            </strong>
 
-                <option value="2nd Year">
-                    2nd Year
-                </option>
-
-                <option value="3rd Year">
-                    3rd Year
-                </option>
-
-                <option value="4th Year">
-                    4th Year
-                </option>
-
-                <option value="Graduate">
-                    Graduate
-                </option>
-
-            </select>
-
-            <label for="bio">
-                Bio
-            </label>
-
-            <textarea
-                id="bio"
-                placeholder="Write something about yourself..."
-            ></textarea>
-
-            <button
-                id="saveProfileBtn"
-                class="save-btn"
-                type="button"
-            >
-                💾 Save Profile
-            </button>
-
-            <div id="profileStatus"></div>
+            Following
 
         </div>
 
     </div>
 
+
+    <!-- PROFILE INFORMATION -->
+
+    <div class="info">
+
+        <div class="info-box">
+
+            <strong>
+                🎓 Academic Year
+            </strong>
+
+            <span id="profileYear">
+                Not added
+            </span>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <strong>
+                📝 Bio
+            </strong>
+
+            <span id="profileBio">
+                No bio added yet.
+            </span>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <strong>
+                📧 Email
+            </strong>
+
+            <span id="profileEmail">
+                Not available
+            </span>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <strong>
+                🏫 Department
+            </strong>
+
+            <span>
+                Sociology &amp; Social Work
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- EDIT PROFILE -->
+
+    <div class="edit-section">
+
+        <h3>
+            ✏️ Edit Profile
+        </h3>
+
+
+        <label for="fullName">
+            Full Name
+        </label>
+
+        <input
+            id="fullName"
+            type="text"
+            placeholder="Enter your full name"
+        >
+
+
+        <label for="year">
+            Academic Year
+        </label>
+
+        <select id="year">
+
+            <option value="">
+                Select your year
+            </option>
+
+            <option value="1st Year">
+                1st Year
+            </option>
+
+            <option value="2nd Year">
+                2nd Year
+            </option>
+
+            <option value="3rd Year">
+                3rd Year
+            </option>
+
+            <option value="4th Year">
+                4th Year
+            </option>
+
+            <option value="Graduate">
+                Graduate
+            </option>
+
+        </select>
+
+
+        <label for="bio">
+            Bio
+        </label>
+
+        <textarea
+            id="bio"
+            placeholder="Write something about yourself..."
+        ></textarea>
+
+
+        <button
+            id="saveProfileBtn"
+            class="save-btn"
+            type="button"
+        >
+            💾 Save Profile
+        </button>
+
+
+        <div id="profileStatus"></div>
+
+    </div>
+
 </div>
 
+</div>
+
+
 <footer>
-    <strong>Sociology Connect</strong> © 2026<br>
-    Arsi University – Sociology &amp; Social Work<br>
+
+    <strong>
+        Sociology Connect
+    </strong>
+    © 2026
+    <br>
+
+    Arsi University – Sociology &amp; Social Work
+    <br>
+
     Created by Horsa Gowe
+
 </footer>
 
 
@@ -714,7 +797,9 @@ body.dark footer strong{
    FIREBASE
    ========================================================= */
 
-import { auth, db } from "./firebase.js";
+import { auth, db }
+from "./firebase.js";
+
 
 import {
     doc,
@@ -725,11 +810,14 @@ import {
     query,
     where,
     getDocs
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
 
 import {
     onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+}
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 
 /* =========================================================
@@ -788,22 +876,19 @@ const DEFAULT_PHOTO =
 
 
 /* =========================================================
-   STATUS
+   SHOW STATUS
    ========================================================= */
 
 function showStatus(message){
 
-    statusBox.textContent = message;
-
-    setTimeout(()=>{
-        statusBox.textContent = "";
-    },3000);
+    statusBox.textContent =
+        message;
 
 }
 
 
 /* =========================================================
-   APPLY PROFILE DATA TO SCREEN
+   APPLY PROFILE
    ========================================================= */
 
 function applyProfile(data,user){
@@ -841,7 +926,9 @@ function applyProfile(data,user){
 
 
     fullName.value =
-        name === "Student Name" ? "" : name;
+        name === "Student Name"
+        ? ""
+        : name;
 
     year.value =
         selectedYear;
@@ -855,23 +942,13 @@ function applyProfile(data,user){
         profilePhoto.src =
             data.photoURL;
 
-    }else if(data.photo){
-
-        profilePhoto.src =
-            data.photo;
-
-    }else{
-
-        profilePhoto.src =
-            DEFAULT_PHOTO;
-
     }
 
 }
 
 
 /* =========================================================
-   LOCAL PROFILE
+   LOAD LOCAL
    ========================================================= */
 
 function loadLocalProfile(){
@@ -879,7 +956,9 @@ function loadLocalProfile(){
     try{
 
         const saved =
-            localStorage.getItem("scProfile");
+            localStorage.getItem(
+                "scProfile"
+            );
 
         if(!saved){
 
@@ -890,12 +969,15 @@ function loadLocalProfile(){
         const data =
             JSON.parse(saved);
 
-        applyProfile(data,null);
+        applyProfile(
+            data,
+            null
+        );
 
     }catch(error){
 
-        console.error(
-            "Local profile error:",
+        console.log(
+            "Local profile error",
             error
         );
 
@@ -905,24 +987,28 @@ function loadLocalProfile(){
 
 
 /* =========================================================
-   LOAD FIREBASE PROFILE
+   LOAD FIREBASE
    ========================================================= */
 
 async function loadFirebaseProfile(user){
 
     try{
 
-        const profileRef =
-            doc(db,"users",user.uid);
+        const ref =
+            doc(
+                db,
+                "users",
+                user.uid
+            );
 
-        const profileSnap =
-            await getDoc(profileRef);
+        const snap =
+            await getDoc(ref);
 
 
-        if(profileSnap.exists()){
+        if(snap.exists()){
 
             const data =
-                profileSnap.data();
+                snap.data();
 
 
             applyProfile(
@@ -931,70 +1017,31 @@ async function loadFirebaseProfile(user){
             );
 
 
-            /* Keep compatible local cache */
-
-            const localData = {
-
-                ...data,
-
-                fullName:
-                    data.fullName ||
-                    data.displayName ||
-                    data.name ||
-                    "",
-
-                name:
-                    data.fullName ||
-                    data.displayName ||
-                    data.name ||
-                    "",
-
-                email:
-                    user.email ||
-                    data.email ||
-                    "",
-
-                photo:
-                    data.photoURL ||
-                    data.photo ||
-                    ""
-
-            };
-
-
             localStorage.setItem(
                 "scProfile",
-                JSON.stringify(localData)
+                JSON.stringify({
+                    ...data,
+                    email:user.email || data.email || ""
+                })
             );
-
 
         }else{
 
             profileEmail.textContent =
                 user.email || "Not available";
 
-            if(user.displayName){
-
-                fullName.value =
-                    user.displayName;
-
-                profileName.textContent =
-                    user.displayName;
-
-            }
-
         }
-
 
     }catch(error){
 
         console.error(
-            "Firebase profile loading error:",
+            "Load profile error:",
             error
         );
 
-        profileEmail.textContent =
-            user.email || "Not available";
+        showStatus(
+            "⚠️ Could not load profile."
+        );
 
     }
 
@@ -1002,19 +1049,19 @@ async function loadFirebaseProfile(user){
 
 
 /* =========================================================
-   LOAD USER POST COUNT
+   POST COUNT
    ========================================================= */
 
 async function loadPostCount(user){
 
     try{
 
-        postCount.textContent = "...";
-
-
         const postsQuery =
             query(
-                collection(db,"posts"),
+                collection(
+                    db,
+                    "posts"
+                ),
                 where(
                     "userId",
                     "==",
@@ -1022,14 +1069,13 @@ async function loadPostCount(user){
                 )
             );
 
-
         const snapshot =
-            await getDocs(postsQuery);
-
+            await getDocs(
+                postsQuery
+            );
 
         postCount.textContent =
             snapshot.size;
-
 
     }catch(error){
 
@@ -1052,20 +1098,29 @@ async function loadPostCount(user){
 
 async function saveProfile(){
 
+    console.log(
+        "SAVE PROFILE BUTTON CLICKED"
+    );
+
+
     const user =
         auth.currentUser;
 
 
+    /* USER CHECK */
+
     if(!user){
 
         alert(
-            "Please login first."
+            "🔐 Please login first."
         );
 
         return;
 
     }
 
+
+    /* GET VALUES */
 
     const name =
         fullName.value.trim();
@@ -1077,26 +1132,37 @@ async function saveProfile(){
         bio.value.trim();
 
 
+    /* NAME CHECK */
+
     if(!name){
 
         alert(
             "Please enter your full name."
         );
 
+        fullName.focus();
+
         return;
 
     }
 
 
-    saveBtn.disabled = true;
+    /* BUTTON */
+
+    saveBtn.disabled =
+        true;
 
     saveBtn.textContent =
         "⏳ Saving...";
 
+    showStatus(
+        "⏳ Saving your profile..."
+    );
+
 
     try{
 
-        const profileRef =
+        const ref =
             doc(
                 db,
                 "users",
@@ -1104,36 +1170,41 @@ async function saveProfile(){
             );
 
 
-        /* Get existing data first */
+        /* GET OLD DATA */
 
-        const oldSnapshot =
-            await getDoc(profileRef);
+        const oldSnap =
+            await getDoc(ref);
 
         const oldData =
-            oldSnapshot.exists()
-                ? oldSnapshot.data()
-                : {};
+            oldSnap.exists()
+            ? oldSnap.data()
+            : {};
 
 
-        const profileData = {
+        /* NEW DATA */
 
-            uid:user.uid,
+        const data = {
+
+            uid:
+                user.uid,
 
             email:
                 user.email || "",
 
-            fullName:name,
+            fullName:
+                name,
 
-            displayName:name,
+            displayName:
+                name,
 
-            /* Keep compatibility
-               with older profile code */
+            name:
+                name,
 
-            name:name,
+            year:
+                selectedYear,
 
-            year:selectedYear,
-
-            bio:selectedBio,
+            bio:
+                selectedBio,
 
             role:
                 oldData.role || "student",
@@ -1149,69 +1220,94 @@ async function saveProfile(){
         };
 
 
+        /* SAVE TO FIRESTORE */
+
         await setDoc(
-            profileRef,
-            profileData,
-            {merge:true}
+            ref,
+            data,
+            {
+                merge:true
+            }
         );
 
 
-        /* =========================
-           LOCAL CACHE
-           ========================= */
-
-        const localData = {
-
-            ...oldData,
-
-            ...profileData,
-
-            name:name,
-
-            photo:
-                oldData.photoURL ||
-                oldData.photo ||
-                ""
-
-        };
-
+        /* SAVE LOCAL */
 
         localStorage.setItem(
             "scProfile",
-            JSON.stringify(localData)
+            JSON.stringify({
+                ...oldData,
+                ...data,
+                email:
+                    user.email || ""
+            })
         );
 
 
-        /* =========================
-           UPDATE SCREEN
-           ========================= */
+        /* UPDATE SCREEN */
 
-        applyProfile(
-            profileData,
-            user
-        );
+        profileName.textContent =
+            name;
 
+        profileYear.textContent =
+            selectedYear ||
+            "Not added";
+
+        profileBio.textContent =
+            selectedBio ||
+            "No bio added yet.";
+
+        profileEmail.textContent =
+            user.email ||
+            "Not available";
+
+
+        /* SUCCESS */
 
         showStatus(
             "✅ Profile updated successfully!"
         );
 
 
+        /* KEEP SUCCESS MESSAGE */
+
+        setTimeout(()=>{
+
+            if(
+                statusBox.textContent ===
+                "✅ Profile updated successfully!"
+            ){
+
+                statusBox.textContent =
+                    "";
+
+            }
+
+        },5000);
+
+
     }catch(error){
 
         console.error(
-            "Profile save error:",
+            "SAVE PROFILE ERROR:",
             error
         );
 
+
         alert(
-            "Could not save profile: " +
+            "❌ Profile could not be saved.\n\n" +
             error.message
+        );
+
+
+        showStatus(
+            "❌ Save failed."
         );
 
     }finally{
 
-        saveBtn.disabled = false;
+        saveBtn.disabled =
+            false;
 
         saveBtn.textContent =
             "💾 Save Profile";
@@ -1221,12 +1317,27 @@ async function saveProfile(){
 }
 
 
+/* =========================================================
+   IMPORTANT:
+   DIRECT BUTTON EVENT
+   ========================================================= */
+
+saveBtn.addEventListener(
+    "click",
+    saveProfile
+);
+
+
+/* =========================================================
+   ALSO MAKE GLOBAL
+   ========================================================= */
+
 window.saveProfile =
     saveProfile;
 
 
 /* =========================================================
-   PROFILE PHOTO
+   PHOTO
    ========================================================= */
 
 photoInput.addEventListener(
@@ -1236,7 +1347,6 @@ photoInput.addEventListener(
         const file =
             this.files[0];
 
-
         if(!file){
 
             return;
@@ -1245,14 +1355,14 @@ photoInput.addEventListener(
 
 
         if(
-            !file.type.startsWith("image/")
+            !file.type.startsWith(
+                "image/"
+            )
         ){
 
             alert(
-                "Please choose an image file."
+                "Please select an image."
             );
-
-            this.value = "";
 
             return;
 
@@ -1260,14 +1370,13 @@ photoInput.addEventListener(
 
 
         if(
-            file.size > 5 * 1024 * 1024
+            file.size >
+            5 * 1024 * 1024
         ){
 
             alert(
-                "Please choose an image smaller than 5MB."
+                "Image must be smaller than 5MB."
             );
-
-            this.value = "";
 
             return;
 
@@ -1279,27 +1388,15 @@ photoInput.addEventListener(
 
 
         reader.onload =
-            async function(event){
+            function(event){
 
-                const imageData =
+                profilePhoto.src =
                     event.target.result;
 
 
-                profilePhoto.src =
-                    imageData;
-
-
-                /*
-                 * Current Firebase project does not
-                 * use Storage here.
-                 *
-                 * Save the image locally so the selected
-                 * photo remains visible on this device.
-                 */
-
                 try{
 
-                    const saved =
+                    const old =
                         JSON.parse(
                             localStorage.getItem(
                                 "scProfile"
@@ -1307,13 +1404,13 @@ photoInput.addEventListener(
                         ) || {};
 
 
-                    saved.photo =
-                        imageData;
+                    old.photo =
+                        event.target.result;
 
 
                     localStorage.setItem(
                         "scProfile",
-                        JSON.stringify(saved)
+                        JSON.stringify(old)
                     );
 
 
@@ -1321,11 +1418,9 @@ photoInput.addEventListener(
                         "📷 Profile photo updated on this device."
                     );
 
-
                 }catch(error){
 
                     console.error(
-                        "Photo save error:",
                         error
                     );
 
@@ -1341,7 +1436,7 @@ photoInput.addEventListener(
 
 
 /* =========================================================
-   AUTH STATE
+   AUTH
    ========================================================= */
 
 onAuthStateChanged(
@@ -1353,10 +1448,8 @@ onAuthStateChanged(
             loginMessage.style.display =
                 "none";
 
-
             saveBtn.disabled =
                 false;
-
 
             profileEmail.textContent =
                 user.email ||
@@ -1381,17 +1474,8 @@ onAuthStateChanged(
             loginMessage.style.display =
                 "block";
 
-
-            saveBtn.disabled =
-                false;
-
-
-            loadLocalProfile();
-
-
             profileEmail.textContent =
                 "Please login";
-
 
             postCount.textContent =
                 "0";
@@ -1403,58 +1487,30 @@ onAuthStateChanged(
 
 
 /* =========================================================
-   THEME
+   DARK MODE
    ========================================================= */
 
-function updateThemeButton(){
+function updateTheme(){
 
-    if(
-        document.body.classList.contains("dark")
-    ){
-
-        themeBtn.textContent =
-            "☀️ Light";
-
-    }else{
-
-        themeBtn.textContent =
-            "🌙 Dark";
-
-    }
-
-}
+    const dark =
+        document.body.classList.contains(
+            "dark"
+        );
 
 
-function applySavedTheme(){
-
-    const theme =
-        localStorage.getItem("theme");
-
-    const darkMode =
-        localStorage.getItem("darkMode");
-
-
-    const isDark =
-        theme === "dark" ||
-        darkMode === "true";
-
-
-    document.body.classList.toggle(
-        "dark",
-        isDark
-    );
-
-
-    updateThemeButton();
+    themeBtn.textContent =
+        dark
+        ? "☀️ Light"
+        : "🌙 Dark";
 
 }
 
 
 themeBtn.addEventListener(
     "click",
-    function(){
+    ()=>{
 
-        const isDark =
+        const dark =
             !document.body.classList.contains(
                 "dark"
             );
@@ -1462,22 +1518,27 @@ themeBtn.addEventListener(
 
         document.body.classList.toggle(
             "dark",
-            isDark
+            dark
         );
 
 
         localStorage.setItem(
             "theme",
-            isDark ? "dark" : "light"
+            dark
+            ? "dark"
+            : "light"
         );
+
 
         localStorage.setItem(
             "darkMode",
-            isDark ? "true" : "false"
+            dark
+            ? "true"
+            : "false"
         );
 
 
-        updateThemeButton();
+        updateTheme();
 
     }
 );
@@ -1487,28 +1548,30 @@ themeBtn.addEventListener(
    INITIAL THEME
    ========================================================= */
 
-applySavedTheme();
+const savedTheme =
+    localStorage.getItem(
+        "theme"
+    );
+
+const savedDark =
+    localStorage.getItem(
+        "darkMode"
+    );
 
 
-/* =========================================================
-   SYNC THEME
-   ========================================================= */
+if(
+    savedTheme === "dark" ||
+    savedDark === "true"
+){
 
-window.addEventListener(
-    "storage",
-    function(event){
+    document.body.classList.add(
+        "dark"
+    );
 
-        if(
-            event.key === "theme" ||
-            event.key === "darkMode"
-        ){
+}
 
-            applySavedTheme();
 
-        }
-
-    }
-);
+updateTheme();
 
 </script>
 

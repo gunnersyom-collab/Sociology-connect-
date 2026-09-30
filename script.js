@@ -1,20 +1,58 @@
 /* =========================================================
-   SOCIOLOGY CONNECT 2.0
+   SOCIOLOGY CONNECT 2.1
    SCRIPT.JS
-   FULL UPDATED VERSION
+   PROFESSIONAL + OPTIMIZED VERSION
 
    FEATURES
-   POSTS + LIKES + COMMENTS + SHARE + REPORT
-   DELETE + ADMIN CONTROLS
-   NEWS + EVENTS
-   FIRESTORE NOTIFICATIONS
-   UNREAD NOTIFICATION BADGE
-   REAL-TIME NOTIFICATIONS
+   ---------------------------------------------------------
+   POSTS
+   ✔ Create posts
+   ✔ Like / Unlike
+   ✔ Comments
+   ✔ Share
+   ✔ Report
+   ✔ Delete own post
+   ✔ Admin delete
+   ✔ Admin clear all posts
+
+   CONTENT
+   ✔ Latest News
+   ✔ Events
+   ✔ Trending Posts
+
+   NOTIFICATIONS
+   ✔ Firestore notifications
+   ✔ Unread badge
+   ✔ Seen notifications
+   ✔ Real-time listener
+
    AI MARI
-   DARK MODE
-   GLOBAL SEARCH 🔍
-   VOICE INPUT
-   LOGOUT
+   ✔ AI chat
+   ✔ Conversation history
+   ✔ Copy response
+   ✔ Listen response
+   ✔ Language-aware speech
+   ✔ Enter to send
+
+   UI
+   ✔ Dark mode
+   ✔ Mobile friendly
+   ✔ PC friendly
+   ✔ Search
+   ✔ Voice input
+   ✔ Ctrl + K search
+
+   PERFORMANCE
+   ✔ Search caching
+   ✔ Debounced search
+   ✔ Parallel searches
+   ✔ Request protection
+   ✔ Listener cleanup
+========================================================= */
+
+
+/* =========================================================
+   FIREBASE
 ========================================================= */
 
 import { auth, db } from "./firebase.js";
@@ -101,20 +139,61 @@ let latestNotifications = [];
 
 
 /* =========================================================
-   SEARCH STATE
+   SEARCH CACHE
 ========================================================= */
 
-let searchTimer = null;
+let cachedPosts = [];
+let cachedNews = [];
+let cachedEvents = [];
+let cachedResearch = null;
 
-/*
-   Used to make sure an older search result
-   does not overwrite a newer search result.
-*/
+let researchCacheUserId = null;
+
+let searchTimer = null;
 let searchRequestId = 0;
 
 
 /* =========================================================
-   NOTIFICATION STATE
+   TRENDING STATE
+========================================================= */
+
+let trendingTimer = null;
+let trendingRequestId = 0;
+
+
+/* =========================================================
+   AI STATE
+========================================================= */
+
+const chatMessages = [
+
+  {
+    role: "system",
+
+    content:
+      `You are AI Mari, the official academic AI assistant of Sociology Connect – Arsi University (Sociology & Social Work).
+
+Help students with:
+Sociology, Social Work, Psychology, Anthropology, Political Science, Economics, Social Policy, Community Development, Human Rights, Gender and Society, Research Methods, Academic Writing, APA 7, Assignments, Presentations and Research Projects.
+
+Always answer in the same language used by the user.
+
+Afaan Oromoo → Answer in natural Afaan Oromoo.
+Amharic → Answer in natural Amharic.
+English → Answer in clear English.
+
+Give clear, useful and educational answers.
+
+Never invent research data, statistics or citations.
+
+When explaining academic topics, use simple examples when useful.`
+  }
+
+];
+
+
+/* =========================================================
+   NOTIFICATION STORAGE
 ========================================================= */
 
 const NOTIFICATION_SEEN_KEY =
@@ -162,17 +241,11 @@ function saveSeenNotificationIds(ids) {
     const unique =
       [...new Set(ids)];
 
-    /*
-       Keep only the latest 100 IDs
-       so localStorage does not grow forever.
-    */
-
-    const limited =
-      unique.slice(-100);
-
     localStorage.setItem(
       NOTIFICATION_SEEN_KEY,
-      JSON.stringify(limited)
+      JSON.stringify(
+        unique.slice(-100)
+      )
     );
 
   } catch (error) {
@@ -188,12 +261,12 @@ function saveSeenNotificationIds(ids) {
 
 
 /* =========================================================
-   ADMIN CHECK
+   ADMIN
 ========================================================= */
 
 function isAdmin() {
 
-  return (
+  return Boolean(
     currentUser &&
     currentUser.email &&
     currentUser.email.toLowerCase() ===
@@ -251,7 +324,7 @@ function formatPostTime(timestamp) {
   } catch (error) {
 
     console.warn(
-      "Time formatting error:",
+      "POST TIME ERROR:",
       error
     );
 
@@ -261,10 +334,6 @@ function formatPostTime(timestamp) {
 
 }
 
-
-/* =========================================================
-   FORMAT NOTIFICATION TIME
-========================================================= */
 
 function formatNotificationTime(timestamp) {
 
@@ -294,7 +363,7 @@ function formatNotificationTime(timestamp) {
   } catch (error) {
 
     console.warn(
-      "Notification time error:",
+      "NOTIFICATION TIME ERROR:",
       error
     );
 
@@ -317,7 +386,7 @@ async function getUserName(user) {
 
   try {
 
-    const snap =
+    const userSnap =
       await getDoc(
         doc(
           db,
@@ -326,10 +395,10 @@ async function getUserName(user) {
         )
       );
 
-    if (snap.exists()) {
+    if (userSnap.exists()) {
 
       const data =
-        snap.data();
+        userSnap.data();
 
       return (
         data.fullName ||
@@ -345,7 +414,7 @@ async function getUserName(user) {
   } catch (error) {
 
     console.warn(
-      "Could not load user name:",
+      "USER NAME ERROR:",
       error
     );
 
@@ -371,10 +440,30 @@ onAuthStateChanged(
     currentUser = user;
     authReady = true;
 
+    /*
+       Clear research cache when
+       authentication changes.
+    */
+
+    if (
+      researchCacheUserId !==
+      user?.uid
+    ) {
+
+      cachedResearch = null;
+
+      researchCacheUserId =
+        user?.uid || null;
+
+    }
+
+
     if (user) {
 
       const name =
-        await getUserName(user);
+        await getUserName(
+          user
+        );
 
       if (userInfo) {
 
@@ -397,11 +486,6 @@ onAuthStateChanged(
 
       }
 
-      /*
-         DOM may already be loaded or
-         may still be loading.
-      */
-
       if (
         document.readyState !==
         "loading"
@@ -411,27 +495,13 @@ onAuthStateChanged(
 
       }
 
-      /*
-         Start Firestore notifications.
-      */
-
       startNotificationListener();
-
-      /*
-         Refresh posts so admin buttons
-         appear immediately after login.
-      */
 
       if (postsContainer) {
 
         loadPosts();
 
       }
-
-      /*
-         Refresh current search because
-         Research becomes available after login.
-      */
 
       if (
         searchBar &&
@@ -473,22 +543,11 @@ onAuthStateChanged(
 
       updateNotificationBadge();
 
-      /*
-         Refresh posts after logout so
-         delete buttons disappear.
-      */
-
       if (postsContainer) {
 
         loadPosts();
 
       }
-
-      /*
-         Refresh search because
-         private Research results are no
-         longer available.
-      */
 
       if (
         searchBar &&
@@ -518,7 +577,7 @@ async function createPost() {
   if (!authReady) {
 
     alert(
-      "Please wait..."
+      "Please wait while your account is loading."
     );
 
     return;
@@ -543,6 +602,8 @@ async function createPost() {
     alert(
       "Write something first."
     );
+
+    postInput.focus();
 
     return;
 
@@ -596,6 +657,7 @@ async function createPost() {
     );
 
     alert(
+      "Unable to create post.\n\n" +
       error.message
     );
 
@@ -624,7 +686,7 @@ postBtn?.addEventListener(
 
 postInput?.addEventListener(
   "keydown",
-  (event) => {
+  event => {
 
     if (
       event.key === "Enter" &&
@@ -657,6 +719,13 @@ async function toggleLike(
     );
 
     return;
+
+  }
+
+  if (likeBtn) {
+
+    likeBtn.disabled =
+      true;
 
   }
 
@@ -702,7 +771,7 @@ async function toggleLike(
       likeBtn
     );
 
-    loadTrendingPosts();
+    scheduleTrendingLoad();
 
   } catch (error) {
 
@@ -710,6 +779,19 @@ async function toggleLike(
       "LIKE ERROR:",
       error
     );
+
+    alert(
+      "Unable to update like."
+    );
+
+  } finally {
+
+    if (likeBtn) {
+
+      likeBtn.disabled =
+        false;
+
+    }
 
   }
 
@@ -741,11 +823,13 @@ async function updateLikeButton(
       likes.size;
 
     const liked =
-      currentUser &&
-      likes.docs.some(
-        item =>
-          item.id ===
-          currentUser.uid
+      Boolean(
+        currentUser &&
+        likes.docs.some(
+          item =>
+            item.id ===
+            currentUser.uid
+        )
       );
 
     likeBtn.textContent =
@@ -766,7 +850,7 @@ async function updateLikeButton(
 
 
 /* =========================================================
-   COMMENT
+   COMMENTS
 ========================================================= */
 
 async function commentPost(
@@ -835,6 +919,7 @@ async function commentPost(
     );
 
     alert(
+      "Unable to add comment.\n\n" +
       error.message
     );
 
@@ -844,10 +929,6 @@ async function commentPost(
 
 }
 
-
-/* =========================================================
-   LOAD COMMENTS
-========================================================= */
 
 async function loadComments(
   postId,
@@ -902,49 +983,37 @@ async function loadComments(
     box.className =
       "comments-box";
 
-    box.style.marginTop =
-      "12px";
-
-    box.style.padding =
-      "10px";
-
-    box.style.borderTop =
-      "1px solid #ddd";
-
     [...snap.docs]
       .sort(
         (a, b) => {
 
-          const x =
+          const first =
             a.data()
               .createdAt
               ?.toMillis?.() || 0;
 
-          const y =
+          const second =
             b.data()
               .createdAt
               ?.toMillis?.() || 0;
 
-          return x - y;
+          return first - second;
 
         }
       )
       .forEach(
-        item => {
+        commentDoc => {
 
           const comment =
-            item.data();
+            commentDoc.data();
 
           const div =
             document.createElement(
               "div"
             );
 
-          div.style.padding =
-            "8px 0";
-
-          div.style.borderBottom =
-            "1px solid #eee";
+          div.className =
+            "comment-item";
 
           div.innerHTML = `
             <strong>
@@ -1003,7 +1072,8 @@ async function sharePost(
   try {
 
     if (
-      navigator.share
+      typeof navigator.share ===
+      "function"
     ) {
 
       await navigator.share(
@@ -1011,13 +1081,18 @@ async function sharePost(
           title:
             "Sociology Connect",
 
-          text,
+          text:
+            text || "Sociology Connect post",
 
           url
         }
       );
 
-    } else if (
+      return;
+
+    }
+
+    if (
       navigator.clipboard
     ) {
 
@@ -1025,23 +1100,28 @@ async function sharePost(
         .writeText(url);
 
       alert(
-        "Post link copied."
+        "✅ Post link copied."
       );
 
-    } else {
-
-      alert(
-        url
-      );
+      return;
 
     }
 
+    alert(url);
+
   } catch (error) {
 
-    console.warn(
-      "SHARE ERROR:",
-      error
-    );
+    if (
+      error?.name !==
+      "AbortError"
+    ) {
+
+      console.warn(
+        "SHARE ERROR:",
+        error
+      );
+
+    }
 
   }
 
@@ -1049,7 +1129,7 @@ async function sharePost(
 
 
 /* =========================================================
-   REPORT POST
+   REPORT
 ========================================================= */
 
 async function reportPost(
@@ -1129,8 +1209,7 @@ async function reportPost(
     );
 
     alert(
-      "✅ Report submitted successfully.\n\n" +
-      "Thank you for helping keep Sociology Connect safe."
+      "✅ Report submitted successfully."
     );
 
   } catch (error) {
@@ -1141,7 +1220,7 @@ async function reportPost(
     );
 
     alert(
-      "❌ Unable to submit report.\n\n" +
+      "Unable to submit report.\n\n" +
       error.message
     );
 
@@ -1152,7 +1231,6 @@ async function reportPost(
 
 /* =========================================================
    DELETE POST DATA
-   Used by single delete and clear-all.
 ========================================================= */
 
 async function deletePostData(
@@ -1169,16 +1247,6 @@ async function deletePostData(
       )
     );
 
-  for (
-    const item of likes.docs
-  ) {
-
-    await deleteDoc(
-      item.ref
-    );
-
-  }
-
   const comments =
     await getDocs(
       collection(
@@ -1189,15 +1257,28 @@ async function deletePostData(
       )
     );
 
-  for (
-    const item of comments.docs
-  ) {
+  /*
+     Delete likes and comments in
+     parallel where possible.
+  */
 
-    await deleteDoc(
-      item.ref
-    );
+  await Promise.all(
+    likes.docs.map(
+      item =>
+        deleteDoc(
+          item.ref
+        )
+    )
+  );
 
-  }
+  await Promise.all(
+    comments.docs.map(
+      item =>
+        deleteDoc(
+          item.ref
+        )
+    )
+  );
 
   await deleteDoc(
     doc(
@@ -1221,9 +1302,7 @@ async function deletePost(
 ) {
 
   if (!currentUser) {
-
     return false;
-
   }
 
   if (
@@ -1256,7 +1335,7 @@ async function deletePost(
       postId
     );
 
-    loadTrendingPosts();
+    scheduleTrendingLoad();
 
     return true;
 
@@ -1270,6 +1349,7 @@ async function deletePost(
     if (askConfirmation) {
 
       alert(
+        "Unable to delete post.\n\n" +
         error.message
       );
 
@@ -1311,7 +1391,7 @@ async function clearAllPosts() {
 
   try {
 
-    const posts =
+    const snapshot =
       await getDocs(
         collection(
           db,
@@ -1320,7 +1400,8 @@ async function clearAllPosts() {
       );
 
     for (
-      const post of posts.docs
+      const post of
+      snapshot.docs
     ) {
 
       await deletePostData(
@@ -1333,7 +1414,7 @@ async function clearAllPosts() {
       "✅ All posts deleted successfully."
     );
 
-    loadTrendingPosts();
+    scheduleTrendingLoad();
 
   } catch (error) {
 
@@ -1343,7 +1424,7 @@ async function clearAllPosts() {
     );
 
     alert(
-      "❌ Could not clear all posts.\n\n" +
+      "Could not clear all posts.\n\n" +
       error.message
     );
 
@@ -1475,7 +1556,17 @@ function loadPosts() {
     onSnapshot(
       postsQuery,
 
-      async (snapshot) => {
+      async snapshot => {
+
+        cachedPosts =
+          snapshot.docs.map(
+            item => ({
+              id:
+                item.id,
+
+              ...item.data()
+            })
+          );
 
         postsContainer.innerHTML =
           "";
@@ -1486,268 +1577,53 @@ function loadPosts() {
 
           postsContainer.innerHTML = `
             <div class="post-card">
-              No posts yet.
-              Be the first student
-              to post! 📚
+              <strong>
+                📚 No posts yet
+              </strong>
+
+              <p>
+                Be the first student
+                to share something!
+              </p>
             </div>
           `;
 
-          loadTrendingPosts();
+          scheduleTrendingLoad();
 
           return;
 
         }
 
-        for (
-          const postDoc of
-          snapshot.docs
-        ) {
+        /*
+           Render cards first.
+           This makes the page feel
+           faster on mobile and PC.
+        */
 
-          const post =
-            postDoc.data();
+        snapshot.docs.forEach(
+          postDoc => {
 
-          const postId =
-            postDoc.id;
-
-          const name =
-            post.name ||
-            "Student";
-
-          const card =
-            document.createElement(
-              "div"
+            renderPostCard(
+              postDoc
             );
 
-          card.className =
-            "post-card";
+          }
+        );
 
-          card.id =
-            "post-" +
-            postId;
+        /*
+           Update likes/comments after
+           cards are visible.
+        */
 
-          const canDelete =
-            currentUser &&
-            (
-              isAdmin() ||
-              currentUser.uid ===
-                post.userId
-            );
+        await refreshPostEngagement();
 
-          card.innerHTML = `
-
-            <div class="post-header">
-
-              <div class="post-avatar">
-                ${escapeHTML(
-                  name
-                    .charAt(0)
-                    .toUpperCase()
-                )}
-              </div>
-
-              <div>
-
-                <div class="post-name">
-                  ${escapeHTML(
-                    name
-                  )}
-                </div>
-
-                <div class="post-time">
-                  🕐
-                  ${formatPostTime(
-                    post.createdAt
-                  )}
-                </div>
-
-              </div>
-
-            </div>
-
-            <div class="post-text">
-              ${escapeHTML(
-                post.text || ""
-              )}
-            </div>
-
-            <div class="post-actions">
-
-              <button
-                class="like-btn"
-              >
-                🤍 Like (0)
-              </button>
-
-              <button
-                class="comment-btn"
-              >
-                💬 Comment (0)
-              </button>
-
-              <button
-                class="share-btn"
-              >
-                📤 Share
-              </button>
-
-              <button
-                class="report-btn"
-                style="color:#dc3545;"
-              >
-                🚩 Report
-              </button>
-
-              ${
-                canDelete
-                  ? `
-                    <button
-                      class="delete-btn"
-                      style="color:#dc3545;"
-                    >
-                      🗑️ Delete
-                    </button>
-                  `
-                  : ""
-              }
-
-            </div>
-          `;
-
-          postsContainer.appendChild(
-            card
-          );
-
-          const likeBtn =
-            card.querySelector(
-              ".like-btn"
-            );
-
-          const commentBtn =
-            card.querySelector(
-              ".comment-btn"
-            );
-
-          const shareBtn =
-            card.querySelector(
-              ".share-btn"
-            );
-
-          const reportBtn =
-            card.querySelector(
-              ".report-btn"
-            );
-
-          const deleteBtn =
-            card.querySelector(
-              ".delete-btn"
-            );
-
-
-          likeBtn?.addEventListener(
-            "click",
-            () => {
-
-              toggleLike(
-                postId,
-                likeBtn
-              );
-
-            }
-          );
-
-
-          commentBtn?.addEventListener(
-            "click",
-            async () => {
-
-              const added =
-                await commentPost(
-                  postId
-                );
-
-              await loadComments(
-                postId,
-                commentBtn,
-                card,
-                added
-              );
-
-              loadTrendingPosts();
-
-            }
-          );
-
-
-          shareBtn?.addEventListener(
-            "click",
-            () => {
-
-              sharePost(
-                postId,
-                post.text || ""
-              );
-
-            }
-          );
-
-
-          reportBtn?.addEventListener(
-            "click",
-            () => {
-
-              reportPost(
-                postId,
-                post.text || "",
-                post.userId || ""
-              );
-
-            }
-          );
-
-
-          deleteBtn?.addEventListener(
-            "click",
-            async () => {
-
-              const deleted =
-                await deletePost(
-                  postId,
-                  post.userId,
-                  true
-                );
-
-              if (deleted) {
-
-                loadTrendingPosts();
-
-              }
-
-            }
-          );
-
-
-          await updateLikeButton(
-            postId,
-            likeBtn
-          );
-
-
-          await loadComments(
-            postId,
-            commentBtn,
-            card,
-            false
-          );
-
-        }
-
-        loadTrendingPosts();
+        scheduleTrendingLoad();
 
         searchWebsite();
 
       },
 
-      (error) => {
+      error => {
 
         console.error(
           "LOAD POSTS ERROR:",
@@ -1757,6 +1633,8 @@ function loadPosts() {
         postsContainer.innerHTML = `
           <div class="post-card">
             ❌ Unable to load posts.
+            <br><br>
+            Please refresh the page.
           </div>
         `;
 
@@ -1767,8 +1645,302 @@ function loadPosts() {
 
 
 /* =========================================================
-   TRENDING POSTS
+   RENDER POST CARD
 ========================================================= */
+
+function renderPostCard(
+  postDoc
+) {
+
+  if (!postsContainer) {
+    return;
+  }
+
+  const post =
+    postDoc.data();
+
+  const postId =
+    postDoc.id;
+
+  const name =
+    post.name ||
+    "Student";
+
+  const canDelete =
+    currentUser &&
+    (
+      isAdmin() ||
+      currentUser.uid ===
+        post.userId
+    );
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+  card.className =
+    "post-card";
+
+  card.id =
+    "post-" +
+    postId;
+
+  card.innerHTML = `
+
+    <div class="post-header">
+
+      <div class="post-avatar">
+        ${escapeHTML(
+          name
+            .charAt(0)
+            .toUpperCase()
+        )}
+      </div>
+
+      <div>
+
+        <div class="post-name">
+          ${escapeHTML(
+            name
+          )}
+        </div>
+
+        <div class="post-time">
+          🕐
+          ${formatPostTime(
+            post.createdAt
+          )}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="post-text">
+      ${escapeHTML(
+        post.text || ""
+      )}
+    </div>
+
+    <div class="post-actions">
+
+      <button class="like-btn">
+        🤍 Like (0)
+      </button>
+
+      <button class="comment-btn">
+        💬 Comment (0)
+      </button>
+
+      <button class="share-btn">
+        📤 Share
+      </button>
+
+      <button
+        class="report-btn"
+        style="color:#dc3545;"
+      >
+        🚩 Report
+      </button>
+
+      ${
+        canDelete
+          ? `
+            <button
+              class="delete-btn"
+              style="color:#dc3545;"
+            >
+              🗑️ Delete
+            </button>
+          `
+          : ""
+      }
+
+    </div>
+  `;
+
+  postsContainer.appendChild(
+    card
+  );
+
+  const likeBtn =
+    card.querySelector(
+      ".like-btn"
+    );
+
+  const commentBtn =
+    card.querySelector(
+      ".comment-btn"
+    );
+
+  const shareBtn =
+    card.querySelector(
+      ".share-btn"
+    );
+
+  const reportBtn =
+    card.querySelector(
+      ".report-btn"
+    );
+
+  const deleteBtn =
+    card.querySelector(
+      ".delete-btn"
+    );
+
+
+  likeBtn?.addEventListener(
+    "click",
+    () =>
+      toggleLike(
+        postId,
+        likeBtn
+      )
+  );
+
+
+  commentBtn?.addEventListener(
+    "click",
+    async () => {
+
+      const added =
+        await commentPost(
+          postId
+        );
+
+      await loadComments(
+        postId,
+        commentBtn,
+        card,
+        added
+      );
+
+      scheduleTrendingLoad();
+
+    }
+  );
+
+
+  shareBtn?.addEventListener(
+    "click",
+    () =>
+      sharePost(
+        postId,
+        post.text || ""
+      )
+  );
+
+
+  reportBtn?.addEventListener(
+    "click",
+    () =>
+      reportPost(
+        postId,
+        post.text || "",
+        post.userId || ""
+      )
+  );
+
+
+  deleteBtn?.addEventListener(
+    "click",
+    async () => {
+
+      await deletePost(
+        postId,
+        post.userId,
+        true
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   REFRESH POST ENGAGEMENT
+========================================================= */
+
+async function refreshPostEngagement() {
+
+  if (!postsContainer) {
+    return;
+  }
+
+  const cards =
+    [...postsContainer.querySelectorAll(
+      ".post-card"
+    )];
+
+  /*
+     Run engagement requests in parallel.
+  */
+
+  await Promise.all(
+    cards.map(
+      async card => {
+
+        const postId =
+          card.id.replace(
+            "post-",
+            ""
+          );
+
+        const likeBtn =
+          card.querySelector(
+            ".like-btn"
+          );
+
+        const commentBtn =
+          card.querySelector(
+            ".comment-btn"
+          );
+
+        await Promise.all([
+          updateLikeButton(
+            postId,
+            likeBtn
+          ),
+
+          loadComments(
+            postId,
+            commentBtn,
+            card,
+            false
+          )
+        ]);
+
+      }
+    )
+  );
+
+}
+
+
+/* =========================================================
+   TRENDING
+========================================================= */
+
+function scheduleTrendingLoad() {
+
+  clearTimeout(
+    trendingTimer
+  );
+
+  trendingTimer =
+    setTimeout(
+      () => {
+
+        loadTrendingPosts();
+
+      },
+      500
+    );
+
+}
+
 
 async function loadTrendingPosts() {
 
@@ -1781,9 +1953,12 @@ async function loadTrendingPosts() {
     return;
   }
 
+  const requestId =
+    ++trendingRequestId;
+
   try {
 
-    const postsSnapshot =
+    const snapshot =
       await getDocs(
         collection(
           db,
@@ -1792,7 +1967,16 @@ async function loadTrendingPosts() {
       );
 
     if (
-      postsSnapshot.empty
+      requestId !==
+      trendingRequestId
+    ) {
+
+      return;
+
+    }
+
+    if (
+      snapshot.empty
     ) {
 
       trendingContainer.innerHTML = `
@@ -1805,64 +1989,86 @@ async function loadTrendingPosts() {
 
     }
 
-    const posts = [];
+    /*
+       Read engagement in parallel
+       instead of one-by-one.
+    */
 
-    for (
-      const postDoc of
-      postsSnapshot.docs
+    const posts =
+      await Promise.all(
+        snapshot.docs.map(
+          async postDoc => {
+
+            const post =
+              postDoc.data();
+
+            const [
+              likesSnapshot,
+              commentsSnapshot
+            ] =
+              await Promise.all([
+                getDocs(
+                  collection(
+                    db,
+                    "posts",
+                    postDoc.id,
+                    "likes"
+                  )
+                ),
+
+                getDocs(
+                  collection(
+                    db,
+                    "posts",
+                    postDoc.id,
+                    "comments"
+                  )
+                )
+              ]);
+
+            const likes =
+              likesSnapshot.size;
+
+            const comments =
+              commentsSnapshot.size;
+
+            return {
+
+              id:
+                postDoc.id,
+
+              name:
+                post.name ||
+                "Student",
+
+              text:
+                post.text ||
+                "",
+
+              likes,
+
+              comments,
+
+              score:
+                likes +
+                comments
+
+            };
+
+          }
+        )
+      );
+
+
+    if (
+      requestId !==
+      trendingRequestId
     ) {
 
-      const post =
-        postDoc.data();
-
-      const likes =
-        (
-          await getDocs(
-            collection(
-              db,
-              "posts",
-              postDoc.id,
-              "likes"
-            )
-          )
-        ).size;
-
-      const comments =
-        (
-          await getDocs(
-            collection(
-              db,
-              "posts",
-              postDoc.id,
-              "comments"
-            )
-          )
-        ).size;
-
-      posts.push({
-
-        id:
-          postDoc.id,
-
-        name:
-          post.name ||
-          "Student",
-
-        text:
-          post.text ||
-          "",
-
-        likes,
-
-        comments,
-
-        score:
-          likes +
-          comments
-
-      });
+      return;
 
     }
+
 
     posts.sort(
       (a, b) =>
@@ -2003,7 +2209,17 @@ function loadNews() {
     onSnapshot(
       newsQuery,
 
-      (snapshot) => {
+      snapshot => {
+
+        cachedNews =
+          snapshot.docs.map(
+            item => ({
+              id:
+                item.id,
+
+              ...item.data()
+            })
+          );
 
         newsContainer.innerHTML =
           "";
@@ -2024,10 +2240,10 @@ function loadNews() {
         }
 
         snapshot.forEach(
-          (docSnap) => {
+          newsDoc => {
 
             const news =
-              docSnap.data();
+              newsDoc.data();
 
             const card =
               document.createElement(
@@ -2039,7 +2255,7 @@ function loadNews() {
 
             card.id =
               "news-" +
-              docSnap.id;
+              newsDoc.id;
 
             card.innerHTML = `
 
@@ -2084,7 +2300,7 @@ function loadNews() {
 
       },
 
-      (error) => {
+      error => {
 
         console.error(
           "NEWS ERROR:",
@@ -2143,7 +2359,17 @@ function loadEvents() {
     onSnapshot(
       eventsQuery,
 
-      (snapshot) => {
+      snapshot => {
+
+        cachedEvents =
+          snapshot.docs.map(
+            item => ({
+              id:
+                item.id,
+
+              ...item.data()
+            })
+          );
 
         eventsContainer.innerHTML =
           "";
@@ -2154,8 +2380,7 @@ function loadEvents() {
 
           eventsContainer.innerHTML = `
             <div class="event-card">
-              📅 No events
-              available.
+              📅 No events available.
             </div>
           `;
 
@@ -2164,10 +2389,10 @@ function loadEvents() {
         }
 
         snapshot.forEach(
-          (docSnap) => {
+          eventDoc => {
 
             const event =
-              docSnap.data();
+              eventDoc.data();
 
             const card =
               document.createElement(
@@ -2179,7 +2404,7 @@ function loadEvents() {
 
             card.id =
               "event-" +
-              docSnap.id;
+              eventDoc.id;
 
             card.innerHTML = `
 
@@ -2226,7 +2451,7 @@ function loadEvents() {
 
       },
 
-      (error) => {
+      error => {
 
         console.error(
           "EVENTS ERROR:",
@@ -2235,8 +2460,7 @@ function loadEvents() {
 
         eventsContainer.innerHTML = `
           <div class="event-card">
-            ❌ Unable to load
-            events.
+            ❌ Unable to load events.
           </div>
         `;
 
@@ -2247,12 +2471,7 @@ function loadEvents() {
 
 
 /* =========================================================
-   FIRESTORE NOTIFICATIONS
-========================================================= */
-
-
-/* =========================================================
-   START NOTIFICATION LISTENER
+   NOTIFICATIONS
 ========================================================= */
 
 function startNotificationListener() {
@@ -2288,7 +2507,7 @@ function startNotificationListener() {
     onSnapshot(
       notificationsQuery,
 
-      (snapshot) => {
+      snapshot => {
 
         latestNotifications =
           snapshot.docs.map(
@@ -2304,7 +2523,7 @@ function startNotificationListener() {
 
       },
 
-      (error) => {
+      error => {
 
         console.error(
           "NOTIFICATIONS ERROR:",
@@ -2321,10 +2540,6 @@ function startNotificationListener() {
 
 }
 
-
-/* =========================================================
-   STOP NOTIFICATION LISTENER
-========================================================= */
 
 function stopNotificationListener() {
 
@@ -2344,10 +2559,6 @@ function stopNotificationListener() {
 
 }
 
-
-/* =========================================================
-   NOTIFICATION BADGE
-========================================================= */
 
 function updateNotificationBadge() {
 
@@ -2395,10 +2606,6 @@ function updateNotificationBadge() {
 }
 
 
-/* =========================================================
-   SHOW NOTIFICATIONS
-========================================================= */
-
 function showNotifications() {
 
   if (!currentUser) {
@@ -2429,27 +2636,21 @@ function showNotifications() {
       .map(
         notification => {
 
-          const title =
-            notification.title ||
-            "Notification";
-
-          const body =
-            notification.message ||
-            "";
-
-          const time =
-            formatNotificationTime(
-              notification.createdAt
-            );
-
           return (
             "🔔 " +
-            title +
+            (
+              notification.title ||
+              "Notification"
+            ) +
             "\n\n" +
-            body +
-            "\n\n" +
-            "🕒 " +
-            time
+            (
+              notification.message ||
+              ""
+            ) +
+            "\n\n🕒 " +
+            formatNotificationTime(
+              notification.createdAt
+            )
           );
 
         }
@@ -2458,32 +2659,23 @@ function showNotifications() {
         "\n\n━━━━━━━━━━━━━━\n\n"
       );
 
-  alert(
-    message
-  );
+  alert(message);
 
-  /*
-     Mark displayed notifications
-     as seen on this device.
-  */
-
-  const oldSeen =
+  const seen =
     getSeenNotificationIds();
 
-  const displayedIds =
+  const displayed =
     latestNotifications
       .slice(0, 10)
       .map(
-        notification =>
-          notification.id
+        item =>
+          item.id
       );
 
-  saveSeenNotificationIds(
-    [
-      ...oldSeen,
-      ...displayedIds
-    ]
-  );
+  saveSeenNotificationIds([
+    ...seen,
+    ...displayed
+  ]);
 
   updateNotificationBadge();
 
@@ -2500,31 +2692,61 @@ notifyBtn?.addEventListener(
    AI MARI
 ========================================================= */
 
-const chatMessages = [
+function detectSpeechLanguage(
+  text
+) {
 
-  {
-    role:
-      "system",
+  /*
+     Amharic / Ge'ez
+  */
 
-    content:
-      `You are AI Mari, the official academic AI assistant of Sociology Connect – Arsi University (Sociology & Social Work).
+  if (
+    /[\u1200-\u137F]/.test(
+      text
+    )
+  ) {
 
-Help students with Sociology, Social Work, Psychology, Anthropology, Political Science, Economics, Social Policy, Community Development, Human Rights, Gender and Society, Research Methods, Academic Writing, APA 7, Assignments, Presentations and Research Projects.
+    return "am-ET";
 
-Always answer in the same language used by the user.
-
-- Afaan Oromoo → Answer in natural Afaan Oromoo.
-- Amharic → Answer in natural Amharic.
-- English → Answer in clear English.
-
-Never invent research data or citations.`
   }
 
-];
+  /*
+     Afaan Oromoo often uses
+     Latin characters, therefore
+     use English as browser fallback.
+  */
+
+  return "en-US";
+
+}
 
 
 /* =========================================================
-   SEND MESSAGE TO SERVER
+   FORMAT AI TEXT
+========================================================= */
+
+function formatAIResponse(
+  text
+) {
+
+  /*
+     Keep HTML safe while making
+     simple line breaks readable.
+  */
+
+  return escapeHTML(
+    text
+  )
+    .replace(
+      /\n/g,
+      "<br>"
+    );
+
+}
+
+
+/* =========================================================
+   SEND AI MESSAGE
 ========================================================= */
 
 async function sendToServer() {
@@ -2562,10 +2784,10 @@ async function sendToServer() {
   userBox.className =
     "message user";
 
-  userBox.innerHTML =
-    `<b>You:</b><br>${escapeHTML(
-      text
-    )}`;
+  userBox.innerHTML = `
+    <b>You:</b><br>
+    ${escapeHTML(text)}
+  `;
 
   chatHistory.appendChild(
     userBox
@@ -2585,7 +2807,7 @@ async function sendToServer() {
   aiBox.innerHTML = `
     <b>AI Mari:</b><br>
     <span class="ai-text">
-      Typing... 🤖
+      Thinking... 🤖
     </span>
   `;
 
@@ -2604,6 +2826,15 @@ async function sendToServer() {
 
   try {
 
+    /*
+       Send recent conversation history
+       so AI Mari can understand context.
+    */
+
+    const history =
+      chatMessages
+        .slice(-12);
+
     const response =
       await fetch(
         "https://sociology-connect.onrender.com/api/chat",
@@ -2620,19 +2851,33 @@ async function sendToServer() {
           body:
             JSON.stringify({
               message:
-                text
+                text,
+
+              history
             })
         }
       );
 
-    const data =
-      await response.json();
+    let data;
+
+    try {
+
+      data =
+        await response.json();
+
+    } catch {
+
+      throw new Error(
+        "The AI server returned an invalid response."
+      );
+
+    }
 
     if (!response.ok) {
 
       throw new Error(
         data.error ||
-        "AI request failed"
+        "AI request failed."
       );
 
     }
@@ -2654,33 +2899,44 @@ async function sendToServer() {
       <b>AI Mari:</b><br>
 
       <span class="ai-text">
-        ${escapeHTML(
+        ${formatAIResponse(
           reply
         )}
       </span>
 
       <br><br>
 
-      <button class="copy-btn">
+      <button
+        class="copy-btn"
+        type="button"
+      >
         📋 Copy
       </button>
 
-      <button class="speak-btn">
+      <button
+        class="speak-btn"
+        type="button"
+      >
         🔊 Listen
       </button>
 
     `;
 
 
-    aiBox
-      .querySelector(
+    const copyBtn =
+      aiBox.querySelector(
         ".copy-btn"
-      )
-      ?.addEventListener(
-        "click",
-        async () => {
+      );
 
-          try {
+    copyBtn?.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          if (
+            navigator.clipboard
+          ) {
 
             await navigator
               .clipboard
@@ -2688,94 +2944,115 @@ async function sendToServer() {
                 reply
               );
 
-          } catch {
+            copyBtn.textContent =
+              "✅ Copied";
+
+            setTimeout(
+              () => {
+
+                copyBtn.textContent =
+                  "📋 Copy";
+
+              },
+              1500
+            );
+
+          } else {
 
             alert(
-              "Copy failed."
+              "Copy is not supported in this browser."
             );
 
           }
 
+        } catch (error) {
+
+          console.warn(
+            "COPY ERROR:",
+            error
+          );
+
+          alert(
+            "Copy failed."
+          );
+
         }
-      );
+
+      }
+    );
 
 
-    aiBox
-      .querySelector(
+    const speakBtn =
+      aiBox.querySelector(
         ".speak-btn"
-      )
-      ?.addEventListener(
-        "click",
-        () => {
+      );
 
-          if (
-            !(
-              "speechSynthesis"
-              in window
-            )
-          ) {
+    speakBtn?.addEventListener(
+      "click",
+      () => {
 
-            alert(
-              "Voice output is not supported."
-            );
+        if (
+          !(
+            "speechSynthesis"
+            in window
+          )
+        ) {
 
-            return;
+          alert(
+            "Voice output is not supported."
+          );
 
-          }
-
-          window
-            .speechSynthesis
-            .cancel();
-
-          const speech =
-            new SpeechSynthesisUtterance(
-              reply
-            );
-
-          speech.lang =
-            /[\u1200-\u137F]/
-              .test(reply)
-              ? "am-ET"
-              : "en-US";
-
-          speech.rate =
-            0.95;
-
-          speech.pitch =
-            1;
-
-          const button =
-            aiBox.querySelector(
-              ".speak-btn"
-            );
-
-          button.textContent =
-            "🔊 Speaking...";
-
-          speech.onend =
-            () => {
-
-              button.textContent =
-                "🔊 Listen";
-
-            };
-
-          speech.onerror =
-            () => {
-
-              button.textContent =
-                "🔊 Listen";
-
-            };
-
-          window
-            .speechSynthesis
-            .speak(
-              speech
-            );
+          return;
 
         }
-      );
+
+        window
+          .speechSynthesis
+          .cancel();
+
+        const speech =
+          new SpeechSynthesisUtterance(
+            reply
+          );
+
+        speech.lang =
+          detectSpeechLanguage(
+            reply
+          );
+
+        speech.rate =
+          0.95;
+
+        speech.pitch =
+          1;
+
+        speakBtn.textContent =
+          "🔊 Speaking...";
+
+        speech.onend =
+          () => {
+
+            speakBtn.textContent =
+              "🔊 Listen";
+
+          };
+
+        speech.onerror =
+          () => {
+
+            speakBtn.textContent =
+              "🔊 Listen";
+
+          };
+
+        window
+          .speechSynthesis
+          .speak(
+            speech
+          );
+
+      }
+    );
 
   } catch (error) {
 
@@ -2786,10 +3063,13 @@ async function sendToServer() {
 
     aiBox.innerHTML = `
       <b>AI Mari:</b><br>
-      ❌ ${escapeHTML(
-        error.message ||
-        "AI request failed"
-      )}
+
+      <span class="ai-text">
+        ❌ ${escapeHTML(
+          error.message ||
+          "AI request failed."
+        )}
+      </span>
     `;
 
   } finally {
@@ -2808,23 +3088,15 @@ async function sendToServer() {
 }
 
 
-/* =========================================================
-   AI SEND BUTTON
-========================================================= */
-
 sendBtn?.addEventListener(
   "click",
   sendToServer
 );
 
 
-/* =========================================================
-   AI ENTER KEY
-========================================================= */
-
 userInput?.addEventListener(
   "keydown",
-  (event) => {
+  event => {
 
     if (
       event.key === "Enter" &&
@@ -2895,13 +3167,16 @@ function toggleTheme() {
     "dark"
   );
 
-  localStorage.setItem(
-    "sociologyTheme",
+  const mode =
     document.body.classList.contains(
       "dark"
     )
       ? "dark"
-      : "light"
+      : "light";
+
+  localStorage.setItem(
+    "sociologyTheme",
+    mode
   );
 
   updateThemeButton();
@@ -2916,17 +3191,7 @@ themeBtn?.addEventListener(
 
 
 /* =========================================================
-   GLOBAL SEARCH 🔍
-   SEARCHES:
-   POSTS
-   NEWS
-   EVENTS
-   RESEARCH
-========================================================= */
-
-
-/* =========================================================
-   CREATE SEARCH RESULT BOX
+   SEARCH
 ========================================================= */
 
 function createSearchResultsBox() {
@@ -2969,7 +3234,9 @@ function createSearchResultsBox() {
       box
     );
 
-  } else if (searchBar?.parentElement) {
+  } else if (
+    searchBar?.parentElement
+  ) {
 
     searchBar.parentElement.appendChild(
       box
@@ -2983,7 +3250,7 @@ function createSearchResultsBox() {
 
 
 /* =========================================================
-   SEARCH RESULT STYLES
+   SEARCH CSS
 ========================================================= */
 
 function addSearchStyles() {
@@ -3009,105 +3276,106 @@ function addSearchStyles() {
   style.textContent = `
 
     #globalSearchResults {
-      position: relative;
-      z-index: 999;
+      position:relative;
+      z-index:9999;
     }
 
     .global-search-panel {
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 14px;
-      box-shadow: 0 8px 25px rgba(0,0,0,.12);
-      overflow: hidden;
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:14px;
+      box-shadow:0 8px 25px rgba(0,0,0,.12);
+      overflow:hidden;
     }
 
     .global-search-header {
-      padding: 12px 15px;
-      font-weight: 700;
-      border-bottom: 1px solid #eee;
-      color: #007bff;
+      padding:12px 15px;
+      font-weight:700;
+      border-bottom:1px solid #eee;
+      color:#007bff;
     }
 
     .global-search-result {
-      padding: 13px 15px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-      transition: background .2s ease;
-    }
-
-    .global-search-result:last-child {
-      border-bottom: none;
+      padding:13px 15px;
+      border-bottom:1px solid #eee;
+      cursor:pointer;
+      transition:background .2s ease;
     }
 
     .global-search-result:hover {
-      background: #f1f7ff;
+      background:#f1f7ff;
     }
 
     .global-search-category {
-      font-size: 12px;
-      font-weight: 700;
-      color: #007bff;
-      margin-bottom: 5px;
+      font-size:12px;
+      font-weight:700;
+      color:#007bff;
+      margin-bottom:5px;
     }
 
     .global-search-title {
-      font-weight: 700;
-      margin-bottom: 5px;
+      font-weight:700;
+      margin-bottom:5px;
     }
 
     .global-search-text {
-      font-size: 14px;
-      opacity: .8;
-      line-height: 1.5;
+      font-size:14px;
+      opacity:.8;
+      line-height:1.5;
     }
 
-    .global-search-empty {
-      padding: 20px;
-      text-align: center;
-      color: #777;
+    .global-search-empty,
+    .global-search-loading {
+      padding:20px;
+      text-align:center;
     }
 
     .global-search-loading {
-      padding: 20px;
-      text-align: center;
-      color: #007bff;
-      font-weight: 600;
+      color:#007bff;
+      font-weight:600;
     }
 
     .global-search-footer {
-      padding: 10px 15px;
-      text-align: center;
-      font-size: 12px;
-      opacity: .7;
+      padding:10px 15px;
+      text-align:center;
+      font-size:12px;
+      opacity:.7;
     }
 
     #globalSearchResults mark {
-      background: #fff3a3;
-      color: inherit;
-      border-radius: 3px;
-      padding: 0 2px;
+      background:#fff3a3;
+      color:inherit;
+      border-radius:3px;
+      padding:0 2px;
     }
 
     body.dark #globalSearchResults .global-search-panel {
-      background: #1e1e1e;
-      border-color: #444;
-      color: #fff;
+      background:#1e1e1e;
+      border-color:#444;
+      color:#fff;
     }
 
-    body.dark #globalSearchResults .global-search-header {
-      border-color: #444;
-    }
-
+    body.dark #globalSearchResults .global-search-header,
     body.dark #globalSearchResults .global-search-result {
-      border-color: #444;
+      border-color:#444;
     }
 
     body.dark #globalSearchResults .global-search-result:hover {
-      background: #292929;
+      background:#292929;
     }
 
     body.dark #globalSearchResults .global-search-empty {
-      color: #aaa;
+      color:#aaa;
+    }
+
+    .comment-item {
+      padding:8px 0;
+      border-bottom:1px solid #eee;
+      line-height:1.5;
+    }
+
+    body.dark .comment-item {
+      border-color:#444;
     }
 
   `;
@@ -3120,7 +3388,7 @@ function addSearchStyles() {
 
 
 /* =========================================================
-   NORMALIZE SEARCH TEXT
+   SEARCH HELPERS
 ========================================================= */
 
 function normalizeSearchText(
@@ -3135,10 +3403,6 @@ function normalizeSearchText(
 
 }
 
-
-/* =========================================================
-   CHECK MATCH
-========================================================= */
 
 function searchMatches(
   fields,
@@ -3163,284 +3427,186 @@ function searchMatches(
 
 
 /* =========================================================
-   SEARCH POSTS
+   SEARCH POSTS - CACHE
 ========================================================= */
 
-async function searchPosts(
+function searchPosts(
   search
 ) {
 
-  try {
-
-    const snapshot =
-      await getDocs(
-        collection(
-          db,
-          "posts"
+  return cachedPosts
+    .filter(
+      post =>
+        searchMatches(
+          [
+            post.text,
+            post.name,
+            post.email
+          ],
+          search
         )
-      );
+    )
+    .map(
+      post => ({
+        type:
+          "post",
 
-    const results = [];
+        id:
+          post.id,
 
-    snapshot.forEach(
-      postDoc => {
+        title:
+          post.name ||
+          "Student Post",
 
-        const post =
-          postDoc.data();
+        text:
+          post.text ||
+          "",
 
-        if (
-          searchMatches(
-            [
-              post.text,
-              post.name,
-              post.email
-            ],
-            search
-          )
-        ) {
-
-          results.push({
-
-            type:
-              "post",
-
-            id:
-              postDoc.id,
-
-            title:
-              post.name ||
-              "Student Post",
-
-            text:
-              post.text ||
-              "",
-
-            icon:
-              "📝"
-
-          });
-
-        }
-
-      }
+        icon:
+          "📝"
+      })
     );
-
-    return results;
-
-  } catch (error) {
-
-    console.error(
-      "SEARCH POSTS ERROR:",
-      error
-    );
-
-    return [];
-
-  }
 
 }
 
 
 /* =========================================================
-   SEARCH NEWS
+   SEARCH NEWS - CACHE
 ========================================================= */
 
-async function searchNews(
+function searchNews(
   search
 ) {
 
-  try {
-
-    const snapshot =
-      await getDocs(
-        collection(
-          db,
-          "news"
+  return cachedNews
+    .filter(
+      news =>
+        searchMatches(
+          [
+            news.title,
+            news.description
+          ],
+          search
         )
-      );
+    )
+    .map(
+      news => ({
+        type:
+          "news",
 
-    const results = [];
+        id:
+          news.id,
 
-    snapshot.forEach(
-      newsDoc => {
+        title:
+          news.title ||
+          "Latest News",
 
-        const news =
-          newsDoc.data();
+        text:
+          news.description ||
+          "",
 
-        if (
-          searchMatches(
-            [
-              news.title,
-              news.description
-            ],
-            search
-          )
-        ) {
-
-          results.push({
-
-            type:
-              "news",
-
-            id:
-              newsDoc.id,
-
-            title:
-              news.title ||
-              "Latest News",
-
-            text:
-              news.description ||
-              "",
-
-            icon:
-              "📰"
-
-          });
-
-        }
-
-      }
+        icon:
+          "📰"
+      })
     );
-
-    return results;
-
-  } catch (error) {
-
-    console.error(
-      "SEARCH NEWS ERROR:",
-      error
-    );
-
-    return [];
-
-  }
 
 }
 
 
 /* =========================================================
-   SEARCH EVENTS
+   SEARCH EVENTS - CACHE
 ========================================================= */
 
-async function searchEvents(
+function searchEvents(
   search
 ) {
 
-  try {
-
-    const snapshot =
-      await getDocs(
-        collection(
-          db,
-          "events"
+  return cachedEvents
+    .filter(
+      event =>
+        searchMatches(
+          [
+            event.title,
+            event.description,
+            event.date
+          ],
+          search
         )
-      );
+    )
+    .map(
+      event => ({
+        type:
+          "event",
 
-    const results = [];
+        id:
+          event.id,
 
-    snapshot.forEach(
-      eventDoc => {
+        title:
+          event.title ||
+          "Event",
 
-        const event =
-          eventDoc.data();
+        text:
+          event.description ||
+          "",
 
-        if (
-          searchMatches(
-            [
-              event.title,
-              event.description,
-              event.date
-            ],
-            search
-          )
-        ) {
+        date:
+          event.date ||
+          "",
 
-          results.push({
-
-            type:
-              "event",
-
-            id:
-              eventDoc.id,
-
-            title:
-              event.title ||
-              "Event",
-
-            text:
-              event.description ||
-              "",
-
-            date:
-              event.date ||
-              "",
-
-            icon:
-              "📅"
-
-          });
-
-        }
-
-      }
+        icon:
+          "📅"
+      })
     );
-
-    return results;
-
-  } catch (error) {
-
-    console.error(
-      "SEARCH EVENTS ERROR:",
-      error
-    );
-
-    return [];
-
-  }
 
 }
 
 
 /* =========================================================
    SEARCH RESEARCH
-   ONLY USER-ACCESSIBLE RESEARCH
 ========================================================= */
 
 async function searchResearch(
   search
 ) {
 
-  /*
-     User must be logged in because
-     Firestore rules protect research.
-  */
-
   if (!currentUser) {
-
     return [];
-
   }
 
   try {
 
-    const snapshot =
-      await getDocs(
-        collection(
-          db,
-          "research"
-        )
-      );
+    if (
+      !cachedResearch ||
+      researchCacheUserId !==
+        currentUser.uid
+    ) {
 
-    const results = [];
+      const snapshot =
+        await getDocs(
+          collection(
+            db,
+            "research"
+          )
+        );
 
-    snapshot.forEach(
-      researchDoc => {
+      cachedResearch =
+        snapshot.docs.map(
+          item => ({
+            id:
+              item.id,
 
-        const research =
-          researchDoc.data();
+            ...item.data()
+          })
+        );
 
-        if (
+      researchCacheUserId =
+        currentUser.uid;
+
+    }
+
+    return cachedResearch
+      .filter(
+        research =>
           searchMatches(
             [
               research.topic,
@@ -3453,46 +3619,32 @@ async function searchResearch(
             ],
             search
           )
-        ) {
+      )
+      .map(
+        research => ({
+          type:
+            "research",
 
-          results.push({
+          id:
+            research.id,
 
-            type:
-              "research",
+          title:
+            research.topic ||
+            "Saved Research",
 
-            id:
-              researchDoc.id,
+          text:
+            research.researchQuestions ||
+            research.abstract ||
+            research.problemStatement ||
+            research.aiMariResponse ||
+            "",
 
-            title:
-              research.topic ||
-              "Saved Research",
-
-            text:
-              research.researchQuestions ||
-              research.abstract ||
-              research.problemStatement ||
-              research.aiMariResponse ||
-              "",
-
-            icon:
-              "🔬"
-
-          });
-
-        }
-
-      }
-    );
-
-    return results;
+          icon:
+            "🔬"
+        })
+      );
 
   } catch (error) {
-
-    /*
-       If Firestore blocks research
-       access, do not break the
-       other search categories.
-    */
 
     console.warn(
       "RESEARCH SEARCH SKIPPED:",
@@ -3507,7 +3659,7 @@ async function searchResearch(
 
 
 /* =========================================================
-   HIGHLIGHT SEARCH TEXT
+   HIGHLIGHT SEARCH
 ========================================================= */
 
 function highlightSearchText(
@@ -3521,17 +3673,10 @@ function highlightSearchText(
     );
 
   if (!search) {
-
     return safeText;
-
   }
 
-  /*
-     Escape regular-expression
-     special characters.
-  */
-
-  const escapedSearch =
+  const escaped =
     String(search)
       .replace(
         /[.*+?^${}()|[\]\\]/g,
@@ -3542,7 +3687,7 @@ function highlightSearchText(
 
     const regex =
       new RegExp(
-        `(${escapedSearch})`,
+        `(${escaped})`,
         "gi"
       );
 
@@ -3561,7 +3706,7 @@ function highlightSearchText(
 
 
 /* =========================================================
-   SHOW SEARCH RESULTS
+   DISPLAY SEARCH RESULTS
 ========================================================= */
 
 function displaySearchResults(
@@ -3580,16 +3725,10 @@ function displaySearchResults(
     "";
 
   if (!search) {
-
     return;
-
   }
 
-  /*
-     Maximum 30 results.
-  */
-
-  const limitedResults =
+  const limited =
     results.slice(
       0,
       30
@@ -3602,11 +3741,6 @@ function displaySearchResults(
 
   panel.className =
     "global-search-panel";
-
-
-  /* =======================================================
-     HEADER
-  ======================================================= */
 
   const header =
     document.createElement(
@@ -3628,11 +3762,7 @@ function displaySearchResults(
   );
 
 
-  /* =======================================================
-     NO RESULTS
-  ======================================================= */
-
-  if (!limitedResults.length) {
+  if (!limited.length) {
 
     const empty =
       document.createElement(
@@ -3642,15 +3772,14 @@ function displaySearchResults(
     empty.className =
       "global-search-empty";
 
-    empty.innerHTML =
-      `
-        🔍 No results found for
-        <strong>
-          "${escapeHTML(search)}"
-        </strong>
-        <br><br>
-        Try another keyword.
-      `;
+    empty.innerHTML = `
+      🔍 No results found for
+      <strong>
+        "${escapeHTML(search)}"
+      </strong>
+      <br><br>
+      Try another keyword.
+    `;
 
     panel.appendChild(
       empty
@@ -3665,11 +3794,7 @@ function displaySearchResults(
   }
 
 
-  /* =======================================================
-     RESULTS
-  ======================================================= */
-
-  limitedResults.forEach(
+  limited.forEach(
     result => {
 
       const item =
@@ -3717,19 +3842,18 @@ function displaySearchResults(
 
       }
 
-      const shortText =
+      const text =
         String(
           result.text || ""
-        ).length > 180
-          ? String(
-              result.text || ""
-            ).substring(
+        );
+
+      const shortText =
+        text.length > 180
+          ? text.substring(
               0,
               180
             ) + "..."
-          : String(
-              result.text || ""
-            );
+          : text;
 
       item.innerHTML = `
 
@@ -3758,7 +3882,8 @@ function displaySearchResults(
                 class="global-search-text"
                 style="margin-top:5px;"
               >
-                📅 ${escapeHTML(
+                📅
+                ${escapeHTML(
                   result.date
                 )}
               </div>
@@ -3768,20 +3893,12 @@ function displaySearchResults(
 
       `;
 
-
-      /* =====================================================
-         CLICK RESULT
-      ===================================================== */
-
       item.addEventListener(
         "click",
-        () => {
-
+        () =>
           openSearchResult(
             result
-          );
-
-        }
+          )
       );
 
       panel.appendChild(
@@ -3792,13 +3909,8 @@ function displaySearchResults(
   );
 
 
-  /* =======================================================
-     SHOW LIMIT MESSAGE
-  ======================================================= */
-
   if (
-    results.length >
-    30
+    results.length > 30
   ) {
 
     const more =
@@ -3829,6 +3941,40 @@ function displaySearchResults(
    OPEN SEARCH RESULT
 ========================================================= */
 
+function highlightTarget(
+  target
+) {
+
+  if (!target) {
+    return false;
+  }
+
+  target.style.outline =
+    "3px solid #007bff";
+
+  target.scrollIntoView({
+    behavior:
+      "smooth",
+
+    block:
+      "center"
+  });
+
+  setTimeout(
+    () => {
+
+      target.style.outline =
+        "";
+
+    },
+    2500
+  );
+
+  return true;
+
+}
+
+
 function openSearchResult(
   result
 ) {
@@ -3839,16 +3985,9 @@ function openSearchResult(
     );
 
   if (box) {
-
     box.innerHTML =
       "";
-
   }
-
-
-  /* =======================================================
-     POST
-  ======================================================= */
 
   if (
     result.type ===
@@ -3861,29 +4000,11 @@ function openSearchResult(
         result.id
       );
 
-    if (target) {
-
-      target.style.outline =
-        "3px solid #007bff";
-
-      target.scrollIntoView({
-        behavior:
-          "smooth",
-        block:
-          "center"
-      });
-
-      setTimeout(
-        () => {
-
-          target.style.outline =
-            "";
-
-        },
-        2500
-      );
-
-    } else {
+    if (
+      !highlightTarget(
+        target
+      )
+    ) {
 
       window.location.hash =
         "post-" +
@@ -3896,10 +4017,6 @@ function openSearchResult(
   }
 
 
-  /* =======================================================
-     NEWS
-  ======================================================= */
-
   if (
     result.type ===
     "news"
@@ -3911,41 +4028,22 @@ function openSearchResult(
         result.id
       );
 
-    if (target) {
+    if (
+      !highlightTarget(
+        target
+      )
+    ) {
 
-      target.style.outline =
-        "3px solid #007bff";
-
-      target.scrollIntoView({
-        behavior:
-          "smooth",
-        block:
-          "center"
-      });
-
-      setTimeout(
-        () => {
-
-          target.style.outline =
-            "";
-
-        },
-        2500
-      );
-
-    } else {
-
-      const container =
-        document.getElementById(
+      document
+        .getElementById(
           "newsContainer"
-        );
-
-      container?.scrollIntoView({
-        behavior:
-          "smooth",
-        block:
-          "start"
-      });
+        )
+        ?.scrollIntoView({
+          behavior:
+            "smooth",
+          block:
+            "start"
+        });
 
     }
 
@@ -3953,10 +4051,6 @@ function openSearchResult(
 
   }
 
-
-  /* =======================================================
-     EVENTS
-  ======================================================= */
 
   if (
     result.type ===
@@ -3969,41 +4063,22 @@ function openSearchResult(
         result.id
       );
 
-    if (target) {
+    if (
+      !highlightTarget(
+        target
+      )
+    ) {
 
-      target.style.outline =
-        "3px solid #007bff";
-
-      target.scrollIntoView({
-        behavior:
-          "smooth",
-        block:
-          "center"
-      });
-
-      setTimeout(
-        () => {
-
-          target.style.outline =
-            "";
-
-        },
-        2500
-      );
-
-    } else {
-
-      const container =
-        document.getElementById(
+      document
+        .getElementById(
           "eventsContainer"
-        );
-
-      container?.scrollIntoView({
-        behavior:
-          "smooth",
-        block:
-          "start"
-      });
+        )
+        ?.scrollIntoView({
+          behavior:
+            "smooth",
+          block:
+            "start"
+        });
 
     }
 
@@ -4011,10 +4086,6 @@ function openSearchResult(
 
   }
 
-
-  /* =======================================================
-     RESEARCH
-  ======================================================= */
 
   if (
     result.type ===
@@ -4030,7 +4101,7 @@ function openSearchResult(
 
 
 /* =========================================================
-   GLOBAL SEARCH FUNCTION
+   GLOBAL SEARCH
 ========================================================= */
 
 async function searchWebsite() {
@@ -4051,10 +4122,6 @@ async function searchWebsite() {
     return;
   }
 
-  /*
-     Empty search
-  */
-
   if (!search) {
 
     box.innerHTML =
@@ -4064,20 +4131,8 @@ async function searchWebsite() {
 
   }
 
-  /*
-     Create a unique request ID.
-     If user types a new search while
-     this search is running, the old
-     result will not replace the new one.
-  */
-
   const requestId =
     ++searchRequestId;
-
-
-  /*
-     Loading message
-  */
 
   box.innerHTML = `
     <div class="global-search-panel">
@@ -4087,13 +4142,7 @@ async function searchWebsite() {
     </div>
   `;
 
-
   try {
-
-    /*
-       Search all sections
-       at the same time.
-    */
 
     const [
       posts,
@@ -4102,28 +4151,28 @@ async function searchWebsite() {
       research
     ] =
       await Promise.all([
-        searchPosts(
-          search
+        Promise.resolve(
+          searchPosts(
+            search
+          )
         ),
 
-        searchNews(
-          search
+        Promise.resolve(
+          searchNews(
+            search
+          )
         ),
 
-        searchEvents(
-          search
+        Promise.resolve(
+          searchEvents(
+            search
+          )
         ),
 
         searchResearch(
           search
         )
       ]);
-
-
-    /*
-       Do not show an old request
-       after a newer search has started.
-    */
 
     if (
       requestId !==
@@ -4134,53 +4183,30 @@ async function searchWebsite() {
 
     }
 
-
-    /*
-       Combine results.
-    */
-
     const results = [
-
       ...posts,
-
       ...news,
-
       ...events,
-
       ...research
-
     ];
 
-
-    /*
-       Sort results by category
-       for consistent display.
-    */
+    const order = {
+      post: 1,
+      news: 2,
+      event: 3,
+      research: 4
+    };
 
     results.sort(
-      (a, b) => {
-
-        const order = {
-          post: 1,
-          news: 2,
-          event: 3,
-          research: 4
-        };
-
-        return (
-          (order[a.type] || 99) -
-          (order[b.type] || 99)
-        );
-
-      }
+      (a, b) =>
+        (order[a.type] || 99) -
+        (order[b.type] || 99)
     );
-
 
     displaySearchResults(
       results,
       search
     );
-
 
   } catch (error) {
 
@@ -4226,29 +4252,20 @@ searchBar?.addEventListener(
 
     searchTimer =
       setTimeout(
-        () => {
-
-          searchWebsite();
-
-        },
-        350
+        searchWebsite,
+        400
       );
 
   }
 );
 
 
-/* =========================================================
-   SEARCH ENTER KEY
-========================================================= */
-
 searchBar?.addEventListener(
   "keydown",
   event => {
 
     if (
-      event.key ===
-      "Enter"
+      event.key === "Enter"
     ) {
 
       event.preventDefault();
@@ -4265,15 +4282,11 @@ searchBar?.addEventListener(
 );
 
 
-/* =========================================================
-   SEARCH STYLES STARTUP
-========================================================= */
-
 addSearchStyles();
 
 
 /* =========================================================
-   CLOSE SEARCH WHEN CLICKING OUTSIDE
+   CLOSE SEARCH OUTSIDE
 ========================================================= */
 
 document.addEventListener(
@@ -4317,7 +4330,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   VOICE RECOGNITION
+   VOICE INPUT
 ========================================================= */
 
 const SpeechRecognition =
@@ -4348,8 +4361,15 @@ if (SpeechRecognition) {
 
         recognition.start();
 
-        micBtn.textContent =
-          "🔴 Listening...";
+        if (micBtn) {
+
+          micBtn.textContent =
+            "🔴 Listening...";
+
+          micBtn.disabled =
+            true;
+
+        }
 
         if (userInput) {
 
@@ -4372,23 +4392,15 @@ if (SpeechRecognition) {
 
 
   recognition.onresult =
-    (event) => {
+    event => {
 
       if (userInput) {
 
         userInput.value =
-          event
-            .results[0][0]
+          event.results[0][0]
             .transcript;
 
         userInput.focus();
-
-      }
-
-      if (micBtn) {
-
-        micBtn.textContent =
-          "🎤";
 
       }
 
@@ -4403,6 +4415,9 @@ if (SpeechRecognition) {
         micBtn.textContent =
           "🎤";
 
+        micBtn.disabled =
+          false;
+
       }
 
       if (userInput) {
@@ -4416,7 +4431,7 @@ if (SpeechRecognition) {
 
 
   recognition.onerror =
-    (event) => {
+    event => {
 
       console.warn(
         "VOICE ERROR:",
@@ -4427,6 +4442,9 @@ if (SpeechRecognition) {
 
         micBtn.textContent =
           "🎤";
+
+        micBtn.disabled =
+          false;
 
       }
 
@@ -4464,6 +4482,9 @@ logoutBtn?.addEventListener(
 
     try {
 
+      logoutBtn.disabled =
+        true;
+
       await signOut(
         auth
       );
@@ -4479,8 +4500,12 @@ logoutBtn?.addEventListener(
       );
 
       alert(
+        "Logout failed.\n\n" +
         error.message
       );
+
+      logoutBtn.disabled =
+        false;
 
     }
 
@@ -4494,7 +4519,7 @@ logoutBtn?.addEventListener(
 
 document.addEventListener(
   "keydown",
-  (event) => {
+  event => {
 
     if (
       event.ctrlKey &&
@@ -4521,7 +4546,7 @@ document.addEventListener(
   () => {
 
     console.log(
-      "🚀 Sociology Connect starting..."
+      "🚀 Sociology Connect 2.1 starting..."
     );
 
     applySavedTheme();
@@ -4531,12 +4556,6 @@ document.addEventListener(
     loadNews();
 
     loadEvents();
-
-    /*
-       If authentication already finished
-       before DOMContentLoaded, make sure
-       admin controls are created.
-    */
 
     if (currentUser) {
 
@@ -4549,7 +4568,7 @@ document.addEventListener(
     updateNotificationBadge();
 
     console.log(
-      "✅ Sociology Connect Ready"
+      "✅ Sociology Connect 2.1 Ready"
     );
 
   }
@@ -4563,6 +4582,14 @@ document.addEventListener(
 window.addEventListener(
   "beforeunload",
   () => {
+
+    clearTimeout(
+      searchTimer
+    );
+
+    clearTimeout(
+      trendingTimer
+    );
 
     if (postsUnsubscribe) {
 
@@ -4587,6 +4614,17 @@ window.addEventListener(
     ) {
 
       notificationsUnsubscribe();
+
+    }
+
+    if (
+      "speechSynthesis" in
+      window
+    ) {
+
+      window
+        .speechSynthesis
+        .cancel();
 
     }
 

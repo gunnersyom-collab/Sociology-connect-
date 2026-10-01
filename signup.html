@@ -1,230 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>Sign Up | Sociology Connect</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta
-    name="description"
-    content="Create your Sociology Connect student account."
->
+    <title>Sign Up | Sociology Connect</title>
 
-<style>
+    <meta
+        name="description"
+        content="Create your Sociology Connect student account."
+    >
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+    <style>
 
-body{
-    font-family:Arial,sans-serif;
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(255,255,255,.25),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #006eff,
-            #00b4ff,
-            #0056b3
-        );
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.box{
-    width:100%;
-    max-width:450px;
-    background:#fff;
-    padding:30px;
-    border-radius:22px;
-    box-shadow:
-        0 15px 45px rgba(0,0,0,.20);
-}
+        body {
+            font-family: Arial, sans-serif;
 
-.logo{
-    text-align:center;
-    margin-bottom:12px;
-}
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(255,255,255,.25),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #006eff,
+                    #00b4ff,
+                    #0056b3
+                );
 
-.logo img{
-    width:75px;
-    height:75px;
-    object-fit:contain;
-}
+            min-height: 100vh;
 
-h2{
-    text-align:center;
-    color:#007bff;
-    margin-bottom:8px;
-    font-size:28px;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-.subtitle{
-    text-align:center;
-    color:#667085;
-    font-size:14px;
-    margin-bottom:22px;
-    line-height:1.5;
-}
+            padding: 20px;
+        }
 
-label{
-    display:block;
-    margin-top:14px;
-    font-weight:bold;
-    font-size:14px;
-    color:#172033;
-}
+        .box {
+            width: 100%;
+            max-width: 450px;
 
-input,
-select,
-textarea{
-    width:100%;
-    padding:14px;
-    margin-top:7px;
-    border:1px solid #cfd6df;
-    border-radius:11px;
-    font-size:15px;
-    font-family:Arial,sans-serif;
-    outline:none;
-    background:#fff;
-    color:#172033;
-    transition:.2s;
-}
+            background: #fff;
 
-input:focus,
-select:focus,
-textarea:focus{
-    border-color:#007bff;
-    box-shadow:
-        0 0 0 3px rgba(0,123,255,.12);
-}
+            padding: 30px;
 
-textarea{
-    resize:vertical;
-    min-height:90px;
-}
+            border-radius: 22px;
 
-.password-box{
-    position:relative;
-}
+            box-shadow:
+                0 15px 45px rgba(0,0,0,.20);
+        }
 
-.password-box input{
-    padding-right:55px;
-}
+        .logo {
+            text-align: center;
+            margin-bottom: 12px;
+        }
 
-.toggle{
-    position:absolute;
-    right:15px;
-    top:50%;
-    transform:translateY(-20%);
-    cursor:pointer;
-    font-size:19px;
-    user-select:none;
-}
+        .logo img {
+            width: 75px;
+            height: 75px;
 
-button{
-    width:100%;
-    padding:15px;
-    margin-top:20px;
-    background:#007bff;
-    color:white;
-    border:none;
-    border-radius:11px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.2s;
-}
+            object-fit: contain;
+        }
 
-button:hover{
-    background:#0056b3;
-    transform:translateY(-1px);
-}
+        h2 {
+            text-align: center;
 
-button:disabled{
-    background:#8bbcff;
-    cursor:not-allowed;
-    transform:none;
-}
+            color: #007bff;
 
-.note{
-    background:#f1f7ff;
-    padding:12px;
-    border-radius:10px;
-    margin-top:16px;
-    font-size:13px;
-    color:#555;
-    line-height:1.6;
-}
+            margin-bottom: 8px;
 
-.links{
-    text-align:center;
-    margin-top:20px;
-}
+            font-size: 28px;
+        }
 
-.links a{
-    display:block;
-    margin-top:11px;
-    color:#007bff;
-    text-decoration:none;
-    font-weight:bold;
-    font-size:14px;
-}
+        .subtitle {
+            text-align: center;
 
-.links a:hover{
-    text-decoration:underline;
-}
+            color: #667085;
 
-footer{
-    text-align:center;
-    margin-top:20px;
-    font-size:13px;
-    color:#777;
-    line-height:1.6;
-}
+            font-size: 14px;
 
-#status{
-    margin-top:12px;
-    text-align:center;
-    font-size:14px;
-    font-weight:bold;
-    min-height:20px;
-}
+            margin-bottom: 22px;
 
-@media(max-width:500px){
+            line-height: 1.5;
+        }
 
-    body{
-        padding:12px;
-    }
+        label {
+            display: block;
 
-    .box{
-        padding:24px 20px;
-        border-radius:18px;
-    }
+            margin-top: 14px;
 
-    h2{
-        font-size:25px;
-    }
+            font-weight: bold;
 
-}
+            font-size: 14px;
 
-</style>
+            color: #172033;
+        }
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 7px;
+
+            border: 1px solid #cfd6df;
+
+            border-radius: 11px;
+
+            font-size: 15px;
+
+            font-family: Arial, sans-serif;
+
+            outline: none;
+
+            background: #fff;
+
+            color: #172033;
+
+            transition: .2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color: #007bff;
+
+            box-shadow:
+                0 0 0 3px rgba(0,123,255,.12);
+        }
+
+        textarea {
+
+            resize: vertical;
+
+            min-height: 90px;
+        }
+
+        .password-box {
+
+            position: relative;
+        }
+
+        .password-box input {
+
+            padding-right: 55px;
+        }
+
+        .toggle {
+
+            position: absolute;
+
+            right: 15px;
+
+            top: 50%;
+
+            transform: translateY(-20%);
+
+            cursor: pointer;
+
+            font-size: 19px;
+
+            user-select: none;
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 20px;
+
+            background: #007bff;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 11px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        button:hover {
+
+            background: #0056b3;
+
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+
+            background: #8bbcff;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        .note {
+
+            background: #f1f7ff;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-top: 16px;
+
+            font-size: 13px;
+
+            color: #555;
+
+            line-height: 1.6;
+        }
+
+        .links {
+
+            text-align: center;
+
+            margin-top: 20px;
+        }
+
+        .links a {
+
+            display: block;
+
+            margin-top: 11px;
+
+            color: #007bff;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+        .links a:hover {
+
+            text-decoration: underline;
+        }
+
+        footer {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            font-size: 13px;
+
+            color: #777;
+
+            line-height: 1.6;
+        }
+
+        #status {
+
+            margin-top: 12px;
+
+            text-align: center;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            min-height: 20px;
+        }
+
+        @media(max-width:500px) {
+
+            body {
+
+                padding: 12px;
+            }
+
+            .box {
+
+                padding: 24px 20px;
+
+                border-radius: 18px;
+            }
+
+            h2 {
+
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
 
 </head>
+
 
 <body>
 
 <div class="box">
+
+
+    <!-- LOGO -->
 
     <div class="logo">
 
@@ -235,6 +334,8 @@ footer{
 
     </div>
 
+
+    <!-- TITLE -->
 
     <h2>
         Create Account
@@ -260,7 +361,7 @@ footer{
     >
 
 
-    <!-- YEAR -->
+    <!-- ACADEMIC YEAR -->
 
     <label for="year">
         Academic Year
@@ -347,18 +448,23 @@ footer{
     </div>
 
 
-    <!-- SIGNUP -->
+    <!-- CREATE ACCOUNT BUTTON -->
 
     <button
         id="signupBtn"
         type="button"
+        onclick="signup()"
     >
         🚀 Create Account
     </button>
 
 
+    <!-- STATUS -->
+
     <div id="status"></div>
 
+
+    <!-- INFORMATION -->
 
     <div class="note">
 
@@ -368,6 +474,8 @@ footer{
 
     </div>
 
+
+    <!-- LINKS -->
 
     <div class="links">
 
@@ -382,406 +490,79 @@ footer{
     </div>
 
 
+    <!-- FOOTER -->
+
     <footer>
 
         © 2026 Sociology Connect • Arsi University
+
         <br>
+
         Created by Horsa Gowe
 
     </footer>
 
+
 </div>
 
 
-<script type="module">
+<!-- =========================================================
+AUTH.JS
+========================================================= -->
 
-/* =========================================================
-   FIREBASE
-   ========================================================= */
+<script type="module" src="auth.js"></script>
 
-import {
-    auth,
-    db
-} from "./firebase.js";
 
+<!-- =========================================================
+PASSWORD SHOW / HIDE
+========================================================= -->
 
-import {
-    createUserWithEmailAndPassword,
-    updateProfile
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+<script>
 
+    const passwordInput =
+        document.getElementById("password");
 
-import {
-    doc,
-    setDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    const togglePassword =
+        document.getElementById("togglePassword");
 
 
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
+    togglePassword.addEventListener(
+        "click",
+        function () {
 
-const fullNameInput =
-    document.getElementById("fullName");
+            if (
+                passwordInput.type === "password"
+            ) {
 
-const yearInput =
-    document.getElementById("year");
+                passwordInput.type = "text";
 
-const bioInput =
-    document.getElementById("bio");
+                togglePassword.textContent =
+                    "🙈";
 
-const emailInput =
-    document.getElementById("email");
-
-const passwordInput =
-    document.getElementById("password");
-
-const togglePassword =
-    document.getElementById("togglePassword");
-
-const signupBtn =
-    document.getElementById("signupBtn");
-
-const statusBox =
-    document.getElementById("status");
-
-
-/* =========================================================
-   PASSWORD SHOW / HIDE
-   ========================================================= */
-
-togglePassword.addEventListener(
-    "click",
-    function(){
-
-        if(
-            passwordInput.type ===
-            "password"
-        ){
-
-            passwordInput.type =
-                "text";
-
-            togglePassword.textContent =
-                "🙈";
-
-            togglePassword.title =
-                "Hide password";
-
-        }else{
-
-            passwordInput.type =
-                "password";
-
-            togglePassword.textContent =
-                "👁️";
-
-            togglePassword.title =
-                "Show password";
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   SIGN UP
-   ========================================================= */
-
-signupBtn.addEventListener(
-    "click",
-    async function(){
-
-        const fullName =
-            fullNameInput.value.trim();
-
-        const year =
-            yearInput.value;
-
-        const bio =
-            bioInput.value.trim();
-
-        const email =
-            emailInput.value.trim();
-
-        const password =
-            passwordInput.value;
-
-
-        /* =========================
-           VALIDATION
-           ========================= */
-
-        if(!fullName){
-
-            alert(
-                "Please enter your full name."
-            );
-
-            fullNameInput.focus();
-
-            return;
-
-        }
-
-
-        if(!year){
-
-            alert(
-                "Please select your academic year."
-            );
-
-            yearInput.focus();
-
-            return;
-
-        }
-
-
-        if(!email){
-
-            alert(
-                "Please enter your email."
-            );
-
-            emailInput.focus();
-
-            return;
-
-        }
-
-
-        if(!password){
-
-            alert(
-                "Please create a password."
-            );
-
-            passwordInput.focus();
-
-            return;
-
-        }
-
-
-        if(password.length < 6){
-
-            alert(
-                "Password must contain at least 6 characters."
-            );
-
-            passwordInput.focus();
-
-            return;
-
-        }
-
-
-        /* =========================
-           START
-           ========================= */
-
-        signupBtn.disabled =
-            true;
-
-        signupBtn.textContent =
-            "⏳ Creating Account...";
-
-        statusBox.textContent =
-            "Creating your account...";
-
-
-        try{
-
-            /* =========================
-               CREATE AUTH ACCOUNT
-               ========================= */
-
-            const userCredential =
-                await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-
-
-            const user =
-                userCredential.user;
-
-
-            /* =========================
-               FIREBASE DISPLAY NAME
-               ========================= */
-
-            await updateProfile(
-                user,
-                {
-                    displayName:
-                        fullName
-                }
-            );
-
-
-            /* =========================
-               FIRESTORE USER PROFILE
-               ========================= */
-
-            await setDoc(
-                doc(
-                    db,
-                    "users",
-                    user.uid
-                ),
-                {
-
-                    uid:
-                        user.uid,
-
-                    email:
-                        email,
-
-                    fullName:
-                        fullName,
-
-                    displayName:
-                        fullName,
-
-                    name:
-                        fullName,
-
-                    year:
-                        year,
-
-                    bio:
-                        bio,
-
-                    department:
-                        "Sociology & Social Work",
-
-                    university:
-                        "Arsi University",
-
-                    role:
-                        "student",
-
-                    photoURL:
-                        "",
-
-                    createdAt:
-                        serverTimestamp(),
-
-                    updatedAt:
-                        serverTimestamp()
-
-                }
-            );
-
-
-            /* =========================
-               SUCCESS
-               ========================= */
-
-            statusBox.textContent =
-                "✅ Account created successfully!";
-
-
-            alert(
-                "✅ Account created successfully!"
-            );
-
-
-            window.location.href =
-                "login.html";
-
-
-        }catch(error){
-
-            console.error(
-                "Signup error:",
-                error
-            );
-
-
-            let message =
-                error.message;
-
-
-            /* =========================
-               FIREBASE ERROR MESSAGES
-               ========================= */
-
-            if(
-                error.code ===
-                "auth/email-already-in-use"
-            ){
-
-                message =
-                    "This email is already registered. Please login.";
+                togglePassword.title =
+                    "Hide password";
 
             }
 
-            else if(
-                error.code ===
-                "auth/invalid-email"
-            ){
+            else {
 
-                message =
-                    "Please enter a valid email address.";
+                passwordInput.type =
+                    "password";
 
-            }
+                togglePassword.textContent =
+                    "👁️";
 
-            else if(
-                error.code ===
-                "auth/weak-password"
-            ){
-
-                message =
-                    "Password is too weak. Use at least 6 characters.";
+                togglePassword.title =
+                    "Show password";
 
             }
-
-            else if(
-                error.code ===
-                "auth/network-request-failed"
-            ){
-
-                message =
-                    "Network error. Please check your internet connection.";
-
-            }
-
-
-            alert(
-                "❌ " + message
-            );
-
-
-            statusBox.textContent =
-                "❌ Account creation failed.";
 
         }
-
-
-        /* =========================
-           RESET BUTTON
-           ========================= */
-
-        finally{
-
-            signupBtn.disabled =
-                false;
-
-            signupBtn.textContent =
-                "🚀 Create Account";
-
-        }
-
-    }
-);
+    );
 
 </script>
 
+
 </body>
+
 </html>
